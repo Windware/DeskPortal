@@ -1,0 +1,5 @@
+<root>
+	<string name="session" value="Click here to keep the user logged in for a day after last access" />
+	<string name="register" value="Click here to learn about the user registration" />
+	<string name="recover" value="To recover a lost password, click here" />
+</root>

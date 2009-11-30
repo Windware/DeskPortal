@@ -1,0 +1,9 @@
+<root>
+	<week number="0" full="Sunday" less="Sun" />
+	<week number="1" full="Monday" less="Mon" />
+	<week number="2" full="Tuesday" less="Tue" />
+	<week number="3" full="Wednesday" less="Wed" />
+	<week number="4" full="Thursday" less="Thu" />
+	<week number="5" full="Friday" less="Fri" />
+	<week number="6" full="Saturday" less="Sat" />
+</root>

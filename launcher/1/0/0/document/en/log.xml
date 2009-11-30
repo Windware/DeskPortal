@@ -1,0 +1,6 @@
+<root>
+	<!-- DEVELOPER -->
+	<!-- gui.js -->
+	<string name="dev/list" value="No applications were returned in the list." />
+	<string name="dev/list/solution" value="It should return a list of applications." />
+</root>

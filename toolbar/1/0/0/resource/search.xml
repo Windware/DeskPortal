@@ -1,0 +1,15 @@
+<root>
+	<method name="web">
+		<mode name="page" />
+		<mode name="image" />
+	</method>
+
+	<method name="wikipedia">
+		<mode name="en" />
+		<mode name="ja" />
+	</method>
+
+	<method name="dictionary">
+		<mode name="en" />
+	</method>
+</root>

@@ -1,0 +1,43 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial version">Initial release.</new>
+
+			<bug summary="Cannot store addresses longer than 500 characters">
+				By technical limitation, feeds and entries address length cannot be more than 500 characters
+			</bug>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="Show favicon" priority="3">
+				Show favicon (Small icon associated with a web page) next to the feed name
+			</change>
+
+			<change summary="Display article categories" priority="3">
+				Display the categories specified by the source on each articles
+			</change>
+
+			<change summary="Allow name change of feeds" priority="3">
+				Allow changing the name of feeds
+			</change>
+
+			<new summary="Ability to categorize feeds" priority="4">
+				Allow categorizing feeds
+			</new>
+
+			<change summary="Allow removing entries" priority="2">
+				Allow configuring entries to be invisible
+			</change>
+
+			<change summary="Show new article notification" priority="2">
+				Show notification when new articles become available
+			</change>
+
+			<change summary="Allow hilighting entries" priority="3">
+				Allow hilighting entries containing specified words
+			</change>
+		</user>
+	</plan>
+</root>

@@ -1,0 +1,21 @@
+<root>
+	<string name="from" value="元" />
+	<string name="to" value="後" />
+	<string name="error" value="変換エラー" />
+	<string name="external" value="外部サイト" />
+
+	<!-- 機能 -->
+	<string name="convert" value="変換" />
+	<string name="search" value="検索" />
+
+	<!-- 方法 -->
+	<string name="dictionary" value="辞書" />
+	<string name="wikipedia" value="ウィキペディア" />
+	<string name="language" value="言語" />
+
+	<!-- モード -->
+	<string name="web" value="ウェブ" />
+	<string name="page" value="ページ" />
+	<string name="image" value="画像" />
+	<string name="cache" value="キャッシュ" />
+</root>

@@ -1,0 +1,15 @@
+<root>
+	<!-- USER -->
+	<!-- item.js -->
+	<string name="user/add" value="Added a new bookmark." />
+	<string name="user/load" value="Loaded bookmarks for the selected categories." />
+
+	<string name="user/remove" value="Removed bookmark '%%'." />
+	<string name="user/update" value="Updated bookmark '%%'." />
+
+	<string name="user/category/create" value="Created category '%%'." />
+	<string name="user/category/remove" value="Removed category '%%'." />
+	<string name="user/category/update" value="Updated category '%%'." />
+
+	<string name="user/cache/add" value="Retrieved cache for '%%'." />
+</root>

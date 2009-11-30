@@ -1,0 +1,38 @@
+<root>
+	<!-- Category -->
+	<table name="category">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255) NOT NULL" />
+		<column name="UNIQUE" param="(user, name)" />
+		<index name="user" />
+	</table>
+
+	<!-- Status -->
+	<table name="status">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255) NOT NULL" />
+		<column name="UNIQUE" param="(user, name)" />
+		<index name="user" />
+	</table>
+
+	<!-- Todo -->
+	<table name="todo">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="title" param="TEXT NOT NULL" />
+		<column name="category" param="INT NOT NULL DEFAULT 0" />
+		<column name="status" param="INT NOT NULL DEFAULT 0" />
+		<column name="content" param="TEXT" />
+		<column name="registered" param="DATETIME NOT NULL" />
+		<column name="year" param="INT" />
+		<column name="month" param="INT" />
+		<column name="day" param="INT" />
+		<column name="hour" param="INT" />
+		<column name="minute" param="INT" />
+		<column name="UNIQUE" param="(user, title, category)" />
+		<index name="user, registered" />
+		<index name="user, status" />
+	</table>
+</root>

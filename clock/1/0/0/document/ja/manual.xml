@@ -1,0 +1,4 @@
+<root>
+	<string name="_1_intro" value="紹介" />
+	<string name="intro" value="日時と時刻を表示できる簡易デジタル時計です。時刻は24時間制で表示されます。" />
+</root>

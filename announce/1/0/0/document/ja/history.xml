@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="所有しているアプリケーションのニュースのみ表示する" priority="3">
+				ユーザーが所有しているアプリケーションのニュースのみを表示する
+			</new>
+		</user>
+	</plan>
+</root>

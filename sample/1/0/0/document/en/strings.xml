@@ -1,0 +1,6 @@
+<root>
+	<string name="name" value="In templates, '%string:name' will be replaced as this value. Also '$system.language.strings($id)['name']' will represent this value too." />
+
+	<string name="sample" value="Sample" />
+	<string name="icon" value="Icon" />
+</root>

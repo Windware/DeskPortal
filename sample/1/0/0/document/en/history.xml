@@ -1,0 +1,37 @@
+<root>
+	<current>
+		<dev>
+			<new summary="New developer feature">
+				'current' node means, what is changed in this version.
+				'plan' node is what might change on future versions.
+				'dev' node means for developers. 'user' node means for users.
+			</new>
+		</dev>
+
+		<user>
+			<bug summary="Bugs those could not be fixed but nothing critical">
+				Those will be mentioned here.
+			</bug>
+		</user>
+	</current>
+
+	<plan>
+		<dev>
+			<new summary="New feature for developers" priority="4">
+				'new' is for anything new.
+				'priority' is from 1 to 5, higher the number, lower the priority.
+				These are not promises, but merely a guide for users and developers.
+			</new>
+		</dev>
+
+		<user>
+			<change summary="Changes to be made" priority="3">
+				'change' is for anything changing.
+			</change>
+
+			<bug summary="Bug to be fixed" priority="2">
+				Some bugs that could not be fixed to be fixed on later versions.
+			</bug>
+		</user>
+	</plan>
+</root>

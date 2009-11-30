@@ -1,0 +1,30 @@
+<table style="text-align : center" cellpadding="3" cellspacing="0" class="%system%_full"><tbody class="%system%_full">
+	<tr>
+		<td style="height : 100%; width : 70%; vertical-align : top; border-right : 1px #333 dotted"><div style="height : 100%; overflow-y : auto"%scroll%>
+			<table style="text-align : center; width : 100%; border-collapse : collapse; background-color : #eee" cellpadding="3" cellspacing="0" border="1">
+				<tbody id="%id%_entries"></tbody>
+			</table>
+		</div></td>
+
+		<td style="width : 30%; vertical-align : top">
+			<form id="%id%_settings" onsubmit="return %top%.%id%.gui.search(this.search.value)">
+				<div><input type="button" value="%string:new%" onclick="%top%.%id%.item.edit(0)" /></div>
+
+				<div>
+					<div class="%id%_filter">%string:group%</div>
+					<select id="%id%_selection" name="group" onchange="%top%.%id%.item.get(this.value)"></select>
+				</div>
+
+				<div>
+					<div class="%id%_filter">%string:search%</div>
+					<input type="text" style="width : 150px" name="search" />
+					<input type="submit" style="display : none" />
+				</div>
+
+				<div id="%id%_choice" style="text-align : left">
+					<div class="%id%_filter">%string:display%</div>
+				</div>
+			</form>
+		</td>
+	</tr>
+</tbody></table>

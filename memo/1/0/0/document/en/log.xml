@@ -1,0 +1,15 @@
+<root>
+	<!-- USER -->
+	<!-- item.js -->
+	<string name="user/save" value="Saved memo '%%'." />
+	<string name="user/save/fail" value="Failed to save the memo." />
+
+	<string name="user/add" value="Added a new memo '%%'." />
+	<string name="user/edit" value="Updated memo information for '%%'." />
+	<string name="user/load" value="Loaded memo '%%'." />
+	<string name="user/remove" value="Removed memo '%%'." />
+
+	<string name="user/group/create" value="Created a group '%%'." />
+	<string name="user/group/remove" value="Removed the group '%%'." />
+	<string name="user/group/update" value="Updated the group '%%'." />
+</root>

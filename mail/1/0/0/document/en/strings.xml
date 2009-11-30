@@ -1,0 +1,25 @@
+<root>
+	<string name="account" value="Account" />
+	<string name="folder" value="Folder" />
+
+	<string name="read" value="Read" />
+	<string name="compose" value="Compose" />
+	<string name="send" value="Send" />
+	<string name="preview" value="Preview" />
+	<string name="edit" value="Edit" />
+	<string name="open" value="Open address book" />
+
+	<string name="name" value="Name" />
+	<string name="address" value="Address" />
+	<string name="tag" value="Tag" />
+
+	<string name="to" value="To" />
+	<string name="message" value="Message" />
+
+	<string name="id" value="ID" />
+	<string name="subject" value="Subject" />
+	<string name="from" value="From" />
+	<string name="date" value="Date" />
+	<string name="attachment" value="Attachment" />
+	<string name="mark" value="Mark" />
+</root>

@@ -1,0 +1,81 @@
+<root>
+	<!-- 一般 -->
+	<string name="loading" value="読み込み中..." />
+	<string name="close" value="閉じる" />
+
+	<!-- 情報ウインドウ -->
+	<string name="tool" value="ツール" />
+	<string name="about" value="情報" />
+	<string name="conf" value="設定" />
+	<string name="history" value="履歴" />
+	<string name="manual" value="説明" />
+	<string name="review" value="評価" />
+	<string name="reload" value="再読み込み" />
+
+	<string name="general" value="一般" />
+	<string name="apply" value="適用" />
+	<string name="version" value="バージョン" />
+	<string name="theme" value="外観" />
+	<string name="default" value="標準" />
+
+	<string name="plan" value="予定" />
+	<string name="new" value="新規" />
+	<string name="current" value="現在" />
+	<string name="change" value="変更点" />
+	<string name="fix" value="修正点" />
+	<string name="bug" value="バグ" />
+
+	<string name="history/missing" value="履歴は見つかりませんでした" />
+	<string name="user/cancel" value="クリックするとログアウトをキャンセルします" />
+
+	<!-- 情報パネル -->
+	<string name="desc" value="概要" />
+	<string name="developer" value="開発者" />
+	<string name="contributor" value="貢献者" />
+	<string name="translator" value="翻訳者" />
+	<string name="web" value="ウェブサイト" />
+	<string name="user" value="ユーザー" />
+	<string name="dev" value="開発者向け" />
+	<string name="translation" value="翻訳" />
+	<string name="target" value="対象国" />
+	<string name="all" value="全て" />
+	<string name="none" value="無し" />
+
+	<!-- 単位 -->
+	<string name="weight" value="重量" />
+	<string name="length" value="長さ" />
+	<string name="time" value="時間" />
+	<string name="mass" value="質量" />
+	<string name="speed" value="速度" />
+	<string name="temperature" value="温度" />
+	<string name="currency" value="通貨" />
+
+	<!-- ネットワーク -->
+	<string name="network/error" value="ネットワークエラーが起きました" />
+	<string name="network/explain" value="ネットワークに問題があります" />
+
+	<!-- ログアウト -->
+	<string name="user/expire" value="セッションリミット" />
+	<string name="user/logout" value="このユーザーはログアウトされます%%" />
+
+	<!-- セッション -->
+	<string name="session/error" value="ユーザーのセッションが切れています" />
+	<string name="session/explain" value="再度ログインし直してください" />
+
+	<!-- クッキー -->
+	<string name="bad/cookie" value="ブラウザーのクッキーが無効です。クッキーを有効にしてください。" />
+	<string name="bad/request" value="ブラウザーに必要な機能が見つかりませんでした。対応しているブラウザーをお使いください。" />
+
+	<!-- 設定パネル -->
+	<string name="conf/changed" value="設定変更完了" />
+	<string name="conf/effect" value="変更はページの再読み込み後に反映されます" />
+	<string name="conf/error" value="サーバーエラー" />
+	<string name="conf/again" value="時間をおいて再度試してください" />
+
+	<!-- エラーメッセージ -->
+	<string name="app/fail" value="アプリケーションエラー" />
+	<string name="app/load" value="アプリーケーション'%%'の起動に失敗しました" />
+
+	<string name="error" value="エラー" />
+	<string name="error_history" value="更新履歴を取得できませんでした" />
+</root>

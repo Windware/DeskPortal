@@ -1,0 +1,140 @@
+<root>
+	<summary>
+		Initiates cross browser XMLHttpRequest object and returns the remote request object.
+	</summary>
+
+	<parameters>address[[[[[, get], post], callback], error], header]</parameters>
+
+	<description>
+		<!-- FIXME - Totally deprecated explanation -->
+		<p>
+			It takes a path as a parameter to be fetched remotely. You should define the address as 'file/to.fetch' and
+			it will be retrieved as a relative path from the top URL of the system. Setting any domain names in the address is irrelevent as
+			XMLHTTPRequest does not allow fetching data from external domains.
+		</p>
+
+		<p>
+			If you need to 'POST' data on the remote file, then set 'data' as a string and it will be passed as a 'POST' request.
+			Otherwise the request will be a 'GET' request and 'data' should be kept as 'null' or not specified.
+		</p>
+
+		<p>
+			The default behaviour is to make a synchronous request and JavaScript will wait till the reply comes back in order for the script
+			to proceed knowning that the data is there from then onward. If you want to make an asynchronous request,
+			define a function that gets called when the reply comes back from the server and place it as a 'func' parameter.
+		</p>
+
+		<p>
+			See the examples below on how this can be achieved. The function gets called for every state change through asynchronous request,
+			thus if you only need to take action after the data is retrieved, then make sure to block any code processing unless the state is set to 4 (which means, when all data came through)
+		</p>
+
+		<p>
+			The function defined for asynchronous retrieval will have the XMLHttpRequest object appended as a last parameter, and it should be used to gather all the information with the request.
+			See example below for specific details.
+		</p>
+
+		<p>
+			The 'drop' parameter is used only internally to avoid a loop between MakeRequest and MakeError, so when an error occurs on MakeRequest to call MakeError to log the error remotely,
+			those two functions won't forever call each others. So, developers should ignore this parameter.
+		</p>
+
+		<p>
+			This function has a mechanism to use a cache to load a file instead of fetching it remotely with the help of 'PreloadFiles' function. See 'PreloadFiles' for specific details.
+			When a cache exists for a requested file, it uses the cache to hand out the request back instead of fetching it remotely.
+			But once the cache is accessed, the cache will be disposed and the next call to the same file will make a remote request which should be avoided by storing the data in a variable.
+		</p>
+
+		<p>
+			If you need data from external domains, consider fetching the data on the server side and retrieve it by accessing the server side script with this function.
+		</p>
+
+		<p>
+			Making a remote request can be very expensive for smooth user experience and thus should be totally avoided at all cost when unnecessary.
+			So, try to cache the requested data when necessary and do not call this function repeatedly for same files for no reason.
+			And whenever possible, try consider using 'PreloadFiles' function to fetch multiple files beforehand instead of requesting it from time to time with a single request to reduce the amount of calls made considerably.
+		</p>
+	</description>
+
+	<bug>
+	</bug>
+
+	<reference>
+	</reference>
+
+	<example>
+		<p>
+			This is the simplest form of using the function by only specifying the file name.
+			It does not specify any GET or POST parameters but a callback function to receive when the request completes.
+		</p>
+
+		<code>
+			var callback = function(request) { if(request.valid()) alert('Returned text is : ' + request.text); }
+			$system.network.send($self.info.root + 'server/sample.php', null, null, callback);
+		</code>
+
+		<p>
+			To make a 'POST' request to the server, to usually store data on the remote side, add the data as the third parameter as a hash.
+			Then manipulate the data on the remote side with the server script.
+			It is common to use 'GET' request when the request does not change the data's state on the server side.
+		</p>
+
+		<code>
+			$system.network.send($self.info.root + '/server/store.php', null, {name : 'sample'});
+		</code>
+
+		<!-- FIXME - Totally deprecated from here onwards -->
+		<p>
+			To make an asynchronous request, you will add the function as a third parameter.
+			If no data needs to be posted, the 'data' parameter should be set as 'null'.
+			Since MakeRequest does not return any useful value this way, you do not need to hold the return value of it
+			but rely on data accessed within the asynchronously called function.
+		</p>
+
+		<code>
+			var AsyncFunc = function(req) //Define the function
+			{
+				alert('Current state is...' + req.readyState);
+				if(!ValidResponse(req)) return; //Only when data has fully arrived
+
+				alert('Data has finally arrived... : ' + req.responseText);
+				fetched = 'There it is : ' + req.responseText;
+			}
+
+			var fetched; //A variable to hold the return value
+			MakeRequest('myapp/server/important.rb', null, AsyncFunc);
+		</code>
+
+		<p>
+			Note that the function parameter does not have brackets nor quotation marks to indicate that the 'AsyncFunc' is a pointer to the function reference.
+			If you need to set parameters over to that function, use 'SetArg' function to expand the parameters. Please read the detail from 'SetArg' function reference.
+			But here is a small example on how it can be done. You may also pass the function as a string, in which case,
+			nothing but string or numbers can be inserted as a parameter and it looks a bit messy with '+' signs when adding parameters to the function defined by string.
+			So, it is better to use 'SetArg'. XMLHttpRequest object will be appended as the last parameter in the asynchronously called function as written below.
+		</p>
+
+		<code>
+			var AsyncFunc = function(obj, req)
+			{
+				if(!ValidResponse(req)) return;
+
+				if(typeof obj == 'object')
+				{
+					alert('I have successfully passed my object over. ex : ' + obj.number);
+
+					obj.string = 'done';
+					fetched = obj;
+				}
+			}
+
+			var object = { number : 123, string : 'abc' }
+			var fetched;
+
+			MakeRequest('myapp/server/important.rb', null, AsyncFunc.SetArg(object));
+		</code>
+
+		<p>
+			To use PreloadFiles to fetch multiple files with a single request, please refer to 'PreloadFiles' examples and descriptions.
+		</p>
+	</example>
+</root>

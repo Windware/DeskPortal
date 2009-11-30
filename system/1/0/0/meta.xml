@@ -1,0 +1,91 @@
+<root>
+	<developer name="Windware Solution" site="http://windware-solution.com/" />
+	<info revision="1" category="system" />
+
+	<language name="en">
+		<translator name="Windware Solution" />
+	</language>
+
+	<language name="ja">
+		<translator name="Windware Solution" />
+	</language>
+
+	<requirement>
+		<item>PHP version 5.2+ (using json_decode etc) with PDO (with appropriate database drivers), zlib, curl and imap modules enabled</item>
+		<item>A web server that can run the above mentioned PHP</item>
+		<item>RDBMS that PHP PDO supports</item>
+	</requirement>
+
+	<license>
+		<folder name="." license="Windware Reference License">
+			<author name="Windware Solution" site="http://windware-solution.com/" />
+
+			<folder name="component">
+				<folder name="default">
+					<folder name="computer">
+						<folder name="graphic" license="Public Domain">
+							<author name="Open Clip Art" contact="http://openclipart.org/media/people/contact/admin" site="http://openclipart.org/" />
+
+							<file name="about.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<file name="about_grey.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<file name="blank.png" license="Public Domain">
+								<author name="Windware Solution" />
+							</file>
+
+							<file name="history.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<file name="history_grey.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<file name="lock.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<file name="manual.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<file name="manual_grey.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<file name="unlock.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+
+							<folder name="wallpaper">
+								<file name="db_*.jpg" license="Commercial use license">
+									<author name="Ryan Bliss" contact="rbliss@digitalblasphemy.com" site="http://digitalblasphemy.com/" />
+								</file>
+
+								<file name="p8_*.jpg" license="Public Domain">
+									<author name="Photos8.com" contact="http://photos8.com/contact.html" site="http://photos8.com/" />
+								</file>
+							</folder>
+						</folder>
+					</folder>
+				</folder>
+			</folder>
+
+			<folder name="server">
+				<folder name="php">
+					<folder name="module">
+						<file name="jsmin.php" license="MIT License">
+							<author name="Douglas Crockford" contact="douglas@crockford.com" note="Original author" />
+							<author name="Ryan Grove" contact="ryan@wonko.com" note="PHP port" />
+						</file>
+					</folder>
+				</folder>
+			</folder>
+		</folder>
+	</license>
+</root>

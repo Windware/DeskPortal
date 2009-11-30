@@ -1,0 +1,12 @@
+
+	td.%id%_option_cell { width : 50%; border : 1px #333 solid; text-align : center; cursor : pointer; background-color : #ca8; }
+
+	td.%id%_active { background-color : #964; font-weight : bold; }
+
+	img.%id%_wallpaper { width : 120px; height : 90px; margin : 5px; cursor : pointer; }
+
+	div#%id%_list { overflow-y : auto; border : 1px #333 solid; background-color : #fff; }
+
+	table#%id% h3 { margin : 5px; border-bottom : 1px #333 dotted; }
+
+	div#%id%_list h3 { margin : 5px; border-bottom : 1px #333 dotted; }

@@ -1,0 +1,11 @@
+<root>
+	<string name="_1_group" value="Category" />
+
+	<string name="category" value="Category" />
+	<string name="name" value="Name" />
+	<string name="new" value="New" />
+	<string name="delete" value="Delete" />
+	<string name="set" value="Set" />
+
+	<string name="confirm" value="Delete this category?" />
+</root>

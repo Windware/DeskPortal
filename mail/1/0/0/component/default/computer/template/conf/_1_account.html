@@ -1,0 +1,23 @@
+<form style="text-align: left" onsubmit="return false">
+	<p>%string:account% <select name="account">
+		<option value="">%string:new%</option>
+	</select></p>
+
+	<p>%string:name% : <input type="text" name="name" /></p>
+	<p>%string:address% : <input type="text" name="address" /></p>
+
+	<p>
+		%string:receive% (%string:port%) : <input type="text" name="receive" /> :
+		<input type="text" name="port_receive" />
+		<input type="checkbox" name="secure_receive" />
+	</p>
+
+	<p>
+		%string:send% (%string:port%) : <input type="text" name="send" /> :
+		<input type="text" name="port_send" />
+		<input type="checkbox" name="secure_send" />
+	</p>
+
+	<p>%string:signature% : <textarea name="signature"></textarea></p>
+	<p style="text-align: center"><input type="submit" class="%system%_flat" value="%string:apply%" /></p>
+</form>

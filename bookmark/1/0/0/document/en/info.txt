@@ -1,0 +1,1 @@
+Bookmark management application with categorization feature

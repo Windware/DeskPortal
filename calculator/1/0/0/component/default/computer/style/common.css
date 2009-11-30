@@ -1,0 +1,8 @@
+
+	tr#%id%_display { background-color : #aaa; font-size : 130%; font-weight : bold; }
+
+	tr#%id%_display td { padding : 0px 10px; }
+
+	table#%id%_calculator td { width : 25%; padding : 2px; font-size : 120%; text-align : center; }
+
+	td.%id%_pressed { border : 1px #ccc inset; }

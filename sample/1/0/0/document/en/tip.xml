@@ -1,0 +1,4 @@
+<root>
+	<string name="name" value="In templates, '%tip:name%' will represent this value as a help text" />
+	<string name="clear" value="Click here to remove the icon." />
+</root>

@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="メモリー機能を追加" priority="4">
+				結果を保存するメモリー機能を追加
+			</new>
+		</user>
+	</plan>
+</root>

@@ -1,0 +1,27 @@
+<table class="%system%_full" style="text-align : center"><tbody>
+	<tr>
+		<td colspan="2"><h2>%title% %string:info%</h2></td>
+	</tr>
+
+	<tr style="height : 100%">
+		<td style="border : 1px #333 solid; background-color : #fff; width : 40%; vertical-align : top">
+			<p><strong>%string:group%</strong></p>
+			<form id="%id%_edit_groups_%value:id%" class="%id%_edits">%value:group%</form>
+		</td>
+
+		<td style="width : 60%; vertical-align : top">
+			<form onsubmit="return %top%.%id%.item.set(%value:id%, this)">
+				<p><strong>%string:name%</strong><br /><input name="name" type="text" value="%value:name%" /></p>
+
+				<p><strong>%string:last%</strong><br />%value:last%</p>
+
+				<p>
+					<input type="submit" value="%string:apply%" />
+
+					<input onclick="%top%.%id%.item.remove(%value:id%)" type="button" value="%string:delete%" />
+					<input onclick="%top%.%system%.window.fade('%id%_edit_%value:id%', true, null, true)" type="button" value="%string:close%" />
+				</p>
+			</form>
+		</td>
+	</tr>
+</tbody></table>

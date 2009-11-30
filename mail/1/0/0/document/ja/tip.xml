@@ -1,0 +1,7 @@
+<root>
+	<string name="account" value="使用アカウントを選択できます" />
+	<string name="select" value="メールアカウントを選択します" />
+	<string name="read" value="メールを読みます" />
+	<string name="compose" value="メールを書きます" />
+	<string name="sort" value="クリックすると並び替えを行います" />
+</root>

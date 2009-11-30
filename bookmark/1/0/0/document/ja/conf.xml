@@ -1,0 +1,11 @@
+<root>
+	<string name="_1_group" value="カテゴリー" />
+
+	<string name="category" value="カテゴリー" />
+	<string name="name" value="名前" />
+	<string name="new" value="新規" />
+	<string name="delete" value="削除" />
+	<string name="set" value="決定" />
+
+	<string name="confirm" value="このカテゴリーを削除しますか？" />
+</root>

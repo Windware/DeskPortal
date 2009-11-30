@@ -1,0 +1,65 @@
+<table cellpadding="0" cellspacing="5" class="%system%_full"><tbody class="%system%_full">
+	<tr style="height : 5%">
+		<td colspan="2"><form id="%id%_selection_filter" onsubmit="return %top%.%id%.gui.filter()">
+			<div class="%id%_filter">
+				<strong>%string:filter%</strong> [%string:state% :
+
+				<label for="%id%_marked"%tip:marked%>
+					<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter()" name="marked"> %string:marked%
+				</label>
+
+				<label for="%id%_unread"%tip:unread%>
+					<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter()" name="unread"> %string:unread%
+				</label>]
+
+				[<span%tip:category% style="cursor : help">%string:category% :
+				<select name="category" id="%id%_filter_category" onchange="%top%.%id%.gui.filter()"></select></span>]
+
+				[<span%tip:search% style="cursor : help">%string:search% : <input type="text" name="search" style="width : 120px" />]
+				<input type="submit" style="display : none" value="%string:apply%" /></span>
+			</div>
+		</form></td>
+	</tr>
+
+	<tr style="height : 5%">
+		<th style="width : 30%" class="%id%_section">%string:list%</th>
+		<th style="width : 70%" class="%id%_section">%string:entries%</th>
+	</tr>
+
+	<tr style="height : 5%">
+		<td colspan="2">
+			<form id="%id%_selection_span" class="%id%_filter"%tip:period% style="cursor : help">
+				<strong>%string:display%</strong> [%string:period% 
+
+				<select name="period" onchange="%top%.%id%.gui.period(this.value)">
+					<option value="0">%string:daily%</option>
+					<option value="1">%string:weekly%</option>
+					<option value="2">%string:monthly%</option>
+				</select>]
+
+				[%string:year% : <select name="year" onchange="%top%.%id%.gui.span()"></select>]
+				[%string:month% : <select name="month" onchange="%top%.%id%.gui.span()"></select>]
+
+				<span id="%id%_selection_1" class="%system%_hidden">
+					[%string:week% :
+					<select name="week" onchange="%top%.%id%.gui.span()">
+						<option value="5">5</option>
+						<option value="4">4</option>
+						<option value="3">3</option>
+						<option value="2">2</option>
+						<option value="1">1</option>
+					</select>]
+				</span>
+
+				<span id="%id%_selection_0">
+					[%string:day% : <select name="day" onchange="%top%.%id%.gui.span()"></select>]
+				</span>
+			</form>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="%id%_item" style="width : 30%"><div id="%id%_list"%scroll%></div></td>
+		<td class="%id%_item" style="width : 70%"><form id="%id%_entries"%scroll%></form></td>
+	</tr>
+</tbody></table>

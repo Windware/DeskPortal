@@ -1,0 +1,33 @@
+<root>
+	<os name="windows">
+		<serif>
+			<font name="Times New Roman" />
+			<font name="Georgia" />
+		</serif>
+		<sans>
+		</sans>
+		<mono>
+		</mono>
+	</os>
+
+	<os name="mac">
+		<serif>
+		</serif>
+		<sans>
+		</sans>
+		<mono>
+		</mono>
+	</os>
+
+	<os name="linux">
+		<serif>
+			<font name="Bitstream Vera Serif" />
+		</serif>
+		<sans>
+			<font name="Bitstream Vera Sans" />
+		</sans>
+		<mono>
+			<font name="Bitstream Vera Sans Mono" />
+		</mono>
+	</os>
+</root>

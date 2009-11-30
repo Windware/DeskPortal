@@ -1,0 +1,6 @@
+<root>
+	<string name="add" value="Add a new memo" />
+	<string name="info" value="Edit or view the memo information" />
+	<string name="shrink" value="Shrink this group" />
+	<string name="expand" value="Expand this group" />
+</root>

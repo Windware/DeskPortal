@@ -1,0 +1,9 @@
+<h2>%string:history/system%</h2>
+
+<form style="width : 100%">
+	%string:version% :
+	<select id="%id%_version" onchange="%top%.%id%.gui.version(this.value)">%value:option%</select>
+</form>
+
+<div id="%id%_list" class="%system%_full %system%_info_zone"%scroll%></div>
+<p><a onclick="%top%.%system%.window.fade('%id%_history', true)">%string:close%</a></p>

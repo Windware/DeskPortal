@@ -1,0 +1,8 @@
+<!-- This file must be copied to "system/static/conf/app/" to take effect -->
+<root>
+	<!-- The address used to recover lost passwords -->
+	<conf name="recover" value="http://i.lost.my/password.html" />
+
+	<!-- The address used to make new registration -->
+	<conf name="register" value="http://i.want.to/register.html" />
+</root>

@@ -1,0 +1,17 @@
+<!--
+	This is the main window template HTML.
+	Following variables will be replaced.
+
+	%id% - Application ID. (Ex : sample_1_0_0)
+	%system% - System ID. (Ex : system_1_0_0)
+	%top% - The top DOM node tree in JavaScript. This is required when executing script from events such as 'onclick'.
+	%string:name% - Translated strings with string ID 'name' read from 'strings.xml'.
+	%tip:name% - Mouse hover tips with tip ID 'tip' read from 'tip.xml'.
+	%image:file% - Image source address that will work across browsers for translucent png taking the theme and device folder into account.
+-->
+
+<h1 id="%id%_header">%string:sample%</h1>
+
+<p>%string:icon% :
+	<img onclick="%top%.%system%.node.fade(this)" style="cursor : pointer" src="%image:graphic/icon.png"%tip:clear%>
+</p>

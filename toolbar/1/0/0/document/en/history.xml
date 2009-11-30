@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="Add histories" priority="2">
+				Allow saving search histories and conversion results
+			</new>
+		</user>
+	</plan>
+</root>

@@ -1,0 +1,30 @@
+<root>
+	<developer name="Windware Solution" site="http://windware-solution.com/" />
+	<info revision="1" category="tool" />
+
+	<language name="en">
+		<translator name="Windware Solution" />
+	</language>
+
+	<language name="ja">
+		<translator name="Windware Solution" />
+	</language>
+
+	<license>
+		<folder name="." license="Windware Reference License">
+			<author name="Windware Solution" site="http://windware-solution.com/" />
+
+			<folder name="component">
+				<folder name="default">
+					<folder name="computer">
+						<folder name="graphic">
+							<file name="icon.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+						</folder>
+					</folder>
+				</folder>
+			</folder>
+		</folder>
+	</license>
+</root>

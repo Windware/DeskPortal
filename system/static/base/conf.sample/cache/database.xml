@@ -1,0 +1,6 @@
+<root>
+	<!--
+		It will store the cache on the system database on the table system_static_cache defined in the schema file.
+		There is no custom option available for this method.
+	-->
+</root>

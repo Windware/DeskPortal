@@ -1,0 +1,11 @@
+<root>
+	<string name="_1_intro" value="Introduction" />
+	<string name="1/intro" value="This application allows the user to log in to the system with given user name and password." />
+
+	<string name="_2_session" value="Session" />
+	<string name="2/option" value="The option shown on the main window indicates whether the user should keep the session across closing the browser and starting the browser again." />
+	<string name="2/convenient" value="While keeping the session available is convenient, it is a privacy risk if the computer has a chance to be used by other people. In those cases, the session should not be kept." />
+	<string name="2/login" value="When the session is not kept, closing the browser will log the user out and restarting the browser will take the user to the log in screen instead of continuing from where left." />
+	<string name="2/period" value="Even if the session is kept, if the user does not access the system for a period of time, the user will be automatically logged out." />
+	<string name="2/another" value="Also, if a same user logs in from another computer while still logged in, the previous logged in user will be logged out, so that only 1 computer can be logged in for 1 user at the same time." />
+</root>

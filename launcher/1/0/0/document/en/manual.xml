@@ -1,0 +1,9 @@
+<root>
+	<string name="_1_intro" value="Introduction" />
+	<string name="1/intro" value="This application can launch applications that you are subscribed to." />
+	<string name="1/appear" value="Applications are categorized in each groups and by clicking on the category name, the list of applications appear." />
+	<string name="1/run" value="By clicking on the application name, the application will be launched. Click the name again to close the application window." />
+
+	<string name="_2_logout" value="Logout" />
+	<string name="2/logout" value="To log out, click on the 'Logout' link at the bottom to discard the user session and go back to the log in screen." />
+</root>

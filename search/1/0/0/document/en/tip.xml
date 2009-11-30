@@ -1,0 +1,7 @@
+<root>
+	<string name="target" value="Select the target application to search from" />
+
+	<string name="page" value="Select the search result page to display" />
+	<string name="previous" value="Go to the previous search result page" />
+	<string name="next" value="Go to the next search result page" />
+</root>

@@ -1,0 +1,7 @@
+<!-- This file must be copied to "system/static/conf/app/" to take effect -->
+<root>
+	<!-- Announcement Feed
+		URL of the RSS feed that 'Announce' application will use to display.
+	-->
+	<conf name="url" value="http://address.to/the.rss" />
+</root>

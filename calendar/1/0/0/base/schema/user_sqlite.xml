@@ -1,0 +1,47 @@
+<root>
+	<!-- Categories -->
+	<table name="category">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="color" param="CHAR(6)" />
+		<column name="UNIQUE" param="(user, name)" />
+	</table>
+
+	<!-- Diaries -->
+	<table name="diary">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="day" param="DATE NOT NULL" />
+		<column name="category" param="INT" />
+		<column name="type" param="INT" />
+		<column name="title" param="TEXT NOT NULL" />
+		<column name="content" param="TEXT NOT NULL" />
+		<index name="user, day" />
+	</table>
+
+	<!-- Schedules -->
+	<table name="schedule">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="day" param="DATE NOT NULL" />
+		<column name="title" param="TEXT NOT NULL" />
+		<column name="content" param="TEXT" />
+		<column name="category" param="INT" />
+		<column name="type" param="INT" />
+		<column name="start" param="DATETIME" />
+		<column name="end" param="DATETIME" />
+		<index name="user, day" />
+		<index name="user, category" />
+		<index name="day" />
+	</table>
+
+	<!-- Types -->
+	<table name="type">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="color" param="CHAR(6)" />
+		<column name="UNIQUE" param="(user, name)" />
+	</table>
+</root>

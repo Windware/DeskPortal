@@ -1,0 +1,6 @@
+<root>
+	<string name="name" value="テンプレート上での'%string:name'はこの文字列に変換されます。また、'$system.language.strings($id)['name']'もこの文字列を表します。" />
+
+	<string name="sample" value="サンプル" />
+	<string name="icon" value="アイコン" />
+</root>

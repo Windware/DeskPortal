@@ -1,0 +1,9 @@
+<root>
+	<string name="info" value="%%" />
+	<string name="year" value="年" />
+	<string name="month" value="月" />
+	<string name="day" value="日" />
+
+	<string name="mail" value="このアドレス宛にメールを作成します" />
+	<string name="web" value="このサイトを新しいウインドウで開きます" />
+</root>

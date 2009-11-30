@@ -1,0 +1,18 @@
+<root>
+	<developer name="Windware Solution" site="http://windware-solution.com/" />
+	<info revision="1" category="system" />
+
+	<language name="en">
+		<translator name="Windware Solution" />
+	</language>
+
+	<language name="ja">
+		<translator name="Windware Solution" />
+	</language>
+
+	<license>
+		<folder name="." license="Windware Reference License">
+			<author name="Windware Solution" site="http://windware-solution.com/" />
+		</folder>
+	</license>
+</root>

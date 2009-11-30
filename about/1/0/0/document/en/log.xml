@@ -1,0 +1,6 @@
+<root>
+	<!-- USER -->
+	<!-- gui.js -->
+	<string name="user/switch" value="Chosen language is not available." />
+	<string name="user/switch/solution" value="Pick an available language." />
+</root>

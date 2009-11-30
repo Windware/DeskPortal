@@ -1,0 +1,8 @@
+
+	table#%id% input, table#%id% textarea { background-color : #fed; }
+
+	table#%id%_switcher { background-color : #dc8; width : 100%; margin-bottom : 10px; }
+
+	table#%id%_switcher th { cursor : pointer; border : 1px #fea solid; }
+
+	table.%id%_table { background-color : #eee; empty-cells : show; border-collapse : collapse; width : 100%; }

@@ -1,0 +1,27 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="Add recovery feature" priority="3">
+				Allow recovering a memo content to past states
+			</new>
+		</user>
+
+		<user>
+			<new summary="Make a sticky from a memo" priority="3">
+				Allow putting a memo as a separate sticky window
+			</new>
+		</user>
+
+		<user>
+			<new summary="WYSIWYG support" priority="4">
+				Allow 'what you see is what you get' editor support
+			</new>
+		</user>
+	</plan>
+</root>

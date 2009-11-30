@@ -1,0 +1,11 @@
+<root>
+	<string name="desc" value="Next generation application platform" />
+	<string name="choice" value="Change language" />
+	<string name="more" value="Read more about %brand%" />
+	<string name="hide" value="Hide about %brand%" />
+	<string name="website" value="Web site" />
+	<string name="info" value="Information site" />
+	<string name="developed" value="Developed by" />
+	<string name="license" value="License" />
+	<string name="welcome" value="Welcome" />
+</root>

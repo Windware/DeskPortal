@@ -1,0 +1,23 @@
+<root>
+	<!-- Filters -->
+	<string name="marked" value="Check here to only view marked topics" />
+	<string name="unread" value="Check here to only view unread topics" />
+	<string name="category" value="Pick the category to display" />
+	<string name="search" value="Search for words in the current list" />
+	<string name="period" value="Pick the display period of the current feed" />
+
+	<!-- Feeds -->
+	<string name="site" value="Open the source site" />
+	<string name="read" value="Read this site's news" />
+
+	<!-- Entries -->
+	<string name="category" value="Set a category for this entry" />
+	<string name="mark" value="Mark this entry" />
+	<string name="open" value="Open the entry in a new window" />
+	<string name="info" value="%%" />
+
+	<!-- Pages -->
+	<string name="page" value="Select the feed page to display" />
+	<string name="previous" value="Go to the previous article list page" />
+	<string name="next" value="Go to the next article list page" />
+</root>

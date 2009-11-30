@@ -1,0 +1,10 @@
+
+	a.%id%_active { font-weight : bold; }
+
+	div#%id%_page { overflow-y : auto; height : 100%; }
+
+	ol#%id%_list a { display : block; }
+
+	%self% h2 { text-align : center; }
+
+	p.%id%_next { font-weight : bold; text-align : right; }

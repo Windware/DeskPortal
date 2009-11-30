@@ -1,0 +1,7 @@
+<root>
+	<string name="target" value="検索対象とするアプリケーションを選択してください" />
+
+	<string name="page" value="検索結果のページを指定できます" />
+	<string name="previous" value="検索結果の前のページを表示します" />
+	<string name="next" value="検索結果の次のページを表示します" />
+</root>

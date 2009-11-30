@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="Add facial graphic capability" priority="3">
+				Add the ability to add facial graphic to an entry
+			</change>
+		</user>
+	</plan>
+</root>

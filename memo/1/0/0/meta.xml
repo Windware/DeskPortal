@@ -1,0 +1,28 @@
+<root>
+	<developer name="Windware Solution" site="http://windware-solution.com/" />
+	<info revision="1" category="personal" />
+
+	<language name="en">
+		<translator name="Windware Solution" />
+	</language>
+
+	<language name="ja">
+		<translator name="Windware Solution" />
+	</language>
+
+	<license>
+		<folder name="." license="Windware Reference License">
+			<author name="Windware Solution" site="http://windware-solution.com/" />
+
+			<folder name="component">
+				<folder name="default">
+					<folder name="computer">
+						<folder name="graphic" license="Public Domain">
+							<author name="Open Clip Art" contact="http://openclipart.org/media/people/contact/admin" site="http://openclipart.org/" />
+						</folder>
+					</folder>
+				</folder>
+			</folder>
+		</folder>
+	</license>
+</root>

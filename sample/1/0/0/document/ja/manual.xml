@@ -1,0 +1,6 @@
+<root>
+	<string name="_1_intro" value="紹介" />
+
+	<string name="1/file" value="template/manualディレクトリーにあるファイルが一覧として使われます。_1_intro.htmlの場合は'_1_intro'の値を使ってリストされます。" />
+	<string name="1/replaced" value="全ての%string:name%の文字列はこのファイルの内容から置換されます。" />
+</root>

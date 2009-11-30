@@ -1,0 +1,17 @@
+<table cellpadding="0" cellspacing="0" class="%system%_full"><tbody class="%system%_full">
+	<tr style="height : 10%">
+		<th style="text-align : left">
+			%title% - %string:cache% :
+			<a onclick="%top%.%id%.cache.source(%value:id%)" style="font-size : 120%"%tip:source%>%value:title%</a>
+		</th>
+
+		<td style="text-align : right"><a onclick="%top%.%system%.window.fade('%id%_cache_%value:id%')">%string:close%</a></td>
+	</tr>
+
+	<tr style="height : 90%">
+		<td style="height : 90%; width : 100%" colspan="2">
+			<!-- onload="%top%.%system%.gui.imitate(this, '%id%_cache_%value:id%')" -->
+			<iframe id="%id%_cache_%value:id%_viewer" class="%system%_full %id%_cache" src="%value:root%"></iframe>
+		</td>
+	</tr>
+</tbody></table>

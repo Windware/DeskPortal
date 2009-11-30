@@ -1,0 +1,29 @@
+<form onsubmit="return %top%.%id%.group.set(this)" style="margin-bottom : 10px">
+	<table class="%system%_full" cellspacing="0" cellpadding="5" style="border : 1px #333 solid; background-color : #aba"><tbody>
+		<tr>
+			<th style="width : 20%">%string:category%</th>
+
+			<td style="width : 20%">
+				<select id="%id%_pick_group" name="group" onchange="%top%.%id%.conf.display(this.value)"></select>
+			</td>
+
+			<td style="width : 60%">
+				<p>%string:name% : <input id="%id%_pick_name" type="text" name="name" /></p>
+
+				<p>
+					<input type="submit" value="%string:set%" style="width : 100px" />
+					<input type="button" id="%id%_pick_delete" onclick="%top%.%id%.group.remove()" class="%system%_hidden" value="%string:delete%" style="width : 100px" />
+				</p>
+			</td>
+		</tr>
+	</tbody></table>
+</form>
+<!--<form class="%id%_field" onsubmit="return %top%.%id%.item.load(this.file)">
+	<h2>%string:import%</h2>
+	<p><input type="file" name="file" /></p>
+
+	<h2>%string:supported%</h2>
+	<p></p>
+
+	<p><input type="submit" style="width : 200px" value="%string:load%" /></p>
+</form>-->

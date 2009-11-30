@@ -1,0 +1,7 @@
+<root>
+	<string name="account" value="Active account can be changed here" />
+	<string name="select" value="Select to change the email account" />
+	<string name="read" value="Read mails" />
+	<string name="compose" value="Write a mail" />
+	<string name="sort" value="Click to sort" />
+</root>

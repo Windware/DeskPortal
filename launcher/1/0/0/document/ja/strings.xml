@@ -1,0 +1,6 @@
+<root>
+	<string name="app" value="アプリケーション" />
+
+	<string name="logout" value="ログアウト" />
+	<string name="confirm" value="ログアウトしますか？" />
+</root>

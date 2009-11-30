@@ -1,0 +1,16 @@
+<root>
+	<string name="tool" value="ツールを表示します" />
+	<string name="low" value="このウインドウを他のウインドウの後ろに表示します" />
+	<string name="close" value="ウインドウを閉じます" />
+	<string name="lock" value="ウインドウを固定します" />
+	<string name="unlock" value="ウインドウを固定を解除します" />
+	<string name="drop" value="内容を隠します" />
+	<string name="show" value="内容を表示します" />
+	<string name="resize" value="ここでマウスを押し、動かすとサイズを変更できます" />
+	<string name="static" value="サイズ変更はできません" />
+	<string name="unremovable" value="今はツールバーは隠せません" />
+	<string name="remove" value="ツールバーを隠します" />
+	<string name="restore" value="ツールバーを表示します" />
+	<string name="reload" value="アプリケーションを再読み込みします" />
+	<string name="blank" value="%%" />
+</root>

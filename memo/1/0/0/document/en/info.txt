@@ -1,0 +1,1 @@
+This is a simple memo taking application with categorization and auto save feature

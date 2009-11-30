@@ -1,0 +1,4 @@
+
+	p#%id%_notice { font-size : 120%; background-color : #cba; border : 1px #333 dotted; padding : 10px; }
+
+	input.%id%_enter { background-color : #fff; width : 150px; }

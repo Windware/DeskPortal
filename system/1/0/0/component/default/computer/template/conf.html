@@ -1,0 +1,28 @@
+<div style="overflow-y : auto" class="%system%_full"%scroll%>
+	<table cellpadding="0" cellspacing="0" style="width : 100%; text-align : center"><tbody>
+		<tr><td style="height : 10%">
+			<table cellpadding="2" cellspacing="0" style="cursor : pointer; margin : 10px 0px; width : 100%; background-color : #fff">
+				<tbody><tr style="text-align : center">
+					<td id="%system%_conf_%app%_tab_general" onclick="%top%.%system%.conf.change('%app%', 'general')" class="%system%_configure_tab"%lock%>
+						%string:general%
+					</td>
+					%tabs%
+				</tr></tbody>
+			</table>
+		</td></tr>
+
+		<tr><td style="height : 90%; vertical-align : top">
+			<form id="%system%_conf_%app%_field_general" onsubmit="return %top%.%system%.conf.apply('%app%', this)">
+				<p>
+					%string:version% :
+					<select name="version">%versions%</select>
+					(<a onclick="%top%.%system%.tool.history('%app%', document.getElementById('%system%_conf_%app%_field_general').version.value)">%string:history%</a>)
+				</p>
+
+				<p><input type="submit" value="%string:apply%" style="margin : 0px 10px; width : 120px; padding : 2px" /></p>
+			</form>
+
+			%regions%
+		</td></tr>
+	</tbody></table>
+</div>

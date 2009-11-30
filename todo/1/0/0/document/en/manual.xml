@@ -1,0 +1,18 @@
+<root>
+	<string name="_1_intro" value="Introduction" />
+	<string name="1/intro" value="This application can add todo items and list them." />
+
+	<string name="_2_register" value="Register" />
+	<string name="2/add" value="To add a todo, click on the 'New' button on the main window. On the newly displayed window, enter the title of the todo and click on the 'Add' button. To specify a category, pick a category from the selection. On how to add a new category will be explained later." />
+
+	<string name="_3_edit" value="Edit" />
+	<string name="3/list" value="Registered todo will be listed on the main display and by moving the mouse over each entries, their information will be displayed. And by clicking on the todo row, edit window will appear to edit its information." />
+	<string name="3/date" value="A due date may be set on an entry and if set, the remaining days will be displayed in the list." />
+	<string name="3/status" value="A status may be specified on a todo. If it is set to other than 'Current', they will no longer be displayed on the main window's listing. But when the 'Display' selection on the main window is selected to 'All' instead of 'Current only', they will be displayed again." />
+	<string name="3/save" value="Pressing the 'Set' button will save the content. And if the 'Delete' button is pressed, the entry will be deleted. Clicking the 'Close' button will close the window without saving the changes." />
+
+	<string name="_4_category" value="Category" />
+	<string name="4/add" value="To add a category, click on the 'Setting' tab of this window and go to 'Category' section. Enter the name of the category to create and click on the 'Set' button to add." />
+	<string name="4/edit" value="To edit a category, pick a category from the selection in the category configuration screen and after changing the name, click on the 'Set' button to save the modification. Pressing the 'Delete' button will delete that category." />
+	<string name="4/use" value="The registered categories can be specified from the new todo creation screen or from the todo edit window." />
+</root>

@@ -1,0 +1,12 @@
+<root>
+	<string name="desc" value="次世代アプリケーション基盤" />
+	<string name="choice" value="言語選択" />
+	<string name="more" value="%brand%の情報を表示する" />
+	<string name="hide" value="%brand%の情報を閉じる" />
+	<string name="website" value="ウェブサイト" />
+	<string name="info" value="情報サイト" />
+	<string name="built" value="制作" />
+	<string name="developed" value="開発者" />
+	<string name="license" value="ライセンス" />
+	<string name="welcome" value="ようこそ" />
+</root>

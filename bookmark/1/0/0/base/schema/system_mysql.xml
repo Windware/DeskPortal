@@ -1,0 +1,27 @@
+<root>
+	<!-- Addresses -->
+	<table name="address">
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
+		<column name="address" param="TEXT NOT NULL" />
+		<column name="title" param="TEXT" />
+		<column name="type" param="VARCHAR(128)" />
+		<column name="status" param="INT" />
+		<column name="checked" param="DATETIME" />
+		<column name="updated" param="DATETIME" />
+
+		<index name="address(50)" />
+		<index name="checked" />
+
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Reference count -->
+	<table name="reference">
+		<column name="user" param="INT NOT NULL" />
+		<column name="address" param="INT NOT NULL" />
+		<column name="referred" param="INT DEFAULT 0" />
+		<column name="UNIQUE" param="(user, address)" />
+
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+</root>

@@ -1,0 +1,20 @@
+<div class="%system%_full" style="overflow-y : auto"%scroll%>
+	<table cellpadding="5" cellspacing="0" style="width : 100%"><tbody class="%system%_full">
+		<tr style="height : 20px">
+			<td style="width : 50%"><a id="%id%_create" onclick="%top%.%id%.gui.create()"%tip:new%>%string:new%</a></td>
+
+			<td style="width : 50%; text-align : right">%string:display% :
+				<select id="%id%_filtering" onchange="%top%.%id%.gui.filter(this.value)">
+					<option value="0">%string:only%</option>
+					<option value="1">%string:all%</option>
+				</select>
+			</td>
+		</tr>
+
+		<tr><td colspan="2">
+			<table border="1" style="border-collapse : collapse; border-color : #000" cellpadding="5" cellspacing="0" class="%system%_full">
+				<tbody class="%system%_full" id="%id%_main"></tbody>
+			</table>
+		</td></tr>
+	</tbody></table>
+</div>

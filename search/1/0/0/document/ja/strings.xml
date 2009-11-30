@@ -1,0 +1,14 @@
+<root>
+	<!-- インターフェース -->
+	<string name="search" value="検索" />
+	<string name="target" value="対象" />
+	<string name="version" value="バージョン" />
+
+	<string name="page" value="ページ" />
+	<string name="previous" value="前" />
+	<string name="next" value="次" />
+
+	<string name="alert/length" value="検索語は2文字以上を入力してください" />
+	<string name="alert/none" value="何も見つかりませんでした" />
+	<string name="alert/select" value="検索対象のアプリケーションが選択されていません" />
+</root>

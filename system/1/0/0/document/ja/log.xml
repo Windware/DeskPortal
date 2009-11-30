@@ -1,0 +1,21 @@
+<root>
+	<!-- USER -->
+	<!-- app.js -->
+	<string name="user/app/load" value="アプリケーション'%%'を起動しています。" />
+	<string name="user/app/unload" value="アプリケーション'%%'を終了しました。" />
+	<string name="user/app/unload/fail" value="アプリケーション'%%'の終了に失敗しました。" />
+
+	<!-- image.js -->
+	<string name="user/wallpaper" value="新しい壁紙を設定しました。" />
+
+	<!-- network.js -->
+	<string name="user/network/error" value="ネットワークエラーが発生しました。" />
+	<string name="user/network/error/solution" value="時間をおいて再度試行してください。" />
+
+	<!-- tool.js -->
+	<string name="user/tool/lock" value="アプリケーション%%'のウインドウを固定しました。" />
+	<string name="user/tool/unlock" value="アプリケーション%%'のウインドウの固定を解除しました。" />
+
+	<!-- window.js -->
+	<string name="user/window/create" value="アプリケーション'%%'の起動に失敗しました。" />
+</root>

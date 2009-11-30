@@ -1,0 +1,11 @@
+<!-- This file must be copied to "system/static/conf/app/" to take effect -->
+<root>
+	<!-- RSS cache limit
+		Minutes the RSS feed caches are considered valid for all feeds
+		Making this too short can get the system to be banned for accessing the feeds too often from remote servers
+		Recommended value is 30 minutes
+		Note that RSS won't be fetched exactly the every minute specified here
+		but will have a few random minutes margin to randomize each feed fetch process not to try to fetch many RSS on the same minute
+	-->
+	<conf name="limit" value="30" />
+</root>

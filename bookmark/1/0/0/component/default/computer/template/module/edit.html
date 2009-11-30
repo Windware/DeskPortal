@@ -1,0 +1,49 @@
+<table class="%system%_full" style="text-align : center"><tbody>
+	<tr>
+		<td colspan="2"><h2>%string:info%</h2></td>
+	</tr>
+
+	<tr style="height : 100%">
+		<td style="width : 40%">
+			<div style="border : 1px #333 solid; background-color : #aba; height : 300px; overflow-y : auto"%scroll%>
+				<p><strong>%string:category%</strong></p>
+				<form id="%id%_edit_categories_%value:id%" class="%id%_edits">%value:cat%</form>
+			</div>
+		</td>
+
+		<td style="width : 60%; vertical-align : top">
+			<form onsubmit="return %top%.%id%.item.set(%value:id%, this)">
+				<p>
+					<strong>%string:name%</strong><br />
+					<input name="name" type="text" value="%value:name%" />
+				</p>
+
+				<p>
+					<strong>%string:address%</strong><br />
+					<input name="address" type="text" value="%value:address%" />
+				</p>
+
+				<p><strong>%string:added%</strong> : %value:added%</p>
+				<p><strong>%string:viewed%</strong> : %value:viewed%</p>
+
+				<p>
+					<input type="submit" value="%string:apply%" />
+
+					<input onclick="%top%.%id%.item.remove(%value:id%)" type="button" value="%string:delete%" />
+					<input onclick="%top%.%system%.window.fade('%id%_edit_%value:id%', true, null, true)" type="button" value="%string:close%" />
+				</p>
+			</form>
+
+			<form style="background-color : #bcb; padding : 5px; border : 1px #333 solid" onsubmit="return %top%.%id%.cache.add(%value:id%)">
+				<h3 style="margin : 0px; border-bottom : 1px #333 dotted">%string:cache%</h3>
+				<p><strong>%string:updated%</strong> : <span id="%id%_cache_%value:id%_updated">%value:cache%</span></p>
+
+				<div>
+					<input type="submit" value="%string:update%" />
+					<input type="button" value="%string:view%" onclick="%top%.%id%.gui.cache(%value:id%)" />
+				</div>
+			</form>
+
+		</td>
+	</tr>
+</tbody></table>

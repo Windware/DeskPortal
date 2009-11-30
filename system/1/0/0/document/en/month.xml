@@ -1,0 +1,14 @@
+<root>
+	<month number="1" full="January" less="Jan" />
+	<month number="2" full="February" less="Feb" />
+	<month number="3" full="March" less="Mar" />
+	<month number="4" full="April" less="Apr" />
+	<month number="5" full="May" less="May" />
+	<month number="6" full="June" less="Jun" />
+	<month number="7" full="July" less="Jul" />
+	<month number="8" full="August" less="Aug" />
+	<month number="9" full="September" less="Sep" />
+	<month number="10" full="October" less="Oct" />
+	<month number="11" full="November" less="Nov" />
+	<month number="12" full="December" less="Dec" />
+</root>

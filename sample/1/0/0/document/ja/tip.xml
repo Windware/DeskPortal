@@ -1,0 +1,4 @@
+<root>
+	<string name="name" value="テンプレート上にて'%tip:name%'はこの文字列にヘルプテキストとして変換されます" />
+	<string name="clear" value="ここを押すとアイコンが消えます" />
+</root>

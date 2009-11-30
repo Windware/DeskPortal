@@ -1,0 +1,22 @@
+<root>
+	<!-- New memo screen -->
+	<string name="new" value="New" />
+	<string name="create" value="New memo" />
+	<string name="add" value="Add memo" />
+	<string name="close" value="Close" />
+
+	<!-- Main interface -->
+	<string name="name" value="Name" />
+	<string name="group" value="Group" />
+	<string name="other" value="Other" />
+	<string name="loading" value="Loading..." />
+
+	<!-- Edit screen -->
+	<string name="edit" value="Edit" />
+	<string name="info" value="Information" />
+	<string name="last" value="Last edited" />
+	<string name="apply" value="Apply" />
+	<string name="delete" value="Delete" />
+	<string name="close" value="Close" />
+	<string name="confirm" value="Delete '%%' memo?" />
+</root>

@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="顔写真を載せられるようにする" priority="3">
+				顔写真を載せられるようにする
+			</change>
+		</user>
+	</plan>
+</root>

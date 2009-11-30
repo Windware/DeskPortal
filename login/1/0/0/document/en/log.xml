@@ -1,0 +1,10 @@
+<root>
+	<!-- DEVELOPER -->
+	<!-- login.js -->
+	<string name="dev/login" value="User failed to login." />
+	<string name="dev/cookie" value="Could not receive proper cookies on success status." />
+	<string name="dev/cookie/solution" value="Check server side authentication process." />
+
+	<string name="dev/system" value="System error for login authentication." />
+	<string name="dev/system/solution" value="Check server side authentication." />
+</root>

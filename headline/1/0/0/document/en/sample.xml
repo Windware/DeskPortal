@@ -1,0 +1,9 @@
+<root>
+	<feed address="http://rss.cnn.com/rss/cnn_topstories.rss" />
+	<feed address="http://rss.slashdot.org/Slashdot/slashdot" />
+	<feed address="http://news.cnet.com/2547-1_3-0-20.xml?tag=txt" />
+	<feed address="http://rss.news.yahoo.com/rss/sports" />
+	<feed address="http://news.google.com/news?topic=w&amp;hl=en&amp;output=atom" />
+	<feed address="http://news.google.com/news?topic=b&amp;hl=en&amp;output=atom" />
+	<feed address="http://news.google.com/news?topic=s&amp;hl=en&amp;output=atom" />
+</root>

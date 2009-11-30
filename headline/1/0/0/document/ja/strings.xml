@@ -1,0 +1,43 @@
+<root>
+	<!-- インターフェース -->
+	<string name="list" value="リスト" />
+	<string name="entries" value="一覧" />
+	<string name="category" value="カテゴリー" />
+	<string name="article" value="記事" />
+	<string name="view" value="閲覧" />
+	<string name="unavailable" value="利用不可" />
+
+	<!-- カテゴリー -->
+	<string name="all" value="全て" />
+	<string name="unset" value="未指定" />
+
+	<!-- フィルター -->
+	<string name="filter" value="フィルター" />
+	<string name="state" value="状態" />
+	<string name="marked" value="マーク済み" />
+	<string name="unread" value="未読" />
+	<string name="search" value="検索" />
+	<string name="mark" value="マーク" />
+	<string name="apply" value="適用" />
+	<string name="filter_determine" value="ニュースが選択されていません" />
+	<string name="filter_determine_fix" value="ニュースを先に選択してください" />
+
+	<!-- 一覧 -->
+	<string name="year" value="年" />
+	<string name="month" value="月" />
+	<string name="week" value="週" />
+	<string name="day" value="日" />
+
+	<!-- エントリー -->
+	<string name="display" value="表示" />
+	<string name="period" value="期間" />
+	<string name="unit" value="単位" />
+	<string name="daily" value="1日分" />
+	<string name="weekly" value="1週間分" />
+	<string name="monthly" value="1ヶ月分" />
+	<string name="none" value="要約無し" />
+	<string name="new" value="新着" />
+
+	<string name="previous" value="前" />
+	<string name="next" value="次" />
+</root>

@@ -1,0 +1,7 @@
+<root>
+	<string name="before" value="先月のお知らせ" />
+	<string name="next" value="来月のお知らせ" />
+
+	<string name="failed" value="この月のお知らせの表示に失敗しました" />
+	<string name="none" value="この月のお知らせはありません" />
+</root>

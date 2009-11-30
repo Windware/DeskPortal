@@ -1,0 +1,41 @@
+<root>
+	<!-- 新規、検索とソート -->
+	<string name="new" value="新規アドレス" />
+	<string name="add" value="追加" />
+
+	<string name="search" value="検索" />
+	<string name="order" value="順序" />
+	<string name="name" value="名前" />
+	<string name="address" value="アドレス" />
+	<string name="type" value="種類" />
+	<string name="added" value="追加日" />
+	<string name="viewed" value="閲覧回数" />
+	<string name="updated" value="更新日時" />
+	<string name="remove" value="カテゴリー'%%'を削除しますか？" />
+
+	<!-- セクションヘッダー -->
+	<string name="category" value="カテゴリー" />
+	<string name="list" value="一覧" />
+
+	<!-- カテゴリー一覧 -->
+	<string name="all" value="全て" />
+	<string name="clear" value="解除" />
+
+	<!-- ブックマーク -->
+	<string name="data" value="データ" />
+	<string name="edit" value="編集" />
+	<string name="info" value="ブックマーク情報" />
+	<string name="apply" value="適用" />
+	<string name="status" value="ステータス" />
+	<string name="delete" value="削除" />
+	<string name="confirm" value="削除しますか？" />
+
+	<string name="cache" value="テキストキャッシュ" />
+	<string name="cache/confirm" value="キャッシュを更新しますか？" />
+	<string name="update" value="更新" />
+	<string name="view" value="表示" />
+	<string name="never" value="未取得" />
+	<string name="error" value="エラー" />
+	<string name="error/big" value="サイズが大きすぎます" />
+	<string name="close" value="閉じる" />
+</root>

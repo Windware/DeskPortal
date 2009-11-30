@@ -1,0 +1,34 @@
+<root>
+	<!-- Interface -->
+	<string name="info" value="Information" />
+	<string name="new" value="New entry" />
+	<string name="list" value="List" />
+	<string name="search" value="Search" />
+	<string name="added" value="Added" />
+	<string name="domain" value="Mail domain" />
+
+	<string name="uncategorized" value="Uncategorized" />
+	<string name="select" value="Select here" />
+	<string name="display" value="Display columns" />
+	<string name="remove" value="Remove this entry?" />
+
+	<!-- Info window -->
+	<string name="name" value="Name" />
+	<string name="sex" value="Sex" />
+	<string name="female" value="Female" />
+	<string name="male" value="Male" />
+	<string name="age" value="Age" />
+	<string name="birthday" value="Birthday" />
+	<string name="mail" value="Mail" />
+	<string name="web" value="Web" />
+	<string name="mobile" value="Mobile" />
+	<string name="phone" value="Phone" />
+	<string name="address" value="Address" />
+	<string name="note" value="Note" />
+	<string name="group" value="Group" />
+	<string name="created" value="Added" />
+
+	<string name="save" value="Save" />
+	<string name="delete" value="Delete" />
+	<string name="close" value="Close" />
+</root>

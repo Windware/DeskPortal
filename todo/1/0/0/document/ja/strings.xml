@@ -1,0 +1,33 @@
+<root>
+	<!-- 新規作成 -->
+	<string name="new" value="新規" />
+	<string name="create" value="新規作成" />
+	<string name="add" value="作成" />
+	<string name="close" value="閉じる" />
+
+	<!-- フィルター -->
+	<string name="current" value="進行中" />
+	<string name="finished" value="完了" />
+	<string name="discarded" value="中止" />
+
+	<string name="title" value="題名" />
+	<string name="category" value="カテゴリー" />
+	<string name="registered" value="登録日" />
+	<string name="due" value="期限" />
+	<string name="status" value="ステータス" />
+	<string name="content" value="内容" />
+
+	<!-- メイン -->
+	<string name="none" value="無し" />
+	<string name="display" value="表示" />
+	<string name="only" value="進行中のみ" />
+	<string name="all" value="全て" />
+	<string name="left" value="%%日残り" />
+
+	<!-- 編集画面 -->
+	<string name="edit" value="編集" />
+	<string name="set" value="決定" />
+	<string name="delete" value="削除" />
+	<string name="close" value="閉じる" />
+	<string name="remove" value="この予定を削除しますか？" />
+</root>

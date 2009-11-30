@@ -1,0 +1,99 @@
+
+	@charset "utf-8";
+
+	/* General tags */
+	html { width : 100%; height : 100%; padding : 0px; margin : 0px; } /* Make sure the content uses the entire window size and let % height work on nodes */
+
+	body { width : 100%; height : 100%; font-size : 100%; margin : 0px; padding : 0px; } /* Add general parameters */
+
+	table { font-size : 100%; margin : 0px; padding : 0px; } /* General parameters for tables */
+
+	input, select, textarea, pre { font-size : 100%; } /* General parameters */
+
+	a, label { cursor : pointer; } /* Let lables and links be visually recognized */
+
+	a:link, a:visited { color : #333; text-decoration : none; } /* Strip underlines and give a generic color */
+
+	a:active, a:hover { color : #777; } /* Hovered style */
+
+	p, h1, h2 { margin-top : 10px; margin-bottom : 10px; } /* Make them look same across browsers */
+
+	h2 { font-size : 120%; }
+
+
+	/* ID specific styles */
+	div#%id%_context { width : 100px; height : 200px; border : 1px #333 solid; position : absolute; } /* Context menu */
+
+	#%id%_tip { position : absolute; cursor : help; padding : 5px; background-color : #fea; border : 1px #333 solid; } /* The tool tip window */
+
+	div.%id%_mover_box { position : absolute; cursor : move; } /* A box window movement indicator */
+
+	div.%id%_mover_clone { border : 1px #333 solid; position : absolute; cursor : move; } /* A cloned window when moving and resizing a window */
+
+
+	/* Application window */
+	table.%id%_window { position : absolute; cursor : move; } /* The window of an application */
+
+	table.%id%_bar { border : 1px #333 solid; width : 100%; } /* Toolbar cell */
+
+	table.%id%_bar th { font-size : 130%; text-align : left; padding : 5px; } /* Title text of the toolbar */
+
+	table.%id%_bar img, img.%id%_icon { border : none; width : 24px; height : 24px; } /* Toolbar buttons */
+
+
+	/* Info & tools pane */
+	div.%id%_info { background-color : #ddd; padding : 5px; border : 1px #333 dashed; }
+
+	td.%id%_configure_tab { border : 1px #333 dotted; }
+
+	td.%id%_configure_tab_active { border : 1px #333 solid; font-weight : bold; }
+
+	a.%id%_tab_active { color : #333; background-color : #f8f8f8; }
+
+	td.%id%_info_content { width : 80%; height : 100%; color : #333; border : 1px #333 solid; background-color : #f8f8f8; vertical-align : top; }
+
+	td.%id%_info_content a:hover, td.%id%_info_content a:active { color : #777 !important; }
+
+	td.%id%_info_tabs { text-align : center; width : 20%; border-top : 1px #333 solid; vertical-align : top; height : 100%; }
+
+	td.%id%_info_tabs a { text-decoration : none; display : block; padding : 5px; border : 1px #333 solid; border-top : none; border-right : none; }
+
+	.%id%_info_zone { vertical-align : top; text-align : center; }
+
+	.%id%_info_zone h2 { border : 1px #333 dotted; background-color : #eee; padding : 5px; }
+
+	.%id%_info_zone h3 { border-bottom : 1px #333 solid; text-align : left; }
+
+	td.%id%_info_list { border-right : 1px #333 solid; width : 30%; height : 100%; vertical-align : top; background-color : #eee; }
+
+	td.%id%_info_list ol { padding-left : 30px; }
+
+	td.%id%_info_list ol a { margin-top : 10px; display : block; }
+
+	a.%id%_viewed { font-weight : bold; }
+
+	ul.%id%_changes { text-align : left; }
+
+	div.%id%_info_changes { margin : 10px; }
+
+	h3.%id%_language { text-align : center; margin : 10px; font-size : 100%; }
+
+
+	/* Common styling */
+	input.%id%_flat { background-color : #fff; border : 1px #333 solid; } /* Flat looking buttons */
+
+	.%id%_field { background-color : #eee; padding : 5px; border : 1px #333 solid; } /*Configuration window content */
+
+	h2.%id%_report { text-align : center; border : 1px #333 solid; background-color : #fff; font-size : 120%; } /* Report message window */
+
+	.%id%_alert { font-size : 120%; border : 1px #333 dotted; background-color : #fed; padding : 10px; } /* Alert window message */
+
+	.%id%_box { border : 1px #333 solid; padding : 10px; } /* Border surrounded area */
+
+	.%id%_full { width : 100%; height : 100%; } /* To make a node at 100% size */
+
+	.%id%_invisible { visibility : hidden; } /* Class name for making an element invisible */
+
+	.%id%_hidden { display : none; } /* Class name for hiding an element's presence */
+
+	.%id%_pad { margin-left : 20px; margin-right : 20px; } /* To add a padding on both sides of a content */

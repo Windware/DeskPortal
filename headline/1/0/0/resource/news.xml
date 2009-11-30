@@ -1,0 +1,13 @@
+<news>
+	<id>%id%</id>
+	<feed>%feed%</feed>
+	<subject><![CDATA[%subject%]]></subject>
+	<link><![CDATA[%link%]]></link>
+	<date>%date%</date>
+	<section><![CDATA[%section%]]></section>
+	<description><![CDATA[%description%]]></description>
+	<updated>%updated%</updated>
+	<custom1><![CDATA[%custom1%]]></custom1>
+	<custom2><![CDATA[%custom2%]]></custom2>
+	<custom3><![CDATA[%custom3%]]></custom3>
+</news>

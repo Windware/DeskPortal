@@ -1,0 +1,21 @@
+<table class="%system%_full" cellpadding="3" cellspacing="3"><tbody class="%system%_full">
+	<tr>
+		<td style="vertical-align : top; width : 30%; height : 100%">
+			<form onsubmit="return %top%.%id%.gui.search(this)" style="text-align : center">
+				<h2>%string:search%</h2>
+
+				<div>
+					<input type="text" name="search" style="width : 95%" />
+					<input type="submit" class="%system%_hidden" />
+				</div>
+
+				<h2>%string:target%</h2>
+				<div id="%id%_target" style="text-align : left"%tip:target%></div>
+			</form>
+		</td>
+
+		<td style="border : 1px #333 solid; background-color : #eee; vertical-align : top; width : 70%; height : 100%">
+			<div id="%id%_result" class="%system%_full" style="overflow-y : auto"%scroll%></div>
+		</td>
+	</tr>
+</tbody></table>

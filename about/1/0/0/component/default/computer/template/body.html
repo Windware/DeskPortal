@@ -1,0 +1,18 @@
+<h1>%brand%</h1>
+
+<h2>%string:welcome%</h2>
+<p>%string:desc%</p>
+
+<p id="%id%_language">%string:choice% :
+	<select onchange="%top%.%id%.gui.language(this.value)" id="%id%_option"%tip:change%></select>
+</p>
+
+<p><a onclick="%top%.%id%.gui.show(this)"%tip:more%>%string:more%</a></p>
+
+<div id="%id%_more" style="width : 100%" class="%system%_hidden">
+	<div style="padding : 10px; border : 1px #333 solid; background-color : #fea">
+		<p>%string:website% : <a href="%brand_site%" target="_blank"%tip:official%>%brand_site%</a></p>
+		<p>%string:info% : <a href="%brand_info%" target="_blank"%tip:info%>%brand_info%</a></p>
+		<p>%string:developed% : <a href="%developer_site%" target="_blank"%tip:company%>%developer%</a></p>
+	</div>
+</div>

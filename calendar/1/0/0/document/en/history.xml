@@ -1,0 +1,27 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial version">Initial release.</new>
+
+			<bug summary="Different box size on a registered day">
+				When a schedule is registered, each box does not sustain same size against other rows.
+			</bug>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="Multiple entries of schedules" priority="3">
+				Allow multiple different entries to be registered on a single day.
+			</change>
+
+			<change summary="Allow custom colors for category type" priority="2">
+				Allow user configurable colors instead of pre defined colors for categories.
+			</change>
+
+			<new summary="Allow diary feature" priority="4">
+				Allow writing diaries different from schedules
+			</new>
+		</user>
+	</plan>
+</root>

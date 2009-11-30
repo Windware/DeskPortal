@@ -1,0 +1,11 @@
+<form style="overflow-y : auto" class="%system%_full"%scroll%>
+	<p>
+		%string:version% :
+
+		<select id="%system%_info_version_%value:id%" onchange="%top%.%system%.tool.history('%value:id%', this.value)">
+			%value:option%
+		</select>
+	</p>
+
+	<div id="%system%_info_history_%value:id%"></div>
+</form>

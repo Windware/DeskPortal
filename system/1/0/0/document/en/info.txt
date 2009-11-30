@@ -1,0 +1,1 @@
+System provides all of the core functionality from creating windows, fading effects to language managements and others.

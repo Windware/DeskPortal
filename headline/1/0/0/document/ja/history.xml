@@ -1,0 +1,43 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+
+			<bug summary="500文字以上のアドレスを登録できない">
+				技術的な制限のため、500文字以上のフィードや記事のリンクが保存できない
+			</bug>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="faviconを表示する" priority="3">
+				favicon (ウェブページに表示される小さなアイコン)をヘッドラインに表示する
+			</change>
+
+			<change summary="記事のカテゴリーを表示する" priority="3">
+				元の記事に指定されているカテゴリーを表示する
+			</change>
+
+			<change summary="ヘッドラインの名前を変更できるようにする" priority="3">
+				ヘッドラインの名前を変更できるようにする
+			</change>
+
+			<new summary="ヘッドラインをカテゴリーで別けられるようにする" priority="4">
+				ヘッドラインをカテゴリーで別けられるようにする
+			</new>
+
+			<change summary="ニュースを非表示にできるようにする" priority="2">
+				個別のニュースを非表示設定にできるようにする
+			</change>
+
+			<change summary="新着お知らせ" priority="2">
+				新着記事があったら通知するようにする
+			</change>
+
+			<change summary="記事をハイライトできるようにする" priority="3">
+				任意の文字を含む記事をハイライトできるようにする
+			</change>
+		</user>
+	</plan>
+</root>

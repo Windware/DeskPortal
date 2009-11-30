@@ -1,0 +1,82 @@
+<!-- This file explains about the application -->
+<root>
+	<!-- Name the developers here. 'site' is optional. -->
+	<developer name="Windware Solution" contact="no_reply@windware-solution.com" site="http://windware-solution.com/" />
+
+	<!-- Information on the application
+		'revision'
+		In case a critical problem is found on a version, it will be overwritten with this number increased.
+		Typically, when a problem is found, the last digit of the version number is increased when a fix is issued
+		instead of overwriting the already published version to avoid breaking other codes those rely on it.
+		Increasing this number is the last resort when a specific version is broken enough that it cannot be left as is.
+
+		'category'
+		Specify which category this application belongs to.
+		Category lists are found in 'system/*/*/*/document/categories.xml'
+	-->
+	<info revision="1" category="system" />
+
+	<!-- Applicable country
+		In case the application only makes sense in specific countries, (ex : postal code lookup of a specific country)
+		note about the name of countries in here in 2 letter abbreviated form. (Do not confuse with language abbreviations.)
+		Make multiple entries if appropriate. If it has no country limitations, omit this tag.
+		If the application only supports specific languages, do not limit the application by country names but use 'language' tags explained next.
+	-->
+	<country name="jp" />
+
+	<!-- List of supported languages
+		Languages the application is translated to. Embed 'translator' tags inside to denote translator names.
+		Optionally give 'site' attributes for 'translator' tags.
+	-->
+	<language name="en">
+		<translator name="Windware Solution" contact="no_reply@windware-solution.com" />
+	</language>
+
+	<language name="ja">
+		<translator name="Windware Solution" contact="no_reply@windware-solution.com" />
+	</language>
+
+	<!-- Name the contributors here. 'site' is optional. -->
+	<contributor name="Windware Solution" contact="no_reply@windware-solution.com" site="http://windware-solution.com/" />
+
+	<!--
+		Place any requirements to run those are not mentioned in the system's 'meta.xml'.
+		1 requirement per <item> node described in short English sentence.
+		Skip this section altogether if nothing to note of.
+	-->
+	<requirement>
+		<item></item>
+	</requirement>
+
+	<!--
+		List the licenses for this application.
+		The more specific statements will override licenses declared broader.
+		Make sure if any other different licenses are used, they do not conflict with other licenses used, including other applications.
+		In <folder> node, 'name' with '.' means the top directory of this application version. (ex : sample/1/0/0/)
+		And it goes downwards for more specific statements.
+		The folders must be stated hierarchically one by one to reach the files and folders with different licenses.
+		<folder> and <file> may have any number of <author> nodes inside to specify the authors.
+		If a 'license' attribute is applied to a <folder>, it will mean every items inside that folder are licensed as such
+		but a <file> node inside will override the license for that specific file.
+		If multiple licenses are applied on a folder or a file, put multiple 'license' attributes.
+		'site' and 'note' (to note about anything) attributes are optional. Others are required unless such information is missing.
+		A wildcard character can be used to match any letters. (ex : <file name="*.jpg">)
+	-->
+	<license>
+		<folder name="." license="Windware Reference License">
+			<author name="Windware Solution" contact="no_reply@windware-solution.com" site="http://windware-solution.com" />
+
+			<folder name="component">
+				<folder name="default">
+					<folder name="computer">
+						<folder name="graphic">
+							<file name="icon.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							</file>
+						</folder>
+					</folder>
+				</folder>
+			</folder>
+		</folder>
+	</license>
+</root>

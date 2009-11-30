@@ -1,0 +1,27 @@
+
+	%self% h2 { border : 1px #333 solid; background-color : #cdc; text-align : center; font-size : 110%; }
+
+	%self% h3 { font-size : 100%; line-height : 100%; text-align : center; color : #456; }
+
+	form#%id%_selection, div#%id%_entries { word-break : break-all; text-align : left; height : 300px; overflow-y : auto; border : 1px #333 solid; }
+
+	/* Category listings */
+	input.%id%_check { border : 1px #333 solid; background-color : #898; }
+
+	/* Bookmark entries */
+	div#%id%_entries div { margin : 5px; }
+
+	div#%id%_entries span { background-color : #333; width : 5px; height : 16px; display : inline-block; }
+
+	div#%id%_entries img { border : none; width : 16px; height : 16px; }
+
+	/* Filters */
+	input.%id%_word { width : 200px; background-color : #aba; border : 1px #333 solid; }
+
+	/* Configuration */
+	div#%id%_conf_category { padding : 5px; height : 300px; text-align : left; border : 1px #333 solid; background-color : #aba; overflow-y : auto; }
+
+	form.%id%_field { border : 1px #333 dotted; margin : 10px 0px; }
+
+	/* Editing */
+	form.%id%_edits { text-align : left; }

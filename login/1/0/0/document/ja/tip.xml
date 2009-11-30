@@ -1,0 +1,5 @@
+<root>
+	<string name="session" value="ここをクリックすると最後のアクセスから1日間の間ユーザーのログインを保ちます" />
+	<string name="register" value="ユーザー登録についての情報ページに行きます" />
+	<string name="recover" value="パスワードを忘れた場合はここから再取得できます" />
+</root>

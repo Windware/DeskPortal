@@ -1,0 +1,73 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+
+			<bug summary="Selection and text input form stays on top in Internet Explorer 6">
+				With Internet Explorer 6, selection and text input form will in a window remain above other windows even if the window is below others.
+				This is the browser's fault and not likely to be fixed.
+				To overcome this problem, upgrading Internet Explorer or using another browser is necessary.
+			</bug>
+
+			<bug summary="Some edge of the window cannot be used to drag windows in Internet Explorer 6.">
+				With Internet Explorer 6, by clicking on some edge of a window to drag the window does not work.
+				This is likely to be a bug in the browser's rendering and a workaround is not yet thought out.
+				To overcome this problem, upgrading Internet Explorer or using another browser is necessary.
+			</bug>
+
+			<bug summary="Resizing a window is sometimes inaccurate on Firefox/Opera/Konqueror">
+				When resizing a window, the end result is inaccurate under certain conditions for those browsers.
+				This is hard to fix difference on the rendering implementations on the browsers but a workaround is being planned.
+			</bug>
+
+			<bug summary="Slow performance under certain wallpapers with Firefox in some cases">
+				When a wallpaper is set with resizing but without streching and without centering, the performance can get degraded under Firefox under some cases.
+				This is a problem of the browser and not likely to be fixed until the browser is fixed.
+				Try other combinations of background options to work around the problem.
+			</bug>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="Allow changing the window colors" priority="3">
+				Allow changing the color of windows to custom colors.
+			</change>
+
+			<change summary="Add more language translations" priority="3">
+				Add more language translations to the system. Other applications also need to be translated.
+			</change>
+
+			<new summary="Contextual menu" priority="4">
+				Have contextual menu by right clicking the screen for easier navigation.
+			</new>
+
+			<new summary="Data export feature" priority="3">
+				Add data export feature on applications so that the data stored can be downloaded by the user.
+			</new>
+
+			<new summary="Test HTML5" priority="5">
+				Test the new HTML5 use possibility for browsers supporting it.
+			</new>
+
+			<new summary="Mobile device support" priority="3">
+				Make the system usable against mobile devices such as smart phones.
+			</new>
+
+			<fix summary="Offline stability" priority="3">
+				Stabilize the system when the connection is down.
+			</fix>
+		</user>
+
+		<dev>
+			<change summary="Add more server side languages" priority="5">
+				Add more supported languages to run on the server side.
+				Possible candidates so far are Ruby, Python and Perl.
+			</change>
+
+			<change summary="Use sprite for images" priority="2">
+				Combine several images together to have less network load.
+			</change>
+		</dev>
+	</plan>
+</root>

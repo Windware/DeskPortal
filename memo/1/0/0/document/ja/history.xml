@@ -1,0 +1,27 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="リカバリー機能追加" priority="3">
+				特定の時間の内容へメモの内容を復元できるようにする
+			</new>
+		</user>
+
+		<user>
+			<new summary="スティッキーモード" priority="3">
+				個別のメモをスティッキーとして、別枠で表示する
+			</new>
+		</user>
+
+		<user>
+			<new summary="WYSIWYGサポート" priority="4">
+				スタイル（太文字、斜体等）をサポートしたテキストをサポートする
+			</new>
+		</user>
+	</plan>
+</root>

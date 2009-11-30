@@ -1,0 +1,23 @@
+
+	div#%id%_current { font-weight : bold; font-size : 120%; }
+
+	/* Calendar days */
+	td.%id%_today { color : #fea; }
+
+	td.%id%_registered { border : 1px #333 solid; padding : 0px; }
+
+	.%id%_sunday { color : #a41; }
+
+	.%id%_saturday { color : #14a; }
+
+	td.%id%_active { color : #fff; }
+
+	/* Schedule edit */
+	table.%id%_editor th { text-align : right; vertical-align : top; }
+
+	table.%id%_editor td { vertical-align : top; }
+
+	.%id%_inputs input { width : 150px; }
+
+	/* Configuration */
+	span#%id%_pick_preview { display : inline-block; width : 15px; height : 15px; border : 1px #333 solid; }

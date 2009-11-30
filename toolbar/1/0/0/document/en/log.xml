@@ -1,0 +1,34 @@
+<root>
+	<!-- USER -->
+	<!-- gui.js -->
+	<string name="user/create" value="Created a new toolbar." />
+	<string name="user/remove" value="Removed a toolbar." />
+
+	<string name="user/run" value="Executed %%." />
+
+	<!-- DEVELOPER -->
+	<!-- gui.js -->
+	<string name="dev/select" value="Cannot execute anything when nothing is selected." />
+	<string name="dev/select/solution" value="Select a feature and a method to run." />
+
+	<string name="dev/feature" value="Non existing feature used or feature script is not loaded." />
+	<string name="dev/feature/solution" value="Use a feature that exists and make sure the scripts are loaded." />
+
+	<string name="dev/function" value="No function to execute for feature '%%' and method '%%'." />
+	<string name="dev/function/solution" value="Make sure the selection has a function to execute." />
+
+	<string name="dev/input" value="Value input field is missing." />
+	<string name="dev/input/solution" value="Make sure the input field exists to enter user inputs." />
+
+	<string name="dev/form" value="Mode selection form is missing." />
+	<string name="dev/form/solution" value="Make sure the mode select element exists." />
+
+	<string name="dev/mode" value="Mode target form is missing." />
+	<string name="dev/mode/solution" value="Make sure the target select element exists." />
+
+	<string name="dev/same" value="Source and target units are same." />
+	<string name="dev/same/solution" value="Pick a different value to make a conversion." />
+
+	<string name="dev/execute" value="Execution failed for feature '%%' and method '%%' : %%." />
+	<string name="dev/execute/solution" value="Check the script for the method." />
+</root>

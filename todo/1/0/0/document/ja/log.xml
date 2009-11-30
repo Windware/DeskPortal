@@ -1,0 +1,19 @@
+<root>
+	<!-- USER -->
+	<!-- item.js -->
+	<string name="user/time" value="無効な時刻が指定されました。" />
+	<string name="user/time/solution" value="有効な時刻を指定してください。" />
+
+	<string name="user/add" value="新規予定'%%'を登録しました。" />
+	<string name="user/add/fail" value="新規予定'%%'の登録に失敗しました。" />
+	<string name="user/add/duplicate" value="同じ名前の予定'%%'がすでに登録してあります。" />
+
+	<string name="user/get" value="予定の一覧を取得しました。" />
+	<string name="user/remove" value="'%%'の予定を削除しました。" />
+	<string name="user/update" value="'%%'の予定を更新しました。" />
+
+	<!-- category.js -->
+	<string name="user/category/create" value="カテゴリー'%%'を作成しました。" />
+	<string name="user/category/remove" value="カテゴリー'%%'を削除しました。" />
+	<string name="user/category/update" value="カテゴリー'%%'を更新しました。" />
+</root>

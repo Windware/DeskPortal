@@ -1,0 +1,8 @@
+<root>
+	<string name="change" value="使用言語を変えるには、ここを選択します" />
+	<string name="more" value="%brand%についての情報を表示するには、ここを押します" />
+	<string name="less" value="%brand%についての情報を隠すには、ここを押します" />
+	<string name="official" value="公式サイトに行く" />
+	<string name="info" value="情報サイトに行く" />
+	<string name="company" value="%developer%のウェブサイトに行く" />
+</root>

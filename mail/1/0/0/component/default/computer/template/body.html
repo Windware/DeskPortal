@@ -1,0 +1,54 @@
+<form><table style="width: 100%"><tbody><tr>
+	<td>
+		%string:account% : <select id="%id%_account" onchange="%top%.%id%.item.account(this.value)"%tip:account%></select>
+		%string:folder% : <select id="%id%_folder" onchange="%top%.%id%.item.folder(this.value)"%tip:folder%></select>
+	</td>
+	<td style="text-align: right">
+		<input type="button" onclick="%top%.%id%.item.addressbook()" value="%string:open%" class="%system%_flat" />
+	</td>
+</tr></tbody></table></form>
+
+<table id="%id%_switcher" cellspacing="0" cellpadding="3"><tbody>
+	<tr>
+		<th style="width: 50%" onclick="%top%.%id%.item.display('read')"%tip:read%%lock%>%string:read%</th>
+		<th style="width: 50%" onclick="%top%.%id%.item.display('compose')"%tip:compose%%lock%>%string:compose%</th>
+	</tr>
+</tbody></table>
+
+<div id="%id%_pane_read" class="%system%_hidden">
+	<table class="%id%_table" border="1" cellspacing="0" cellpadding="0"><tbody>
+		<tr%tip:sort%>
+			<th%lock%>%string:id%</th>
+			<th%lock%>%string:subject%</th>
+			<th%lock%>%string:from%</th>
+			<th%lock%>%string:date%</th>
+			<th%lock%>%string:attachment%</th>
+			<th%lock%>%string:mark%</th>
+		</tr>
+	</tbody></table>
+</div>
+
+<div id="%id%_pane_compose" class="%system%_hidden">
+	<form id="%id%_form" onsubmit="return %top%.%id%.item.preview(this)">
+		<table style="width: 100%"><tbody>
+			<tr>
+				<td style="text-align: right; width: 50px">%string:to%</td>
+				<td><input type="text" name="to" style="width: 100%" /></td>
+			</tr>
+			<tr>
+				<td style="vertical-align: top; text-align: right">%string:message%</td>
+				<td><textarea name="body" rows="10" style="width: 100%"></textarea></td>
+			</tr>
+		</table>
+		<p style="text-align: center"><input type="submit" class="%system%_flat" style="padding: 5px; width: 300px" value="%string:preview%" /></p>
+	</form>
+
+	<div id="%id%_preview" class="%system%_hidden">
+		<p>%string:to% : <span id="%id%_to"></span></p>
+		<p>%string:message% : <span id="%id%_body"></span></p>
+		<p><form>
+			<input value="%string:edit%" type="button" onclick="%top%.%id%.item.edit()" />
+			<input value="%string:send%" type="button" onclick="%top%.%id%.item.send()" />
+		</form></p>
+	</div>
+</div>

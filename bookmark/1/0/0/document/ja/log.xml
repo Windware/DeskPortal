@@ -1,0 +1,15 @@
+<root>
+	<!-- USER -->
+	<!-- item.js -->
+	<string name="user/add" value="新規ブックマークを追加しました。" />
+	<string name="user/load" value="選択されたカテゴリーのブックマークを読み込みました。" />
+
+	<string name="user/remove" value="'%%'のブックマークを削除しました。" />
+	<string name="user/update" value="'%%'のブックマークを更新しました。" />
+
+	<string name="user/category/create" value="カテゴリー'%%'を作成しました。" />
+	<string name="user/category/remove" value="カテゴリー'%%'を削除しました。" />
+	<string name="user/category/update" value="カテゴリー'%%'を更新しました。" />
+
+	<string name="user/cache/add" value="'%%'のキャッシュを取得しました。" />
+</root>

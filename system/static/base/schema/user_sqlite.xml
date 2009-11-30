@@ -1,0 +1,48 @@
+<root>
+	<!-- Application specific preferences -->
+	<table name="conf">
+		<column name="user" param="INT NOT NULL" />
+		<column name="app" param="VARCHAR(64) NOT NULL" />
+		<column name="key" param="VARCHAR(128) NOT NULL" />
+		<column name="value" param="VARCHAR(255)" />
+		<column name="UNIQUE" param="(user, app, key)" />
+	</table>
+
+	<!-- User logs -->
+	<table name="log">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT" />
+		<column name="section" param="VARCHAR(16)" />
+		<column name="session" param="CHAR(32)" />
+		<column name="ip" param="VARCHAR(15)" />
+		<column name="time" param="DATETIME" />
+		<column name="level" param="INT" />
+		<column name="access" param="VARCHAR(255)" />
+		<column name="reporter" param="VARCHAR(32)" />
+		<column name="app" param="VARCHAR(32)" />
+		<column name="version" param="VARCHAR(32)" />
+		<column name="source" param="VARCHAR(64)" />
+		<column name="folder" param="VARCHAR(255)" />
+		<column name="message" param="TEXT" />
+		<column name="solution" param="TEXT" />
+		<index name="user, time" />
+	</table>
+
+	<!-- The version of the application user uses -->
+	<table name="used">
+		<column name="user" param="INT NOT NULL" />
+		<column name="app" param="VARCHAR(32) NOT NULL" />
+		<column name="version" param="VARCHAR(32) NOT NULL" />
+		<column name="loaded" param="INT" />
+		<column name="UNIQUE" param="(user, app, version)" />
+	</table>
+
+	<!-- System configuration for each window -->
+	<table name="window">
+		<column name="user" param="INT NOT NULL" />
+		<column name="app" param="VARCHAR(128) NOT NULL" />
+		<column name="key" param="VARCHAR(128) NOT NULL" />
+		<column name="value" param="VARCHAR(255)" />
+		<column name="UNIQUE" param="(user, app, key)" />
+	</table>
+</root>

@@ -1,0 +1,8 @@
+<root>
+	<language name="English (American)" code="en" />
+	<language name="English (British)" code="en-gb" />
+	<language name="日本語" code="ja" />
+	<!-- <language name="Français" code="fr" /> -->
+	<!-- <language name="Deutsch" code="de" /> -->
+	<!-- <language name="中文" code="zh" /> -->
+</root>

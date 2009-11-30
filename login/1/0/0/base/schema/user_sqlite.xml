@@ -1,0 +1,11 @@
+<root>
+	<!-- Login records -->
+	<table name="record">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="time" param="INT NOT NULL" />
+		<column name="ip" param="VARCHAR(15) NOT NULL" />
+		<column name="success" param="INT NOT NULL" />
+		<index name="user, success" />
+	</table>
+</root>

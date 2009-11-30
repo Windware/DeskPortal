@@ -1,0 +1,34 @@
+<root>
+	<!-- New todo window -->
+	<string name="new" value="New" />
+	<string name="create" value="Create" />
+	<string name="add" value="Add" />
+	<string name="close" value="Close" />
+
+	<!-- Filters -->
+	<string name="current" value="Current" />
+	<string name="finished" value="Finished" />
+	<string name="discarded" value="Discarded" />
+
+	<string name="title" value="Title" />
+	<string name="category" value="Category" />
+	<string name="registered" value="Registered" />
+	<string name="due" value="Due" />
+	<string name="status" value="Status" />
+	<string name="content" value="Content" />
+
+	<!-- Main -->
+	<string name="none" value="None" />
+	<string name="display" value="Display" />
+	<string name="only" value="Current only" />
+	<string name="all" value="All" />
+	<string name="left" value="%% days left" />
+	<string name="all" value="All" />
+
+	<!-- Edit window -->
+	<string name="edit" value="Edit" />
+	<string name="set" value="Set" />
+	<string name="delete" value="Delete" />
+	<string name="close" value="Close" />
+	<string name="remove" value="Remove this todo?" />
+</root>

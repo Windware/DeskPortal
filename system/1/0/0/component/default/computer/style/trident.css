@@ -1,0 +1,3 @@
+
+	/* Make sure colors inside tables are inherited from above (Simulates 'inherit')*/
+	table { color : expression(this.parentNode.currentStyle.color || ''); }

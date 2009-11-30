@@ -1,0 +1,14 @@
+<root>
+	<!-- Mass -->
+	<string name="kl" value="kilolitre" />
+	<string name="dl" value="decilitre" />
+	<string name="l" value="litre" />
+	<string name="ml" value="mililitre" />
+
+	<!-- Length -->
+	<string name="km" value="kilometre" />
+	<string name="m" value="metre" />
+	<string name="cm" value="centimetre" />
+	<string name="mm" value="milimetre" />
+	<string name="nm" value="nanometre" />
+</root>

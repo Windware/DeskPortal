@@ -1,0 +1,34 @@
+
+	strong.%id%_new { color : #953; }
+
+	/* Description row */
+	th.%id%_section { padding : 5px; background-color : #333; color : #ccc; text-align : center; border : 1px #ccc solid; font-weight : bold; }
+
+	/* Feed list box */
+	td.%id%_item { vertical-align : top; height : 85%; }
+
+	td.%id%_item span { border-bottom : 1px #333 dotted; padding : 0px 3px; display : block; text-decoration : none; cursor : pointer; padding : 3px 5px; }
+
+	span.%id%_chosen { background-color : #abc; }
+
+	/*TODO - How to force no wrap and make scrollbar horizontally? "white-scape : nowrap" only removes the line break by extending the element till the line fits */
+	div#%id%_list, form#%id%_entries { color : #333; height : 300px; background-color : #ddd; border : 1px #333 solid; overflow-y : auto; }
+
+	form#%id%_entries a:active, form#%id%_entries a:hover { color : #963 !important; }
+
+	span.%id%_active { background-color : #dca; }
+
+	img.%id%_icon { width : 24px; height : 24px; border : none; } 	/* Feed mark icons */
+
+	/* Entries */
+	form#%id%_entries { font-weight : bold; }
+
+	span.%id%_read { font-style : italic; font-weight : normal; }
+
+	p.%id%_paging { text-align : center; }
+
+	/* Date line */
+	span.%id%_date { cursor : move !important; font-weight : bold; text-align : center; font-size : 120%; background-color : #567; color : #fff; }
+
+	/* Filter selection */
+	.%id%_filter { margin : 5px 0px; text-align : center; padding : 3px; background-color : #789; border : 1px #333 solid; }

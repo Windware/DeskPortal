@@ -1,0 +1,11 @@
+<root>
+	<string name="year" value="%%年" />
+	<string name="month" value="%%月" />
+	<string name="day" value="%%日" />
+	<string name="week" value="%%" />
+	<string name="hour" value="%%" />
+	<string name="minute" value="%%" />
+
+	<string name="am" value="午前" />
+	<string name="pm" value="午後" />
+</root>

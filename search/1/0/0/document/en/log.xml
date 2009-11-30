@@ -1,0 +1,13 @@
+<root>
+	<!-- USER -->
+	<!-- gui.js -->
+	<string name="user/search" value="Retrieved search result for '%%'." />
+
+	<!-- DEVELOPER -->
+	<!-- display.js -->
+	<string name="dev/version" value="Preferred app version number differs from the version trying to load." />
+	<string name="dev/version/solution" value="The search does not support the version preferred for application '%%'." />
+
+	<string name="dev/support" value="Search does not support the given app version for app '%%' major version '%%'." />
+	<string name="dev/support/solution" value="Try to load the interface that the search app supports." />
+</root>

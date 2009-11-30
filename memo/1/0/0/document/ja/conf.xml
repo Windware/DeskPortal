@@ -1,0 +1,11 @@
+<root>
+	<string name="_1_group" value="グループ" />
+
+	<string name="group" value="グループ" />
+	<string name="name" value="名称" />
+	<string name="new" value="新規" />
+	<string name="delete" value="削除" />
+	<string name="set" value="決定" />
+
+	<string name="confirm" value="このグループを削除しますか？" />
+</root>

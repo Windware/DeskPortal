@@ -1,0 +1,5 @@
+<root>
+	<!-- USER -->
+	<!-- gui.js -->
+	<string name="user/get" value="%%年%%月のお知らせを読み込みました。" />
+</root>

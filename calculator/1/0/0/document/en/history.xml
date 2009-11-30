@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="Add memory function" priority="4">
+				Add memory function to remember results
+			</new>
+		</user>
+	</plan>
+</root>

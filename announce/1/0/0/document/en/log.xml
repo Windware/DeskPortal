@@ -1,0 +1,16 @@
+<root>
+	<!-- USER -->
+	<!-- gui.js -->
+	<string name="user/get" value="Loaded the announcement for %% %%." />
+
+	<!-- DEVELOPER -->
+	<!-- gui.js -->
+	<string name="dev/remote" value="Previous remote fetching has not finished yet" />
+	<string name="dev/remote/solution" value="Wait until the previous operation completes" />
+
+	<string name="dev/load" value="Cannot load the announcement for '%%/%%'" />
+	<string name="dev/load/solution" value="Check network or server side script" />
+
+	<string name="dev/parse" value="Cannot parse the news XML retrieved : %%" />
+	<string name="dev/parse/solution" value="Check the error" />
+</root>

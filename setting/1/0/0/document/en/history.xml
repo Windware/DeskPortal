@@ -1,0 +1,19 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="Allow solid and gradient colors for background" priority="3">
+				Allow setting custom colors for the background.
+			</new>
+
+			<new summary="Allow changing fonts" priority="3">
+				Allow changing the display fonts in the configuration
+			</new>
+		</user>
+	</plan>
+</root>

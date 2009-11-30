@@ -1,0 +1,10 @@
+<root>
+	<!-- Memcache servers
+		List of memcache servers to use when cache method is set for memcache
+		Multiple entries can be provided for parallel use
+		Value should be in the form of "host:port"
+	-->
+	<conf value="cache_memcache" value="mem1:12345" />
+	<conf value="cache_memcache" value="mem2:12345" />
+	<conf value="cache_memcache" value="mem3:12345" />
+</root>

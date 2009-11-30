@@ -1,0 +1,19 @@
+<root>
+	<!-- Calendar interface -->
+	<string name="previous" value="Previous" />
+	<string name="next" value="Next" />
+
+	<!-- Schedule edit pane -->
+	<string name="set" value="Set" />
+	<string name="edit" value="Edit" />
+	<string name="delete" value="Delete" />
+	<string name="cancel" value="Cancel" />
+	<string name="close" value="Close" />
+	<string name="title" value="Title" />
+	<string name="category" value="Category" />
+	<string name="type" value="Type" />
+	<string name="content" value="Content" />
+	<string name="schedule" value="Schedule" />
+	<string name="time" value="Time" />
+	<string name="confirm" value="Delete day %%'s schedule?" />
+</root>

@@ -1,0 +1,19 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="背景色に色指定" priority="3">
+				背景色に任意の色を指定可能にする
+			</new>
+
+			<new summary="フォントを変更可能にする" priority="3">
+				フォントを指定して変更できるようにする
+			</new>
+		</user>
+	</plan>
+</root>

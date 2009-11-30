@@ -1,0 +1,10 @@
+<root>
+	<feed address="http://www3.nhk.or.jp/rss/news/cat0.xml" />
+	<feed address="http://www3.asahi.com/rss/index.rdf" />
+	<feed address="http://feeds.reuters.com/reuters/JPTopNews?format=xml" />
+	<feed address="http://feed.nikkeibp.co.jp/rss/nikkeibp/buzz.rdf" />
+	<feed address="http://rss.itmedia.co.jp/rss/2.0/topstory.xml" />
+	<feed address="http://feeds.japan.cnet.com/cnet/rss" />
+	<feed address="http://www.pheedo.jp/f/nikkansportscom_sports" />
+	<feed address="http://www.pheedo.jp/f/nikkansportscom_entertainment" />
+</root>

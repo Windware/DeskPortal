@@ -1,0 +1,39 @@
+<root>
+	<os name="windows">
+		<serif>
+			<font name="ＭＳ Ｐ明朝" />
+		</serif>
+		<sans>
+			<font name="メイリオ" />
+			<font name="ＭＳ Ｐゴシック" />
+		</sans>
+		<mono>
+			<font name="ＭＳ 明朝" />
+			<font name="ＭＳ ゴシック" />
+		</mono>
+	</os>
+
+	<os name="mac">
+		<serif>
+			<font name="ヒラギノ明朝" />
+		</serif>
+		<sans>
+			<font name="ヒラギノゴシック" />
+		</sans>
+		<mono>
+			<font name="Osaka" />
+		</mono>
+	</os>
+
+	<os name="linux">
+		<serif>
+			<font name="東風明朝" />
+		</serif>
+		<sans>
+			<font name="VLGothic" />
+			<font name="東風ゴシック" />
+		</sans>
+		<mono>
+		</mono>
+	</os>
+</root>

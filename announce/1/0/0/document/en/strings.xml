@@ -1,0 +1,7 @@
+<root>
+	<string name="before" value="Previous month's announces" />
+	<string name="next" value="Next month's announces" />
+
+	<string name="failed" value="Failed to show the announcement for this month" />
+	<string name="none" value="No news were found for this month" />
+</root>

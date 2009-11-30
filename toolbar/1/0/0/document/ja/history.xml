@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="履歴を残せるようにする" priority="2">
+				検索履歴や変換結果を保存できるようにする
+			</new>
+		</user>
+	</plan>
+</root>

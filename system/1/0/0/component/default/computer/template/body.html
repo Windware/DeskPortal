@@ -1,0 +1,41 @@
+<table cellpadding="0" cellspacing="0" id="%id%" class="%system%_window"><tbody>
+	<tr>
+		<td style="height : %edge%px; width : %edge%px"></td>
+		<td></td>
+		<td id="%system%_%id%_hide" style="width : %shadow%px"%tip:restore%></td>
+	</tr>
+
+	<tr>
+		<td rowspan="2"></td>
+
+		<td style="height : 1px">
+			<table cellpadding="3" cellspacing="0" id="%system%_%id%_bar" class="%system%_bar %system%_hidden"><tbody><tr>
+				<th>%logo%%title%</th>
+				<th style="text-align : right">
+					<a class="%system%_hidden" id="%system%_%id%_notice"><img src="%image:graphic/notice.png%" /></a>
+					%tools%
+					<a onclick="%top%.%system%.tool.lock('%id%')"%tip:lock% id="%system%_%id%_lock" style="cursor : w-resize"><img src="%image:graphic/unlock.png%" /></a>
+					<a onclick="%top%.%system%.window.sink('%id%')"%tip:low% style="cursor : n-resize"><img src="%image:graphic/behind.png%" /></a>
+					<a onclick="%top%.%system%.tool.hide('%id%', 'body')"%tip:drop% id="%system%_%id%_invisible" style="cursor : nw-resize"><img src="%image:graphic/hide.png%" /></a>
+					<a onclick="%top%.%system%.tool.fade('%id%')"%tip:close% style="cursor : ne-resize"><img src="%image:graphic/close.png%" /></a>
+				</th>
+			</tr></tbody></table>
+		</td>
+
+		<td rowspan="2"></td>
+	</tr>
+
+	<tr>
+		<td style="vertical-align : middle">
+			<table cellpadding="0" cellspacing="0" class="%system%_full"><tbody class="%system%_full"><tr>
+				<td id="%system%_%id%_body" style="padding : 0px">%content%</td>
+			</tr></tbody></table>
+		</td>
+	</tr>
+
+	<tr style="height : %shadow%px">
+		<td></td>
+		<td height="%shadow%px"></td>
+		<td id="%system%_%id%_resize" style="cursor : nw-resize"%tip:resize%></td>
+	</tr>
+</tbody></table>

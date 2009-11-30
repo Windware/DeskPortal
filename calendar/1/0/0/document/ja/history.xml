@@ -1,0 +1,27 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+
+			<bug summary="登録済みの日付枠のサイズが異なる">
+				スケジュールが登録された日の枠のサイズが他の列と同一でない。
+			</bug>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="複数のスケジュールの登録" priority="3">
+				同一日に複数のスケジュールを登録する機能を追加
+			</change>
+
+			<change summary="カテゴリーに任意の色を設定" priority="2">
+				カテゴリーにユーザー任意の色を設定可能にする
+			</change>
+
+			<new summary="日記機能" priority="4">
+				スケジュールとは別に日記を書き込めるように変更
+			</new>
+		</user>
+	</plan>
+</root>

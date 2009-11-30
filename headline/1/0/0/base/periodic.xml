@@ -1,0 +1,3 @@
+<root>
+	<action language="php" version="0" id="update" interval="5m" />
+</root>

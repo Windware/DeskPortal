@@ -1,0 +1,81 @@
+<root>
+	<!-- General -->
+	<string name="loading" value="Loading..." />
+	<string name="close" value="Close" />
+
+	<!-- Configuration tabs -->
+	<string name="tool" value="Tools" />
+	<string name="about" value="About" />
+	<string name="conf" value="Setting" />
+	<string name="history" value="History" />
+	<string name="manual" value="Manual" />
+	<string name="review" value="Review" />
+	<string name="reload" value="Reload" />
+
+	<string name="general" value="General" />
+	<string name="apply" value="Apply" />
+	<string name="version" value="Version" />
+	<string name="theme" value="Theme" />
+	<string name="default" value="Default" />
+
+	<string name="plan" value="Planned" />
+	<string name="new" value="New" />
+	<string name="current" value="Current" />
+	<string name="change" value="Change" />
+	<string name="fix" value="Fix" />
+	<string name="bug" value="Bug" />
+
+	<string name="history/missing" value="History record is not found" />
+	<string name="user/cancel" value="Click to cancel logging out" />
+
+	<!-- Info panel -->
+	<string name="desc" value="Description" />
+	<string name="developer" value="Developer" />
+	<string name="contributor" value="Contributor" />
+	<string name="translator" value="Translator" />
+	<string name="web" value="Web site" />
+	<string name="user" value="User" />
+	<string name="dev" value="For developers" />
+	<string name="translation" value="Translation" />
+	<string name="target" value="Target Country" />
+	<string name="all" value="All" />
+	<string name="none" value="None" />
+
+	<!-- Units -->
+	<string name="weight" value="Weight" />
+	<string name="length" value="Length" />
+	<string name="time" value="Time" />
+	<string name="mass" value="Mass" />
+	<string name="speed" value="Speed" />
+	<string name="temperature" value="Temperature" />
+	<string name="currency" value="Currency" />
+
+	<!-- Network -->
+	<string name="network/error" value="Network error occured" />
+	<string name="network/explain" value="There is a problem on the network" />
+
+	<!-- Logout -->
+	<string name="user/expire" value="Session limit" />
+	<string name="user/logout" value="This user will be logged out%%" />
+
+	<!-- Session -->
+	<string name="session/error" value="User session is invalid" />
+	<string name="session/explain" value="Please log in again" />
+
+	<!-- Cookie -->
+	<string name="bad/cookie" value="Browser does not support cookie. Please enable cookie support." />
+	<string name="bad/request" value="Browser does not support the necessary feature to run. Please use supported browser." />
+
+	<!-- Configuration panel -->
+	<string name="conf/changed" value="Settings changed" />
+	<string name="conf/effect" value="Changes take effect after reload" />
+	<string name="conf/error" value="Server Error" />
+	<string name="conf/again" value="Please try again at a later time" />
+
+	<!-- Error messages -->
+	<string name="app/fail" value="Application failure" />
+	<string name="app/load" value="Application '%%' failed to load" />
+
+	<string name="error" value="Error" />
+	<string name="error_history" value="Version history could not be retrieved" />
+</root>

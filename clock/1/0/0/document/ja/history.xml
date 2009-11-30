@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="初リリース">初リリース</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="表示の設定を変更できるようにする">
+				時計の表示方式を設定変更可能にする
+			</change>
+		</user>
+	</plan>
+</root>

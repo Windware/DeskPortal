@@ -1,0 +1,25 @@
+<root>
+	<!-- USER -->
+	<!-- feed.js -->
+	<string name="user/feed/add" value="Added a new feed '%%'." />
+	<string name="user/feed/add/fail" value="Failed adding feed '%%'." />
+
+	<string name="user/feed/get" value="Loaded list of feeds." />
+	<string name="user/feed/remove" value="Removed feed '%%'." />
+	<string name="user/feed/new" value="New entries are published for '%%'." />
+
+	<string name="user/sample" value="Added example feeds." />
+	<string name="user/entry/get" value="Loaded entries for '%%'." />
+
+	<string name="user/category/add" value="Added category '%%'." />
+	<string name="user/category/remove" value="Removed category '%%'." />
+	<string name="user/category/update" value="Updated category '%%'." />
+
+	<!-- DEVELOPER -->
+	<!-- feed.js -->
+	<string name="dev/object" value="Given object is not an object as a feed list XML" />
+	<string name="dev/object/solution" value="Check the parameter passed or the network." />
+
+	<string name="dev/area" value="The feed display HTML node does not exist." />
+	<string name="dev/area/solution" value="Make sure '$id_list' node exists." />
+</root>

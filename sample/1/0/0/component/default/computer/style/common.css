@@ -1,0 +1,10 @@
+
+	/*
+		Stylesheet to be loaded for this application.
+		Make sure all of the namings are prefixed by %id%, which will be replaced by the application ID.
+		%self% will be replaced to reflect the node for the application body container.
+	*/
+
+	h1.%id%_header { font-style : italic; }
+
+	%self% h3 { text-decoration : underline; }

@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<new summary="Only display news of owned applications" priority="3">
+				Only display news of owned applications by the user
+			</new>
+		</user>
+	</plan>
+</root>

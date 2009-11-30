@@ -1,0 +1,36 @@
+<root>
+	<!-- Tag list -->
+	<table name="category">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="UNIQUE" param="(user, name)" />
+	</table>
+
+	<!-- Feed entries -->
+	<table name="entry">
+		<column name="user" param="INT NOT NULL" />
+		<column name="entry" param="INT NOT NULL" />
+		<column name="category" param="INT DEFAULT 0" />
+		<column name="read" param="INT DEFAULT 0" />
+		<column name="rate" param="INT DEFAULT 0" />
+		<column name="trash" param="INT DEFAULT 0" />
+		<column name="UNIQUE" param="(user, entry)" />
+	</table>
+
+	<!-- Notification keywords -->
+	<table name="keyword">
+		<column name="user" param="INT NOT NULL" />
+		<column name="word" param="VARCHAR(255)" />
+		<column name="UNIQUE" param="(user, word)" />
+	</table>
+
+	<!-- Feed source -->
+	<table name="subscribed">
+		<column name="user" param="INT NOT NULL" />
+		<column name="feed" param="INT NOT NULL" />
+		<column name="period" param="INT DEFAULT 2" />
+		<column name="category" param="INT DEFAULT 0" />
+		<column name="UNIQUE" param="(user, feed)" />
+	</table>
+</root>

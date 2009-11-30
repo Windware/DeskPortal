@@ -1,0 +1,27 @@
+<form id="%id%_conf_form" onsubmit="return %top%.%id%.conf.apply(this)">
+	<p%tip:level%>
+		%string:level% :
+		<select name="level">
+			<option value="4">%string:important%</option>
+			<option value="5">%string:default%</option>
+			<option value="7">%string:detail%</option>
+		</select>
+	</p>
+
+	<p%tip:period%>
+		%string:period% :
+		<select name="period">
+			<option value="1">1 %string:minute%</option>
+			<option value="10">10 %string:minute%</option>
+			<option value="30">30 %string:minute%</option>
+			<option value="60">60 %string:minute%</option>
+			<option value="0">%string:always%</option>
+		</select>
+	</p>
+
+	<p%tip:dev%><label for="%id%_conf_dev">
+		%string:dev% : <input id="%id%_conf_dev" type="checkbox" name="dev" />
+	</label></p>
+
+	<p style="text-align : center"><input type="submit" value="%string:apply%" /></p>
+</form>

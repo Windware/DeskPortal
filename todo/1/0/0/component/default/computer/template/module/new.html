@@ -1,0 +1,24 @@
+<form onsubmit="return %top%.%id%.item.add(this)">
+	<table style="color : #ccc; text-align : center" class="%system%_full"><tbody>
+		<tr>
+			<td colspan="2"><h2>%string:create%</h2></td>
+		</tr>
+
+		<tr>
+			<th style="text-align : right">%string:title%</th>
+			<td style="text-align : left"><input id="%id%_name" type="text" name="subject" /></td>
+		</tr>
+
+		<tr>
+			<th style="text-align : right">%string:category%</th>
+			<td style="text-align : left"><select name="category" id="%id%_set_category"></select></td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<input type="submit" value="%string:add%" style="width : 40%" />
+				<input type="button" value="%string:close%" onclick="%top%.%system%.window.fade('%id%_new', true)" style="width : 40%" />
+			</td>
+		</tr>
+	</tbody></table>
+</form>

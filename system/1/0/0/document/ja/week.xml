@@ -1,0 +1,9 @@
+<root>
+	<week number="0" full="日曜日" less="日" />
+	<week number="1" full="月曜日" less="月" />
+	<week number="2" full="火曜日" less="火" />
+	<week number="3" full="水曜日" less="水" />
+	<week number="4" full="木曜日" less="木" />
+	<week number="5" full="金曜日" less="金" />
+	<week number="6" full="土曜日" less="土" />
+</root>

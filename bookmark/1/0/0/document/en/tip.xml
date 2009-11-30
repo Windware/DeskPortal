@@ -1,0 +1,14 @@
+<root>
+	<string name="add" value="Type in a web address to add a bookmark" />
+
+	<!-- Filtering and searching -->
+	<string name="order" value="Change the order of bookmarks" />
+	<string name="search" value="Search the bookmarks for words" />
+
+	<!-- Entries -->
+	<string name="edit" value="Click here to edit the bookmark information" />
+	<string name="info" value="%%" />
+
+	<!-- Cache -->
+	<string name="source" value="Open the source page" />
+</root>

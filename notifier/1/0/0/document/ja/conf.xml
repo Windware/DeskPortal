@@ -1,0 +1,17 @@
+<root>
+	<string name="_1_display" value="表示" />
+	<string name="level" value="通知レベル" />
+
+	<string name="important" value="重要のみ" />
+	<string name="default" value="標準" />
+	<string name="detail" value="詳細 " />
+
+	<string name="period" value="表示期間" />
+	<string name="minute" value="分" />
+	<string name="always" value="常に" />
+
+	<string name="animated" value="アニメーション" />
+
+	<string name="dev" value="開発者用メッセージを表示する" />
+	<string name="apply" value="適用" />
+</root>

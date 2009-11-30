@@ -1,0 +1,37 @@
+<root>
+	<current>
+		<dev>
+			<new summary="新しい開発用機能">
+				'current'はこのバージョンでの変更点一覧です。
+				'plan'はこは今後のバージョンでの変更予定です。
+				'dev'は開発者向けの内容です。'user'はユーザー向けの内容です。
+			</new>
+		</dev>
+
+		<user>
+			<bug summary="修正できなかった重要でないバグ">
+				それらはここに書かれます。
+			</bug>
+		</user>
+	</current>
+
+	<plan>
+		<dev>
+			<new summary="開発車向けの新しい機能" priority="4">
+				'new'は新しい追加事項です。
+				'priority'は1から5で、高いほど優先度が低いです。
+				これらの内容は約束でなく、参考程度のものです。
+			</new>
+		</dev>
+
+		<user>
+			<change summary="変更点" priority="3">
+				'change'は既存の機能の変更点についてです。
+			</change>
+
+			<bug summary="修正されるバグ" priority="2">
+				修正されなかったバグで将来修正される予定のものです。
+			</bug>
+		</user>
+	</plan>
+</root>

@@ -1,0 +1,117 @@
+<root>
+	<method name="length" mutual="1">
+		<mode name="km" />
+		<mode name="m" />
+		<mode name="cm" />
+		<mode name="mm" />
+		<mode name="ft" />
+		<mode name="in" />
+		<mode name="ly" />
+	</method>
+
+	<method name="mass" mutual="1">
+		<mode name="kg" />
+		<mode name="g" />
+		<mode name="mg" />
+		<mode name="lb" />
+		<mode name="oz" />
+		<mode name="t" />
+		<mode name="kl" />
+		<mode name="dl" />
+		<mode name="l" />
+		<mode name="ml" />
+	</method>
+
+	<method name="speed" mutual="1">
+		<mode name="kph" />
+		<mode name="mph" />
+		<mode name="kt" />
+		<mode name="Ma" />
+	</method>
+
+	<method name="temperature" mutual="1">
+		<mode name="C" />
+		<mode name="F" />
+	</method>
+
+	<method name="time" mutual="1">
+		<mode name="year" />
+		<mode name="month" />
+		<mode name="week" />
+		<mode name="day" />
+		<mode name="hour" />
+		<mode name="minute" />
+		<mode name="second" />
+	</method>
+
+	<method name="currency" mutual="1" external="1">
+		<mode name="cad" />
+		<mode name="chf" />
+		<mode name="cny" />
+		<mode name="dkk" />
+		<mode name="eur" />
+		<mode name="gbp" />
+
+		<mode name="hkd" />
+		<mode name="huf" />
+		<mode name="inr" />
+		<mode name="jpy" />
+		<mode name="mxn" />
+		<mode name="myr" />
+
+		<mode name="nok" />
+		<mode name="nzd" />
+		<mode name="rub" />
+		<mode name="sek" />
+		<mode name="sgd" />
+		<mode name="thb" />
+
+		<mode name="usd" />
+		<mode name="zar" />
+	</method>
+
+	<method name="language" mutual="1" external="1">
+		<mode name="sq" />
+		<mode name="ar" />
+		<mode name="bg" />
+		<mode name="ca" />
+		<mode name="zh-cn" />
+		<mode name="hr" />
+		<mode name="cs" />
+		<mode name="da" />
+		<mode name="nl" />
+		<mode name="en" />
+		<mode name="et" />
+		<mode name="tl" />
+		<mode name="fi" />
+		<mode name="fr" />
+		<mode name="gl" />
+		<mode name="de" />
+		<mode name="el" />
+		<mode name="iw" />
+		<mode name="hi" />
+		<mode name="hu" />
+		<mode name="id" />
+		<mode name="it" />
+		<mode name="ja" />
+		<mode name="kr" />
+		<mode name="lv" />
+		<mode name="lt" />
+		<mode name="mt" />
+		<mode name="no" />
+		<mode name="fa" />
+		<mode name="pl" />
+		<mode name="pt" />
+		<mode name="ro" />
+		<mode name="ru" />
+		<mode name="sr" />
+		<mode name="sk" />
+		<mode name="sl" />
+		<mode name="es" />
+		<mode name="sv" />
+		<mode name="th" />
+		<mode name="tr" />
+		<mode name="uk" />
+		<mode name="vi" />
+	</method>
+</root>

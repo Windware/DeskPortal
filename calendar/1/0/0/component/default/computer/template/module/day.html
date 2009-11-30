@@ -1,0 +1,60 @@
+<h2 style="background-color : #c74; border : 1px #333 solid; padding : 5px; text-align : center">%value:day%</h2>
+
+<form id="%id%_day_%value:id%_form" onsubmit="return %top%.%id%.item.set(%value:param%)">
+	<table cellpadding="5" cellspacing="0" style="width : 100%" class="%id%_editor %id%_inputs"><tbody>
+		<tr style="height : 10px">
+			<th style="width : 30%">%string:title%</th>
+			<td style="width : 70%"><input type="text" name="title" style="width : 200px" /></td>
+		</tr>
+
+		<tr style="height : 10px">
+			<th>%string:category%</th>
+			<td><select name="category"></select></td>
+		</tr>
+
+		<tr style="height : 10px">
+			<th>%string:time%</th>
+
+			<td>
+				<select name="start_hour">%init:hour%</select>
+				<select name="start_minute">%init:minute%</select>
+				-
+				<select name="end_hour">%init:hour%</select>
+				<select name="end_minute">%init:minute%</select>
+			</td>
+		</tr>
+
+		<tr>
+			<th>%string:content%</th>
+			<td><textarea name="content" rows="8" cols="30"></textarea></td>
+		</tr>
+
+		<tr style="height : 10px">
+			<td colspan="2" style="text-align : center">
+				<p>
+					<input type="submit" value="%string:set%" />
+					<input type="button" onclick="%top%.%system%.window.fade('%id%_edit_%value:id%', true)" value="%string:close%" />
+				</p>
+
+				<p id="%id%_day_%value:id%_away" class="%system%_hidden">
+					<input type="button" onclick="%top%.%id%.item.remove(%value:param%)" value="%string:delete%" />
+					<input type="button" onclick="%top%.%id%.item.set(%value:param%, true)" value="%string:cancel%" />
+				</p>
+			</td>
+		</tr>
+	</tbody></table>
+</form>
+
+<div id="%id%_day_%value:id%_display" style="text-align : center" class="%system%_hidden %id%_inputs">
+	<h2 id="%id%_day_%value:id%_title"></h2>
+
+	<p id="%id%_day_%value:id%_category"></p>
+	<p id="%id%_day_%value:id%_time"></p>
+
+	<div id="%id%_day_%value:id%_content" style="padding : 5px; background-color : #c97; text-align : left; border : 1px #333 solid"></div>
+
+	<p>
+		<input type="button" onclick="%top%.%id%.gui.edit(%value:param%)" value="%string:edit%" />
+		<input type="button" onclick="%top%.%system%.window.fade('%id%_edit_%value:id%', true)" value="%string:close%" />
+	</p>
+</div>

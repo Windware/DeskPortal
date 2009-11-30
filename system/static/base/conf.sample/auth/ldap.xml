@@ -1,0 +1,6 @@
+<root>
+	<server host="ldap.deskportal.net" port="389" user="" pass="">
+		<param name="version" value="3" />
+		<param name="base" value="ou=people,dc=org,dc=deskportal" />
+	</server>
+</root>

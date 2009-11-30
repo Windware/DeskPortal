@@ -1,0 +1,5 @@
+<root>
+	<!-- USER -->
+	<!-- gui.js -->
+	<string name="user/search" value="'%%'の検索結果を取得しました。" />
+</root>

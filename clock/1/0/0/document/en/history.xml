@@ -1,0 +1,15 @@
+<root>
+	<current>
+		<user>
+			<new summary="Initial release">Initial release</new>
+		</user>
+	</current>
+
+	<plan>
+		<user>
+			<change summary="Allow custom display">
+				Allow display customization
+			</change>
+		</user>
+	</plan>
+</root>
