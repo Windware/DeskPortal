@@ -46,7 +46,7 @@
 
 			if(strlen($param['search'])) #Filter by search words
 			{
-				$search = ' AND (subject LIKE :search OR description LIKE :search)';
+				$search = " AND (subject LIKE :search $database->escape OR description LIKE :search $database->escape)";
 				$base[':search'] = '%'.$system->database_escape($param['search']).'%';
 			}
 

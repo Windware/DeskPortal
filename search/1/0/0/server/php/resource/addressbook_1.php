@@ -24,7 +24,7 @@
 			$target = explode(' ', 'name mail_user mail_domain phone mobile web address note'); #List of columns to check
 			$column = array(); #List of patterns to check
 
-			foreach($target as $item) $column[] = "$item LIKE :phrase"; #Construct column query string
+			foreach($target as $item) $column[] = "$item LIKE :phrase $database->escape"; #Construct column query string
 			$column = implode(' OR ', $column);
 
 			$value = array(':user' => $user->id, ':phrase' => '%'.$system->database_escape($phrase).'%'); #Query values
@@ -45,7 +45,7 @@
 
 				unset($value[':phrase']);
 
-				$query = $database->prepare("SELECT id, name, groups FROM {$database->prefix}address WHERE user = :user AND mail_user LIKE :mail_user AND mail_domain LIKE :mail_domain");
+				$query = $database->prepare("SELECT id, name, groups FROM {$database->prefix}address WHERE user = :user AND mail_user LIKE :mail_user $database->escape AND mail_domain LIKE :mail_domain $database->escape");
 				$query->run($value);
 
 				if(!$query->success) return false;

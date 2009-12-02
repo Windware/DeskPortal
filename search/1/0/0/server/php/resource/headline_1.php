@@ -35,6 +35,7 @@
 			$sub = array(); #List of subscription
 			foreach($query->all() as $row) $sub[] = $row['feed'];
 
+			if(!count($sub)) return false;
 			#NOTE : Not searching for categories as the interface provides it and could clutter the result
 
 			$database = $system->database('system', __METHOD__, null, strtolower($name[5]), $name[6]);
@@ -49,7 +50,7 @@
 				$value[":id{$index}_index"] = $id;
 			}
 
-			$base = "FROM {$database->prefix}entry WHERE (".implode(' OR ', $param).") AND (subject LIKE :phrase OR section LIKE :phrase OR description LIKE :phrase)";
+			$base = "FROM {$database->prefix}entry WHERE (".implode(' OR ', $param).") AND (subject LIKE :phrase $database->escape OR section LIKE :phrase $database->escape OR description LIKE :phrase $database->escape)";
 
 			$query = $database->prepare("SELECT COUNT(id) $base"); #Count the results
 			$query->run($value);

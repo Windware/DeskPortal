@@ -20,7 +20,7 @@
 
 			if(!$database->success) return false;
 
-			$base = "FROM {$database->prefix}todo as todo LEFT JOIN {$database->prefix}category as cat ON todo.user = :user AND todo.category = cat.id AND cat.user = :user AND (todo.title LIKE :phrase OR todo.content LIKE :phrase OR cat.name LIKE :phrase)";
+			$base = "FROM {$database->prefix}todo as todo LEFT JOIN {$database->prefix}category as cat ON todo.user = :user AND todo.category = cat.id AND cat.user = :user AND (todo.title LIKE :phrase $database->escape OR todo.content LIKE :phrase $database->escape OR cat.name LIKE :phrase $database->escape)";
 			$value = array(':user' => $user->id, ':phrase' => '%'.$system->database_escape($phrase).'%');
 
 			$query = $database->prepare("SELECT COUNT(id) $base"); #Look for matches in category names, entry title or entry content

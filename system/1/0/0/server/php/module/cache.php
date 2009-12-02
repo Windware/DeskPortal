@@ -10,7 +10,7 @@
 			if(($expire === null || $expire != 0) && !$system->app_conf('system', 'static', 'cache')) return true; #Do not send headers if caching is disabled
 			if(headers_sent()) return $log->dev(LOG_ERR, 'Headers already sent', 'Set headers before sending contents');
 
-			if($expire == 0) #If not to be cached
+			if($expire === 0) #If not to be cached
 			{
 				$end = 'Thu, 01 Jan 1970 00:00:00'; #Set to a time in the past
 

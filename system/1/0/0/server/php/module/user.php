@@ -103,7 +103,7 @@
 
 				foreach($list as $index => $app) #Compile the query from the application names
 				{
-					$limiter[] = "app LIKE :app{$index}_index";
+					$limiter[] = "app LIKE :app{$index}_index $database->escape";
 					$parameter[":app{$index}_index"] = $system->database_escape($app).'%';
 				}
 

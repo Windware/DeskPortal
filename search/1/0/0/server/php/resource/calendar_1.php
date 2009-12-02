@@ -20,10 +20,10 @@
 			$sql = array(); #List of queries to make
 
 			#Look for matches in category names
-			$sql[] = "SELECT sc.id as id FROM {$database->prefix}category as cat, {$database->prefix}schedule as sc WHERE cat.user = :user AND cat.name LIKE :phrase AND sc.user = :user AND cat.id = sc.category";
+			$sql[] = "SELECT sc.id as id FROM {$database->prefix}category as cat, {$database->prefix}schedule as sc WHERE cat.user = :user AND cat.name LIKE :phrase $database->escape AND sc.user = :user AND cat.id = sc.category";
 
 			#Look for matches in schedule title and content
-			$sql[] = "SELECT id FROM {$database->prefix}schedule WHERE user = :user AND title LIKE :phrase OR content LIKE :phrase";
+			$sql[] = "SELECT id FROM {$database->prefix}schedule WHERE user = :user AND title LIKE :phrase $database->escape OR content LIKE :phrase $database->escape";
 
 			$list = array(); #List of item ID that matched
 

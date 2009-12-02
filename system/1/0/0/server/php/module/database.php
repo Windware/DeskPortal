@@ -3,6 +3,8 @@
 	{
 		private $_system;
 
+		protected static $character = '$'; #Escape character for 'LIKE' statement special characters
+
 		public $adapter, $caller, $handler, $logger, $prefix, $app, $success, $type, $user, $version;
 
 		protected function _build($structure) #Create a table from a schema object
@@ -136,6 +138,7 @@
 			$this->type = $type;
 			$this->adapter = $adapter;
 
+			$this->escape = "ESCAPE '".self::$character."'"; #The escape character for 'LIKE' statements
 			$this->logger(LOG_INFO, 'Creating a new database object');
 
 			#Replace the placeholders passed with real values : TODO - Do string sanity check on replacements
@@ -194,7 +197,7 @@
 		public function commit() { return $this->success ? $this->handler->commit() : false; } #Commit the changes atomically
 
 		#Escape string for 'LIKE' operators
-		public static function escape($string) { return is_string($string) ? str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $string) : ''; }
+		public static function escape($string) { return is_string($string) ? str_replace(array(self::$character, '%', '_'), array(self::$character.self::$character, self::$character.'%', self::$character.'_'), $string) : ''; }
 
 		#Retrieve or store a value with a key index : TODO - Make it deletable
 		public static function key(&$system, $type, $key, $value = null, System_1_0_0_User $user = null, $app = null, $version = null)

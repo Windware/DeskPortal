@@ -23,13 +23,13 @@
 			$sql = array(); #List of queries to make
 
 			#Look for matches in group names
-			$sql[] = "SELECT rel.memo as id FROM {$database->prefix}groups as grp, {$database->prefix}relation as rel WHERE grp.user = :user AND grp.name LIKE :phrase AND rel.user = :user AND grp.id = rel.groups";
+			$sql[] = "SELECT rel.memo as id FROM {$database->prefix}groups as grp, {$database->prefix}relation as rel WHERE grp.user = :user AND grp.name LIKE :phrase $database->escape AND rel.user = :user AND grp.id = rel.groups";
 
 			#Look for matches in memo names
-			$sql[] = "SELECT id FROM {$database->prefix}memo WHERE user = :user AND name LIKE :phrase";
+			$sql[] = "SELECT id FROM {$database->prefix}memo WHERE user = :user AND name LIKE :phrase $database->escape";
 
 			#Look for matches in memo contents
-			$sql[] = "SELECT memo as id FROM {$database->prefix}revision WHERE user = :user AND content LIKE :phrase";
+			$sql[] = "SELECT memo as id FROM {$database->prefix}revision WHERE user = :user AND content LIKE :phrase $database->escape";
 
 			$list = array(); #List of item ID that matched
 

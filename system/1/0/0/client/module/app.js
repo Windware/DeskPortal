@@ -352,7 +352,7 @@
 			for(var i = 0; i < info.depend.length; i++) //Load any application's info file that the application depends on
 				if(!$global.top[info.depend[i]]) load.push($system.app.path(info.depend[i]) + 'client/info.js');
 
-			$system.network.fetch(load); //Cache the lists
+			return $system.network.fetch(load); //Cache the lists
 		}
 
 		this.reload = function() //Reload system variable : FIXME

@@ -48,7 +48,7 @@
 				//Detect method, OS name, browser type
 				{platform : 'Win', name : 'windows', type : 'computer'},
 
-				{platform : 'iPhone', name : 'iphone', type : 'mobile'},
+				{platform : 'iPhone', name : 'iphone', type : 'computer'},
 
 				{platform : 'Mac', name : 'mac', type : 'computer'},
 
