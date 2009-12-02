@@ -99,7 +99,7 @@
 	<!-- User list -->
 	<table name="user">
 		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="name" param="VARCHAR(32) NOT NULL UNIQUE" />
+		<column name="name" param="VARCHAR(30) NOT NULL UNIQUE" />
 		<column name="pass" param="CHAR(64)" />
 		<column name="joined" param="DATE" />
 		<column name="logged" param="INT DEFAULT 0" />
