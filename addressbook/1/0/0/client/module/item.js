@@ -15,7 +15,7 @@
 			var node = $id + '_edit_' + id;
 			var language = $system.language.strings($id);
 
-			var focus = function() { $system.node.id($id + '_form_name_' + id).focus(); } //Focus on the name field
+			var focus = function() { if(!$system.node.hidden(node)) $system.node.id($id + '_form_name_' + id).focus(); } //Focus on the name field
 
 			if($system.node.id(node)) return $system.window.fade(node, undefined, focus);
 			var icon = {}; //Mail composing and site address icon

@@ -30,7 +30,7 @@
 			foreach($sql as $run) #Retrieve the item ID by looking for matches
 			{
 				$query = $database->prepare($run);
-				$query->run(array(':user' => $user->id, ':phrase' => "%$phrase%"));
+				$query->run(array(':user' => $user->id, ':phrase' => '%'.$system->database_escape($phrase).'%'));
 
 				if(!$query->success) return false;
 				foreach($query->all() as $row) $list[$row['id']] = true; #Keep the item ID found

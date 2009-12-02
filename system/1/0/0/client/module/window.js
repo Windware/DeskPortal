@@ -356,7 +356,7 @@
 			node = $system.node.target(node);
 
 			if(!$system.is.element(node)) return log.param();
-			if(value === undefined && $system.is.digit($system.window.depth) && $system.is.digit(node.style.zIndex) && node.style.zIndex == $system.window.depth) return false; //Do not keep raising the same object
+			if(value === undefined && $system.is.digit($system.window.depth) && $system.window.depth != 0 && $system.is.digit(node.style.zIndex) && node.style.zIndex == $system.window.depth) return false; //Do not keep raising the same object
 
 			if($system.is.digit(value))
 			{

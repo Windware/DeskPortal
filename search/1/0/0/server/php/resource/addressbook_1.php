@@ -27,7 +27,7 @@
 			foreach($target as $item) $column[] = "$item LIKE :phrase"; #Construct column query string
 			$column = implode(' OR ', $column);
 
-			$value = array(':user' => $user->id, ':phrase' => "%$phrase%"); #Query values
+			$value = array(':user' => $user->id, ':phrase' => '%'.$system->database_escape($phrase).'%'); #Query values
 
 			$query = $database->prepare("SELECT id, name, groups FROM {$database->prefix}address WHERE user = :user AND ($column)");
 			$query->run($value);
@@ -40,8 +40,8 @@
 			if(count($mail = explode('@', $phrase, 2)) >= 2)  #If the query looks like a mail address
 			{
 				#Match against the user and the domain field
-				$value[':mail_user'] = "%{$mail[0]}";
-				$value[':mail_domain'] = "{$mail[1]}%";
+				$value[':mail_user'] = '%'.$system->database_escape($mail[0]);
+				$value[':mail_domain'] = $system->database_escape($mail[1]).'%';
 
 				unset($value[':phrase']);
 

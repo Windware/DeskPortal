@@ -134,6 +134,8 @@
 			return $_database[$id] = new System_1_0_0_Database($this, $type, $caller, $user, $app, $version);
 		}
 
+		public function database_escape($string) { return System_1_0_0_Database::escape($string); }
+
 		public function database_key($type, $key, $value = false, System_1_0_0_User $user = null, $app = null, $version = null)
 		{
 			return System_1_0_0_Database::key($this, $type, $key, $value, $user, $app, $version);

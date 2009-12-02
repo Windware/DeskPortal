@@ -41,7 +41,7 @@
 			if(!$database->success) return false;
 
 			$param = array();
-			$value = array(':phrase' => "%$phrase%");
+			$value = array(':phrase' => '%'.$system->database_escape($phrase).'%');
 
 			foreach($sub as $index => $id)
 			{

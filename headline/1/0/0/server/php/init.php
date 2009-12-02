@@ -5,7 +5,7 @@
 
 		protected static function _flatten($string) #Remove tags, redundant whitespaces and convert HTML entities back into regular characters
 		{
-			return html_entity_decode(trim(str_replace("\n", '', preg_replace('/<.+?>/', '', $string))));
+			return html_entity_decode(trim(str_replace("\n", ' ', preg_replace('/<.+?>/', ' ', $string))));
 		}
 
 		public static function update($feed = null) #Update the feed caches

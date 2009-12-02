@@ -104,7 +104,7 @@
 				foreach($list as $index => $app) #Compile the query from the application names
 				{
 					$limiter[] = "app LIKE :app{$index}_index";
-					$parameter[":app{$index}_index"] = "$app%";
+					$parameter[":app{$index}_index"] = $system->database_escape($app).'%';
 				}
 
 				#Set parameter to filter out the application names

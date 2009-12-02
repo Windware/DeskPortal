@@ -193,6 +193,9 @@
 
 		public function commit() { return $this->success ? $this->handler->commit() : false; } #Commit the changes atomically
 
+		#Escape string for 'LIKE' operators
+		public static function escape($string) { return is_string($string) ? str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $string) : ''; }
+
 		#Retrieve or store a value with a key index : TODO - Make it deletable
 		public static function key(&$system, $type, $key, $value = null, System_1_0_0_User $user = null, $app = null, $version = null)
 		{

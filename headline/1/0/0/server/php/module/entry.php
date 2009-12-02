@@ -47,7 +47,7 @@
 			if(strlen($param['search'])) #Filter by search words
 			{
 				$search = ' AND (subject LIKE :search OR description LIKE :search)';
-				$base[':search'] = "%{$param['search']}%";
+				$base[':search'] = '%'.$system->database_escape($param['search']).'%';
 			}
 
 			if($param['unread'] == '1' && $limiter) #Filter by unread status
@@ -137,10 +137,10 @@
 				if(!$query['detail']->success) return false;
 				$item = $query['detail']->row(); #Entry information
 
-				foreach(explode(' ', 'id link date subject') as $entry) $parts[$entry] = preg_replace('/<.+?>/', '', $item[$entry]);
+				foreach(explode(' ', 'id link date subject') as $entry) $parts[$entry] = preg_replace('/<.+?>/', ' ', $item[$entry]);
 				foreach(explode(' ', 'category rate read') as $entry) $parts[$entry] = $pref[$entry];
 
-				$xml .= $system->xml_node('entry', $parts, $system->xml_data(preg_replace('/<.+?>/', '', $item['description'])));
+				$xml .= $system->xml_node('entry', $parts, $system->xml_data(preg_replace('/<.+?>/', ' ', $item['description'])));
 			}
 
 			$xml .= $system->xml_node('amount', array('value' => floor(($amount - 1) / self::$_limit) + 1));
