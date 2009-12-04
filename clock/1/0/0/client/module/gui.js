@@ -14,7 +14,7 @@
 			var now = $system.date.create(); //Get the current time
 			var day = now.format($global.user.pref.format.monthdate);
 
-			if(day != _previous) $system.node.fade($id + '_date', false);
+			if($global.user.conf[$id].date !== 0 && day != _previous) $self.gui.date(true);
 			$system.node.fade($id + '_digital', false);
 
 			$system.node.text($id + '_date', day); //Set the date

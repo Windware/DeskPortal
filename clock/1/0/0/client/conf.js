@@ -8,7 +8,7 @@
 			var log = $system.log.init(_class + '._1_display');
 
 			var form = $system.node.id($id + '_conf_form');
-			form.date.checked = !!$global.user.conf[$id].date;
+			form.date.checked = $global.user.conf[$id].date !== 0;
 		}
 
 		this.apply = function(form) //Save the configuration
