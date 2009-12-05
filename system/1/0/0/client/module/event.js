@@ -57,16 +57,8 @@
 						}
 					}
 				}
-				else //Otherwise, check the values on their existence
-				{
-					//Konqueror can scroll an empty node with scrollTop/Left even if there is no scrollbar
-					//and reports a pixel different on the scroll/clientWidth/Height when no scrollbars are seen
-					if($system.browser.engine == 'khtml')
-					{
-						if(node.scrollWidth == node.clientWidth + 1 && node.scrollHeight == node.clientHeight + 1) cancel = false;
-					}
-					else if(node.scrollWidth == node.clientWidth && node.scrollHeight == node.clientHeight) cancel = false;
-				}
+				//Otherwise, check the values on their existence
+				else if(node.scrollWidth == node.clientWidth && node.scrollHeight == node.clientHeight) cancel = false;
 			}
 
 			if(!cancel) return; //If the scrollbars are not present, let the window get dragged by bubbling up to motion.start
