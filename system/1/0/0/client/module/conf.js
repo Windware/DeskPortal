@@ -151,8 +151,10 @@
 									var values = [web, $system.tip.link($system.info.id, null, 'blank', [web]), language.web];
 									web = web ? $system.text.format(' (<a href="%%" target="_blank"%%>%%</a>)', values) : '';
 
-									var values = [mail, $system.dom.attribute(people[i], 'name'), web];
-									list += $system.text.format('<p><span style="cursor : help"%%>%%</span>%%</p>', values);
+									var cursor = mail ? ' style="cursor : help"' : '';
+									var values = [cursor, mail, $system.dom.attribute(people[i], 'name'), web];
+
+									list += $system.text.format('<p><span%%%%>%%</span>%%</p>', values);
 								}
 
 								return list ? list : language.none;
@@ -191,8 +193,10 @@
 										var values = [web, $system.tip.link($system.info.id, null, 'blank', [web]), language.web];
 										web = web ? $system.text.format(' (<a href="%%" target="_blank"%%>%%</a>)', values) : '';
 
-										var values = [mail, $system.dom.attribute(author[j], 'name'), web];
-										list += $system.text.format('<p><span style="cursor : help"%%>%%</span>%%</p>', values);
+										var cursor = mail ? ' style="cursor : help"' : '';
+										var values = [cursor, mail, $system.dom.attribute(author[j], 'name'), web];
+
+										list += $system.text.format('<p><span%%%%>%%</span>%%</p>', values);
 									}
 								}
 

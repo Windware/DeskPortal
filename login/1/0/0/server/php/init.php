@@ -11,6 +11,8 @@
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
+			$name = strtolower($name);
+
 			if($system->is_ticket($_COOKIE['ticket'])) #If the client already has a ticket, abort but report success
 			{
 				$problem = "User '$name' tried to authenticate again while already authenticated";
@@ -152,6 +154,7 @@
 			$log = $system->log(__METHOD__);
 
 			$conf = $system->app_conf('system', 'static');
+			$name = strtolower($name);
 
 			#Load the authentication module
 			$system->file_load("{$system->global['define']['root']}system/static/server/auth/{$conf['system_auth']}.php");
@@ -168,13 +171,15 @@
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
+			$name = strtolower($name);
+
 			if(!$system->is_text($name) || !$system->is_text($pass)) $status = 1; #Report failure
 			else
 			{
 				$log->system(LOG_INFO, 'Checking for user credentials');
 
 				#Try the login sequence (Will be issued cookies on success)
-				$status = Login_1_0_0::attempt($name, $pass, $keep);
+				$status = self::attempt($name, $pass, $keep);
 
 				#Since cookies are already issued and login is recorded in the database,
 				#it will be odd to issue status code other than 0 beyond this point,

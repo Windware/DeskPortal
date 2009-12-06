@@ -1,4 +1,4 @@
-<form style="text-align: left" onsubmit="return false">
+<form id="%id%_conf_form" style="text-align: left" onsubmit="return %top%.%id%.conf.apply(this)">
 	<p>%string:account% <select name="account">
 		<option value="">%string:new%</option>
 	</select></p>
@@ -6,17 +6,17 @@
 	<p>%string:name% : <input type="text" name="name" /></p>
 	<p>%string:address% : <input type="text" name="address" /></p>
 
-	<p>
-		%string:receive% (%string:port%) : <input type="text" name="receive" /> :
-		<input type="text" name="port_receive" />
-		<input type="checkbox" name="secure_receive" />
-	</p>
+	<h3>%string:receive%</h3>
+	<p>%string:name% : <input type="text" name="receive_name" /></p>
 
-	<p>
-		%string:send% (%string:port%) : <input type="text" name="send" /> :
-		<input type="text" name="port_send" />
-		<input type="checkbox" name="secure_send" />
-	</p>
+	<p>%string:user% (%string:pass%) : <input type="text" name="receive_user" /> (<input type="password" name="receive_pass" />)</p>
+	<p>%string:server% (%string:port%) : <input type="text" name="receive_host" /> (<input type="text" name="receive_port" />)</p>
+
+	<h3>%string:send%</h3>
+	<p>%string:name% : <input type="text" name="receive_name" /></p>
+
+	<p>%string:user% (%string:pass%) : <input type="text" name="receive_user" /> (<input type="password" name="receive_pass" />)</p>
+	<p>%string:server% (%string:port%) : <input type="text" name="receive_host" /> (<input type="text" name="receive_port" />)</p>
 
 	<p>%string:signature% : <textarea name="signature"></textarea></p>
 	<p style="text-align: center"><input type="submit" class="%system%_flat" value="%string:apply%" /></p>

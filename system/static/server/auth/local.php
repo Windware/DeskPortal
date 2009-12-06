@@ -1,14 +1,15 @@
 <?php
 	class System_Static_Auth
 	{
-		public static function verify($user, $pass) #Check if authentication passes with given parameters
+		public static function verify($name, $pass) #Check if authentication passes with given parameters
 		{
 			$system = new System_1_0_0(__FILE__);
 
 			$log = $system->log(__METHOD__);
-			if(!is_string($user) || !is_string($pass)) return $log->param();
+			if(!is_string($name) || !is_string($pass)) return $log->param();
 
 			$conf = $system->app_conf('system', 'static');
+			$name = strtolower($name);
 
 			#If used password hashing algorithm is not implemented in PHP, quit
 			if(!in_array($conf['db_hash'], hash_algos()))
@@ -21,8 +22,8 @@
 			if(!$database->success) return false;
 
 			#Look for the user with the given user name and password
-			$query = $database->prepare("SELECT id FROM {$database->prefix}user WHERE name = :user AND pass = :pass AND invalid = :invalid");
-			$query->run(array(':user' => $user, ':pass' => hash($conf['db_hash'], $pass), ':invalid' => 0)); #Run the query
+			$query = $database->prepare("SELECT id FROM {$database->prefix}user WHERE name = :name AND pass = :pass AND invalid = :invalid");
+			$query->run(array(':name' => $name, ':pass' => hash($conf['db_hash'], $pass), ':invalid' => 0)); #Run the query
 
 			if($query->success) $id = $query->column(); #Get the user information
 
