@@ -65,20 +65,15 @@
 			else node.src = $system.network.form(image); //Otherwise, simply use the image as is
 		}
 
-		this.source = function(id, image, theme) //Returns a cross engine image source address that will go inside 'src' attribute of an 'img' element
+		this.source = function(id, image) //Returns a cross engine image source address that will go inside 'src' attribute of an 'img' element
 		{
 			var log = $system.log.init(_class + '.source');
-			if(!$system.is.id(id) || !$system.is.text(image) || !$system.is.type(theme, 'string')) return log.param();
+			if(!$system.is.id(id) || !$system.is.text(image)) return log.param();
 
-			if(theme === undefined) //If not defined
-			{
-				if(!$global.user.conf[id] || !$global.user.conf[id].theme) theme = 'default'; //Fallback to default
-				else theme = $global.user.conf[id].theme; //Use the selected theme, if it is set
-			}
+			var root = $global.user.conf[id] && $global.user.conf[id].theme ? $global.user.conf[id].theme : $system.app.path(id) + 'component/default/';
+			root += $system.browser.type + '/';
 
-			var root = $system.text.format('%%/component/%%/%%/', [id.replace(/_/g, '/'), theme, $system.browser.type]);
 			var graphic = $system.network.form(root + image); //Full address to get the image
-
 			if($system.browser.engine != 'trident' || $system.browser.version >= 8) return graphic; //For png supporting browsers, use the image as is
 
 			//Otherwise, trick the engine by using a blank image and using filter function on it

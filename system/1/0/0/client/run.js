@@ -3,8 +3,6 @@
 
 	$self.run = function() //The main function to be loaded upon HTML body element load
 	{
-		$system.user.init(); //Initialize the user module
-
 		//Register mouse movements for window dragging
 		$system.event.add(document.body, 'onmousemove', $system.motion.move);
 		$system.event.add(document.body, 'onmouseup', $system.motion.stop);
@@ -59,6 +57,12 @@
 		//Create 'img' element (Not using 'background' property on 'body', since it is not resizable)
 		var background = document.createElement('img');
 		background.id = $id + '_background';
+
+		background.onmousedown = function(event) //Avoid the image from getting dragged around
+		{
+			if(!event) event = window.event;
+			return event.button != 0;
+		}
 
 		cell.appendChild(background);
 		row.appendChild(cell);

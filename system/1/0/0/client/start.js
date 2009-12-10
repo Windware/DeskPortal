@@ -34,7 +34,7 @@
 		$global.depend[$id] = []; //Lists which other applications the application depends on
 		$global.system = $self; //Declare this system version as the core
 
-		$global.user.conf[$id] = {theme : 'default'}; //Set the user preference list
+		$global.user.conf[$id] = {}; //Set the user preference list
 		%root%.start = function() { $self.run(); } //Link the top level 'main.start' as this system's 'start' function
 
 		//Load other system scripts

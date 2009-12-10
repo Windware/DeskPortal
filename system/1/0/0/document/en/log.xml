@@ -108,7 +108,7 @@
 	<string name="dev/style/retrieve/solution" value="Check for the node or engine capability." />
 
 	<!-- style.js -->
-	<string name="dev/style/exist" value="Style sheet already exists for application '%%' with theme '%%' and sheet '%%'." />
+	<string name="dev/style/exist" value="Style sheet already exists for application '%%' and sheet '%%'." />
 	<string name="dev/style/exist/solution" value="Ignoring duplicate style sheet addition." />
 	<string name="dev/style/load" value="Cannot load style sheet for ID '%%' and sheet '%%'." />
 	<string name="dev/style/load/solution" value="Make sure an existing style sheet is requested." />

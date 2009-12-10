@@ -26,7 +26,7 @@
 		this.digit = function(subject, signed, decimal) //Checks if a value is a valid number or not
 		{
 			signed = signed ? '[+-]?' : ''; //If signs are allowed or not
-			decimal = decimal ? '(\\.\d+)?' : ''; //If signs are allowed or not : FIXME - need to allow '.8' style too
+			decimal = decimal ? '(\\.\\d+)?' : ''; //If signs are allowed or not : FIXME - need to allow '.8' style too
 
 			var digit = RegExp($system.text.format('^%%\\d+%%$', [signed, decimal]));
 			return !!String(subject).match(digit); //Return the match result

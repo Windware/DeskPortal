@@ -2,25 +2,39 @@
 	<string name="account" value="アカウント" />
 	<string name="folder" value="フォルダー" />
 
-	<string name="read" value="閲覧" />
+	<string name="list" value="一覧" />
 	<string name="compose" value="作成" />
-	<string name="send" value="送信" />
-	<string name="preview" value="確認" />
-	<string name="edit" value="編集" />
-	<string name="open" value="アドレス帳を開く" />
 
-	<string name="name" value="名前" />
-	<string name="address" value="アドレス" />
-	<string name="tag" value="区分" />
+	<!-- フィルター -->
+	<string name="all" value="全て" />
 
+	<string name="filter" value="フィルター" />
+	<string name="state" value="状態" />
+	<string name="marked" value="マーク済み" />
+	<string name="unread" value="未読" />
+	<string name="group" value="グループ" />
+	<string name="search" value="検索" />
 
+	<!-- メール一覧 -->
+	<string name="action" value="コマンド" />
 	<string name="to" value="宛先" />
-	<string name="message" value="本文" />
-
-	<string name="id" value="ID" />
-	<string name="subject" value="題名" />
 	<string name="from" value="送信者" />
+	<string name="size" value="サイズ" />
+	<string name="mark" value="*" />
+	<string name="received" value="受信日" />
+	<string name="sent" value="送信日" />
+	<string name="cc" value="Cc" />
+	<string name="subject" value="題名" />
 	<string name="date" value="日付" />
-	<string name="attachment" value="添付" />
-	<string name="mark" value="印" />
+	<string name="empty" value="空" />
+
+	<!-- メールウインドウ -->
+	<string name="reply" value="返信" />
+	<string name="reply_all" value="全員に返信" />
+	<string name="forward" value="転送" />
+	<string name="copy" value="コピー" />
+	<string name="move" value="移動" />
+	<string name="delete" value="削除" />
+	<string name="mark" value="マーク" />
+	<string name="close" value="閉じる" />
 </root>

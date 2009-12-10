@@ -82,11 +82,11 @@
 			node.onmouseover = node.onmouseout = '';
 		}
 
-		this.set = function(node, id, tip, format, newline) //Shortcut to set a tip on a node
+		this.set = function(node, id, tip, format, lines) //Shortcut to set a tip on a node
 		{ //FIXME : This overrides previous onmouseover/out
 			node = $system.node.target(node); //Get the target element
 
-			if(newline) for(var index in format) //Make new lines on the values if specified
+			if(lines) for(var index in format) //Make new lines on the values if specified
 				if($system.is.text(format[index])) format[index] = format[index].replace(/\n/g, '<br />\n');
 
 			if(!$system.is.text(tip) || !$system.is.id(id) || !$system.is.type(format, 'array') || !$system.is.element(node)) return log.param();

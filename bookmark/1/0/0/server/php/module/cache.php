@@ -58,7 +58,7 @@
 				$match = str_replace(' ', '|', self::$_attributes); #List of attributes to remove
 				$page = preg_replace(array('/\s{2,}/', '/<!--(.+?)-->/s', "/\s+($match)\s*=\s*(([\"']).*?\\3|[^\s>]+)/"), array(' ', ''), $page);
 
-				$adjustments = $system->file_read("{$system->self['devroot']}template/module/adjustment.html");
+				$adjustments = $system->file_read("{$system->self['root']}resource/adjustment.html");
 				if(!$adjustments) return 1;
 
 				#Insert link adjustment and styles

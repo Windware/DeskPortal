@@ -1,8 +1,27 @@
 
-	table#%id% input, table#%id% textarea { background-color : #fed; }
+	/* Configuration */
+	table#%id%_account th { border : 1px #333 solid; text-align : center; font-weight : bold; padding : 5px; background-color : #da8; }
 
-	table#%id%_switcher { background-color : #dc8; width : 100%; margin-bottom : 10px; }
+	td.%id%_conf_row { text-align : right; border-right : 1px #333 dotted; }
 
-	table#%id%_switcher th { cursor : pointer; border : 1px #fea solid; }
+	/* Main interface */
+	table#%id%_tab { background-color : #dc8; width : 100%; margin-bottom : 10px; }
 
-	table.%id%_table { background-color : #eee; empty-cells : show; border-collapse : collapse; width : 100%; }
+	table#%id%_tab th { cursor : pointer; border : 1px #333 solid; }
+
+	div#%id%_pane_read { overflow : auto; height : 300px; border : 1px #333 solid; }
+
+	table#%id%_read_zone { background-color : #eee; empty-cells : show; border-collapse : collapse; width : 100%; }
+
+	tr#%id%_read_header { background-color : #cca; }
+
+	tr.%id%_mail_unread { font-weight : bold; }
+
+	tr.%id%_mail_marked { background-color : #dca; }
+
+	tr.%id%_hover { background-color : #c97; }
+
+	/* Mail window */
+	h2.%id%_mail_subject { text-align : center; font-weight : bold; border : 1px #333 solid; padding : 5px; }
+
+	div.%id%_mail_body { overflow : auto; height : 300px; text-align : left; background-color : #eee; color : #333; padding : 10px; }

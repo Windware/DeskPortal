@@ -18,7 +18,6 @@
 	<string name="unread" value="未読" />
 	<string name="search" value="検索" />
 	<string name="mark" value="マーク" />
-	<string name="apply" value="適用" />
 	<string name="filter_determine" value="ニュースが選択されていません" />
 	<string name="filter_determine_fix" value="ニュースを先に選択してください" />
 

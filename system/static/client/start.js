@@ -78,7 +78,7 @@
 				format : {}, //Date display format
 
 				round : true, //If the window should have rounded corners or not
-				fade : true, //To fade windows and elements or not (Can degrade performance when 'true')
+				fade : false, //To fade windows and elements or not (Can degrade performance when 'true')
 				animate : false, //If shrink/expand operations should be done with animation (Not used yet as of system_1_0_0)
 
 				delay : 1, //Delay in seconds till a tip is shown

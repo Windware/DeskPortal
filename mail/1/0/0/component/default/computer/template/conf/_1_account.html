@@ -1,23 +1,121 @@
-<form id="%id%_conf_form" style="text-align: left" onsubmit="return %top%.%id%.conf.apply(this)">
-	<p>%string:account% <select name="account">
-		<option value="">%string:new%</option>
-	</select></p>
+<form id="%id%_conf_form" style="text-align: left" onsubmit="return %top%.%id%.conf.account(this)">
+	<p>%string:account% : <select name="account"><option value="0">(%string:new%)</option></select></p>
 
-	<p>%string:name% : <input type="text" name="name" /></p>
-	<p>%string:address% : <input type="text" name="address" /></p>
+	<table id="%id%_account" style="width : 100%" cellpadding="10" cellspacing="0"><tbody>
+		<tr><td colspan="2"><em>* %string:required%</em></td></tr>
+		<tr><th colspan="2">%string:basic%</th></tr>
 
-	<h3>%string:receive%</h3>
-	<p>%string:name% : <input type="text" name="receive_name" /></p>
+		<tr>
+			<td class="%id%_conf_row">* %string:description%</td>
+			<td><input style="width : 200px" type="text" name="description" /></td>
+		</tr>
 
-	<p>%string:user% (%string:pass%) : <input type="text" name="receive_user" /> (<input type="password" name="receive_pass" />)</p>
-	<p>%string:server% (%string:port%) : <input type="text" name="receive_host" /> (<input type="text" name="receive_port" />)</p>
+		<tr>
+			<td class="%id%_conf_row">* %string:name%</td>
+			<td><input style="width : 200px" type="text" name="name" /></td>
+		</tr>
 
-	<h3>%string:send%</h3>
-	<p>%string:name% : <input type="text" name="receive_name" /></p>
+		<tr>
+			<td class="%id%_conf_row">* %string:address%</td>
+			<td><input style="width : 200px" type="text" name="address" /></td>
+		</tr>
 
-	<p>%string:user% (%string:pass%) : <input type="text" name="receive_user" /> (<input type="password" name="receive_pass" />)</p>
-	<p>%string:server% (%string:port%) : <input type="text" name="receive_host" /> (<input type="text" name="receive_port" />)</p>
+		<tr>
+			<td class="%id%_conf_row">%string:signature%</td>
+			<td><textarea name="signature" style="width : 250px" rows="3"></textarea></td>
+		</tr>
 
-	<p>%string:signature% : <textarea name="signature"></textarea></p>
-	<p style="text-align: center"><input type="submit" class="%system%_flat" value="%string:apply%" /></p>
+		<tr><th colspan="2">%string:receive%</th></tr>
+
+		<tr>
+			<td class="%id%_conf_row">%string:type%</td>
+			<td>
+				<select name="receive_type" onchange="%top%.%id%.conf.type(this.value)">
+					<option value="imap">IMAP</option>
+					<option value="pop3">POP</option>
+					<option value="gmail">Gmail</option>
+					<option value="hotmail">Hotmail</option>
+				</select>
+			</td>
+		</tr>
+
+		<tr id="%id%_conf_receive">
+			<td class="%id%_conf_row">* %string:server% / %string:port%</td>
+			<td>
+				<input type="text" style="width : 150px" name="receive_host" /> /
+				<input type="text" name="receive_port" style="width : 50px" value="143" maxlength="5" />
+
+				<label for="%id%_secure_receive"%tip:secure%>
+					<input id="%id%_secure_receive" type="checkbox" name="receive_secure" onclick="%top%.%id%.conf.port('receive')" value="1" /> %string:secure% (SSL)
+				</label>
+			</td>
+		</tr>
+
+		<tr id="%id%_conf_receive_user">
+			<td class="%id%_conf_row">%string:user%</td>
+			<td><input type="text" style="width : 150px" name="receive_user" /></td>
+		</tr>
+
+		<tr>
+			<td class="%id%_conf_row">%string:pass%</td>
+			<td><input type="password" style="width : 150px" name="receive_pass" /></td>
+		</tr>
+
+		<!--<tr id="%id%_conf_preserve" class="%system%_hidden">
+			<td class="%id%_conf_row">%string:keep%</td>
+			<td%tip:leave%>
+				<label for="%id%_conf_keep">
+					<input id="%id%_conf_keep" type="checkbox" name="receive_keep" onclick="%top%.%id%.conf.keep(this.checked)" checked="checked" value="1" />
+					%string:leave%
+				</label>
+
+				(<input id="%id%_conf_duration" type="text" style="width : 50px" name="receive_duration" /> %string:days%)
+			</td>
+		</tr>-->
+
+		<tr id="%id%_conf_send"><th colspan="2">%string:send%</th></tr>
+
+		<tr id="%id%_conf_send_host">
+			<td class="%id%_conf_row">* %string:server% / %string:port%</td>
+			<td>
+				<input type="text" style="width : 150px" name="send_host" /> /
+				<input type="text" name="send_port" style="width : 50px" maxlength="5" value="25" />
+
+				<label for="%id%_secure_send"%tip:secure%>
+					<input id="%id%_secure_send" type="checkbox" name="send_secure" onclick="%top%.%id%.conf.port('send')" value="1" /> %string:secure% (SSL)
+				</label>
+			</td>
+		</tr>
+
+		<tr id="%id%_conf_send_user">
+			<td class="%id%_conf_row">%string:user%</td>
+			<td><input type="text" style="width : 150px" name="send_user" /></td>
+		</tr>
+
+		<tr id="%id%_conf_send_pass">
+			<td class="%id%_conf_row">%string:pass%</td>
+			<td><input type="password" style="width : 150px" name="send_pass" /></td>
+		</tr>
+
+		<tr id="%id%_conf_folder" class="%system%_hidden"><th colspan="2">%string:folder%</th></tr>
+
+		<tr id="%id%_conf_folder_draft" class="%system%_hidden">
+			<td class="%id%_conf_row">%string:draft%</td>
+			<td><select name="folder_draft"></select></td>
+		</tr>
+
+		<tr id="%id%_conf_folder_sent" class="%system%_hidden">
+			<td class="%id%_conf_row">%string:sent%</td>
+			<td><select name="folder_sent"></select></td>
+		</tr>
+
+		<tr id="%id%_conf_folder_trash" class="%system%_hidden">
+			<td class="%id%_conf_row">%string:trash%</td>
+			<td><select name="folder_trash"></select></td>
+		</tr>
+
+		<tr>
+			<td colspan="2" style="text-align : center"><input type="submit" class="%system%_flat" value="%string:save%" /></td>
+		</tr>
+	</tbody></table>
 </form>

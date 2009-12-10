@@ -134,7 +134,7 @@
 			$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.set', index : index}, null, $system.app.method(set, [callback])); //Get the choices
 		}
 
-		this.swap = function(index, feature, method, source, target, quick) //Swap the bar option
+		this.swap = function(index, feature, method, source, target, quick, deep) //Swap the bar option
 		{
 			var log = $system.log.init(_class + '.swap');
 			if(!$system.is.digit(index)) return log.param();
@@ -150,12 +150,12 @@
 				_selected[index] = {feature : feature}; //Keep the current selection
 				form.feature.value = feature; //Select the choice
 
-				$self.gui.swap(index, feature, $system.node.id(id).value, undefined, undefined, quick); //Show the modes from the selected method
+				if(!deep) $self.gui.swap(index, feature, $system.node.id(id).value, undefined, undefined, quick); //Show the modes from the selected method
 			}
 			else //If changing the method of a feature
 			{
 				//Display the method if the feature has never been set first
-				if(!_selected[index] || _selected[index].feature != feature) $self.gui.swap(index, feature, undefined, undefined, undefined, quick); //Set the feature
+				if(!_selected[index] || _selected[index].feature != feature) $self.gui.swap(index, feature, undefined, undefined, undefined, quick, true); //Set the feature
 				$system.node.id([$id, 'method', feature, index].join('_')).value = method;
 
 				var id = [$id, 'region', feature, method, index].join('_');

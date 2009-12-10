@@ -1,0 +1,55 @@
+<root>
+	<!-- Accounts-->
+	<table name="account">
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT" />
+		<column name="description" param="VARCHAR(255) UNIQUE" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="address" param="VARCHAR(255) UNIQUE" />
+		<column name="signature" param="TEXT" />
+
+		<column name="receive_type" param="VARCHAR(12)" />
+		<column name="receive_host" param="VARCHAR(255)" />
+		<column name="receive_port" param="INT" />
+		<column name="receive_secure" param="INT" />
+		<column name="receive_keep" param="INT" />
+		<column name="receive_duration" param="INT" />
+		<column name="receive_user" param="VARCHAR(255)" />
+		<column name="receive_pass" param="VARCHAR(255)" />
+
+		<column name="send_host" param="VARCHAR(255)" />
+		<column name="send_port" param="INT" />
+		<column name="send_secure" param="INT" />
+		<column name="send_user" param="VARCHAR(255)" />
+		<column name="send_pass" param="VARCHAR(255)" />
+	</table>
+
+	<!-- Mail lists-->
+	<table name="mail">
+		<column name="id" param="INT UNIQUE" />
+		<column name="user" param="INT" />
+		<column name="subject" param="TEXT" />
+		<column name="size" param="INT" />
+		<column name="from" param="TEXT" />
+		<column name="to" param="TEXT" />
+		<column name="cc" param="TEXT" />
+		<column name="sent" param="DATETIME" />
+		<column name="received" param="DATETIME" />
+		<column name="marked" param="INT" />
+		<column name="read" param="INT" />
+		<column name="body" param="TEXT" />
+
+		<index name="received" />
+	</table>
+
+	<!-- Mail attachments -->
+	<table name="attachment">
+		<column name="mail" param="INT" />
+		<column name="user" param="INT" />
+		<column name="name" param="TEXT" />
+		<column name="type" param="VARCHAR(255)" />
+		<column name="body" param="BLOB" />
+
+		<index name="mail" />
+	</table>
+</root>

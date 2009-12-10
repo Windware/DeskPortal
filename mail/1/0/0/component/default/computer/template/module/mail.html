@@ -1,0 +1,16 @@
+<h2 class="%id%_mail_subject"><span%lock%>%value:subject%</span></h2>
+
+<form style="margin : 10px 0px">
+	<table cellpadding="5" cellspacing="0" style="border : 1px #ccc solid; border-width : 1px 0px 1px 1px; width : 100%"><tbody><tr%lock%>
+		<td style="border-right : 1px #ccc solid">%string:reply%</td>
+		<td style="border-right : 1px #ccc solid">%string:reply_all%</td>
+		<td style="border-right : 1px #ccc solid">%string:forward%</td>
+		<td style="border-right : 1px #ccc solid">%string:move% <select name="target"></select></td>
+		<td style="border-right : 1px #ccc solid">%string:copy% <select name="target"></select></td>
+		<td style="border-right : 1px #ccc solid">%string:delete%</td>
+		<td style="border-right : 1px #ccc solid">%string:mark%</td>
+	</tr></tbody></table>
+</form>
+
+<div class="%id%_mail_body"%lock%>%value:body%</div>
+<p><a onclick="%top%.%system%.window.fade('%id%_mail_%value:index%')">%string:close%</a></p>

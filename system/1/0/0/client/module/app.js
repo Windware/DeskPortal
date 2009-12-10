@@ -72,7 +72,6 @@
 
 				//Create application preference hash
 				if(!$system.is.object($global.user.conf[$id])) $global.user.conf[$id] = {};
-				if(!$global.user.conf[$id].theme) $global.user.conf[$id].theme = 'default';
 
 				$private.component = $system.app.component($id); //Get the application name and version
 
@@ -96,14 +95,17 @@
 					info.root = $system.app.path($id); //Top folder for the application
 
 					//Browser specific folder
-					info.devroot = $system.text.format('%%component/%%/%%/', [info.root, $global.user.conf[$id].theme, $system.browser.type]);
 
 					info.preload = []; //List of preloading files
 					info.depend = []; //List of dependencies on other applications
 
 					info.system = null; //Indicates which system the application relies on
 					info.template = {}; //List of HTML template caches
+
+					info.devroot = $global.user.conf[$id] && $global.user.conf[$id].theme ? $global.user.conf[$id].theme : info.root + 'component/default/';
+					info.devroot += $system.browser.type + '/';
 				}
+
 
 				try { with($self.info) eval($private.request.text); } //Load the info script with its own 'info' name space applied
 
@@ -191,7 +193,7 @@
 					$private.code += request[i].text + "\n";
 				}
 
-				i = language = load = request = undefined; //Clear temporary variables before the 'eval'
+				i = load = request = undefined; //Clear temporary variables before the 'eval'
 				$system = $global.top[$self.info.system]; //Declare the depending system reference
 
 				try { eval($private.code); } //Run the codes
@@ -355,7 +357,7 @@
 			return $system.network.fetch(load); //Cache the lists
 		}
 
-		this.reload = function() //Reload system variable : FIXME
+		this.reload = function() //Reload system variable : TODO
 		{
 			if($global.system == $id) return true; //If this is the core system, quit
 			//If this system is loaded from another system, variables may not exist those are used within this system
@@ -368,9 +370,8 @@
 		{
 			var log = $system.log.init(_class + '.theme');
 
-			//Change the devroot reference
-			//Clear any requested cache that refers inside devroot and reload them
-			//Notify the need to reload the app (need function to do that)
+			//Change $global.user.conf[id].theme parameter
+			//Notify the need to reload the app
 		}
 
 		this.unload = function(id, execute) //Unload the application and all applications depending on it

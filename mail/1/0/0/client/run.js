@@ -1,3 +1,6 @@
 
-//	$self.mail.load(); //Load the email contents
-//	$self.mail.display('read'); //Dispaly the read pane
+	$self.run = function(callback)
+	{
+		$self.account.get(); //Get list of accounts
+		if(typeof callback == 'function') callback();
+	}

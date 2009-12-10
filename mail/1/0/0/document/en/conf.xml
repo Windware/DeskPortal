@@ -1,3 +1,36 @@
 <root>
 	<string name="_1_account" value="Accounts" />
+
+	<string name="required" value="Required fields" />
+	<string name="account" value="Account" />
+	<string name="new" value="New" />
+	<string name="basic" value="Basic Settings" />
+	<string name="description" value="Description" />
+	<string name="name" value="Name" />
+	<string name="address" value="Address" />
+	<string name="signature" value="Signature" />
+
+	<string name="receive" value="Receive Settings" />
+	<string name="send" value="Send Settings" />
+
+	<string name="type" value="Type" />
+	<string name="server" value="Server" />
+	<string name="port" value="Port" />
+	<string name="secure" value="Secure" />
+
+	<string name="keep" value="Keep Message" />
+	<string name="leave" value="Leave messages on server" />
+	<string name="days" value="days" />
+
+	<string name="user" value="User" />
+	<string name="pass" value="Password" />
+	<string name="save" value="Save" />
+
+	<string name="folder" value="Folder" />
+	<string name="draft" value="Draft" />
+	<string name="sent" value="Sent" />
+	<string name="trash" value="Trash" />
+
+	<string name="error" value="Error" />
+	<string name="fill" value="Please fill in the required fields marked with '*'." />
 </root>

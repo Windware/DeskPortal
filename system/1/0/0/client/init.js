@@ -16,9 +16,11 @@
 		if($self == $global.system) //If this is the first loaded core system
 		{
 			$global.user.language = $system.language.pref(); //Set the preferred language to use
+			$system.user.init(); //Load user configuration
 
 			//Set browser specific component folder
-			$system.info.devroot = $system.text.format('%%component/%%/%%/', [$system.info.root, $global.user.conf[$id].theme, $system.browser.type]);
+			$system.info.devroot = $global.user.conf[$id] && $global.user.conf[$id].theme ? $global.user.conf[$id].theme : $system.info.root + 'component/default/';
+			$system.info.devroot += $system.browser.type + '/';
 
 			if($system.is.md5($global.user.ticket)) //If the login ticket is available
 			{

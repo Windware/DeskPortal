@@ -1,31 +1,35 @@
-<form><table style="width: 100%"><tbody><tr>
-	<td>
-		%string:account% : <select id="%id%_account" onchange="%top%.%id%.item.account(this.value)"%tip:account%></select>
-		%string:folder% : <select id="%id%_folder" onchange="%top%.%id%.item.folder(this.value)"%tip:folder%></select>
-	</td>
-	<td style="text-align: right">
-		<input type="button" onclick="%top%.%id%.item.addressbook()" value="%string:open%" class="%system%_flat" />
-	</td>
-</tr></tbody></table></form>
+<form style="margin : 10px 0px" onsubmit="%top%.%id%.gui.filter()">
+	<p>
+		<input type="button" onclick="%top%.%id%.item.create()" value="%string:new%" />
 
-<table id="%id%_switcher" cellspacing="0" cellpadding="3"><tbody>
-	<tr>
-		<th style="width: 50%" onclick="%top%.%id%.item.display('read')"%tip:read%%lock%>%string:read%</th>
-		<th style="width: 50%" onclick="%top%.%id%.item.display('compose')"%tip:compose%%lock%>%string:compose%</th>
-	</tr>
-</tbody></table>
+		<strong>%string:account%</strong> :
+		<select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>
 
-<div id="%id%_pane_read" class="%system%_hidden">
-	<table class="%id%_table" border="1" cellspacing="0" cellpadding="0"><tbody>
-		<tr%tip:sort%>
-			<th%lock%>%string:id%</th>
-			<th%lock%>%string:subject%</th>
-			<th%lock%>%string:from%</th>
-			<th%lock%>%string:date%</th>
-			<th%lock%>%string:attachment%</th>
-			<th%lock%>%string:mark%</th>
-		</tr>
-	</tbody></table>
+		<strong>%string:folder%</strong> :
+		<select id="%id%_folder" onchange="%top%.%id%.folder.change(this.value)"%tip:folder%></select>
+	</p>
+
+	<p class="%id%_filter">
+		<strong>%string:filter%</strong> [%string:state% :
+
+		<label for="%id%_marked"%tip:marked%>
+			<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter()" name="marked"> %string:marked%
+		</label>
+
+		<label for="%id%_unread"%tip:unread%>
+			<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter()" name="unread"> %string:unread%
+		</label>]
+
+		[<span%tip:group% style="cursor : help">%string:group% :
+		<select name="group" id="%id%_filter_group" onchange="%top%.%id%.gui.filter()"></select></span>]
+
+		[<span%tip:search% style="cursor : help">%string:search% : <input type="text" name="search" style="width : 120px" />]
+		<input type="submit" style="display : none" /></span>
+	</p>
+</form>
+
+<div id="%id%_pane_read"%scroll%>
+	<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"%lock%><tbody id="%id%_read_mail"></tbody></table>
 </div>
 
 <div id="%id%_pane_compose" class="%system%_hidden">
@@ -40,12 +44,19 @@
 				<td><textarea name="body" rows="10" style="width: 100%"></textarea></td>
 			</tr>
 		</table>
-		<p style="text-align: center"><input type="submit" class="%system%_flat" style="padding: 5px; width: 300px" value="%string:preview%" /></p>
+
+		<p style="text-align: center">
+			<input type="submit" class="%system%_flat" style="padding: 5px; width: 300px" value="%string:preview%" />
+		</p>
 	</form>
 
-	<div id="%id%_preview" class="%system%_hidden">
-		<p>%string:to% : <span id="%id%_to"></span></p>
-		<p>%string:message% : <span id="%id%_body"></span></p>
+	<div id="%id%_compose_preview" class="%system%_hidden">
+		<p>%string:to% : <span id="%id%_compose_to"></span></p>
+
+		<p>%string:cc% : <span id="%id%_compose_cc"></span></p>
+
+		<p>%string:message% : <span id="%id%_compose_body"></span></p>
+
 		<p><form>
 			<input value="%string:edit%" type="button" onclick="%top%.%id%.item.edit()" />
 			<input value="%string:send%" type="button" onclick="%top%.%id%.item.send()" />

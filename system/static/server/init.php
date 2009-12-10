@@ -1,4 +1,5 @@
 <?php
+	mb_detect_order('ascii,jis,utf-8,euc-jp,sjis'); #TODO - What about other languages?
 	require(dirname(__FILE__).'/class.php'); #Load the base classes
 
 	if(function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) System_Static::system_strip(); #Remove magic quotes

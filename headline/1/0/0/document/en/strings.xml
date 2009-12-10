@@ -18,7 +18,6 @@
 	<string name="unread" value="Unread" />
 	<string name="search" value="Search" />
 	<string name="mark" value="Mark" />
-	<string name="apply" value="Apply" />
 	<string name="filter_determine" value="No news is selected to filter" />
 	<string name="filter_determine_fix" value="Please select a news feed first" />
 

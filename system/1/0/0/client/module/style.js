@@ -8,9 +8,7 @@
 		this.add = function(id, sheet) //Load a style sheet for an already loaded application
 		{
 			var log = $system.log.init(_class + '.add');
-
-			var theme = $global.user.conf[id].theme || 'default'; //Use 'default' theme if unspecified
-			if(!String(sheet).match(/\.css$/i) || !$system.is.id(id) || !$system.is.text(theme)) return log.param();
+			if(!String(sheet).match(/\.css$/i) || !$system.is.id(id)) return log.param();
 
 			//Make an unique node ID for the style sheet
 			var node = $system.text.format(_name, [$id, id, sheet.replace(/\.css$/i, '')]);
@@ -21,10 +19,12 @@
 			for(var i = 0; i < list.length; i++)
 			{
 				if(list[i].id == node) //Report about duplicate style sheet but report it as success
-					return log.dev($global.log.info, 'dev/style/exist', 'dev/style/exist/solution', [id, theme, sheet], null, true);
+					return log.dev($global.log.info, 'dev/style/exist', 'dev/style/exist/solution', [id, sheet], null, true);
 			}
 
-			var style = $system.app.path(id) + $system.text.format('component/%%/%%/style/%%', [theme, $system.browser.type, sheet]);
+			var root = $global.user.conf[id] && $global.user.conf[id].theme ? $global.user.conf[id].theme : $system.app.path(id) + 'component/default/';
+			var style = root + $system.browser.type + '/style/' + sheet;
+
 			var request = $system.network.item(style);
 
 			if(!request.made) //Grab the stylesheet if it is not retrieved

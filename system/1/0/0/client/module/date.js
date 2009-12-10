@@ -154,6 +154,7 @@
 
 				return $system.date.create([date[0], date[1], date[2], time[0], time[1], time[2]]);
 			}
+			else if(source instanceof Date) date = source; //If a date object is passed directly
 			//Use current time and adjust the time by the value given from the server
 			else if(source === undefined) return $system.date.create(_timestamp(new Date()) + _difference);
 

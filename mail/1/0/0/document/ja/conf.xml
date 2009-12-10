@@ -1,3 +1,36 @@
 <root>
 	<string name="_1_account" value="アカウント" />
+
+	<string name="required" value="必須項目" />
+	<string name="account" value="アカウント" />
+	<string name="new" value="新規" />
+	<string name="basic" value="基本設定" />
+	<string name="description" value="名称" />
+	<string name="name" value="名前" />
+	<string name="address" value="メールアドレス" />
+	<string name="signature" value="署名" />
+
+	<string name="receive" value="受信設定" />
+	<string name="send" value="送信設定" />
+
+	<string name="type" value="種類" />
+	<string name="server" value="サーバー" />
+	<string name="port" value="ポート" />
+	<string name="secure" value="暗号化" />
+
+	<string name="keep" value="メッセージ保存" />
+	<string name="leave" value="サーバーにメッセージを残す" />
+	<string name="days" value="日間" />
+
+	<string name="user" value="ユーザー" />
+	<string name="pass" value="パスワード" />
+	<string name="save" value="保存" />
+
+	<string name="folder" value="フォルダー" />
+	<string name="draft" value="下書き" />
+	<string name="sent" value="送信済み" />
+	<string name="trash" value="ゴミ箱" />
+
+	<string name="error" value="エラー" />
+	<string name="fill" value="*印でマークされた箇所に全て入力してください。" />
 </root>

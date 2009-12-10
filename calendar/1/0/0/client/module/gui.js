@@ -159,6 +159,7 @@
 				}
 
 				_loading = false;
+				$system.node.fade(field.id, false);
 
 				log.user($global.log.info, 'user/display', '', [show]);
 				if(typeof callback == 'function') callback();

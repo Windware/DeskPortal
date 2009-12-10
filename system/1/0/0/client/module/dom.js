@@ -5,7 +5,7 @@
 		{
 			if(!$system.is.object(node) || !node.attributes || !$system.is.text(name)) return '';
 
-			attribute = node.attributes.getNamedItem(name); //Get the attribute value
+			var attribute = node.attributes.getNamedItem(name); //Get the attribute value
 			return attribute && typeof attribute.nodeValue == 'string' ? attribute.nodeValue : ''; //Return the value
 		}
 

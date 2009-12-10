@@ -11,7 +11,7 @@
 	</language>
 
 	<requirement>
-		<item>PHP version 5.2+ (using json_decode etc) with PDO (with appropriate database drivers), zlib, curl and imap modules enabled</item>
+		<item>PHP version 5.2+ with PDO (with appropriate database drivers), zlib, curl, imap and pear (with Net_SMTP) modules enabled</item>
 		<item>A web server that can run the above mentioned PHP</item>
 		<item>RDBMS that PHP PDO supports</item>
 	</requirement>

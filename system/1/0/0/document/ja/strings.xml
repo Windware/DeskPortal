@@ -60,7 +60,7 @@
 
 	<!-- セッション -->
 	<string name="session/error" value="ユーザーのセッションが切れています" />
-	<string name="session/explain" value="再度ログインし直してください" />
+	<string name="session/explain" value="ログインし直してください" />
 
 	<!-- クッキー -->
 	<string name="bad/cookie" value="ブラウザーのクッキーが無効です。クッキーを有効にしてください。" />

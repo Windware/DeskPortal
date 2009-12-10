@@ -15,14 +15,7 @@
 			$path['self'] = preg_replace('/\?.*/', '', $this->file_relative($location)); #Get the path to the requested file
 			$path['system'] = $this->file_relative(__FILE__); #Get the path to this system
 
-			foreach(array('self', 'system') as $section)
-			{
-				$this->{$section} = System_Static::app_env($path[$section]); #Get path environements
-
-				#Add device specific component path : FIXME - Apply theme capability
-				$this->{$section}['devroot'] = "{$this->{$section}['root']}component/default/{$this->global['define']['device']}/";
-			}
-
+			foreach(array('self', 'system') as $section) $this->{$section} = System_Static::app_env($path[$section]); #Get path environements
 			$this->log(__METHOD__); #Report the creation of the system object
 		}
 
