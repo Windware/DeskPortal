@@ -16,8 +16,6 @@
 			$global.user.id = $system.browser.cookie('name'); //Name of the user to be authenticated
 			$global.user.ticket = $system.browser.cookie('ticket'); //A temporary ticket given through cookie for authorization
 
-			$global.user.pref.wallpaper = $system.info.devroot + 'graphic/wallpaper/db_tree.jpg'; //Set a default wallpaper
-
 			$global.user.language = $system.language.pref(); //Set the preferred language to use
 			$global.user.pref.format = {date : '%Y% %M% %d%', month : '%Y% %M%', monthdate : '%M% %d%', time : '%h%:%N%'}; //Date display format
 

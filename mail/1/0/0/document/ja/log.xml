@@ -1,2 +1,6 @@
 <root>
+	<!-- USER -->
+	<!-- item.js -->
+	<string name="user/show/error" value="メールの表示に失敗しました" />
+	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />
 </root>

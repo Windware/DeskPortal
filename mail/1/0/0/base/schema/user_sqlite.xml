@@ -2,50 +2,94 @@
 	<!-- Accounts-->
 	<table name="account">
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT" />
+		<column name="user" param="INT NOT NULL" />
 		<column name="description" param="VARCHAR(255) UNIQUE" />
-		<column name="name" param="VARCHAR(255)" />
-		<column name="address" param="VARCHAR(255) UNIQUE" />
+		<column name="name" param="VARCHAR(255) NOT NULL" />
+		<column name="address" param="VARCHAR(255) NOT NULL" />
 		<column name="signature" param="TEXT" />
 
-		<column name="receive_type" param="VARCHAR(12)" />
-		<column name="receive_host" param="VARCHAR(255)" />
-		<column name="receive_port" param="INT" />
-		<column name="receive_secure" param="INT" />
+		<column name="receive_type" param="VARCHAR(12) NOT NULL" />
+		<column name="receive_host" param="VARCHAR(255) NOT NULL" />
+		<column name="receive_port" param="INT NOT NULL" />
+		<column name="receive_secure" param="INT NOT NULL" />
 		<column name="receive_keep" param="INT" />
 		<column name="receive_duration" param="INT" />
 		<column name="receive_user" param="VARCHAR(255)" />
 		<column name="receive_pass" param="VARCHAR(255)" />
 
-		<column name="send_host" param="VARCHAR(255)" />
-		<column name="send_port" param="INT" />
-		<column name="send_secure" param="INT" />
+		<column name="send_host" param="VARCHAR(255) NOT NULL" />
+		<column name="send_port" param="INT NOT NULL" />
+		<column name="send_secure" param="INT NOT NULL" />
 		<column name="send_user" param="VARCHAR(255)" />
 		<column name="send_pass" param="VARCHAR(255)" />
+
+		<column name="folder_draft" param="VARCHAR(255)" />
+		<column name="folder_sent" param="VARCHAR(255)" />
+		<column name="folder_trash" param="VARCHAR(255)" />
+
+		<index name="user" />
 	</table>
 
-	<!-- Mail lists-->
+	<!-- Mail lists
+		'uid' is a unique identifier for a message provided by the mail server.
+		'sequence' is a sequence number of a message provided by the mail server, which may change across sessions.
+		'signature' is a md5 sum of the header of a mail to identify the message.
+
+		NOTE : 'sequence' and 'signature' are provided, so that under POP3, since UIDL command is optional,
+		a message can be identified in another way to download the body and attachments separately.
+	-->
 	<table name="mail">
-		<column name="id" param="INT UNIQUE" />
-		<column name="user" param="INT" />
-		<column name="subject" param="TEXT" />
-		<column name="size" param="INT" />
-		<column name="from" param="TEXT" />
-		<column name="to" param="TEXT" />
-		<column name="cc" param="TEXT" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+
+		<column name="account" param="INT NOT NULL" />
+		<column name="folder" param="VARCHAR(255) NOT NULL" />
+
+		<column name="uid" param="VARCHAR(255)" />
+		<column name="sequence" param="INT" />
+		<column name="signature" param="CHAR(32)" />
+
+		<column name="subject" param="TEXT NOT NULL" />
+		<column name="size" param="INT NOT NULL" />
 		<column name="sent" param="DATETIME" />
 		<column name="received" param="DATETIME" />
-		<column name="marked" param="INT" />
-		<column name="read" param="INT" />
-		<column name="body" param="TEXT" />
 
-		<index name="received" />
+		<column name="plain" param="TEXT" />
+		<column name="html" param="TEXT" />
+
+		<index name="user, account, folder" />
+	</table>
+
+	<!-- From addresses -->
+	<table name="from">
+		<column name="mail" param="INT" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="address" param="VARCHAR(255)" />
+
+		<index name="mail" />
+	</table>
+
+	<!-- Cc addresses -->
+	<table name="cc">
+		<column name="mail" param="INT" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="address" param="VARCHAR(255)" />
+
+		<index name="mail" />
+	</table>
+
+	<!-- To addresses -->
+	<table name="to">
+		<column name="mail" param="INT" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="address" param="VARCHAR(255)" />
+
+		<index name="mail" />
 	</table>
 
 	<!-- Mail attachments -->
 	<table name="attachment">
 		<column name="mail" param="INT" />
-		<column name="user" param="INT" />
 		<column name="name" param="TEXT" />
 		<column name="type" param="VARCHAR(255)" />
 		<column name="body" param="BLOB" />

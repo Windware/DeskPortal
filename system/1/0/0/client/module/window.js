@@ -100,11 +100,10 @@
 
 			if($global.top[id]) //If it's an application window, grab the icon automatically
 			{
-				var logo = 'graphic/icon.png'; //Name of the icon file
-				var request = $system.network.item($global.top[id].info.devroot + logo); //Get the icon request object
+				var request = $system.network.item($global.top[id].info.devroot + 'graphic/icon.png'); //Get the icon request object
 
 				//If application icon exists, make HTML out of it
-				var icon = request.valid() ? '<img src="' + $system.image.source(id, logo) + '" /> ' : '';
+				var icon = request.valid() ? '<img src="' + $system.image.source(id, 'icon.png') + '" /> ' : '';
 				var tools = $system.info.template.tools.replace(/%id%/g, id); //Swap the ID string on the buttons
 			}
 			else
@@ -281,6 +280,8 @@
 
 			pane.object.style.visibility = ''; //Make it visible upon fading in
 			$system.window.fade(id, false, execute, false, true, quick); //Fade in the window and execute the specified function as it completes
+
+			return pane;
 		}
 
 		this.fade = function(id, direction, execute, destroy, stay, quick) //Fades in and out a window

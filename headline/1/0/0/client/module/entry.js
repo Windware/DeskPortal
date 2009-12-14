@@ -103,7 +103,7 @@
 					_mark[headline] = $system.dom.attribute(entries[i], 'rate');
 					var star = _mark[headline] == 5 ? 'star' : 'grey'; //Set the star image by mark
 
-					replacer.push($system.image.source($id, 'graphic/' + star + '.png')); //Mark image
+					replacer.push($system.image.source($id, star + '.png')); //Mark image
 					replacer.push($system.dom.attribute(entries[i], 'subject')); //Subject
 
 					line.onmousedown = $system.app.method($system.event.cancel, [line]); //Prevent the window from getting dragged on mouse down event

@@ -19,7 +19,8 @@
 		<column name="groups" param="INT DEFAULT 0" />
 		<column name="created" param="DATETIME NOT NULL" />
 		<column name="updated" param="DATETIME NOT NULL" />
-		<index name="user" />
+
+		<index name="user, groups" />
 	</table>
 
 	<!-- Group -->
@@ -27,6 +28,7 @@
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 		<column name="user" param="INT NOT NULL" />
 		<column name="name" param="VARCHAR(255) NOT NULL" />
+
 		<column name="UNIQUE" param="(user, name)" />
 	</table>
 </root>

@@ -80,12 +80,10 @@
 		public function conf($table, $list = null) #Gets the user's preference list
 		{
 			$system = $this->_system;
-
 			$log = $system->log(__METHOD__);
-			if(!$this->valid || !$system->is_digit($this->id)) return false;
 
+			if(!$this->valid || !$system->is_digit($this->id)) return false;
 			if(!in_array($table, explode(' ', 'conf used window'))) return $log->param();
-			if(($table == 'conf' || $table == 'window') && !is_array($list)) return false;
 
 			$user = $system->user(); #Load the user
 			if(!$user->valid) return false;
@@ -96,7 +94,7 @@
 			$log->dev(LOG_INFO, "Getting user configuration for user ID '$this->id'");
 			$values = array(':id' => $this->id); #Parameter to be passed to the query
 
-			if($table == 'conf' || $table == 'window') #For application table lookup
+			if(($table == 'conf' || $table == 'window') && is_array($list)) #For application table lookup
 			{
 				$limiter = array(); #List of application list
 				$parameter = array(); #List of query parameters

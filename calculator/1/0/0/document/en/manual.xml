@@ -4,4 +4,5 @@
 	<string name="1/intro" value="This is a simple calculator application supporting basic arithmetic operations." />
 	<string name="1/calc" value="To do a calculation, like a regular calculator, click on a number pad and then the operation button and another number pad and then the equal sign for the result." />
 	<string name="1/sign" value="'D' button will delete a digit of an uncalculated value and 'C' button will clear the display." />
+	<string name="1/limit" value="The maximum allowed decimal point is the 10th digit. Lower digits will be rounded off." />
 </root>

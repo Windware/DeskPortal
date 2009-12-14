@@ -10,6 +10,9 @@
 			<new summary="Add memory function" priority="4">
 				Add memory function to remember results
 			</new>
+			<new summary="Support keyboard typing" priority="3">
+				Allow numbers to be typed directly from keyboard numbers.
+			</new>
 		</user>
 	</plan>
 </root>

@@ -6,20 +6,15 @@
 		this.change = function(account) //Change the displayed account
 		{
 			var log = $system.log.init(_class + '.change');
-
-			if(!$system.is.digit(account))
-			{
-			}
+			if(!$system.is.digit(account)) return log.param();
 
 			$self.item.get(account, 'INBOX'); //Get mails for default mail box
-
-			$self.folder.list(account); //List the folders
-			$system.node.id($id + '_folder').value = 'INBOX';
+			$self.folder.get(account); //List the folders
 		}
 
 		this.get = function(callback) //Get list of accounts
 		{
-			var log = $system.log.init(_class + '.folder');
+			var log = $system.log.init(_class + '.get');
 
 			var select = $system.node.id($id + '_account');
 			var index = select.value; //Keep the current value
@@ -41,7 +36,6 @@
 
 			var list = function(request)
 			{
-				var section = ['name', 'count', 'recent']; //Folder parameters
 				var accounts = $system.dom.tags(request.xml, 'account');
 
 				for(var i = 0; i < accounts.length; i++) //Create the account selection and store the information
@@ -54,16 +48,6 @@
 
 					select.appendChild(option);
 					__account[option.value] = {description : description, folder : []}; //Keep the account information
-
-					var folder = $system.dom.tags(accounts[i], 'folder');
-
-					for(var j = 0; j < folder.length; j++)
-					{
-						var categorized = {};
-						for(var k = 0; k < section.length; k++) categorized[section[k]] = $system.dom.attribute(folder[j], section[k]);
-
-						__account[option.value].folder.push(categorized); //Folder information
-					}
 				}
 
 				select.value = index;

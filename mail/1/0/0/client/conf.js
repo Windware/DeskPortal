@@ -21,7 +21,7 @@
 					return false; //Avoid form submission
 				}
 
-				if(item.type == 'checkbox') var value = item.checked ? 1 : 0;
+				if(item.type == 'checkbox') var value = item.checked ? '1' : '0';
 				else var value = item.value;
 
 				option[item.name] = value.substr(0, 500); //Limit the string length (Mainly for signature)

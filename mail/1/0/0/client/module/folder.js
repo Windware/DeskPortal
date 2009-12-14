@@ -11,25 +11,36 @@
 			$self.item.get($system.node.id($id + '_account').value, folder); //Get the folder for current account
 		}
 
-		this.list = function(account) //List folders for an account
+		this.get = function(account, callback) //List folders for an account
 		{
-			var log = $system.log.init(_class + '.list');
+			var log = $system.log.init(_class + '.get');
 			if(!$system.is.digit(account)) return log.param();
 
-			var select = $system.node.id($id + '_folder');
-			select.innerHTML = '';
-
-			if(!__account[account] || !__account[account].folder) return false;
-			var folder = __account[account].folder;
-
-			for(var i = 0; i < folder.length; i++)
+			var list = function(account, callback, request)
 			{
-				var option = document.createElement('option');
+				var area = $system.node.id($id + '_folder');
+				area.innerHTML = '';
 
-				option.value = folder[i].name;
-				$system.node.text(option, folder[i].name);
+				var folder = $system.dom.tags(request.xml, 'folder');
+				var section = ['name', 'count', 'recent']; //Folder parameters
 
-				select.appendChild(option);
+				for(var i = 0; i < folder.length; i++)
+				{
+					var param = {}; //Folder parameters
+
+					for(var j = 0; j < section.length; j++) param[section[j]] = $system.dom.attribute(folder[i], section[j]);
+					__account[account].folder.push(param); //Keep folder information
+
+					var link = document.createElement('a');
+					link.onclick = $system.app.method($self.item.get, [account, param.name]);
+
+					$system.node.text(link, param.name.match(/\./) ? param.name.replace(/^.+?\./, ' |- ') : param.name);
+					area.appendChild(link);
+				}
+
+				if(typeof callback == 'function') callback();
 			}
+
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account}, null, $system.app.method(list, [account, callback]));
 		}
 	}

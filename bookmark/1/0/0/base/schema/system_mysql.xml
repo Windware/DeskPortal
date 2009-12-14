@@ -11,7 +11,6 @@
 
 		<index name="address(50)" />
 		<index name="checked" />
-
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 
@@ -20,8 +19,8 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="address" param="INT NOT NULL" />
 		<column name="referred" param="INT DEFAULT 0" />
-		<column name="UNIQUE" param="(user, address)" />
 
+		<column name="UNIQUE" param="(user, address)" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 </root>

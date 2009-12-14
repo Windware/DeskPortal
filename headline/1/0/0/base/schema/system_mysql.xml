@@ -41,6 +41,7 @@
 	<table name="used">
 		<column name="feed" param="INT NOT NULL" />
 		<column name="user" param="INT NOT NULL" />
+
 		<column name="UNIQUE" param="(feed, user)" />
 	</table>
 </root>

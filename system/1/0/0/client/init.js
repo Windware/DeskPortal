@@ -22,6 +22,8 @@
 			$system.info.devroot = $global.user.conf[$id] && $global.user.conf[$id].theme ? $global.user.conf[$id].theme : $system.info.root + 'component/default/';
 			$system.info.devroot += $system.browser.type + '/';
 
+			$global.user.pref.wallpaper = $system.info.devroot + 'graphic/wallpaper/db_tree.jpg'; //Set a default wallpaper
+
 			if($system.is.md5($global.user.ticket)) //If the login ticket is available
 			{
 				$system.info.depend = []; //The list of application the system depends on

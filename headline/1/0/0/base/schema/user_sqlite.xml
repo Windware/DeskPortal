@@ -4,6 +4,7 @@
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 		<column name="user" param="INT NOT NULL" />
 		<column name="name" param="VARCHAR(255)" />
+
 		<column name="UNIQUE" param="(user, name)" />
 	</table>
 
@@ -15,6 +16,7 @@
 		<column name="read" param="INT DEFAULT 0" />
 		<column name="rate" param="INT DEFAULT 0" />
 		<column name="trash" param="INT DEFAULT 0" />
+
 		<column name="UNIQUE" param="(user, entry)" />
 	</table>
 
@@ -22,6 +24,7 @@
 	<table name="keyword">
 		<column name="user" param="INT NOT NULL" />
 		<column name="word" param="VARCHAR(255)" />
+
 		<column name="UNIQUE" param="(user, word)" />
 	</table>
 
@@ -31,6 +34,7 @@
 		<column name="feed" param="INT NOT NULL" />
 		<column name="period" param="INT DEFAULT 2" />
 		<column name="category" param="INT DEFAULT 0" />
+
 		<column name="UNIQUE" param="(user, feed)" />
 	</table>
 </root>

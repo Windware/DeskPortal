@@ -10,6 +10,9 @@
 			<new summary="メモリー機能を追加" priority="4">
 				結果を保存するメモリー機能を追加
 			</new>
+			<new summary="キーボードからの入力のサポート" priority="3">
+				数値をキーボードから直接入力できるようにする。
+			</new>
 		</user>
 	</plan>
 </root>

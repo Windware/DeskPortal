@@ -4,9 +4,6 @@
 
 		<strong>%string:account%</strong> :
 		<select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>
-
-		<strong>%string:folder%</strong> :
-		<select id="%id%_folder" onchange="%top%.%id%.folder.change(this.value)"%tip:folder%></select>
 	</p>
 
 	<p class="%id%_filter">
@@ -28,9 +25,13 @@
 	</p>
 </form>
 
-<div id="%id%_pane_read"%scroll%>
-	<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"%lock%><tbody id="%id%_read_mail"></tbody></table>
-</div>
+<div id="%id%_pane_read"><table style="width : 100%"><tbody><tr>
+	<td style="width : 20%; vertical-align : top"><div id="%id%_folder"%scroll%></td>
+
+	<td style="width : 80%; vertical-align : top"><div style="overflow : auto; height : 300px; border : 1px #333 solid"%scroll%>
+		<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"%lock%><tbody id="%id%_read_mail"></tbody></table>
+	</div></td>
+</tr></tbody></table></div>
 
 <div id="%id%_pane_compose" class="%system%_hidden">
 	<form id="%id%_form" onsubmit="return %top%.%id%.item.preview(this)">

@@ -3,9 +3,11 @@
 	{
 		var _class = $id + '.gui';
 
-		var _switch = true; //Flag to change operation
+		var _max = 10; //Max digits to display to avoid division inaccuracies
 
 		var _memory; //Current calculated value
+
+		var _switch = true; //Flag to change operation
 
 		var _timer = {}; //Timer to make the button look flat in case the mouse didn't go up on the button
 
@@ -14,7 +16,6 @@
 			//Multiplier to keep the elements as integers to avoid floating point number accuracy errors in JavaScript
 			//http://en.wikipedia.org/wiki/Floating_point#Accuracy_problems
 			var precision = 0;
-
 			var check = [soil, seed]; //Values to check
 
 			for(var i = 0; i <= 1; i++)
@@ -25,7 +26,7 @@
 				if(decimal > precision) precision = decimal; //Override the precision value if it's longer
 			}
 
-			precision = Math.pow(10, precision); //Have it be the decimal multiplier
+			precision = Math.pow(10, precision); //Set the number of digits used
 
 			//Make sure these are numbers and apply the integer precision multiplier and make sure they are integers
 			soil = Math.round(Number(soil) * precision);
@@ -34,10 +35,15 @@
 			switch(operation)
 			{
 				case '+' : return (soil + seed) / precision; break; //Addition
+
 				case '-' : return (soil - seed) / precision; break; //Subtraction
 
 				case '*' : return (soil * seed) / precision / precision; break; //Multiplication
-				case '/' : return seed != 0 ? soil / seed : 0; break; //Division
+
+				case '/' : //Division
+					var limit = Math.pow(10, _max); //Multiply for the maximum allowed dicimal number
+					return seed != 0 ? Math.round((soil / seed) * limit) / limit : 0; //Round it before the inaccuracy appears
+				break;
 
 				default : return 0; break;
 			}

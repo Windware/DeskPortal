@@ -5,6 +5,7 @@
 		<column name="app" param="VARCHAR(64) NOT NULL" />
 		<column name="key" param="VARCHAR(128) NOT NULL" />
 		<column name="value" param="VARCHAR(255)" />
+
 		<column name="UNIQUE" param="(user, app, key)" />
 	</table>
 
@@ -25,6 +26,7 @@
 		<column name="folder" param="VARCHAR(255)" />
 		<column name="message" param="TEXT" />
 		<column name="solution" param="TEXT" />
+
 		<index name="user, time" />
 	</table>
 
@@ -34,6 +36,7 @@
 		<column name="app" param="VARCHAR(32) NOT NULL" />
 		<column name="version" param="VARCHAR(32) NOT NULL" />
 		<column name="loaded" param="INT" />
+
 		<column name="UNIQUE" param="(user, app, version)" />
 	</table>
 
@@ -43,6 +46,7 @@
 		<column name="app" param="VARCHAR(128) NOT NULL" />
 		<column name="key" param="VARCHAR(128) NOT NULL" />
 		<column name="value" param="VARCHAR(255)" />
+
 		<column name="UNIQUE" param="(user, app, key)" />
 	</table>
 </root>

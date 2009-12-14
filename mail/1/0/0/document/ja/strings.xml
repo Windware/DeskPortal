@@ -16,11 +16,10 @@
 	<string name="search" value="検索" />
 
 	<!-- メール一覧 -->
-	<string name="action" value="コマンド" />
+	<string name="new" value="新規作成" />
 	<string name="to" value="宛先" />
 	<string name="from" value="送信者" />
 	<string name="size" value="サイズ" />
-	<string name="mark" value="*" />
 	<string name="received" value="受信日" />
 	<string name="sent" value="送信日" />
 	<string name="cc" value="Cc" />

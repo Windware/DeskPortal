@@ -10,6 +10,8 @@
 		this.edit = function(id) //Pop a window to edit an entry
 		{
 			var log = $system.log.init(_class + '.edit');
+
+			if(id === undefined) id = 0;
 			if(!$system.is.digit(id)) return log.param();
 
 			var node = $id + '_edit_' + id;
@@ -78,18 +80,18 @@
 			else //Create mail composing link
 			{
 				var link = '<img style="margin-left : 5px; cursor : pointer" src="%%" onclick="%%.%%.gui.mail(\'%%\')" class="%%_icon"%% />';
-				var mail = $system.text.format(link, [$system.image.source($id, 'graphic/mail.png'), $global.root, $id, icon.mail, $system.info.id, $system.tip.link($id, null, 'mail')]);
+				var mail = $system.text.format(link, [$system.image.source($id, 'mail.png'), $global.root, $id, icon.mail, $system.info.id, $system.tip.link($id, null, 'mail')]);
 			}
 
 			if(!icon.web) var web = '';
 			else //Create mail composing link
 			{
 				var link = '<img style="margin-left : 5px; cursor : pointer" src="%%" onclick="%%.%%.gui.web(\'%%\')" class="%%_icon"%% />';
-				var web = $system.text.format(link, [$system.image.source($id, 'graphic/web.png'), $global.root, $id, icon.web, $system.info.id, $system.tip.link($id, null, 'web')]);
+				var web = $system.text.format(link, [$system.image.source($id, 'web.png'), $global.root, $id, icon.web, $system.info.id, $system.tip.link($id, null, 'web')]);
 			}
 
 			template = template.replace('%mail%', mail).replace('%web%', web); //If the mail address is available, give composing icon link
-			return $system.window.create(node, $self.info.title + ' : ' + language['info'], template, $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, undefined, undefined, undefined, undefined, true, false, true, focus, $system.app.method(list, [id]), true);
+			return $system.window.create(node, $self.info.title + ' : ' + language['info'], template, $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, undefined, undefined, 350, undefined, true, false, true, focus, $system.app.method(list, [id]), true);
 		}
 
 		this.get = function(group, refresh, callback) //Show the items

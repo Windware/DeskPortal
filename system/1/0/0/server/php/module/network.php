@@ -46,6 +46,7 @@
 			CURLOPT_HEADER => true, #Include HTTP headers in the response too
 			CURLOPT_CONNECTTIMEOUT => $conf['net_timeout'], #Set the network timeout
 			CURLOPT_DNS_CACHE_TIMEOUT => self::$_cache, #Set the valid duration of DNS caches
+			URLOPT_SSL_VERIFYPEER => false, #Do not mind the SSL certificate's validity
 			CURLOPT_MAXREDIRS => self::$_redirection, #Amount of max redirects allowed
 			CURLOPT_ENCODING => '', #Allow content compression on transfer
 			CURLOPT_USERAGENT => $conf['net_agent']); #The user agent string to send

@@ -3,6 +3,7 @@
 	<table>
 		<column name="name" param="varchar(255) UNIQUE" />
 		<column name="value" param="text" />
+
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 </root>

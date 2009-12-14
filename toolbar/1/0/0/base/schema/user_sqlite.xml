@@ -3,6 +3,7 @@
 	<table name="display">
 		<column name="user" param="INT NOT NULL" />
 		<column name="id" param="INT NOT NULL" />
+
 		<column name="UNIQUE" param="(user, id)" />
 	</table>
 
@@ -11,6 +12,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="feature" param="VARCHAR(255) NOT NULL" />
 		<column name="value" param="VARCHAR(255) NOT NULL" />
+
 		<column name="UNIQUE" param="(user, feature)" />
 	</table>
 
@@ -21,6 +23,7 @@
 		<column name="source" param="VARCHAR(255) NOT NULL" />
 		<column name="target" param="VARCHAR(255) NOT NULL" />
 		<column name="value" param="VARCHAR(255) NOT NULL" />
+
 		<column name="UNIQUE" param="(user, method, source, target)" />
 	</table>
 
@@ -32,6 +35,7 @@
 		<column name="method" param="VARCHAR(255) NOT NULL" />
 		<column name="source" param="VARCHAR(255) NOT NULL" />
 		<column name="target" param="VARCHAR(255) NOT NULL" />
+
 		<column name="UNIQUE" param="(user, bar)" />
 	</table>
 </root>

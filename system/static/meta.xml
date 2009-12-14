@@ -10,6 +10,12 @@
 		<translator name="Windware Solution" />
 	</language>
 
+	<!-- NOTE : Check other applications' "meta.xml" for additional requirements -->
+	<requirement>
+		<item>A web server with required language supports</item>
+		<item>RDBMS that those languages all support</item>
+	</requirement>
+
 	<license>
 		<folder name="." license="Windware Reference License">
 			<author name="Windware Solution" site="http://windware-solution.com/" />

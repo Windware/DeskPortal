@@ -16,7 +16,7 @@
 	<string name="search" value="Search" />
 
 	<!-- Mail list -->
-	<string name="action" value="Action" />
+	<string name="new" value="Compose new mail" />
 	<string name="to" value="To" />
 	<string name="from" value="From" />
 	<string name="size" value="Size" />

@@ -5,6 +5,7 @@
 		<column name="version" param="VARCHAR(32)" />
 		<column name="name" param="VARCHAR(128)" />
 		<column name="value" param="BLOB" />
+
 		<column name="UNIQUE" param="(app, version, name)" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
@@ -15,6 +16,7 @@
 		<column name="type" param="VARCHAR(16)" />
 		<column name="data" param="VARCHAR(15)" />
 		<column name="life" param="DATETIME" />
+
 		<column name="UNIQUE" param="(host, type)" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
@@ -31,6 +33,7 @@
 		<column name="day" param="INT DEFAULT NULL" />
 		<column name="week" param="INT DEFAULT NULL" />
 		<column name="month" param="INT DEFAULT NULL" />
+
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 
@@ -38,6 +41,7 @@
 	<table name="group">
 		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
 		<column name="name" param="VARCHAR(32) NOT NULL UNIQUE" />
+
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 
@@ -56,6 +60,7 @@
 		<column name="folder" param="VARCHAR(255)" />
 		<column name="message" param="TEXT" />
 		<column name="solution" param="TEXT" />
+
 		<extra name="ENGINE" param="MYISAM" />
 	</table>
 
@@ -63,19 +68,10 @@
 	<table name="member">
 		<column name="user" param="INT NOT NULL" />
 		<column name="belong" param="INT NOT NULL" />
+
 		<column name="UNIQUE" param="(user, belong)" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
-
-	<!-- User reviews -->
-	<!--<table name="review">
-		<column name="user" param="INT NOT NULL" />
-		<column name="app" param="VARCHAR(32) NOT NULL" />
-		<column name="version" param="VARCHAR(32) NOT NULL" />
-		<column name="review" param="TEXT" />
-		<column name="UNIQUE" param="(user, app, version)" />
-		<extra name="ENGINE" param="INNODB" />
-	</table>-->
 
 	<!-- User login session -->
 	<table name="session">
@@ -83,8 +79,9 @@
 		<column name="ticket" param="CHAR(32) NOT NULL" />
 		<column name="ip" param="VARCHAR(15) NOT NULL" />
 		<column name="time" param="DATETIME NOT NULL" />
-		<extra name="ENGINE" param="INNODB" />
+
 		<index name="ticket" />
+		<extra name="ENGINE" param="INNODB" />
 	</table>
 
 	<!-- User subscription -->
@@ -92,6 +89,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="app" param="VARCHAR(32) NOT NULL" />
 		<column name="invalid" param="INT DEFAULT 0" />
+
 		<column name="UNIQUE" param="(user, app)" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
@@ -104,6 +102,7 @@
 		<column name="joined" param="DATE" />
 		<column name="logged" param="INT DEFAULT 0" />
 		<column name="invalid" param="INT DEFAULT 0" />
+
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 </root>

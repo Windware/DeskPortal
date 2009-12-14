@@ -9,9 +9,7 @@
 
 	table#%id%_tab th { cursor : pointer; border : 1px #333 solid; }
 
-	div#%id%_pane_read { overflow : auto; height : 300px; border : 1px #333 solid; }
-
-	table#%id%_read_zone { background-color : #eee; empty-cells : show; border-collapse : collapse; width : 100%; }
+	table#%id%_read_zone { background-color : #fff; empty-cells : show; border-collapse : collapse; width : 100%; }
 
 	tr#%id%_read_header { background-color : #cca; }
 
@@ -21,7 +19,23 @@
 
 	tr.%id%_hover { background-color : #c97; }
 
+	div#%id%_folder { border : 1px #333 solid; overflow : auto; height : 300px; }
+
+	div#%id%_folder a { display : block; background-color : #ddc; border-bottom : 1px #333 solid; padding : 5px; }
+
+	div#%id%_folder a:hover { background-color : #ca8; }
+
+	th.%id%_row_from { width : 200px; }
+
+	th.%id%_row_date { width : 120px; }
+
 	/* Mail window */
 	h2.%id%_mail_subject { text-align : center; font-weight : bold; border : 1px #333 solid; padding : 5px; }
 
-	div.%id%_mail_body { overflow : auto; height : 300px; text-align : left; background-color : #eee; color : #333; padding : 10px; }
+	div.%id%_mail_body { word-break : all; overflow : auto; height : 300px; text-align : left; background-color : #eee; color : #333; padding : 10px; }
+
+	form.%id%_mail_action input { width : 95px; border : 1px #333 solid; background-color : #dca; }
+
+	tbody.%id%_mail_header th { font-weight : bold; text-align : right; }
+
+	tbody.%id%_mail_header td { padding-left : 10px; }

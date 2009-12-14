@@ -1,0 +1,14 @@
+<!-- This file must be copied to "system/static/conf/app/" to take effect -->
+<root>
+	<!-- Key string to encrypt user password in their databases
+		Since this application needs the passwords to access the mail servers in plain text form,
+		the passwords will be stored in a readable format, but it will be encrypted with the key string mentioned here
+		but will be decrypted using this key upon usage.
+
+		Anyone accessing the user database will not be able to decrypt the user password without this key string.
+		While both the database and the key string may be accessed from the same source together,
+		it is still better to keep the password in an encrypted form than in plain text.
+	-->
+	<conf name="key" value="PLEASE CHANGE ME T0 A VERY LONG RANDOM STRING!" />
+</root>
+

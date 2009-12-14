@@ -1,10 +1,10 @@
-<form onsubmit="return %top%.%id%.item.set(%value:id%, this)">
+<form id="%id%_form_edit" onsubmit="return %top%.%id%.item.set(%value:id%, this)">
 	<table class="%id%_info" cellpadding="5" cellspacing="0" style="text-align : left" class="%system%_full"><tbody>
 		<tr><td colspan="2" style="text-align : center"><h2>%title% %string:info%</h2></td></tr>
 
 		<tr>
 			<th style="width : 30%; border-top : 1px #333 dotted"><strong>%string:name%</strong></th>
-			<td style="width : 70%"><input name="name" type="text" value="%value:name%" id="%id%_form_name_%value:id%" /></td></tr>
+			<td style="width : 70%"><input name="name" style="width : 100%" type="text" value="%value:name%" id="%id%_form_name_%value:id%" /></td></tr>
 		</tr>
 
 		<tr>
@@ -37,35 +37,35 @@
 		<tr>
 			<th><strong>%string:mail%</strong></th>
 			<td><table cellpadding="0" cellspacing="0"><tbody><tr>
-				<td><input name="mail" type="text" value="%value:mail%" /></td><td>%mail%</td>
+				<td><input name="mail" type="text" style="width : 100%" value="%value:mail%" /></td><td>%mail%</td>
 			</tr></tbody></table></td></tr>
 		</tr>
 
 		<tr>
 			<th><strong>%string:web%</strong></th>
 			<td><table cellpadding="0" cellspacing="0"><tbody><tr>
-				<td><input name="web" type="text" value="%value:web%" /></td><td>%web%</td>
+				<td><input name="web" type="text" style="width : 100%" value="%value:web%" /></td><td>%web%</td>
 			</tr></tbody></table></td></tr>
 		</tr>
 
 		<tr>
 			<th><strong>%string:mobile%</strong></th>
-			<td><input name="mobile" type="text" value="%value:mobile%" /></td></tr>
+			<td><input name="mobile" type="text" style="width : 100%" value="%value:mobile%" /></td></tr>
 		</tr>
 
 		<tr>
 			<th><strong>%string:phone%</strong></th>
-			<td><input name="phone" type="text" value="%value:phone%" /></td></tr>
+			<td><input name="phone" type="text" style="width : 100%" value="%value:phone%" /></td></tr>
 		</tr>
 
 		<tr>
 			<th><strong>%string:address%</strong></th>
-			<td><textarea name="address">%value:address%</textarea></td></tr>
+			<td><textarea style="width : 100%" name="address" rows="3">%value:address%</textarea></td></tr>
 		</tr>
 
 		<tr>
 			<th><strong>%string:note%</strong></th>
-			<td><textarea name="note" rows="3">%value:note%</textarea></td></tr>
+			<td><textarea style="width : 100%" name="note" rows="3">%value:note%</textarea></td></tr>
 		</tr>
 
 		<tr>

@@ -52,7 +52,8 @@
 		{
 			switch($type)
 			{
-				case 'sqlite' : return 'PRAGMA auto_vacuum = FULL'; break; #Set auto vacuum feature on
+				#TODO : Disabled, since, it causes 'General error: 17 database schema has changed' on some occasions
+				#case 'sqlite' : return 'PRAGMA auto_vacuum = FULL'; break; #Set auto vacuum feature on
 
 				default : return ''; break;
 			}

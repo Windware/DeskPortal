@@ -58,7 +58,7 @@
 
 						if($system.dom.attribute(entries[j], 'icon')) //Make icon if it exists
 						{
-							var graphic = $system.image.source(name, 'graphic/icon.png', $system.dom.attribute(entries[j], 'icon'));
+							var graphic = $system.image.source(name, 'icon.png');
 							var icon = '<img class="' + $system.info.id + '_icon" src="' + graphic + '" /> ';
 						}
 						else var icon = '';

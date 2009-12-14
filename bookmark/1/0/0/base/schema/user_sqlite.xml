@@ -7,6 +7,7 @@
 		<column name="viewed" param="INT DEFAULT 0" />
 		<column name="name" param="VARCHAR(255)" />
 		<column name="rate" param="INT" />
+
 		<column name="UNIQUE" param="(user, id)" />
 	</table>
 
@@ -15,6 +16,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 		<column name="name" param="VARCHAR(255)" />
+
 		<column name="UNIQUE" param="(user, name)" />
 	</table>
 
@@ -23,6 +25,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="bookmark" param="INT NOT NULL" />
 		<column name="category" param="INT NOT NULL" />
+
 		<column name="UNIQUE" param="(user, bookmark, category)" />
 	</table>
 
@@ -34,6 +37,7 @@
 		<column name="time" param="DATETIME NOT NULL" />
 		<column name="type" param="VARCHAR(255)" />
 		<column name="content" param="TEXT" />
+
 		<column name="UNIQUE" param="(user, bookmark, file)" />
 	</table>
 </root>

@@ -5,6 +5,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="name" param="VARCHAR(255)" />
 		<column name="color" param="CHAR(6)" />
+
 		<column name="UNIQUE" param="(user, name)" />
 	</table>
 
@@ -17,6 +18,7 @@
 		<column name="type" param="INT" />
 		<column name="title" param="TEXT NOT NULL" />
 		<column name="content" param="TEXT NOT NULL" />
+
 		<index name="user, day" />
 	</table>
 
@@ -31,6 +33,7 @@
 		<column name="type" param="INT" />
 		<column name="start" param="DATETIME" />
 		<column name="end" param="DATETIME" />
+
 		<index name="user, day" />
 		<index name="user, category" />
 		<index name="day" />
@@ -42,6 +45,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="name" param="VARCHAR(255)" />
 		<column name="color" param="CHAR(6)" />
+
 		<column name="UNIQUE" param="(user, name)" />
 	</table>
 </root>

@@ -71,12 +71,11 @@
 			if(!$system.is.id(id) || !$system.is.text(image)) return log.param();
 
 			var root = $global.user.conf[id] && $global.user.conf[id].theme ? $global.user.conf[id].theme : $system.app.path(id) + 'component/default/';
-			root += $system.browser.type + '/';
+			var graphic = $system.network.form(root + $system.browser.type + '/graphic/' + image); //Full address to get the image
 
-			var graphic = $system.network.form(root + image); //Full address to get the image
 			if($system.browser.engine != 'trident' || $system.browser.version >= 8) return graphic; //For png supporting browsers, use the image as is
 
-			//Otherwise, trick the engine by using a blank image and using filter function on it
+			//Otherwise, use filter to achieve the translucent effects under older IE
 			return $system.network.form($system.info.devroot + 'graphic/blank.png') + '" style="filter : ' + $system.text.format(_filter, [graphic]);
 		}
 

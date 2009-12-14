@@ -270,7 +270,7 @@
 					var tab = document.createElement('a'); //Create the tab to switch the section
 					tab.id = [$id, id, 'tab', section[i]].join('_');
 
-					var value = [$id, $system.image.source($id, 'graphic/' + section[i] + '_grey.png'), section[i]];
+					var value = [$id, $system.image.source($id, section[i] + '_grey.png'), section[i]];
 					tab.innerHTML = $system.text.format('<img class="%%_icon" src="%%" name="%%" /> ', value) + language[section[i]];
 
 					tab.onclick = $system.app.method($system.conf.swap, [id, section[i]]);

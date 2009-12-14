@@ -1,2 +1,6 @@
 <root>
+	<!-- USER -->
+	<!-- item.js -->
+	<string name="user/show/error" value="Displaying the email failed" />
+	<string name="user/show/solution" value="Please reload the page and try again" />
 </root>

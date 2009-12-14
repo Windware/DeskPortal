@@ -1,16 +1,19 @@
 <h2 class="%id%_mail_subject"><span%lock%>%value:subject%</span></h2>
 
-<form style="margin : 10px 0px">
-	<table cellpadding="5" cellspacing="0" style="border : 1px #ccc solid; border-width : 1px 0px 1px 1px; width : 100%"><tbody><tr%lock%>
-		<td style="border-right : 1px #ccc solid">%string:reply%</td>
-		<td style="border-right : 1px #ccc solid">%string:reply_all%</td>
-		<td style="border-right : 1px #ccc solid">%string:forward%</td>
-		<td style="border-right : 1px #ccc solid">%string:move% <select name="target"></select></td>
-		<td style="border-right : 1px #ccc solid">%string:copy% <select name="target"></select></td>
-		<td style="border-right : 1px #ccc solid">%string:delete%</td>
-		<td style="border-right : 1px #ccc solid">%string:mark%</td>
-	</tr></tbody></table>
+<table style="width : 100%" cellpadding="0" cellspacing="0"><tbody class="%id%_mail_header">
+	<tr><th style="width : 25%">%string:from%</th><td>%value:from%</td></tr>
+	<tr><th>%string:to%</th><td>%value:to%</td></tr>
+	<tr><th>%string:cc%</th><td>%value:cc%</td></tr>
+	<tr><th>%string:date%</th><td>%value:date%</td></tr>
+</tbody></table>
+
+<form style="text-align : center; margin : 10px 0px" class="%id%_mail_action">
+	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%, ['from'])" value="%string:reply%" />
+	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%, ['from', 'cc'])" value="%string:reply_all%" />
+	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%)" value="%string:forward%" />
+	<input type="button" onclick="%top%.%id%.gui.mark(%value:index%)" value="%string:mark%" />
+	<input type="button" onclick="%top%.%id%.gui.remove(%value:index%)" value="%string:delete%" />
+	<input type="button" onclick="%top%.%system%.window.fade('%id%_mail_%value:index%')" value="%string:close%" />
 </form>
 
 <div class="%id%_mail_body"%lock%>%value:body%</div>
-<p><a onclick="%top%.%system%.window.fade('%id%_mail_%value:index%')">%string:close%</a></p>

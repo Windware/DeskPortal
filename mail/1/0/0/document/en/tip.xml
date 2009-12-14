@@ -1,15 +1,8 @@
 <root>
+	<!-- Configuration -->
 	<string name="secure" value="Uses secure connection. Your mail server must support this feature." />
 	<string name="leave" value="To leave the copy of mails on the server or not. Leave the number of days empty to keep it forever or enter the number of days to delete the copy off the server after specified days." />
 
-
-
-
-
-
-	<string name="account" value="Active account can be changed here" />
-	<string name="select" value="Select to change the email account" />
-	<string name="read" value="Read mails" />
-	<string name="compose" value="Write a mail" />
-	<string name="sort" value="Click to sort" />
+	<!-- Mail window -->
+	<string name="add" value="Add to address book" />
 </root>

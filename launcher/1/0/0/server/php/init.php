@@ -48,6 +48,9 @@
 			$versions = array(); #List of version numbers the user prefers
 			foreach($query->all() as $row) $versions[$row['app']] = $row['version'];
 
+			$conf = array(); #User configurations
+			foreach($user->conf('conf') as $row) if($system->is_id($row['app'])) $conf[$row['app']][$row['key']] = $row['value'];
+
 			foreach($subscribed as $name)
 			{
 				$used = $system->is_version($versions[$name]) ? $versions[$name] : $system->app_version($name);
@@ -69,10 +72,10 @@
 					$list[$category][] = $id; #Add to the list
 				}
 
-				$theme = 'default'; #FIXME - need to account for user's selected theme through db
+				$theme = $conf[$id]['theme'] ? $conf[$id]['theme'] : "$path/component/default/";
+				$graphic = "$theme{$system->global['define']['device']}/graphic/icon.png"; #Load the icon on the current theme
 
-				$graphic = "{$system->global['define']['top']}$path/component/$theme/{$system->global['define']['device']}/graphic/icon.png";
-				$icon[$id] = $system->file_readable($graphic) ? $theme : ''; #Note the icon's theme
+				$icon[$id] = $system->file_readable($graphic) ? $graphic : ''; #Note the icon's theme
 			}
 
 			$xml = ''; #XML list of applications

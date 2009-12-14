@@ -4,6 +4,7 @@
 		<column name="user" param="INT" />
 		<column name="name" param="varchar(255)" />
 		<column name="value" param="text" />
+
 		<column name="UNIQUE" param="(user, name)" />
 	</table>
 </root>
