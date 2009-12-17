@@ -2,12 +2,11 @@
 	<string name="tool" value="Show tools for this application" />
 	<string name="low" value="Lower the window position" />
 	<string name="close" value="Close this window" />
-	<string name="lock" value="Lock this window from moving/resizing" />
-	<string name="unlock" value="Unlock this window for moving/resizing" />
+	<string name="lock" value="Lock this window from moving" />
+	<string name="unlock" value="Unlock this window for moving" />
 	<string name="drop" value="Hide the content" />
 	<string name="show" value="Show the content" />
 	<string name="resize" value="Grab here to resize the pane" />
-	<string name="static" value="Resizing is locked" />
 	<string name="unremovable" value="Cannot remove the tool bar now" />
 	<string name="remove" value="Remove the tool bar" />
 	<string name="restore" value="Restore the tool bar" />

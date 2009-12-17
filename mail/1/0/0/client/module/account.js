@@ -8,14 +8,16 @@
 			var log = $system.log.init(_class + '.change');
 			if(!$system.is.digit(account)) return log.param();
 
-			$self.item.get(account, 'INBOX'); //Get mails for default mail box
-			$self.folder.get(account); //List the folders
+			var list = function() //Get mails for the default mail box (That is cached on the server) and then update the content from the mail server
+			{
+				$self.item.get(account, __folder[account].INBOX.id, 1, $system.app.method($self.account.update, [account]));
+			}
+
+			$self.folder.get(account, list); //List the folders (That is cached on the server)
 		}
 
 		this.get = function(callback) //Get list of accounts
 		{
-			var log = $system.log.init(_class + '.get');
-
 			var select = $system.node.id($id + '_account');
 			var index = select.value; //Keep the current value
 
@@ -47,7 +49,7 @@
 					$system.node.text(option, description);
 
 					select.appendChild(option);
-					__account[option.value] = {description : description, folder : []}; //Keep the account information
+					__account[option.value] = description;
 				}
 
 				select.value = index;
@@ -55,5 +57,18 @@
 			}
 
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'account.get'}, null, list);
+		}
+
+		this.update = function() //Update the folders and mails
+		{
+			if(!__selected.account || !__selected.folder) return;
+
+			var list = function(request)
+			{
+				$self.folder.get(__selected.account, null, request);
+				$self.item.get(__selected.account, __selected.folder, __selected.page, null, request);
+			}
+
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'account.update', account : __selected.account, folder : __selected.folder, page : __selected.page}, null, list);
 		}
 	}

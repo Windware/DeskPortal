@@ -8,6 +8,8 @@
 			var log = $system.log.init(_class + '.add');
 			if(!$system.is.text(address) || !$system.is.text(name, true)) return log.param();
 
+			//TODO - It cannot open the address book version the user uses, since it may have different API and node names,
+			//which may open a different address book app on top of an already displayed version
 			var app = 'addressbook_1_0_0'; //The address book version this function supports
 
 			var open = function(address, name)

@@ -9,6 +9,7 @@
 	<string name="logout" value="自動ログアウト" />
 	<string name="off" value="オフ" />
 	<string name="minute" value="分" />
+	<string name="hour" value="時間" />
 	<string name="window" value="ウインドウ" />
 	<string name="wallpaper" value="壁紙" />
 	<string name="background" value="背景" />

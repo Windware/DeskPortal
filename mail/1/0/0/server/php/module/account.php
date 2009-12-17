@@ -1,19 +1,20 @@
 <?php
 	class Mail_1_0_0_Account
 	{
-		public static function connect($account, $folder, System_1_0_0_User $user = null) #Connect to the mail server of an account
+		public static function connect($account, $folder = '', System_1_0_0_User $user = null) #Connect to the mail server of an account
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_digit($account)) return $log->param();
-			if(!is_string($folder)) $folder = '';
+			if(!$system->is_digit($account) || !$system->is_digit($folder) && $folder !== '') return $log->param();
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
 
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
+
+			if($folder !== '') $folder = Mail_1_0_0_Folder::name($folder); #Convert it into textual name
 
 			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $account, ':user' => $user->id));
@@ -29,7 +30,7 @@
 			$connection = imap_open($parameter.imap_utf7_encode($folder), $info['receive_user'], $info['receive_pass']);
 
 			if(!$connection) $log->dev(LOG_ERR, 'Failed opening connection to a mail server', 'Check user configuration');
-			return array($connection, $host, $parameter);
+			return array($connection, $host, $parameter, $info['receive_type']);
 		}
 
 		public static function get(System_1_0_0_User $user = null) #Get list of accounts
@@ -108,6 +109,29 @@
 			}
 
 			return $query->success;
+		}
+
+		public static function update($account, $folder, $page, $order = 'sent', $reverse = false, System_1_0_0_User $user = null)
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($account) || !$system->is_digit($folder) || !$system->is_digit($page) || !$system->is_text($order)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			if(Mail_1_0_0_Item::update($account, $folder, $user) === false) return false;
+
+			$mail = Mail_1_0_0_Item::get($account, $folder, $page, $order, $reverse, $user);
+			if($mail === false) return false;
+
+			if(Mail_1_0_0_Folder::update($account, $user) === false) return false;
+
+			$folder = Mail_1_0_0_Folder::get($account, $user);
+			if($folder === false) return false;
+
+			return $mail.$folder;
 		}
 	}
 ?>

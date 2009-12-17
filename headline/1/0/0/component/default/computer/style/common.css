@@ -21,9 +21,7 @@
 	img.%id%_icon { width : 24px; height : 24px; border : none; } 	/* Feed mark icons */
 
 	/* Entries */
-	form#%id%_entries { font-weight : bold; }
-
-	span.%id%_read { font-style : italic; font-weight : normal; }
+	span.%id%_read { font-weight : bold; }
 
 	p.%id%_paging { text-align : center; }
 

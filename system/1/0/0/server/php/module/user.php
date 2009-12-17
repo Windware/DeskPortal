@@ -5,7 +5,9 @@
 
 		public $id, $name, $system, $ticket, $valid;
 
-		public static $_last = 1; #Days for the cookie to expire (NOTE : Translation for 'login' app needs changed if the value changes)
+		#NOTE : Manual for 'login' app needs changed if this value changes
+		#Must be in sync with the value set in start.js 'this.user.pref.logout' value for 'system_static'
+		public static $_last = 30; #Default minutes for auto logout mechanism
 
 		public function __construct(&$system, $id = null) #Get the user info (If no user is specified, gets the logged in user's)
 		{
@@ -204,7 +206,15 @@
 			$log = $system->log(__METHOD__);
 
 			if(!$this->valid) return -1; #If the user is invalid, quit
-			return setcookie('ticket', $this->ticket, time() + self::$_last * 24 * 3600); #Resend the same ticket with new expire time
+
+			foreach($this->conf('conf', array('system_static')) as $conf) #Set a very long expire date when auto logout is turned off
+				if($conf['key'] == 'logout' && $system->is_digit($conf['value'])) $period = $conf['value'] == 0 ? 365 * 24 * 60 : $conf['value'];
+
+			if(!$period) $period = self::$_last; #If never set, use the default auto logout value
+			$period *= 60; #Turn into seconds
+
+			#Resend the same cookies with new expire time
+			return setcookie('ticket', $this->ticket, time() + $period) && setcookie('name', $this->name, time() + $period);
 		}
 
 		public function save($section, $data, $id = null) #Update user configuration values

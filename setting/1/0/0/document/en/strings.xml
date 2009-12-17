@@ -9,6 +9,7 @@
 	<string name="logout" value="Auto logout" />
 	<string name="off" value="Off" />
 	<string name="minute" value="minutes" />
+	<string name="hour" value="hours" />
 	<string name="window" value="Window" />
 	<string name="wallpaper" value="Wallpaper" />
 	<string name="background" value="Background" />

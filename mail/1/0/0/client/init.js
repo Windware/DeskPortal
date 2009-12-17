@@ -1,8 +1,10 @@
 
-	var __account = {}; //List of accounts cached
+	var __account = {}; //List of account names
 
-	var __folder = {}; //List of mails in a folder
+	var __folder = {}; //List of folder information
 
-	var __local = {}; //Local mail numbering
+	var __mail = {}; //List of mails
 
-	var __mail = {}; //List of mails cached
+	var __selected = {}; //Current displayed account, folder and page
+
+	var __update; //Mail update process

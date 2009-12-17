@@ -17,7 +17,7 @@
 			$global.user.ticket = $system.browser.cookie('ticket'); //A temporary ticket given through cookie for authorization
 
 			$global.user.language = $system.language.pref(); //Set the preferred language to use
-			$global.user.pref.format = {date : '%Y% %M% %d%', month : '%Y% %M%', monthdate : '%M% %d%', time : '%h%:%N%'}; //Date display format
+			$global.user.pref.format = {full : '%Y% %M% %d% %h%:%N%', date : '%Y% %M% %d%', month : '%Y% %M%', monthdate : '%M% %d%', time : '%h%:%N%'}; //Date display format
 
 			if(!$system.is.md5($global.user.ticket)) return; //If ticket is not available, quit
 

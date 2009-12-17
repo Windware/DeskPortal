@@ -12,7 +12,6 @@
 
 	<requirement>
 		<item>IMAP and mcrypt PHP modules</item>
-		<item>Net_SMTP, Auth_SASL and Net_POP3 pear packages for PHP</item>
 	</requirement>
 
 	<license>
