@@ -27,7 +27,7 @@
 		break;
 
 		case 'item.get' : #Get list of mails stored in the database
-			$data = Mail_1_0_0_Item::get($_GET['account'], $_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse']);
+			$data = Mail_1_0_0_Item::get($_GET['account'], $_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse'], true);
 			print $system->xml_send($data !== false, $data, null, true);
 		break;
 

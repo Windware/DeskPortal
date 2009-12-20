@@ -21,6 +21,9 @@
 
 	<!-- DEVELOPER -->
 	<!-- app.js -->
+	<string name="dev/callback" value="Executing callback function failed on %% : %%" />
+	<string name="dev/callback/solution" value="Check the callback function." />
+
 	<string name="dev/check" value="Check the error." />
 
 	<string name="dev/depend" value="Depending system could not be used to load for version '%%'." />

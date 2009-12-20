@@ -17,6 +17,19 @@
 			return $global.loader[process][system](id); //Use that system version to process the loading
 		}
 
+		this.callback = function(source, callback) //Run a callback function safely
+		{
+			if(!$system.is.text(source) || typeof callback != 'function') return false;
+
+			try { return callback(); }
+
+			catch(error)
+			{
+				var log = $system.log.init(_class + '.callback');
+				return log.dev($global.log.error, 'dev/callback', 'dev/callback/solution', [source, $system.browser.report(error)]);
+			}
+		}
+
 		//Gets the name and the version of the application from an ID string
 		this.component = function(id) { return String(id).match(/^([a-z\d]+)_(\d+_\d+_\d+)$/) ? [RegExp.$1, RegExp.$2] : null; }
 

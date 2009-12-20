@@ -57,10 +57,12 @@
 		<column name="preview" param="TEXT NOT NULL" />
 
 		<column name="marked" param="INT" />
+		<column name="color" param="CHAR(6)" />
 		<column name="read" param="INT" />
 		<column name="belong" param="INT" />
 
-		<index name="user, account, folder" />
+		<index name="user, account, folder, uid" />
+		<index name="user, account, folder, sequence" />
 		<index name="signature" />
 	</table>
 

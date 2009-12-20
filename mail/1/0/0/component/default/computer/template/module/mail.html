@@ -13,7 +13,7 @@
 	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%)" value="%string:forward%" />
 	<input type="button" onclick="%top%.%id%.gui.mark(%value:index%)" value="%string:mark%" />
 	<input type="button" onclick="%top%.%id%.gui.remove(%value:index%)" value="%string:delete%" />
-	<input type="button" onclick="%top%.%system%.window.fade('%id%_mail_%value:index%')" value="%string:close%" />
+	<input type="button" onclick="%top%.%system%.window.fade('%id%_mail_%value:index%', undefined, undefined, true)" value="%string:close%" />
 </form>
 
 <div class="%id%_mail_body"%lock%>%value:body%</div>

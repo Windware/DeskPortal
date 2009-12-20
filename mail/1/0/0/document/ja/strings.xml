@@ -7,12 +7,15 @@
 
 	<!-- フィルター -->
 	<string name="all" value="全て" />
+	<string name="display" value="表示" />
 
 	<string name="filter" value="フィルター" />
 	<string name="state" value="状態" />
 	<string name="marked" value="マーク済み" />
 	<string name="unread" value="未読" />
-	<string name="group" value="グループ" />
+	<string name="page" value="ページ" />
+	<string name="order" value="順序" />
+	<string name="reverse" value="逆順" />
 	<string name="search" value="検索" />
 
 	<!-- メール一覧 -->

@@ -7,12 +7,15 @@
 
 	<!-- Filters -->
 	<string name="all" value="All" />
+	<string name="display" value="Display" />
 
 	<string name="filter" value="Filters" />
 	<string name="state" value="State" />
 	<string name="marked" value="Marked" />
 	<string name="unread" value="Unread" />
-	<string name="group" value="Group" />
+	<string name="page" value="Page" />
+	<string name="order" value="Order" />
+	<string name="reverse" value="Reverse" />
 	<string name="search" value="Search" />
 
 	<!-- Mail list -->

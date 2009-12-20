@@ -17,8 +17,8 @@
 				var strings = $system.language.strings($system.info.id); //System language strings
 				var language = $system.language.strings(source, 'log.xml'); //App specific log strings
 
-				message = language[message] && $system.text.format(language[message].replace(/%%/g, '<strong>%%</strong>'), param_message, true); //Translate the message
-				solution = language[solution] && $system.text.format(language[solution].replace(/%%/g, '<strong>%%</strong>'), param_solution, true); //Translate the solution
+				message = language[message] && $system.text.format(language[message].replace(/%%/g, '<strong>%%</strong>'), param_message); //Translate the message
+				solution = language[solution] && $system.text.format(language[solution].replace(/%%/g, '<strong>%%</strong>'), param_solution); //Translate the solution
 
 				source = $global.app[source].title; //Set the name
 				if($global.user.pref.debug && solution) hint = $system.tip.link($system.info.id, null, 'blank', [solution]) + ' style="cursor : help"';

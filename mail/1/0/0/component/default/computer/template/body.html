@@ -1,14 +1,25 @@
-<form style="margin : 10px 0px" onsubmit="%top%.%id%.gui.filter()">
-	<p>
-		<input type="button" onclick="%top%.%id%.item.create()" value="%string:new%" />
+<form id="%id%_form" style="margin : 10px 0px" onsubmit="%top%.%id%.gui.filter()">
+	<p><strong>%string:display%</strong>
+		[%string:account% :
+		<select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>]
 
-		<strong>%string:account%</strong> :
-		<select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>
+		[%string:order% :
+		<select name="order" onchange="%top%.%id%.item.update()">
+			<option value="sent">%string:sent%</option>
+			<option value="subject">%string:subject%</option>
+			<option value="from">%string:from%</option>
+			<option value="to">%string:to%</option>
+		</select>
+
+		<label for="%id%_reverse">
+			<input id="%id%_reverse" type="checkbox" name="reverse" onclick="%top%.%id%.item.update()" checked="checked" /> %string:reverse%
+		</label>]
+
+		[%string:page% : <span id="%id%_paging"><select id="%id%_show"><option>1</option></select> / 1</span>]
 	</p>
 
-	<p class="%id%_filter">
-		<strong>%string:filter%</strong> [%string:state% :
-
+	<p class="%id%_filter"><strong>%string:filter%</strong>
+		[%string:state% :
 		<label for="%id%_marked"%tip:marked%>
 			<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter()" name="marked"> %string:marked%
 		</label>
@@ -16,9 +27,6 @@
 		<label for="%id%_unread"%tip:unread%>
 			<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter()" name="unread"> %string:unread%
 		</label>]
-
-		[<span%tip:group% style="cursor : help">%string:group% :
-		<select name="group" id="%id%_filter_group" onchange="%top%.%id%.gui.filter()"></select></span>]
 
 		[<span%tip:search% style="cursor : help">%string:search% : <input type="text" name="search" style="width : 120px" />]
 		<input type="submit" style="display : none" /></span>

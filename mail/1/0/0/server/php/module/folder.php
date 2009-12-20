@@ -18,8 +18,20 @@
 			$query->run(array(':user' => $user->id, ':account' => $account));
 
 			if(!$query->success) return false;
-			foreach($query->all() as $row) $xml .= $system->xml_node('folder', $row);
+			$list = $query->all();
 
+			if(!count($list)) #If no folders exist
+			{
+				if(Mail_1_0_0_Folder::update($account, $user)) #Update from the mail server
+				{
+					$query->run(array(':user' => $user->id, ':account' => $account));
+					if(!$query->success) return false;
+
+					$list = $query->all();
+				}
+			}
+
+			foreach($list as $row) $xml .= $system->xml_node('folder', $row);
 			return $xml;
 		}
 
@@ -84,11 +96,11 @@
 				$index[$row['name']] = $row['id'];
 			}
 
-			list($connection, $host, $parameter, $type) = Mail_1_0_0_Account::connect($account, '', $user); #Connect to the server
+			$link = Mail_1_0_0_Account::connect($account, '', $user); #Connect to the server
 			$list = ''; #List of folders
 
 			#Get the folder names
-			foreach(imap_list($connection, '{'.$host.'}', '*') as $name) $folders[] = preg_replace('/^{'.preg_quote($host).'}/', '', $name);
+			foreach(imap_list($link['connection'], '{'.$link['host'].'}', '*') as $name) $folders[] = preg_replace('/^{'.preg_quote($link['host']).'}/', '', $name);
 
 			foreach(array_diff($stored, $folders) as $name) #For folders not existing anymore, delete it and the mails inside
 			{

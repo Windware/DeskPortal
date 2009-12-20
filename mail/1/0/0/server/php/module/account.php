@@ -1,6 +1,8 @@
 <?php
 	class Mail_1_0_0_Account
 	{
+		private static $_stream = array(); #Mail server connection cache
+
 		public static function connect($account, $folder = '', System_1_0_0_User $user = null) #Connect to the mail server of an account
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -14,7 +16,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			if($folder !== '') $folder = Mail_1_0_0_Folder::name($folder); #Convert it into textual name
+			$name = $folder !== '' ? Mail_1_0_0_Folder::name($folder) : ''; #Convert it into textual name
 
 			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $account, ':user' => $user->id));
@@ -27,10 +29,22 @@
 			$secure = $info['receive_secure'] ? '/ssl' : '';
 
 			$parameter = "{{$host}/{$info['receive_type']}/novalidate-cert$secure}";
-			$connection = imap_open($parameter.imap_utf7_encode($folder), $info['receive_user'], $info['receive_pass']);
 
+			if(self::$_stream[$user->id][$account]) #If a connection already exists for the account
+			{
+				if(self::$_stream[$user->id][$account]['folder'] != $folder) #If the folder is different
+				{
+					imap_reopen(self::$_stream[$user->id][$account]['connection'], $parameter.imap_utf7_encode($name)); #Open that folder
+					self::$_stream[$user->id][$account]['folder'] = $folder;
+				}
+
+				return self::$_stream[$user->id][$account]; #Return the cached connection information
+			}
+
+			$connection = imap_open($parameter.imap_utf7_encode($name), $info['receive_user'], $info['receive_pass']);
 			if(!$connection) $log->dev(LOG_ERR, 'Failed opening connection to a mail server', 'Check user configuration');
-			return array($connection, $host, $parameter, $info['receive_type']);
+
+			return self::$_stream[$user->id][$account] = array('connection' => $connection, 'folder' => $folder, 'host' => $host, 'parameter' => $parameter, 'type' => $type);
 		}
 
 		public static function get(System_1_0_0_User $user = null) #Get list of accounts
@@ -111,7 +125,7 @@
 			return $query->success;
 		}
 
-		public static function update($account, $folder, $page, $order = 'sent', $reverse = false, System_1_0_0_User $user = null)
+		public static function update($account, $folder, $page, $order = 'sent', $reverse = true, System_1_0_0_User $user = null)
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -121,17 +135,17 @@
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
 
-			if(Mail_1_0_0_Item::update($account, $folder, $user) === false) return false;
-
-			$mail = Mail_1_0_0_Item::get($account, $folder, $page, $order, $reverse, $user);
-			if($mail === false) return false;
-
 			if(Mail_1_0_0_Folder::update($account, $user) === false) return false;
 
-			$folder = Mail_1_0_0_Folder::get($account, $user);
-			if($folder === false) return false;
+			$storage = Mail_1_0_0_Folder::get($account, $user);
+			if($storage === false) return false;
 
-			return $mail.$folder;
+			if(Mail_1_0_0_Item::update($account, $folder, $user) === false) return false;
+
+			$mail = Mail_1_0_0_Item::get($account, $folder, $page, $order, $reverse, false, $user);
+			if($mail === false) return false;
+
+			return $storage.$mail;
 		}
 	}
 ?>

@@ -25,6 +25,8 @@
 
 	div#%id%_folder a:hover { background-color : #ca8; }
 
+	a.%id%_displayed { background-color : #abc !important; font-weight : bold; }
+
 	th.%id%_row_from { width : 200px; }
 
 	th.%id%_row_date { width : 120px; }

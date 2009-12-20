@@ -216,6 +216,8 @@
 			return $_log[$id] = new System_1_0_0_Log($this, $caller);
 		}
 
+		public function log_query($mode = 2) { $this->app_conf('system', 'static', 'log_query', $mode); } #Debugging shortcut
+
 
 		public function network_http($request) { return System_1_0_0_Network::http($this, $request); }
 
