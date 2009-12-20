@@ -81,7 +81,9 @@
 
 			if($system->is_language($language)) #If specified parameter is a valid language string
 			{
+				if(strstr($language, '-')) array_unshift($order, strtolower(array_shift(explode('-', $language))));
 				array_unshift($order, strtolower($language)); #Add the langauge given to the foremost
+
 				$order = array_unique($order); #Crop any duplicates
 			}
 

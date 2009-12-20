@@ -15,6 +15,8 @@
 
 		if($self == $global.system) //If this is the first loaded core system
 		{
+			$global.user.pref.wallpaper = 'system/1/0/0/component/default/computer/graphic/wallpaper/db_tree.jpg'; //Set default wallpaper
+
 			$global.user.language = $system.language.pref(); //Set the preferred language to use
 			$system.user.init(); //Load user configuration
 

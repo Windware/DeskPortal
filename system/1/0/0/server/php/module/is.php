@@ -19,7 +19,7 @@
 		}
 
 		#Find out if the given string is a language string or not (Ex : 'fr_FR' or 'es' but case insensitive)
-		public static function language($subject) { return !!preg_match('/^[a-z]{2}(_[a-z]{2})?$/i', $subject); }
+		public static function language($subject) { return !!preg_match('/^[a-z]{2}(-[a-z]{2})?$/i', $subject); }
 
 		#Checks if the subject is a string and optionally if it has a length and contains given regular expression characters
 		public static function text($subject, $zero = false, $match = null)
