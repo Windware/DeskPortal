@@ -82,6 +82,6 @@
 			}
 
 			//Make request for authentication (Response will set the cookie header) - TODO : Report the last login time/IP
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'login.process'}, {user : user, pass : pass, keep : keep ? 1 : 0}, $system.app.method(process, [callback, keep]));
+			$system.network.send($self.info.root + 'server/php/front.php', {task : 'login.process', user : user, pass : pass, keep : keep ? 1 : 0}, null, $system.app.method(process, [callback, keep]));
 		}
 	}

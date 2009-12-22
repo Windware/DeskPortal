@@ -45,7 +45,11 @@
 
 		#Get the base system part of the script
 		$static = $system->file_read("{$system->global['define']['top']}system/static/client/start.js", LOG_CRIT)."\n";
-		$source = $replacer = array();
+		if($conf['demo']) $demo = $system->file_conf('system/static/conf/auth/demo.xml'); #Pick the demo user credential
+
+		#Replace variables in the JavaScript
+		$source = array('%demo%', '%demo_user%', '%demo_pass%');
+		$replacer = array($conf['demo'] ? 'true' : 'false', $demo['user'], $demo['pass']);
 
 		foreach(explode(' ', 'brand brand_site brand_info developer developer_site root') as $holder)
 		{

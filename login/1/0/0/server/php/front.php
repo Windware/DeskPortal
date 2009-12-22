@@ -6,7 +6,7 @@
 		case 'login.process' : #Log the user in and return the login information
 			$system->cache_header(0); #Do not cache
 
-			$result = Login_1_0_0::process($_POST['user'], $_POST['pass'], $_POST['keep']);
+			$result = Login_1_0_0::process($_GET['user'], $_GET['pass'], $_GET['keep']);
 			print $system->xml_send($result['status'], $result['data']);
 		break;
 	}

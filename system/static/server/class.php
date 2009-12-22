@@ -75,9 +75,9 @@
 		public static function auth_verify($user, $pass)
 		{
 			$log = self::log(__METHOD__);
+			$conf = self::app_conf('system', 'static');
 
-			if(preg_match('/[^\w\-]/', $method = self::app_conf('system', 'static', 'system_auth')))
-				return $log->system(LOG_ERR, 'Invalid authentication mechanism specified', 'Check for system configuration');
+			if(preg_match('/[^\w\-]/', $method = $conf['system_auth'])) return $log->system(LOG_ERR, 'Invalid authentication mechanism specified', 'Check for system configuration');
 
 			$auth = "system/static/server/auth/$method.php"; #Authentication method script
 			$log->system(LOG_INFO, "Loading authentication configuration file '$auth'");
@@ -91,13 +91,11 @@
 			$log = self::log(__METHOD__);
 
 			if(!self::app_conf('system', 'static', 'cache'))
-			{
-				$problem = 'Cache not allowed by system configuration';
-				return $log->system(LOG_NOTICE, $problem, 'Enable caching in system configuration');
-			}
+				return $log->system(LOG_NOTICE, 'Cache not allowed by system configuration', 'Enable caching in system configuration');
 
 			#Make sure to only allow valid operations
-			if(!in_array($op, array('get', 'modified', 'set'))) $log->param();
+			if(!in_array($op, array('get', 'modified', 'set'))) return $log->param();
+
 			if(!is_string($key) || $data !== null && !is_string($data)) return $log->param();
 			if(!is_string($id) || $id != 'system_static' && !preg_match('/^[a-z\d]+_\d+_\d+_\d+$/', $id)) return $log->param();
 
@@ -113,7 +111,7 @@
 			$log->system(LOG_INFO, "Loading a cache function script '$code'");
 			require_once(self::$global['define']['top'].$code); #Load the function library
 
-			if(!in_array($op, array('get', 'modified', 'set'))) $log->param(); #Just in case the variable gets tainted - FIXME : But does not prevent getting altered
+			if(!in_array($op, array('get', 'modified', 'set'))) return $log->param(); #Just in case the variable gets tainted - FIXME : Could try to prevent it
 			return System_Static_Cache::$op($id, $key, $data, $compressed); #Run the code
 		}
 
@@ -166,7 +164,7 @@
 			if(!is_readable($file) || !is_file($file))
 				return $log->system($severity, "Cannot load the file '".self::file_relative($file)."'", 'Make sure it is accessible');
 
-			#FIXME - included file has too many variables visible from within this function $log, $file, $multiple
+			#FIXME - included file has too many variables visible from within this function. $log, $file, $multiple
 			$return = $multiple ? include($file) : include_once($file); #Load the specified file
 		}
 

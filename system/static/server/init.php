@@ -33,14 +33,15 @@
 	#TODO - cache the result but to where? (separate config file with 1 line of file location?)
 	$conf = &System_Static::app_conf('system', 'static'); #Read the configuration XML
 
+	if($conf['demo'] && count($_POST)) exit; #Avoid writing data under demo mode
+
 	if(!is_array($conf)) #Quit if configuration is unreadable, cannot even log
 	{
 		print 'System Error';
 		exit; #TODO - Try to log to syslog
 	}
 
-	foreach(array('app_public', 'app_subscribed', 'app_initial') as $name) #Make sure these are arrays
-		if(!is_array($conf[$name])) $conf[$name] = array($conf[$name]);
+	foreach(array('app_public', 'app_subscribed', 'app_initial') as $name) if(!is_array($conf[$name])) $conf[$name] = array($conf[$name]); #Make sure these are arrays
 
 	#Make the relative path absolute - #FIXME : For windows
 	if(!preg_match('|^/|', $conf['log_file'])) $conf['log_file'] = $global['define']['top'].$conf['log_file'];

@@ -39,11 +39,21 @@
 			$database = $system->database('system', __METHOD__, null, 'system', 'static'); #Open database
 			if(!$database->success) return false;
 
+			$conf = $system->app_conf('system', 'static');
+
 			if($id === null) #For logged in user
 			{
-				#Query to be used
-				$query = $database->prepare("SELECT user.id, user.invalid, user.name FROM {$database->prefix}user as user, {$database->prefix}session as session WHERE session.ticket = :ticket AND session.ip = :ip AND session.user = user.id AND user.name = :name"); 
-				$parameters = array(':ticket' => $_COOKIE['ticket'], ':ip' => $_SERVER['REMOTE_ADDR'], ':name' => $_COOKIE['name']);
+				if($conf['demo']) #For demo mode
+				{
+					$query = $database->prepare("SELECT id, invalid, name FROM {$database->prefix}user WHERE name = :name");
+					$parameters = array(':name' => $_COOKIE['name']);
+				}
+				else
+				{
+					#Query to be used
+					$query = $database->prepare("SELECT user.id, user.invalid, user.name FROM {$database->prefix}user as user, {$database->prefix}session as session WHERE session.ticket = :ticket AND session.ip = :ip AND session.user = user.id AND user.name = :name"); 
+					$parameters = array(':ticket' => $_COOKIE['ticket'], ':ip' => $_SERVER['REMOTE_ADDR'], ':name' => $_COOKIE['name']);
+				}
 
 				#Specify data for logging
 				$request = "name '{$_COOKIE['name']}'";

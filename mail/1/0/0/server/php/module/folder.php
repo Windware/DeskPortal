@@ -72,7 +72,20 @@
 			if(!$query->success) return false;
 			$type = $query->column();
 
-			if($type != 'imap' && $type != 'gmail') return true; #Sync folders for IMAP
+			if($type == 'pop3' || $type == 'hotmail') #Check if INBOX exists
+			{
+				$query = $database->prepare("SELECT count(id) FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name = :name");
+				$query->run(array(':user' => $user->id, ':account' => $account, ':name' => 'INBOX'));
+
+				if(!$query->success) return false;
+				if($query->column() == 1) return true;
+
+				$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name) VALUES (:user, :account, :name)");
+				$query->run(array(':user' => $user->id, ':account' => $account, ':name' => 'INBOX'));
+
+				return $query->success;
+			}
+
 			$query = array();
 
 			#Delete non existing folder

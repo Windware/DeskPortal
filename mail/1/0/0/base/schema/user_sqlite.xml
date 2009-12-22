@@ -61,8 +61,8 @@
 		<column name="read" param="INT" />
 		<column name="belong" param="INT" />
 
-		<index name="user, account, folder, uid" />
-		<index name="user, account, folder, sequence" />
+		<index name="user, folder, uid" />
+		<index name="user, folder, sequence" />
 		<index name="signature" />
 	</table>
 

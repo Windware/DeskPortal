@@ -38,12 +38,12 @@
 			return $encoding == 'ASCII' || $encoding == 'UTF-8' ? $decoded : '(?)'; #Avoid other character sets to avoid outputting XML from corrupting
 		}
 
-		public static function get($account, $folder, $page, $order = 'sent', $reverse = true, $update = false, System_1_0_0_User $user = null) #Get list of mails
+		public static function get($folder, $page, $order = 'sent', $reverse = true, $update = false, System_1_0_0_User $user = null) #Get list of mails
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_digit($account) || !$system->is_digit($folder) || !$system->is_digit($page) || preg_match('/\W/', $order)) return $log->param();
+			if(!$system->is_digit($folder) || !$system->is_digit($page) || preg_match('/\W/', $order)) return $log->param();
 			$order = "LOWER($order)"; #NOTE : Using 'LOWER' for case insensitive sorting to be compatible across database, possibly FIXME for performance
 
 			if($user === null) $user = $system->user();
@@ -52,7 +52,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			if($update) self::update($account, $folder, $user); #Update from the mail server if specified
+			if($update) self::update($folder, $user); #Update from the mail server if specified
 
 			$descend = $reverse ? ' DESC' : '';
 			$start = ($page - 1) * self::$_page;
@@ -61,16 +61,16 @@
 			$query['check']->run(array(':id' => $folder, ':user' => $user->id));
 
 			if(!$query['check']->success) return false;
-			if($query['check']->column() === null) self::update($account, $folder, $user); #If the folder is never updated to sync with the mail server, do so now
+			if($query['check']->column() === null) self::update($folder, $user); #If the folder is never updated to sync with the mail server, do so now
 
-			$query['count'] = $database->prepare("SELECT count(id) FROM {$database->prefix}mail WHERE user = :user AND account = :account AND folder = :folder");
-			$query['count']->run(array(':user' => $user->id, ':account' => $account, ':folder' => $folder));
+			$query['count'] = $database->prepare("SELECT count(id) FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
+			$query['count']->run(array(':user' => $user->id, ':folder' => $folder));
 
 			if(!$query['count']->success) return false;
 			$xml = $system->xml_node('page', array('total' => floor($query['count']->column() / (self::$_page + 1)) + 1)); #Get the total count
 
-			$query['all'] = $database->prepare("SELECT id, subject, size, sent, received, preview FROM {$database->prefix}mail WHERE user = :user AND account = :account AND folder = :folder ORDER BY $order$descend LIMIT $start,".self::$_page);
-			$query['all']->run(array(':user' => $user->id, ':account' => $account, ':folder' => $folder));
+			$query['all'] = $database->prepare("SELECT id, subject, size, sent, received, read, preview FROM {$database->prefix}mail WHERE user = :user AND folder = :folder ORDER BY $order$descend LIMIT $start,".self::$_page);
+			$query['all']->run(array(':user' => $user->id, ':folder' => $folder));
 
 			if(!$query['all']->success) return false;
 			foreach(array('from', 'to', 'cc') as $section) $query[$section] = $database->prepare("SELECT name, address FROM {$database->prefix}$section WHERE mail = :mail");
@@ -93,12 +93,12 @@
 			return $xml;
 		}
 
-		public static function show($account, $folder, $id, System_1_0_0_User $user = null) #Get the body of a message
+		public static function show($id, System_1_0_0_User $user = null) #Get the body of a message
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_digit($account) || !$system->is_digit($folder) || !$system->is_digit($id)) return $log->param();
+			if(!$system->is_digit($id)) return $log->param();
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
@@ -106,11 +106,11 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT uid, sequence, signature FROM {$database->prefix}mail WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT account, folder, uid, sequence, signature FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));
 
 			$identity = $query->row(); #Get the mail's identifiers
-			$link = Mail_1_0_0_Account::connect($account, $folder, $user); #Connect to the server
+			$link = Mail_1_0_0_Account::connect($identity['account'], $identity['folder'], $user); #Connect to the server
 
 			$content = imap_check($link['connection']);
 			if(!$content) $log->user(LOG_ERR, "Invalid mailbox '$folder' on host '{$link['host']}'", 'Check the mail server or configuration');
@@ -188,18 +188,24 @@
 			return $system->xml_node('body', null, $system->xml_data($body));
 		}
 
-		public static function update($account, $folder, System_1_0_0_User $user = null) #Store any new messages in the local database
+		public static function update($folder, System_1_0_0_User $user = null) #Store any new messages in the local database
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_digit($account) || !$system->is_digit($folder)) return $log->param();
+			if(!$system->is_digit($folder)) return $log->param();
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
 
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $folder, ':user' => $user->id));
+
+			if(!$query->success) return false;
+			$account = $query->column();
 
 			$link = Mail_1_0_0_Account::connect($account, $folder, $user); #Connect to the server
 			$list = $mail = ''; #List of XML outputs
@@ -208,16 +214,16 @@
 			if(!$content) $log->user(LOG_ERR, "Invalid mailbox '$folder' on host '{$link['host']}'", 'Check the mail server or configuration');
 
 			$exist = array(); #List of header md5 sum of mails existing in the mail box
-			$field = explode(' ', 'date subject to from'); #List of field to get
+			$field = explode(' ', 'date subject to from unseen'); #List of field to get
 
 			#Prepare to check for mail's existence
-			$query['check'] = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE signature = :signature AND folder = :folder AND user = :user");
+			$query = array('check' => $database->prepare("SELECT id FROM {$database->prefix}mail WHERE signature = :signature AND folder = :folder AND user = :user"));
 
 			foreach(array('from', 'to', 'cc') as $section) #Query to insert mail addresses
 				$query[$section] = $database->prepare("REPLACE INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
 
 			#Mail data insertion query
-			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, account, folder, uid, sequence, signature, subject, size, sent, preview) VALUES (:user, :account, :folder, :uid, :sequence, :signature, :subject, :size, :sent, :preview)");
+			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, account, folder, uid, sequence, signature, subject, size, sent, preview, read) VALUES (:user, :account, :folder, :uid, :sequence, :signature, :subject, :size, :sent, :preview, :read)");
 
 			for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++) #For all of the messages found in the mail box
 			{
@@ -241,7 +247,15 @@
 
 					if(!is_array($value))
 					{
-						$store = $key == 'date' ? ':sent' : ":$key";
+						switch($key)
+						{
+							case 'date' : $store = ':sent'; break;
+
+							case 'unseen' : $store = ':read'; break;
+
+							default : $store = ":$key"; break;
+						}
+
 						$attributes[$store] = self::decode(trim($value));
 
 						switch($key)
@@ -249,6 +263,8 @@
 							case 'date' : $attributes[$store] = $system->date_datetime(strtotime($attributes[$store])); break; #Format the time
 
 							case 'preview' : case 'subject' : if($attributes[$store] == null) $attributes[$store] = ''; break; #Avoid null values on these keys
+
+							case 'unseen' : $attributes[$store] = $value == 'U' ? 0 : 1; break; #Unread entries
 						}
 					}
 					else

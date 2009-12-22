@@ -143,6 +143,8 @@
 		public function event_run() { return System_1_0_0_Event::run($this); }
 
 
+		public function file_conf($xml) { return System_Static::file_conf($xml); }
+
 		public function file_load($file, $multiple = false, $severity = LOG_WARNING) { return System_Static::file_load($file, $multiple, $severity); }
 
 		public function file_package($list, $compressed = true) { return System_1_0_0_File::package($this, $list, $compressed); }

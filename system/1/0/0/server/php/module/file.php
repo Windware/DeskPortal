@@ -2,7 +2,7 @@
 	class System_1_0_0_File
 	{
 		public static function package(&$system, $list, $compressed) #Send a package of files in XML containers
-		{ #FIXME - Malicious queries can create massive amount of caches (ex : Random 404 requests attached)
+		{ #FIXME - Malicious queries can create massive amount of caches (ex : Random 404 requests attached : Avoid caching requests having 404)
 			$log = $system->log(__METHOD__);
 			if(!is_array($list)) return $log->param();
 

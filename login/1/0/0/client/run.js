@@ -2,7 +2,14 @@
 	$self.run = function(callback)
 	{
 		$system.node.id($id).style.visibility = ''; //Force turn the window visible earlier to have focus on it
-		document.forms[$id + '_form'].user.focus(); //Move focus to the login user name field
+		var form = document.forms[$id + '_form']; //Login form
 
-		if(typeof callback == 'function') callback();
+		if($global.demo.mode) //Set demo user credential
+		{
+			form.user.value = $global.demo.user;
+			form.pass.value = $global.demo.pass;
+		}
+
+		form.user.focus(); //Move focus to the login user name field
+		$system.app.callback($id + '.run', callback);
 	}

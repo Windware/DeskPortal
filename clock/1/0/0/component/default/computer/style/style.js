@@ -5,8 +5,8 @@
 	bar = false;
 	center = true;
 
-	left = 40;
+	left = 35;
 	top = 20;
 
-	width = 100;
+	width = 120;
 	height = 30;

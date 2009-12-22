@@ -39,4 +39,5 @@
 	<string name="delete" value="Delete" />
 	<string name="mark" value="Mark" />
 	<string name="close" value="Close" />
+	<string name="loading" value="Loading..." />
 </root>

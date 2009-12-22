@@ -13,6 +13,8 @@
 
 			this.developer = {name : '%developer%', site : '%developer_site%'}; //The developer information
 
+			this.demo = {mode : %demo%, user : '%demo_user%', pass : '%demo_pass%'}; //Whether this is under demo mode or not
+
 			this.extensions = {%extension%}; //List of available server side languages and their extension
 
 			this.loader = {library : {}, load : {}, unload : {}}; //Links to loading functions for systems

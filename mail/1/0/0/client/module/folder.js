@@ -11,8 +11,6 @@
 
 		this.change = function(account, folder) //Change the displaying folder
 		{
-			var log = $system.log.init('hey');
-			if(_lock) log.debug('locked');
 			if(_lock) return false;
 
 			var log = $system.log.init(_class + '.change');
@@ -78,6 +76,6 @@
 			if(!__selected.account || !__selected.folder) return;
 
 			var list = function(request) { $self.folder.get(__selected.account, null, request); }
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.update', account : __selected.account, folder : __selected.folder}, null, list);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.update', folder : __selected.folder}, null, list);
 		}
 	}

@@ -5,18 +5,18 @@
 
 		var _body = {}; //Message body cache
 
-		var _cache = {}; //Listing cache
+		var _cache = {}; //Message listing cache
 
 		var _lock = false; //Do not allow updating multiple folders simultaneously
 
-		var _preserve = 4.5; //Amount of minutes to keep local cache for each folder listings
+		var _preserve = 5; //Amount of minutes to keep local cache for each folder listings
 
 		var _update = {}; //Flag to indicate that a folder should be updated from the server
 
-		this.get = function(account, folder, callback, request) //Get list of mails of a folder for an account
+		this.get = function(folder, callback, request) //Get list of mails of a folder
 		{
 			var log = $system.log.init(_class + '.get');
-			if(!$system.is.digit(account) || !$system.is.text(folder)) return log.param();
+			if(!$system.is.text(folder)) return log.param();
 
 			if(_lock)
 			{
@@ -31,34 +31,30 @@
 			var reverse = $system.node.id($id + '_form').reverse.checked ? 1 : 0;
 
 			$system.node.id($id + '_folder').value = folder;
-			__selected = {account : account, folder : folder, page : page, order : order, reverse : reverse};
+			__selected = {folder : folder, page : page, order : order, reverse : reverse};
 
 			//Create cache storage
-			if(!_cache[account]) _cache[account] = {};
-			if(!_cache[account][folder]) _cache[account][folder] = {};
-			if(!_cache[account][folder][page]) _cache[account][folder][page] = {};
-			if(!_cache[account][folder][page][order]) _cache[account][folder][page][order] = {};
+			if(!_cache[folder]) _cache[folder] = {};
+			if(!_cache[folder][page]) _cache[folder][page] = {};
+			if(!_cache[folder][page][order]) _cache[folder][page][order] = {};
 
-			var expire = function(account, folder, page, order, reverse) //Expire the cache
+			var expire = function(folder, page, order, reverse) //Expire the cache
 			{
-				if(!_update[account]) _update[account] = {};
+				if(__selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
+					return _update[folder] = true; //If not currently displayed list, flag to note that this folder should be updated on next display
 
-				if(__selected.account != account || __selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
-					return _update[account][folder] = true; //If not currently displayed list, flag to note that this folder should be updated on next display
-
-				delete _cache[account][folder]; //Remove the cache
-				$self.item.get(account, folder); //Update the displaying list
+				delete _cache[folder]; //Remove the cache
+				$self.item.get(folder); //Update the displaying list
 			}
 
-			var list = function(account, folder, page, order, reverse, request) //List the mails upon receiving the contents
+			var list = function(folder, page, order, reverse, request) //List the mails upon receiving the contents
 			{
 				//Create cache storage
-				if(!_cache[account]) _cache[account] = {};
-				if(!_cache[account][folder]) _cache[account][folder] = {};
-				if(!_cache[account][folder][page]) _cache[account][folder][page] = {};
-				if(!_cache[account][folder][page][order]) _cache[account][folder][page][order] = {};
+				if(!_cache[folder]) _cache[folder] = {};
+				if(!_cache[folder][page]) _cache[folder][page] = {};
+				if(!_cache[folder][page][order]) _cache[folder][page][order] = {};
 
-				_cache[account][folder][page][order][reverse] = request;
+				_cache[folder][page][order][reverse] = request;
 
 				var language = $system.language.strings($id);
 				var section = $system.array.list('subject from date'); //List of columns to display
@@ -83,9 +79,7 @@
 				}
 
 				table.appendChild(row);
-
-				if(!__mail[account]) __mail[account] = {}; //Mail information cache
-				if(!__mail[account][folder]) __mail[account][folder] = {};
+				if(!__mail[folder]) __mail[folder] = {}; //Mail information cache
 
 				var max = $system.dom.tags(request.xml, 'page')[0];
 				max = $system.dom.attribute(max, 'total');
@@ -98,7 +92,7 @@
 					var select = document.createElement('select');
 
 					select.id = $id + '_show'; //NOTE : Using 'id' instead of 'name' since IE6 cannot set 'name' on a dynamically created select object
-					select.onchange = $system.app.method($self.item.get, [__selected.account, __selected.folder]);
+					select.onchange = $system.app.method($self.item.get, [__selected.folder]);
 
 					for(var i = 1; i <= max; i++)
 					{
@@ -122,13 +116,13 @@
 				for(var i = 0; i < mail.length; i++)
 				{
 					var id = $system.dom.attribute(mail[i], 'id');
-					var storage = __mail[account][folder][id] = {}; //Mail information
+					var storage = __mail[folder][id] = {}; //Mail information
 
 					var row = document.createElement('tr');
 					row.style.cursor = 'pointer';
 
 					$system.node.hover(row, $id + '_hover'); //Give mouse hovered style
-					row.onclick = $system.app.method($self.item.show, [account, folder, id]); //Display the message pane on click
+					row.onclick = $system.app.method($self.item.show, [folder, id]); //Display the message pane on click
 
 					var preview = $system.text.escape($system.dom.attribute(mail[i], 'preview')); //Grab the message preview
 					if(!preview.match(/\S/)) preview = '(' + language.empty + ')';
@@ -141,7 +135,7 @@
 						storage[parameter.name] = parameter.value;
 					}
 
-					if(!storage.read) $system.node.classes(row, $id + '_mail_unread', true); //For unread mails
+					if(storage.read != '1') $system.node.classes(row, $id + '_mail_unread', true); //For unread mails
 					if(storage.marked) $system.node.classes(row, $id + '_mail_marked', true); //For marked mails
 
 					for(var j = 0; j < section.length; j++) //For all the columns
@@ -193,12 +187,12 @@
 				if(typeof callback == 'function') callback();
 				_lock = false;
 
-				if(_update[account] && _update[account][folder]) //If cache should be updated
+				if(_update[folder]) //If cache should be updated
 				{
-					delete _cache[account][folder]; //Remove the entire cache for the folder
-					$self.item.get(account, folder); //Update it
+					delete _cache[folder]; //Remove the entire cache for the folder
+					$self.item.get(folder); //Update it
 
-					delete _update[account][folder];
+					delete _update[folder];
 				}
 
 				return true;
@@ -206,34 +200,31 @@
 
 			_lock = true;
 
-			if($system.is.object(request)) return list(account, folder, page, order, reverse, request); //If updating, use the passed object
-			if(_cache[account][folder][page][order][reverse]) return list(account, folder, page, order, reverse, _cache[account][folder][page][order][reverse]); //If already cached, use it
+			if($system.is.object(request)) return list(folder, page, order, reverse, request); //If updating, use the passed object
+			if(_cache[folder][page][order][reverse]) return list(folder, page, order, reverse, _cache[folder][page][order][reverse]); //If already cached, use it
 
-			setTimeout($system.app.method(expire, [account, folder, page, order, reverse]), _preserve * 60000); //Update local cache after a period
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.get', account : account, folder : folder, page : page, order : order, reverse : reverse ? 1 : 0}, null, $system.app.method(list, [account, folder, page, order, reverse]));
+			setTimeout($system.app.method(expire, [folder, page, order, reverse]), _preserve * 60000); //Update local cache after a period
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.get', folder : folder, page : page, order : order, reverse : reverse ? 1 : 0}, null, $system.app.method(list, [folder, page, order, reverse]));
 		}
 
 		this.update = function() //Reload the mails from the server
 		{
-			if(!$system.is.digit(__selected.account) || !$system.is.digit(__selected.folder)) return false;
+			if(!$system.is.digit(__selected.folder)) return false;
 
 			var page = $system.node.id($id + '_show').value;
 			if(!$system.is.digit(page)) return false;
 
-			$self.item.get(__selected.account, __selected.folder); //Refresh the listing
+			$self.item.get(__selected.folder); //Refresh the listing
 		}
 
-		this.show = function(account, folder, message, callback) //Display the mail window
+		this.show = function(folder, message, callback) //Display the mail window
 		{
 			var log = $system.log.init(_class + '.show');
 
-			if(!$system.is.digit(account) || !$system.is.digit(message)) return log.param();
-			if(!__mail[account] || !__mail[account][folder] || !__mail[account][folder][message]) return log.user($global.log.WARNING, 'user/show/error', 'user/show/solution');
+			if(!$system.is.digit(message)) return log.param();
+			if(!__mail[folder] || !__mail[folder][message]) return log.user($global.log.WARNING, 'user/show/error', 'user/show/solution');
 
-			//Create cache storage
-			if(!_body[account]) _body[account] = {};
-			if(!_body[account][folder]) _body[account][folder] = {};
-
+			if(!_body[folder]) _body[folder] = {}; //Create cache storage
 			var id = $id + '_mail_' + message;
 
 			if($system.node.id(id))
@@ -242,47 +233,47 @@
 				return $system.node.fade(id);
 			}
 
-			var display = function(account, folder, message, callback, request)
+			var display = function(folder, message, callback, request)
 			{
-				_body[account][folder][message] = request;
+				_body[folder][message] = request;
+				var body = $system.dom.text($system.dom.tags(request.xml, 'body')[0]).replace(/\n/g, '<br />\n');
 
-				var parameter = __mail[account][folder][message];
-				var body = $system.dom.text($system.dom.tags(request.xml, 'body')[0]);
-
-				var section = ['from', 'to', 'cc'];
-				var value = {index : message, sent : $system.date.create(parameter.sent).format($global.user.pref.format.full), subject : parameter.subject, body : body.replace(/\n/g, '<br />\n')};
-
-				var replace = function(phrase, match) { return variable[match]; }
-
-				for(var i = 0; i < section.length; i++)
-				{
-					var list = parameter[section[i]];
-					var address = [];
-
-					if($system.is.array(list))
-					{
-						for(var j = 0; j < list.length; j++)
-						{
-							var variable = {address : $system.text.escape(list[j][0]), show : $system.text.escape(list[j][1] ? list[j][1] : list[j][0]), name : list[j][1] ? $system.text.escape(list[j][1]) : ''};
-							variable.tip = $system.tip.link($system.info.id, null, 'blank', [$system.text.escape(list[j][0])]);
-
-							address.push($self.info.template.address.replace(/%value:(.+?)%/g, replace));
-						}
-					}
-
-					value[section[i]] = address.join(' ');
-				}
-
-				var replace = function(phrase, match) { return value[match]; }
-				var body = $self.info.template.mail.replace(/%value:(.+?)%/g, replace);
-
-				$system.window.create(id, $self.info.title, body, 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
-
-				if(typeof callback == 'function') callback();
-				return true;
+				$system.node.id($id + '_mail_' + message + '_body').innerHTML = body; //Write out the message body
+				$system.app.callback(_class + '.show.display', callback);
 			}
 
-			if(_body[account][folder][message]) return display(account, folder, message, callback, _body[account][folder][message]);
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.show', account : account, folder : folder, message : message}, null, $system.app.method(display, [account, folder, message, callback]));
+			var parameter = __mail[folder][message];
+
+			var section = ['from', 'to', 'cc'];
+			var value = {index : message, sent : $system.date.create(parameter.sent).format($global.user.pref.format.full), subject : parameter.subject};
+
+			var replace = function(phrase, match) { return variable[match]; }
+
+			for(var i = 0; i < section.length; i++)
+			{
+				var list = parameter[section[i]];
+				var address = [];
+
+				if($system.is.array(list))
+				{
+					for(var j = 0; j < list.length; j++)
+					{
+						var variable = {address : $system.text.escape(list[j][0]), show : $system.text.escape(list[j][1] ? list[j][1] : list[j][0]), name : list[j][1] ? $system.text.escape(list[j][1]) : ''};
+						variable.tip = $system.tip.link($system.info.id, null, 'blank', [$system.text.escape(list[j][0])]);
+
+						address.push($self.info.template.address.replace(/%value:(.+?)%/g, replace));
+					}
+				}
+
+				value[section[i]] = address.join(' ');
+			}
+
+			var replace = function(phrase, match) { return value[match]; }
+			var template = $self.info.template.mail.replace(/%value:(.+?)%/g, replace);
+
+			$system.window.create(id, $self.info.title, template, 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+
+			if(_body[folder][message]) return display(folder, message, callback, _body[folder][message]);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.show', message : message}, null, $system.app.method(display, [folder, message, callback]));
 		}
 	}
