@@ -8,7 +8,7 @@
 			var log = $system.log.init(_class + '.change');
 			if(!$system.is.digit(account)) return log.param();
 
-			var list = function() { if(__folder[account].INBOX) $self.item.get(account, __folder[account].INBOX.id); } //Get mails for the default mail box
+			var list = function() { if(__folder[account].INBOX) $self.folder.change(__folder[account].INBOX.id); } //Get mails for the default mail box
 			$self.folder.get(account, list); //List the folders
 		}
 
@@ -49,7 +49,7 @@
 				}
 
 				select.value = index;
-				if(typeof callback == 'function') callback();
+				$system.app.callback(_class + '.get.list', callback);
 			}
 
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'account.get'}, null, list);

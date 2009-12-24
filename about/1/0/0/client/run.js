@@ -15,6 +15,11 @@
 			$system.node.id($id + '_option').appendChild(choice); //Add the selection to the interface
 		}
 
-		if($system.is.md5($global.user.ticket)) $system.node.hide($id + '_language'); //Remove the language selector if logged in
-		if(typeof callback == 'function') callback();
+		if($system.is.md5($global.user.ticket))
+		{
+			$system.node.hide($id + '_language'); //Remove the language selector if logged in
+			$self.gui.show(); //Open the detail by default when logged in
+		}
+
+		$system.app.callback($id + '.run', callback);
 	}

@@ -42,8 +42,6 @@
 	<table name="mail">
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 		<column name="user" param="INT NOT NULL" />
-
-		<column name="account" param="INT NOT NULL" />
 		<column name="folder" param="INT NOT NULL" />
 
 		<column name="uid" param="VARCHAR(255)" />
@@ -51,19 +49,21 @@
 		<column name="signature" param="CHAR(32)" />
 
 		<column name="subject" param="TEXT NOT NULL" />
+		<column name="preview" param="TEXT" />
+		<column name="mail" param="TEXT" />
+
 		<column name="size" param="INT" />
 		<column name="sent" param="DATETIME" />
 		<column name="received" param="DATETIME" />
-		<column name="preview" param="TEXT NOT NULL" />
 
 		<column name="marked" param="INT" />
 		<column name="color" param="CHAR(6)" />
 		<column name="read" param="INT" />
-		<column name="belong" param="INT" />
 
+		<column name="UNIQUE" param="(user, folder, uid)" />
 		<index name="user, folder, uid" />
 		<index name="user, folder, sequence" />
-		<index name="signature" />
+		<index name="user, folder, signature" />
 	</table>
 
 	<!-- List of folders -->
@@ -127,11 +127,8 @@
 	<table name="body">
 		<column name="mail" param="INT NOT NULL" />
 
-		<column name="plain" param="TEXT NOT NULL" />
+		<column name="plain" param="TEXT" />
 		<column name="html" param="TEXT" />
-
-		<column name="plain_position" param="VARCHAR(255)" />
-		<column name="html_position" param="VARCHAR(255)" />
 
 		<index name="mail" />
 	</table>
@@ -145,15 +142,5 @@
 		<column name="UNIQUE" param="(mail, reference)" />
 		<index name="mail" />
 		<index name="reference" />
-	</table>
-
-	<!-- Mail groups -->
-	<table name="groups">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255) NOT NULL" />
-
-		<column name="UNIQUE" param="(user, name)" />
-		<index name="user" />
 	</table>
 </root>

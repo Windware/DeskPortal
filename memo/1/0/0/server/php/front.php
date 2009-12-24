@@ -41,7 +41,7 @@
 		break;
 
 		case 'item.set' : #Set a memo information
-			$result = Memo_1_0_0_Item::set($_POST['name'], $_POST['groups'], $_POST['id']);
+			$result = Memo_1_0_0_Item::set($_POST['name'], $_POST['groups'], $_POST['id'] ? $_POST['id'] : 0);
 			$data = Memo_1_0_0_Item::get();
 
 			print $system->xml_send($result && $data !== false, $data);

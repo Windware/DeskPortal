@@ -208,7 +208,7 @@
 			if(!$system.is.type(callback, 'function') && callback !== null || !$system.is.type(error, 'function') || !$system.is.type(header, 'object')) return log.param();
 
 			var method = $system.is.object(post) ? 'POST' : 'GET'; //Specify request type according to the data given
-			if(method == 'POST' && $global.demo) return $system.app.callback(_class + '.send', $system.app.method(callback, [new _response(address)])); //Avoid making call for POST on demo mode
+			if(method == 'POST' && $global.demo.mode) return $system.app.callback(_class + '.send', $system.app.method(callback, [new _response(address)])); //Avoid making call for POST on demo mode
 
 			var asynchronous = callback !== null; //Go asynchronous unless specifically specified not to
 

@@ -5,25 +5,18 @@
 
 		var _cache = {}; //Listing cache
 
-		var _lock = false; //Avoid requesting multiple folders at once
-
 		var _previous; //Previously selected folder
 
-		this.change = function(account, folder) //Change the displaying folder
+		this.change = function(folder) //Change the displaying folder
 		{
-			if(_lock) return false;
-
 			var log = $system.log.init(_class + '.change');
 			if(!$system.is.text(folder)) return log.param();
 
-			_lock = true;
+			if(!$self.item.get(folder)) return false; //Get the folder items for current account
 
 			//Change the look of the chosen folder
 			if(_previous) $system.node.classes($id + '_folder_' + _previous, $id + '_displayed', false);
 			$system.node.classes($id + '_folder_' + folder, $id + '_displayed', true);
-
-			var unlock = function() { _lock = false; }
-			$self.item.get(account, folder, unlock); //Get the folder for current account
 
 			_previous = folder;
 		}
@@ -55,13 +48,13 @@
 					var link = document.createElement('a');
 					link.id = $id + '_folder_' + param.id;
 
-					link.onclick = $system.app.method($self.folder.change, [account, param.id]);
+					link.onclick = $system.app.method($self.folder.change, [param.id]);
 
 					$system.node.text(link, param.name.match(/\./) ? param.name.replace(/^.+?\./, ' |- ') : param.name);
 					area.appendChild(link);
 				}
 
-				if(typeof callback == 'function') callback();
+				$system.app.callback(_class + '.get.list', callback);
 				return true;
 			}
 

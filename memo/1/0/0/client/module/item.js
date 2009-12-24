@@ -126,9 +126,10 @@
 			if(!confirm(language.confirm.replace(/%%/, name))) return;
 
 			$system.window.fade($id + '_edit_' + id, true, null, true); //Let go of the edit window
-			$system.node.hide($id + '_field_' + id, true, null, true); //Let go of the text field
+			$system.node.fade($id + '_field_' + id, true, null, true); //Let go of the text field
 
 			delete __opened[id]; //Let go from the list of opened info window list
+			if(id == _displayed.id) _displayed = null; //Forget about current selection
 
 			var load = function(request)
 			{

@@ -7,13 +7,15 @@
 
 		var _cache = {}; //Message listing cache
 
+		var _fresh = {}; //Flag to indicate if a folder has been updated
+
 		var _lock = false; //Do not allow updating multiple folders simultaneously
 
 		var _preserve = 5; //Amount of minutes to keep local cache for each folder listings
 
 		var _update = {}; //Flag to indicate that a folder should be updated from the server
 
-		this.get = function(folder, callback, request) //Get list of mails of a folder
+		this.get = function(folder, update, callback, request) //Get list of mails of a folder
 		{
 			var log = $system.log.init(_class + '.get');
 			if(!$system.is.text(folder)) return log.param();
@@ -44,11 +46,13 @@
 					return _update[folder] = true; //If not currently displayed list, flag to note that this folder should be updated on next display
 
 				delete _cache[folder]; //Remove the cache
-				$self.item.get(folder); //Update the displaying list
+				$self.item.get(folder, true); //Update the displaying list
 			}
 
 			var list = function(folder, page, order, reverse, request) //List the mails upon receiving the contents
 			{
+				if($system.dom.status(request.xml) != 0) return false; //TODO - Show some error
+
 				//Create cache storage
 				if(!_cache[folder]) _cache[folder] = {};
 				if(!_cache[folder][page]) _cache[folder][page] = {};
@@ -62,7 +66,7 @@
 				var table = $system.node.id($id + '_read_mail'); //Display table
 				while(table.firstChild) table.removeChild(table.firstChild); //Clean up the field (innerHTML on table breaks khtml)
 
-				table.scrollTop = 0;
+				table.scrollTop = 0; //Go to top
 
 				var row = document.createElement('tr');
 				row.id = $id + '_read_header';
@@ -79,7 +83,6 @@
 				}
 
 				table.appendChild(row);
-				if(!__mail[folder]) __mail[folder] = {}; //Mail information cache
 
 				var max = $system.dom.tags(request.xml, 'page')[0];
 				max = $system.dom.attribute(max, 'total');
@@ -116,13 +119,13 @@
 				for(var i = 0; i < mail.length; i++)
 				{
 					var id = $system.dom.attribute(mail[i], 'id');
-					var storage = __mail[folder][id] = {}; //Mail information
+					var storage = __mail[id] = {}; //Mail information
 
 					var row = document.createElement('tr');
 					row.style.cursor = 'pointer';
 
 					$system.node.hover(row, $id + '_hover'); //Give mouse hovered style
-					row.onclick = $system.app.method($self.item.show, [folder, id]); //Display the message pane on click
+					row.onclick = $system.app.method($self.item.show, [id]); //Display the message pane on click
 
 					var preview = $system.text.escape($system.dom.attribute(mail[i], 'preview')); //Grab the message preview
 					if(!preview.match(/\S/)) preview = '(' + language.empty + ')';
@@ -184,15 +187,21 @@
 					table.appendChild(row);
 				}
 
-				if(typeof callback == 'function') callback();
 				_lock = false;
+				$system.app.callback(_class + '.get', callback);
+
+				if(!_fresh[folder]) //If never updated
+				{
+					_fresh[folder] = true;
+					return $self.item.get(folder, true); //Update it
+				}
 
 				if(_update[folder]) //If cache should be updated
 				{
 					delete _cache[folder]; //Remove the entire cache for the folder
-					$self.item.get(folder); //Update it
-
 					delete _update[folder];
+
+					return $self.item.get(folder, true); //Update it
 				}
 
 				return true;
@@ -201,51 +210,47 @@
 			_lock = true;
 
 			if($system.is.object(request)) return list(folder, page, order, reverse, request); //If updating, use the passed object
-			if(_cache[folder][page][order][reverse]) return list(folder, page, order, reverse, _cache[folder][page][order][reverse]); //If already cached, use it
+			if(!update && _cache[folder][page][order][reverse]) return list(folder, page, order, reverse, _cache[folder][page][order][reverse]); //If already cached, use it
 
 			setTimeout($system.app.method(expire, [folder, page, order, reverse]), _preserve * 60000); //Update local cache after a period
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.get', folder : folder, page : page, order : order, reverse : reverse ? 1 : 0}, null, $system.app.method(list, [folder, page, order, reverse]));
+
+			var param = {task : 'item.get', folder : folder, page : page, order : order, reverse : reverse ? 1 : 0, update : update === true ? 1 : 0};
+			return $system.network.send($self.info.root + 'server/php/front.php', param, null, $system.app.method(list, [folder, page, order, reverse]));
 		}
 
-		this.update = function() //Reload the mails from the server
-		{
-			if(!$system.is.digit(__selected.folder)) return false;
+		this.update = function() { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder) : false; } //Reload the mails from the server
 
-			var page = $system.node.id($id + '_show').value;
-			if(!$system.is.digit(page)) return false;
-
-			$self.item.get(__selected.folder); //Refresh the listing
-		}
-
-		this.show = function(folder, message, callback) //Display the mail window
+		this.show = function(id, callback) //Display the mail window
 		{
 			var log = $system.log.init(_class + '.show');
 
-			if(!$system.is.digit(message)) return log.param();
-			if(!__mail[folder] || !__mail[folder][message]) return log.user($global.log.WARNING, 'user/show/error', 'user/show/solution');
+			if(!$system.is.digit(id)) return log.param();
+			if(!__mail[id]) return log.user($global.log.warning, 'user/show/error', 'user/show/solution');
 
-			if(!_body[folder]) _body[folder] = {}; //Create cache storage
-			var id = $id + '_mail_' + message;
+			var node = $id + '_mail_' + id;
 
-			if($system.node.id(id))
+			if($system.node.id(node))
 			{
-				if($system.node.hidden(id)) $system.window.raise(id);
-				return $system.node.fade(id);
+				if($system.node.hidden(node)) $system.window.raise(node);
+				return $system.node.fade(node);
 			}
 
-			var display = function(folder, message, callback, request)
+			var display = function(id, callback, request)
 			{
-				_body[folder][message] = request;
-				var body = $system.dom.text($system.dom.tags(request.xml, 'body')[0]).replace(/\n/g, '<br />\n');
+				var node = $system.node.id($id + '_mail_' + id + '_body');
+				if(!node) return; //If the window has disappeared already, don't bother
 
-				$system.node.id($id + '_mail_' + message + '_body').innerHTML = body; //Write out the message body
+				_body[id] = request;
+				var body = $system.text.escape($system.dom.text($system.dom.tags(request.xml, 'body')[0])).replace(/\n/g, '<br />\n');
+
+				node.innerHTML = body; //Write out the message body
 				$system.app.callback(_class + '.show.display', callback);
 			}
 
-			var parameter = __mail[folder][message];
+			var parameter = __mail[id];
 
 			var section = ['from', 'to', 'cc'];
-			var value = {index : message, sent : $system.date.create(parameter.sent).format($global.user.pref.format.full), subject : parameter.subject};
+			var value = {index : id, sent : $system.date.create(parameter.sent).format($global.user.pref.format.full), subject : parameter.subject};
 
 			var replace = function(phrase, match) { return variable[match]; }
 
@@ -271,9 +276,9 @@
 			var replace = function(phrase, match) { return value[match]; }
 			var template = $self.info.template.mail.replace(/%value:(.+?)%/g, replace);
 
-			$system.window.create(id, $self.info.title, template, 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+			$system.window.create(node, $self.info.title, template, 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
 
-			if(_body[folder][message]) return display(folder, message, callback, _body[folder][message]);
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.show', message : message}, null, $system.app.method(display, [folder, message, callback]));
+			if(_body[id]) return display(id, callback, _body[id]);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.show', message : id}, null, $system.app.method(display, [id, callback]));
 		}
 	}

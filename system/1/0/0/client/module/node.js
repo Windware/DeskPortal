@@ -109,13 +109,15 @@
 
 		this.hidden = function(node) { return $system.node.classes(node, _hidden); } //Finds if a node is hidden or not
 
-		this.hide = function(node, mode) //Hides or unhides a node : TODO - Apply animation effect
+		this.hide = function(node, mode, destroy) //Hides or unhides a node : TODO - Apply animation effect
 		{
 			var node = $system.node.target(node);
 			if(!$system.is.element(node)) return false;
 
 			if(mode === undefined) mode = !$system.node.hidden(node);
 			$system.node.classes(node, _hidden, mode); //Set the hiding class on or off
+
+			if(mode && destroy) $system.node.remove(node);
 		}
 
 		this.hover = function(node, style) //Change style on hover

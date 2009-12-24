@@ -22,14 +22,14 @@
 		break;
 
 		case 'item.get' : #Get list of mails stored in the database
-			$update = Mail_1_0_0_Item::update($_GET['folder']); #Update it from the mail server
-			$data = Mail_1_0_0_Item::get($_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse'], true); #Get list from database
+			if($_GET['update']) $update = Mail_1_0_0_Item::update($_GET['folder']); #Update it from the mail server
+			$data = Mail_1_0_0_Item::get($_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse']); #Get list from database
 
 			print $system->xml_send($update !== false && $data !== false, $data, null, true);
 		break;
 
 		case 'item.show' : #Get message body of a mail #TODO - Send caching header
-			$data = Mail_1_0_0_Item::show($_GET['account'], $_GET['folder'], $_GET['message']);
+			$data = Mail_1_0_0_Item::show($_GET['message']);
 			print $system->xml_send($data !== false, $data, null, true);
 		break;
 	}

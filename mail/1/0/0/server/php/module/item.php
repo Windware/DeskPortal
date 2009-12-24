@@ -1,15 +1,9 @@
 <?php
 	class Mail_1_0_0_Item
 	{
-		#Max bytes allowed to be transferred from mail servers as message body
-		#No body will be retrieved if it is bigger
-		protected static $_max = 300000;
+		protected static $_max = 300000; #Max bytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger.
 
-		protected static $_page = 30; #Number of mails to display per page
-
-		#Amount of max (bytes, lines) of a message body to be sent with the list of messages for previewing
-		#Any messages that are larger will be truncated to the size and lines
-		protected static $_preview = array(500, 5);
+		protected static $_page = 30; #Default number of mails to display per page
 
 		protected static function _dig($parts, $position = '') #Dig the multi part message and find the main body section
 		{
@@ -38,7 +32,7 @@
 			return $encoding == 'ASCII' || $encoding == 'UTF-8' ? $decoded : '(?)'; #Avoid other character sets to avoid outputting XML from corrupting
 		}
 
-		public static function get($folder, $page, $order = 'sent', $reverse = true, $update = false, System_1_0_0_User $user = null) #Get list of mails
+		public static function get($folder, $page, $order = 'sent', $reverse = true, $amount = null, System_1_0_0_User $user = null) #Get list of mails
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -52,24 +46,22 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			if($update) self::update($folder, $user); #Update from the mail server if specified
+			if(!$system->is_digit($amount)) $amount = self::$_page; #Set to default amount of mails per page
 
 			$descend = $reverse ? ' DESC' : '';
-			$start = ($page - 1) * self::$_page;
-
-			$query = array('check' => $database->prepare("SELECT updated FROM {$database->prefix}folder WHERE id = :id AND user = :user"));
-			$query['check']->run(array(':id' => $folder, ':user' => $user->id));
-
-			if(!$query['check']->success) return false;
-			if($query['check']->column() === null) self::update($folder, $user); #If the folder is never updated to sync with the mail server, do so now
+			$start = ($page - 1) * $amount;
 
 			$query['count'] = $database->prepare("SELECT count(id) FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
 			$query['count']->run(array(':user' => $user->id, ':folder' => $folder));
 
 			if(!$query['count']->success) return false;
-			$xml = $system->xml_node('page', array('total' => floor($query['count']->column() / (self::$_page + 1)) + 1)); #Get the total count
 
-			$query['all'] = $database->prepare("SELECT id, subject, size, sent, received, read, preview FROM {$database->prefix}mail WHERE user = :user AND folder = :folder ORDER BY $order$descend LIMIT $start,".self::$_page);
+			$total = $query['count']->column();
+			if(!$total) $total = 0;
+
+			$xml = $system->xml_node('page', array('total' => floor($total / ($amount + 1)) + 1)); #Get the total count
+
+			$query['all'] = $database->prepare("SELECT id, subject, sent, received, read FROM {$database->prefix}mail WHERE user = :user AND folder = :folder ORDER BY $order$descend LIMIT $start,$amount");
 			$query['all']->run(array(':user' => $user->id, ':folder' => $folder));
 
 			if(!$query['all']->success) return false;
@@ -106,26 +98,56 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT account, folder, uid, sequence, signature FROM {$database->prefix}mail WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT folder, uid, sequence, signature FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));
 
+			if(!$query->success) return false;
 			$identity = $query->row(); #Get the mail's identifiers
-			$link = Mail_1_0_0_Account::connect($identity['account'], $identity['folder'], $user); #Connect to the server
+
+			$query = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $identity['folder'], ':user' => $user->id));
+
+			if(!$query->success) return false;
+			$link = Mail_1_0_0_Account::connect($query->column(), $identity['folder'], $user); #Connect to the server
 
 			$content = imap_check($link['connection']);
 			if(!$content) $log->user(LOG_ERR, "Invalid mailbox '$folder' on host '{$link['host']}'", 'Check the mail server or configuration');
 
-			if($identity['uid']) #If the mail has an unique identifier, set the target for that mail
+			if($identity['uid']) #If the mail has an unique identifier, set the target for that mail (NOTE : This block is an optional procedure to speed up the message look up)
 			{
-				$signature = md5(imap_fetchheader($link['connection'], $sequence = imap_msgno($connection, $identity['uid'])));
-				if($signature == $identity['signature']) $target = $sequence;
+				if($link['info']['receive_type'] == 'imap') $sequence = imap_msgno($link['connection'], $identity['uid']); #Get message number from the ID
+				elseif($link['info']['receive_type'] == 'pop3') #List the unique ID and find the message number for POP3
+				{
+					if((@include_once('Auth/SASL.php')) && (@include_once('Net/POP3.php'))) #NOTE : Requires these PHP PEAR packages - FIXME - Have a local copy of PEAR
+					{
+						$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
+						$pop3 =& new Net_POP3();
+
+						if($pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port'])) #Connect
+						{
+							if($pop3->login($link['info']['receive_user'], $link['info']['receive_pass']))
+							{
+								$all = $pop3->getListing();
+								if(is_array($all)) foreach($all as $list) if($list['uidl'] == $identity['uid']) $sequence = $list['msg_id'];
+							}
+
+							$pop3->disconnect();
+						}
+					}
+				}
+
+				if($system->is_digit($sequence))
+				{
+					$signature = md5(imap_fetchheader($link['connection'], $sequence));
+					if($signature == $identity['signature']) $target = $sequence;
+				}
 			}
 
-			if(!$target)
+			if(!$target) #If no unique identifier is given
 			{
 				if($identity['sequence'])
 				{
-					$signature = md5(imap_fetchheader($link['connection'], $identity['sequence'])); #Try to use the sequence number
+					$signature = md5(imap_fetchheader($link['connection'], $identity['sequence'])); #Try to see if the sequence number still matches
 					if($signature == $identity['signature']) $target = $sequence; #Use it if it matches
 				}
 
@@ -208,37 +230,71 @@
 			$account = $query->column();
 
 			$link = Mail_1_0_0_Account::connect($account, $folder, $user); #Connect to the server
-			$list = $mail = ''; #List of XML outputs
 
 			$content = imap_check($link['connection']);
-			if(!$content) $log->user(LOG_ERR, "Invalid mailbox '$folder' on host '{$link['host']}'", 'Check the mail server or configuration');
+			if(!$content) return $log->user(LOG_ERR, "Invalid mailbox '$folder' on host '{$link['host']}'", 'Check the mail server or configuration');
 
-			$exist = array(); #List of header md5 sum of mails existing in the mail box
-			$field = explode(' ', 'date subject to from unseen'); #List of field to get
+			$query = array('list' => $database->prepare("SELECT uid FROM {$database->prefix}mail WHERE user = :user AND folder = :folder"));
+			$query['list']->run(array(':user' => $user->id, ':folder' => $folder)); #Get list of UID
+
+			if(!$query['list']->success) return false;
+
+			$current = array(); #List of currently existing UID
+			foreach($query['list']->all() as $row) $current[$row['uid']] = true;
 
 			#Prepare to check for mail's existence
-			$query = array('check' => $database->prepare("SELECT id FROM {$database->prefix}mail WHERE signature = :signature AND folder = :folder AND user = :user"));
+			$query['check'] = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND signature = :signature");
 
 			foreach(array('from', 'to', 'cc') as $section) #Query to insert mail addresses
-				$query[$section] = $database->prepare("REPLACE INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
+				$query[$section] = $database->prepare("INSERT INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
 
 			#Mail data insertion query
-			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, account, folder, uid, sequence, signature, subject, size, sent, preview, read) VALUES (:user, :account, :folder, :uid, :sequence, :signature, :subject, :size, :sent, :preview, :read)");
+			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, sequence, signature, subject, sent, read) VALUES (:user, :folder, :uid, :sequence, :signature, :subject, :sent, :read)");
+
+			if($link['info']['receive_type'] == 'imap') #For IMAP
+			{
+				$unique = imap_search($link['connection'], 'ALL', SE_UID); #Get the UID list from the mail server
+				if(is_array($unique)) array_unshift($unique, null); #Make sure the sequence number starts from 1
+			}
+			elseif($link['info']['receive_type'] == 'pop3') #NOTE : Get the UID with an alternative method, since 'imap_search' cannot get UID on POP3
+			{
+				if((@include_once('Auth/SASL.php')) && (@include_once('Net/POP3.php'))) #TODO - Include them as local files instead of PEAR packages
+				{
+					$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
+					$pop3 =& new Net_POP3();
+
+					if($pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port'])) #Connect
+					{
+						if($pop3->login($link['info']['receive_user'], $link['info']['receive_pass']) && is_array($all = $pop3->getListing())) #Login
+						{
+							$unique = array(); #Store the unique ID for each message
+							foreach($all as $list) $unique[$list['msg_id']] = $list['uidl']; #Remember the unique identifier
+						}
+
+						$pop3->disconnect();
+					}
+				}
+			}
+
+			$exist = array(); #List of header md5 sum of mails existing in the mail box
+
+			$field = explode(' ', 'date subject to from unseen'); #List of fields to get
+			$short = is_array($unique) && count($unique); #If UID can be used to make queries shorter to the mail server
 
 			for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++) #For all of the messages found in the mail box
 			{
-				$exist[] = $signature = md5(imap_fetchheader($link['connection'], $sequence)); #Keep a unique signature of the message
-				$query['check']->run(array(':signature' => $signature, ':folder' => $folder, ':user' => $user->id));
-
-				if(!$query['check']->success) return false; #Quit the entire function if it fails
-				if($query['check']->column()) continue; #If already stored, check for the next message
+				if($current[$unique[$sequence]]) #If the given UID is already stored in the database
+				{
+					unset($current[$unique[$sequence]]); #Find out list of non existing mails on the server
+					continue; #If already stored, move on
+				}
 
 				$addresses = array(); #List of 'from', 'to' and 'cc' addresses
 
-				$detail = imap_headerinfo($link['connection'], $sequence); #Get mail information
-				$attributes = array(':user' => $user->id, ':account' => $account, ':folder' => $folder, ':sequence' => $sequence, ':signature' => $signature); #Mail information parameters
+				$signature = md5(imap_fetchheader($link['connection'], $sequence)); #Keep a unique signature of the message
+				$attributes = array(':user' => $user->id, ':folder' => $folder, ':sequence' => $sequence, ':signature' => $signature, ':uid' => isset($unique[$sequence]) ? $unique[$sequence] : null); #Mail information parameters
 
-				foreach($detail as $key => $value)
+				foreach(imap_headerinfo($link['connection'], $sequence) as $key => $value) #Get mail information
 				{
 					$key = strtolower($key);
 
@@ -262,7 +318,7 @@
 						{
 							case 'date' : $attributes[$store] = $system->date_datetime(strtotime($attributes[$store])); break; #Format the time
 
-							case 'preview' : case 'subject' : if($attributes[$store] == null) $attributes[$store] = ''; break; #Avoid null values on these keys
+							case 'subject' : if(!$system->is_text($attributes[$store])) $attributes[$store] = ''; break; #Avoid null values
 
 							case 'unseen' : $attributes[$store] = $value == 'U' ? 0 : 1; break; #Unread entries
 						}
@@ -279,54 +335,11 @@
 					}
 				}
 
-				$structure = imap_fetchstructure($link['connection'], $sequence); #Get the mail's structure
-				$body = ''; #The message body
+				if(!$short) $exist[] = $database->handler->quote($signature); #Keep remembering the header signature
+				$query['check']->run(array(':user' => $user->id, ':folder' => $folder, ':signature' => $signature));
 
-				if($structure->type == 1) #If it is a multi part message
-				{
-					list($data, $main) = self::_dig($structure->parts); #Dig the message and find the body part
-					if($data && $data->bytes < self::$_max) $body = imap_fetchbody($link['connection'], $sequence, $main, FT_PEEK); #Get the content as body if it's valid
-				}
-				elseif($structure->type == 0 && strtolower($structure->subtype) == 'plain' && $structure->bytes < self::$_max) #If it's a single part message having plain text
-				{
-					$main = '1'; #Body ID for single part message
-
-					$body = imap_fetchbody($link['connection'], $sequence, $main, FT_PEEK); #Get the body on a single part message
-					$data = $structure; #Specify its structure
-				}
-
-				$attributes[':size'] = $data->bytes; #Total size of the body
-
-				if($body && is_object($data)) #Only if any textual data is found
-				{
-					switch($data->encoding) #Decode encoded string
-					{
-						case 3 : $body = base64_decode($body); break;
-
-						case 4 : $body = quoted_printable_decode($body); break;
-					}
-
-					$encoding = mb_detect_encoding($body); #Detect manually first to avoid mails with false or no encoding specified
-
-					if($encoding) $body = mb_convert_encoding($body, 'utf-8', $encoding); #Convert to UTF8 if it isn't
-					else #If it cannot detect, trust the encoding specified in the mail
-					{
-						foreach($data->parameters as $param) #Check for character set
-						{
-							if(strtolower($param->attribute) != 'charset' || strtolower($param->value) == 'us-ascii' || strtolower($param->value) == 'utf-8') continue;
-							$body = mb_convert_encoding($body, 'utf-8', $param->value); #Convert to UTF8 if it isn't
-						}
-					}
-
-					$preview = substr($body, 0, self::$_preview[0]); #Limit the size of the message body TODO - This does not corrupt multi byte characters and the outputting XML?
-					$preview = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', $preview); #Limit the lines of the message body
-
-					if($body != $preview) $preview = rtrim($preview).'...'; #Note about the truncation
-					if($link['type'] == 'imap') $attributes[':uid'] = imap_uid($link['connection'], $sequence); #Get message unique ID to reference it later
-				}
-
-				$encoding = mb_detect_encoding($preview);
-				$attributes[':preview'] = $encoding == 'ASCII' || $encoding == 'UTF-8' ? str_replace("\r", '', $preview) : '(?)'; #Add the body content
+				if(!$query['check']->success) return false; #Quit the entire function if it fails
+				if($query['check']->column()) continue; #If already stored, check for the next message (TODO - This avoids having duplicate messages in the mailbox, even possibly with different body)
 
 				$query['insert']->run($attributes); #Insert the mail in the database
 				$id = $database->id(); #Id for the mail in the database
@@ -341,18 +354,25 @@
 						$query[$section]->run($values);
 					}
 				}
+
+				#imap_gc($link['connection'], IMAP_GC_ELT & IMAP_GC_ENV & IMAP_GC_TEXTS); #Keep freeing memories TODO - Not available in PHP 5.2
 			}
 
-			sort($exist);
-			$exist = implode("','", $exist); #Concatenate the existing mail signatures
+			if($short) foreach($current as $key => $value) if(strlen($key)) $exist[] = $database->handler->quote($key); #List of UID not existing on the server anymore
 
-			$query['select'] = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE signature NOT IN ('$exist') AND user = :user AND account = :account AND folder = :folder");
-			$query['select']->run(array(':user' => $user->id, ':account' => $account, ':folder' => $folder)); #Pick non existing mails
+			sort($exist); #TODO - Is this necessary for database performance?
+			$exist = implode(',', $exist); #Concatenate the identifiers
+
+			#Match on UID for deletion that was not found on the mail server. Otherwise, go through the header hashes for deletion
+			$sql = $short ? "uid IN ($exist)" : "signature NOT IN ($exist)";
+
+			$query['select'] = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND $sql");
+			$query['select']->run(array(':user' => $user->id, ':folder' => $folder)); #Pick non existing mails
 
 			if(!$query['select']->success) return false;
-			$query['delete'] = $database->prepare("DELETE FROM {$database->prefix}mail WHERE id = :id");
 
-			$association = explode(' ', 'from to cc attachment body reference');
+			$association = explode(' ', 'from to cc attachment body reference'); #Message related table names
+			$query['delete'] = $database->prepare("DELETE FROM {$database->prefix}mail WHERE id = :id"); #TODO - Should these queries be concatenated as a single query using 'IN'?
 
 			foreach($association as $section) $query[$section] = $database->prepare("DELETE FROM {$database->prefix}$section WHERE mail = :mail");
 			$query['reference'] = $database->prepare("DELETE FROM {$database->prefix}reference WHERE reference = :reference");

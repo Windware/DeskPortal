@@ -121,10 +121,8 @@
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_text($name)) return $log->param();
-
+			if(!$system->is_text($name) || !$system->is_digit($id)) return $log->param();
 			if(!is_array($groups)) $groups = array();
-			if(!$system->is_digit($id)) $id = 0;
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;

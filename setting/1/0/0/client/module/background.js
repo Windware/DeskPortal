@@ -33,6 +33,6 @@
 				_loaded = true;
 			}
 
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'background.get'}, {}, list);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'background.get'}, null, list);
 		}
 	}

@@ -30,6 +30,9 @@
 
 			$parameter = "{{$host}/{$info['receive_type']}/novalidate-cert$secure}";
 
+			$conf = $system->app_conf('system', 'static');
+			imap_timeout($conf['net_timeout']); #Set the timeout value
+
 			if(self::$_stream[$user->id][$account]) #If a connection already exists for the account
 			{
 				if(self::$_stream[$user->id][$account]['folder'] != $folder) #If the folder is different
@@ -44,7 +47,7 @@
 			$connection = imap_open($parameter.imap_utf7_encode($name), $info['receive_user'], $info['receive_pass']);
 			if(!$connection) $log->dev(LOG_ERR, 'Failed opening connection to a mail server', 'Check user configuration');
 
-			return self::$_stream[$user->id][$account] = array('connection' => $connection, 'folder' => $folder, 'host' => $host, 'parameter' => $parameter, 'type' => $type);
+			return self::$_stream[$user->id][$account] = array('connection' => $connection, 'folder' => $folder, 'host' => $host, 'parameter' => $parameter, 'info' => $info);
 		}
 
 		public static function get(System_1_0_0_User $user = null) #Get list of accounts
@@ -142,7 +145,7 @@
 
 			if(Mail_1_0_0_Item::update($account, $folder, $user) === false) return false;
 
-			$mail = Mail_1_0_0_Item::get($account, $folder, $page, $order, $reverse, false, $user);
+			$mail = Mail_1_0_0_Item::get($account, $folder, $page, $order, $reverse, false, null, $user);
 			if($mail === false) return false;
 
 			return $storage.$mail;

@@ -16,10 +16,12 @@
 			location.href = location.href.replace(/\?.*/, '') + '?' + language; //Swap the address to specify the language
 		}
 
-		this.show = function(element) //Swap the details on and off
+		this.show = function() //Swap the details on and off
 		{
 			var node = $id + '_more'; //The node to hide and show
 			var state = $system.node.hidden(node); //The hidden state of the area
+
+			var element = $system.node.id($id + '_click');
 
 			var alter = function() //Action to take after the fade completes
 			{

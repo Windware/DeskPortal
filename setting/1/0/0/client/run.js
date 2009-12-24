@@ -48,9 +48,8 @@
 			}
 		}
 
-		if($system.is.address($global.user.pref.wallpaper)) //Show the wallpaper address
-			$system.node.id($id + '_wallpaper_address').value = $global.user.pref.wallpaper;
-
+		if($system.is.address($global.user.pref.wallpaper)) $system.node.id($id + '_wallpaper_address').value = $global.user.pref.wallpaper; //Show the wallpaper address
 		$self.gui.valid(); //Enables or disables options
-		if(typeof callback == 'function') callback();
+
+		$system.app.callback($id + '.run', callback);
 	}
