@@ -16,14 +16,21 @@
 			print $system->xml_send($data !== false, $data);
 		break;
 
-		case 'folder.get' : case 'folder.update' : #Get list of folders for an account
+		case 'folder.get' : #Get list of folders for an account
 			$data = Mail_1_0_0_Folder::get($_GET['account']);
 			print $system->xml_send($data !== false, $data);
 		break;
 
+		case 'folder.update' : #Update list of folders for an account
+			$update = Mail_1_0_0_Folder::update($_GET['account']);
+			$data = Mail_1_0_0_Folder::get($_GET['account']);
+
+			print $system->xml_send($update !== false && $data !== false, $data);
+		break;
+
 		case 'item.get' : #Get list of mails stored in the database
 			if($_GET['update']) $update = Mail_1_0_0_Item::update($_GET['folder']); #Update it from the mail server
-			$data = Mail_1_0_0_Item::get($_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse']); #Get list from database
+			$data = Mail_1_0_0_Item::get($_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse'], $_GET['marked'], $_GET['unread'], $_GET['search']); #Get list from database
 
 			print $system->xml_send($update !== false && $data !== false, $data, null, true);
 		break;

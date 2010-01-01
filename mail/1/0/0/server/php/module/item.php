@@ -32,13 +32,12 @@
 			return $encoding == 'ASCII' || $encoding == 'UTF-8' ? $decoded : '(?)'; #Avoid other character sets to avoid outputting XML from corrupting
 		}
 
-		public static function get($folder, $page, $order = 'sent', $reverse = true, $amount = null, System_1_0_0_User $user = null) #Get list of mails
+		public static function get($folder, $page, $order = 'sent', $reverse = true, $marked = false, $unread = false, $search = '', $amount = null, System_1_0_0_User $user = null) #Get list of mails
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
 			if(!$system->is_digit($folder) || !$system->is_digit($page) || preg_match('/\W/', $order)) return $log->param();
-			$order = "LOWER($order)"; #NOTE : Using 'LOWER' for case insensitive sorting to be compatible across database, possibly FIXME for performance
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
@@ -46,13 +45,48 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
+			$param = array(':user' => $user->id, ':folder' => $folder);
+
+			if($marked)
+			{
+				$filter .= ' AND marked = :marked';
+				$param[':marked'] = 1;
+			}
+
+			if($unread)
+			{
+				$filter .= ' AND read = :read';
+				$param[':read'] = 0;
+			}
+
+			switch($order) #Join the extra table for address sorting
+			{
+				case 'from' : case 'to' : case 'cc' :
+					$foreign = " LEFT JOIN {$database->prefix}$order as _$order ON id = _$order.mail";
+					$order = 'address'; #Specify the column name for the address to sort
+				break;
+			}
+
+			if(is_string($search) && strlen($search) > 1)
+			{
+				foreach(array('from', 'to', 'cc') as $target)
+				{
+					if($order != $target) $foreign .= " LEFT JOIN {$database->prefix}$target as _$target ON id = _$target.mail";
+					$limiter .= " OR _$target.name LIKE :search $database->escape OR _$target.address LIKE :search $database->escape";
+				}
+
+				$filter .= " AND (subject LIKE :search $database->escape$limiter)";
+				$param[':search'] = '%'.$system->database_escape($search).'%';
+			}
+
+			$order = "LOWER($order)"; #NOTE : Using 'LOWER' for case insensitive sorting to be compatible across database, possibly FIXME for performance
 			if(!$system->is_digit($amount)) $amount = self::$_page; #Set to default amount of mails per page
 
-			$descend = $reverse ? ' DESC' : '';
+			$reverse = $reverse ? ' DESC' : '';
 			$start = ($page - 1) * $amount;
 
-			$query['count'] = $database->prepare("SELECT count(id) FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
-			$query['count']->run(array(':user' => $user->id, ':folder' => $folder));
+			$query['count'] = $database->prepare("SELECT count(id) FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter");
+			$query['count']->run($param);
 
 			if(!$query['count']->success) return false;
 
@@ -61,8 +95,8 @@
 
 			$xml = $system->xml_node('page', array('total' => floor($total / ($amount + 1)) + 1)); #Get the total count
 
-			$query['all'] = $database->prepare("SELECT id, subject, sent, received, read FROM {$database->prefix}mail WHERE user = :user AND folder = :folder ORDER BY $order$descend LIMIT $start,$amount");
-			$query['all']->run(array(':user' => $user->id, ':folder' => $folder));
+			$query['all'] = $database->prepare("SELECT id, subject, sent, received, marked, read, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
+			$query['all']->run($param);
 
 			if(!$query['all']->success) return false;
 			foreach(array('from', 'to', 'cc') as $section) $query[$section] = $database->prepare("SELECT name, address FROM {$database->prefix}$section WHERE mail = :mail");
@@ -73,7 +107,7 @@
 
 				foreach(array('from', 'to', 'cc') as $section)
 				{
-					$query[$section]->run(array(':mail' => $row['id']));
+					$query[$section]->run(array(':mail' => $row['id'])); #TODO - Run this once with 'IN' clause (Gets run 60 times)
 					if(!$query[$section]->success) return false;
 
 					foreach($query[$section]->all() as $line) $addresses .= $system->xml_node($section, $line);
@@ -207,6 +241,9 @@
 				if($encoding != 'ASCII' && $encoding != 'UTF-8') $body = '(?)'; #If it cannot be converted, do not send the content to avoid corrupting XML
 			}
 
+			$query = $database->prepare("UPDATE {$database->prefix}mail SET read = :read WHERE id = :id AND user = :user");
+			$query->run(array(':read' => 1, ':id' => $id, ':user' => $user->id)); #Update the read status
+
 			return $system->xml_node('body', null, $system->xml_data($body));
 		}
 
@@ -240,7 +277,7 @@
 			if(!$query['list']->success) return false;
 
 			$current = array(); #List of currently existing UID
-			foreach($query['list']->all() as $row) $current[$row['uid']] = true;
+			foreach($query['list']->all() as $row) if(strlen($row['uid'])) $current[$row['uid']] = true;
 
 			#Prepare to check for mail's existence
 			$query['check'] = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND signature = :signature");
@@ -255,6 +292,30 @@
 			{
 				$unique = imap_search($link['connection'], 'ALL', SE_UID); #Get the UID list from the mail server
 				if(is_array($unique)) array_unshift($unique, null); #Make sure the sequence number starts from 1
+
+				$flag = array('read' => 'SEEN', 'marked' => 'FLAGGED', 'replied' => 'ANSWERED'); #Table column names and corresponding IMAP flags
+
+				foreach($flag as $column => $mark)
+				{
+					if(count($current)) #If UID are available : TODO - If the mail server changes its UID capability during use, it will break mail lookup
+					{
+						$list = array();
+
+						$target = imap_search($link['connection'], $mark, SE_UID); #Get the flagged mails
+						if(!is_array($target)) continue;
+
+						foreach($target as $id) $list[] = $database->handler->quote($id);
+						$list = implode(',', $list);
+
+						$query[$column] = $database->prepare("UPDATE {$database->prefix}mail SET $column = :$column WHERE user = :user AND folder = :folder AND uid IN ($list)");
+						$query[$column]->run(array(":$column" => 1, ':user' => $user->id, ':folder' => $folder)); #Mark the mails
+
+						$query[$column] = $database->prepare("UPDATE {$database->prefix}mail SET $column = :$column WHERE user = :user AND folder = :folder AND uid NOT IN ($list)");
+						$query[$column]->run(array(":$column" => 0, ':user' => $user->id, ':folder' => $folder)); #Remove the mark off mails
+					}
+					#Prepare for later manipulation when no UID is available
+					else $query[$mark] = $database->prepare("UPDATE {$database->prefix}mail SET $mark = :$mark WHERE user = :user AND folder = :folder AND signature = :signature");
+				}
 			}
 			elseif($link['info']['receive_type'] == 'pop3') #NOTE : Get the UID with an alternative method, since 'imap_search' cannot get UID on POP3
 			{
@@ -265,10 +326,13 @@
 
 					if($pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port'])) #Connect
 					{
-						if($pop3->login($link['info']['receive_user'], $link['info']['receive_pass']) && is_array($all = $pop3->getListing())) #Login
+						if($pop3->login($link['info']['receive_user'], $link['info']['receive_pass'])) #Login
 						{
-							$unique = array(); #Store the unique ID for each message
-							foreach($all as $list) $unique[$list['msg_id']] = $list['uidl']; #Remember the unique identifier
+							if(is_array($all = $pop3->getListing())) #Get all listing
+							{
+								$unique = array(); #Store the unique ID for each message
+								foreach($all as $list) $unique[$list['msg_id']] = $list['uidl']; #Remember the unique identifier
+							}
 						}
 
 						$pop3->disconnect();
@@ -336,10 +400,17 @@
 				}
 
 				if(!$short) $exist[] = $database->handler->quote($signature); #Keep remembering the header signature
-				$query['check']->run(array(':user' => $user->id, ':folder' => $folder, ':signature' => $signature));
 
+				$query['check']->run(array(':user' => $user->id, ':folder' => $folder, ':signature' => $signature));
 				if(!$query['check']->success) return false; #Quit the entire function if it fails
-				if($query['check']->column()) continue; #If already stored, check for the next message (TODO - This avoids having duplicate messages in the mailbox, even possibly with different body)
+
+				if($query['check']->column()) #If the mail exists
+				{
+					foreach($flag as $column => $mark) if($query[$column]) #Flag the states
+						$query[$column]->run(array(":$column" => $attributes[':'.strtolower($mark)] ? 0 : 1, ':user' => $user->id, ':folder' => $folder, ':signature' => $signature));
+
+					continue; #Check for the next message (TODO - This avoids having duplicate messages in the mailbox, even possibly with different body)
+				}
 
 				$query['insert']->run($attributes); #Insert the mail in the database
 				$id = $database->id(); #Id for the mail in the database
@@ -355,7 +426,7 @@
 					}
 				}
 
-				#imap_gc($link['connection'], IMAP_GC_ELT & IMAP_GC_ENV & IMAP_GC_TEXTS); #Keep freeing memories TODO - Not available in PHP 5.2
+				#imap_gc($link['connection'], IMAP_GC_ELT & IMAP_GC_ENV & IMAP_GC_TEXTS); #Keep freeing memories - NOTE : Only available in PHP >= 5.3
 			}
 
 			if($short) foreach($current as $key => $value) if(strlen($key)) $exist[] = $database->handler->quote($key); #List of UID not existing on the server anymore

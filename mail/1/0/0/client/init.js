@@ -1,9 +1,13 @@
 
 	var __account = {}; //List of account names
 
-	var __folder = {}; //List of folder information
+	var __filter = {}; //List filter options
+
+	var __inbox = {}; //Folder ID for default mail box
 
 	var __mail = {}; //List of mails
+
+	var __order = {item : 'sent', reverse : true}; //Current sort order method
 
 	var __selected = {}; //Current displayed account, folder and page
 

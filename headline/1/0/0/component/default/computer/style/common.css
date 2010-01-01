@@ -12,7 +12,7 @@
 	span.%id%_chosen { background-color : #abc; }
 
 	/*TODO - How to force no wrap and make scrollbar horizontally? "white-scape : nowrap" only removes the line break by extending the element till the line fits */
-	div#%id%_list, form#%id%_entries { color : #333; height : 300px; background-color : #ddd; border : 1px #333 solid; overflow-y : auto; }
+	div#%id%_list, form#%id%_entries { color : #333; height : 300px; background-color : #ddd; border : 1px #333 solid; overflow : auto; }
 
 	form#%id%_entries a:active, form#%id%_entries a:hover { color : #963 !important; }
 

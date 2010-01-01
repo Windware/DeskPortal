@@ -10,8 +10,8 @@
 		this.change = function(folder) //Change the displaying folder
 		{
 			var log = $system.log.init(_class + '.change');
-			if(!$system.is.text(folder)) return log.param();
 
+			if(!$system.is.digit(folder)) return log.param();
 			if(!$self.item.get(folder)) return false; //Get the folder items for current account
 
 			//Change the look of the chosen folder
@@ -29,34 +29,65 @@
 			var list = function(account, callback, request)
 			{
 				_cache[account] = request;
+				var language = $system.language.strings($id);
 
 				var area = $system.node.id($id + '_folder');
 				area.innerHTML = '';
 
-				var folder = $system.dom.tags(request.xml, 'folder');
-				var section = ['id', 'name', 'count', 'recent']; //Folder parameters
+				var header = document.createElement('div');
+				header.className = $id + '_folder_header';
 
-				__folder[account] = {};
+				header.innerHTML = '<strong>' + language.folder + '</strong>';
+				area.appendChild(header);
 
-				for(var i = 0; i < folder.length; i++)
+				var construct = function(tree, depth) //Create the directory structure tree
 				{
-					var param = {}; //Folder parameters
+					if(!$system.is.object(tree) || !$system.is.digit(depth)) return false;
 
-					for(var j = 0; j < section.length; j++) param[section[j]] = $system.dom.attribute(folder[i], section[j]);
-					__folder[account][param.name] = param; //Keep folder information
+					var nodes = tree.childNodes;
+					if(!nodes) return false;
 
-					var link = document.createElement('a');
-					link.id = $id + '_folder_' + param.id;
+					for(var i = 0; i < nodes.length; i++)
+					{
+						if(nodes[i].nodeType != 1 || nodes[i].nodeName != 'folder') continue; //Get the folder's node
 
-					link.onclick = $system.app.method($self.folder.change, [param.id]);
+						var id = $system.dom.attribute(nodes[i], 'id');
+						var name = $system.dom.attribute(nodes[i], 'name');
 
-					$system.node.text(link, param.name.match(/\./) ? param.name.replace(/^.+?\./, ' |- ') : param.name);
-					area.appendChild(link);
+						if(depth == 0 && name == 'INBOX') __inbox[account] = id; //Remember the folder ID for default mail box
+
+						var link = document.createElement('a'); //Create link for the folder
+						link.id = $id + '_folder_' + id;
+
+						link.onclick = $system.app.method($self.folder.change, [id]);
+						$system.node.hover(link, $id + '_hilight');
+
+						var trunk = ''; //Create folder listing indicator
+						for(var j = 0; j < depth * 2; j++) trunk += '&nbsp;';
+
+						if(depth) link.innerHTML = trunk + '|- ';
+						var display = document.createElement('strong');
+
+						display.appendChild(document.createTextNode(name));
+						link.appendChild(display);
+
+						area.appendChild(link);
+						construct(nodes[i], depth + 1); //Look through child folders
+					}
+
+					return true;
 				}
 
+				if(!construct(request.xml.childNodes[0], 0)) //Create folder listing
+					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/solution');
+
+				if(_previous) $system.node.classes($id + '_folder_' + _previous, $id + '_displayed', true);
 				$system.app.callback(_class + '.get.list', callback);
+
 				return true;
 			}
+
+			__selected.account = account; //Keep the selected account
 
 			if($system.is.object(request)) return list(account, callback, request); //If cached object is given, call it directly
 			if(_cache[account]) return list(account, callback, _cache[account]); //If cached object is given, call it directly
@@ -66,9 +97,7 @@
 
 		this.update = function() //Update the folders
 		{
-			if(!__selected.account || !__selected.folder) return;
-
-			var list = function(request) { $self.folder.get(__selected.account, null, request); }
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.update', folder : __selected.folder}, null, list);
+			if(!$system.is.digit(__selected.account)) return false;
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.update', account : __selected.account}, null, $system.app.method($self.folder.get, [__selected.account, null]));
 		}
 	}

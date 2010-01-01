@@ -3,7 +3,9 @@
 	{
 		var _class = $id + '.gui';
 
-		this.add = function(address, name) //Add email address to address book
+		var _limit = 50; //Maximum search string length
+
+		this.add = function(address, name) //Add email address to address book app
 		{
 			var log = $system.log.init(_class + '.add');
 			if(!$system.is.text(address) || !$system.is.text(name, true)) return log.param();
@@ -33,11 +35,40 @@
 			$system.app.load(app, $system.app.method(open, [address, name])); //Load the address book app
 		}
 
-		this.filter = function() //Filters the list of mails
+		this.filter = function(section, value) //Filters the list of mails
 		{
+			var log = $system.log.init(_class + '.filter');
+
+			switch(section)
+			{
+				case 'marked' : case 'unread' : if(typeof value != 'boolean') return log.param(); break;
+
+				default : return log.dev($global.log.error, 'dev/gui/filter', 'dev/gui/filter/solution'); break;
+			}
+
+			__filter[section] = value;
+			$self.item.update(); //Update the listing
+
+			return false; //Avoid form submission
 		}
 
 		this.sort = function(section) //Sort the columns
 		{
+			var log = $system.log.init(_class + '.filter');
+			if(!$system.is.text(section)) return log.param();
+
+			__order = {item : section, reverse : __order.item == section && !__order.reverse}; //Set order option
+			var header = $system.array.list('from to cc');
+
+			$self.item.update(); //Update the listing
+
+			for(var i = 0; i < header.length; i++)
+			{
+				var sign = $system.node.id($id + '_sign_' + header[i]);
+				if(!$system.is.element(sign)) continue;
+
+				if(section != header[i]) sign.innerHTML = '';
+				else sign.innerHTML = !__order.reverse ? ' &uarr;' : ' &darr;';
+			}
 		}
 	}

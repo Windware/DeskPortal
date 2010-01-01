@@ -1,8 +1,8 @@
 
-	window = 'eebb44';
+	window = 'eeddcc';
 
 	border = 'cccccc';
-	hover = '885511';
+	hover = '776655';
 
 	bar = true;
 	up = true;

@@ -1,7 +1,7 @@
 
 	bar = true;
 
-	window = '336699';
+	window = '556677';
 	border = '333333';
 
 	color = 'ffffff';

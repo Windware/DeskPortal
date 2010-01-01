@@ -16,4 +16,6 @@
 	<input type="button" onclick="%top%.%system%.window.fade('%id%_mail_%value:index%', undefined, undefined, true)" value="%string:close%" />
 </form>
 
-<div id="%id%_mail_%value:index%_body" class="%id%_mail_body"%lock%>%string:loading%</div>
+<div class="%id%_mail_body"%scroll%><table cellpadding="0" cellspacing="0" class="%system%_full"%lock%><tbody><tr>
+	<td style="vertical-align : top" id="%id%_mail_%value:index%_body">%string:loading%</td>
+</tr></tbody></table></div>

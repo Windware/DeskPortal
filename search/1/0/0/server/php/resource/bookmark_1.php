@@ -33,7 +33,7 @@
 				if(stristr($phrase, $row['name'])) $list[] = $row['id']; #If found in the name, mark it
 				else #Otherwise, list up to be searched inside the system database for matches in other fields
 				{
-					$param[] = "id = :id{$index}_index";
+					$param[] = ":id{$index}_index";
 					$value[":id{$index}_index"] = $row['id'];
 				}
 
@@ -45,10 +45,8 @@
 			$database = $system->database('system', __METHOD__, null, strtolower($name[5]), $name[6]);
 			if(!$database->success) return false;
 
-			$limiter = implode(' OR ', $param); #Look for bookmark address and title
-
-			$query = $database->prepare("SELECT id, address, title FROM {$database->prefix}address WHERE $limiter");
-			$query->run($value);
+			$query = $database->prepare("SELECT id, address, title FROM {$database->prefix}address WHERE id IN (".implode(',', $param).')');
+			$query->run($value); #Look for bookmark address and title
 
 			foreach($query->all() as $row)
 			{
@@ -63,17 +61,15 @@
 
 			foreach($list as $index => $id)
 			{
-				$limiter[] = "bookmark = :id$index";
-				$value[":id$index"] = $id;
+				$limiter[] = ":id{$index}_index";
+				$value[":id{$index}_index"] = $id;
 			}
 
 			$database = $system->database('user', __METHOD__, $user, strtolower($name[5]), $name[6]);
 			if(!$database->success) return false;
 
-			$limiter = implode(' OR ', $limiter); #Check out the belonging group for that bookmark
-
-			$query = $database->prepare("SELECT bookmark, category FROM {$database->prefix}relation WHERE user = :user AND ($limiter)");
-			$query->run($value);
+			$query = $database->prepare("SELECT bookmark, category FROM {$database->prefix}relation WHERE user = :user AND bookmark IN (".implode(',', $limiter).')');
+			$query->run($value); #Check out the belonging group for that bookmark
 
 			$relation = array();
 			foreach($query->all() as $row) $relation[$row['bookmark']][] = $row['category'];

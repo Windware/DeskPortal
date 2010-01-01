@@ -106,13 +106,13 @@
 
 			foreach($subscription as $index => $row)
 			{
-				$grep[] = "id = :id{$index}_index";
+				$grep[] = ":id{$index}_index";
 				$parameter[":id{$index}_index"] = $row['feed'];
 
 				$period[$row['feed']] = $row['period']; #Get the period setting for a feed
 			}
 
-			$query = $database->prepare("SELECT * FROM {$database->prefix}feed WHERE (".implode(' OR ', $grep).') ORDER BY description');
+			$query = $database->prepare("SELECT * FROM {$database->prefix}feed WHERE id IN (".implode(',', $grep).') ORDER BY description');
 			$query->run($parameter); #Get the list of subscribed feeds' information
 
 			if(!$query->success) return false;

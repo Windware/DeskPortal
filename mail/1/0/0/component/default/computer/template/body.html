@@ -1,43 +1,34 @@
-<form id="%id%_form" style="margin : 10px 0px" onsubmit="%top%.%id%.gui.filter()">
-	<p><strong>%string:display%</strong>
-		[%string:account% :
-		<select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>]
-
-		[%string:order% :
-		<select name="order" onchange="%top%.%id%.item.update()">
-			<option value="sent">%string:sent%</option>
-			<option value="subject">%string:subject%</option>
-			<option value="from">%string:from%</option>
-			<option value="to">%string:to%</option>
-		</select>
-
-		<label for="%id%_reverse">
-			<input id="%id%_reverse" type="checkbox" name="reverse" onclick="%top%.%id%.item.update()" checked="checked" /> %string:reverse%
-		</label>]
-
-		[%string:page% : <span id="%id%_paging"><select id="%id%_show"><option>1</option></select> / 1</span>]
+<form id="%id%_form" style="margin : 10px 0px" onsubmit="%top%.%id%.item.update(); return false">
+	<p>
+		<input type="button" value="%string:new%" />
+		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this)"%tip:account%></select>]
+		[<strong>%string:status%</strong> : <span id="%id%_status"></span>]
 	</p>
 
-	<p class="%id%_filter"><strong>%string:filter%</strong>
-		[%string:state% :
+	<p>
+		[<strong>%string:filter%</strong> :
 		<label for="%id%_marked"%tip:marked%>
-			<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter()" name="marked"> %string:marked%
+			<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter('marked', this.checked)" name="marked"> %string:marked%
 		</label>
 
 		<label for="%id%_unread"%tip:unread%>
-			<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter()" name="unread"> %string:unread%
+			<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter('unread', this.checked)" name="unread"> %string:unread%
 		</label>]
 
-		[<span%tip:search% style="cursor : help">%string:search% : <input type="text" name="search" style="width : 120px" />]
-		<input type="submit" style="display : none" /></span>
+		[<span%tip:search% style="cursor : help"><strong>%string:search%</strong> : <input type="text" name="search" style="width : 120px" /></span>]
+		[<span%tip:page% style="cursor : help"><strong>%string:page%</strong> : <span id="%id%_paging"></span></span>]
 	</p>
+
+	<input type="submit" style="display : none" />
 </form>
 
 <div id="%id%_pane_read"><table style="width : 100%"><tbody><tr>
-	<td style="width : 20%; vertical-align : top"><div id="%id%_folder"%scroll%></td>
+	<td style="width : 20%; vertical-align : top"><div class="%id%_pane"%scroll%>
+		<table style="width : 100%" cellpadding="0" cellspacing="0"><tbody><tr><td id="%id%_folder"></td></tr></tbody></table>
+	</div></td>
 
-	<td style="width : 80%; vertical-align : top"><div style="overflow : auto; height : 300px; border : 1px #333 solid"%scroll%>
-		<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"%lock%><tbody id="%id%_read_mail"></tbody></table>
+	<td style="width : 80%; vertical-align : top"><div class="%id%_pane"%scroll%>
+		<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"%lock%></table>
 	</div></td>
 </tr></tbody></table></div>
 

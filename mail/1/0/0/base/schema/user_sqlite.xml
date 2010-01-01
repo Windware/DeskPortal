@@ -56,9 +56,10 @@
 		<column name="sent" param="DATETIME" />
 		<column name="received" param="DATETIME" />
 
-		<column name="marked" param="INT" />
+		<column name="marked" param="INT" /> <!-- Corresponds to IMAP 'flagged' -->
 		<column name="color" param="CHAR(6)" />
-		<column name="read" param="INT" />
+		<column name="read" param="INT" /> <!-- Corresponds to IMAP 'seen' -->
+		<column name="replied" param="INT" /> <!-- Corresponds to IMAP 'answered' -->
 
 		<column name="UNIQUE" param="(user, folder, uid)" />
 		<index name="user, folder, uid" />
@@ -73,6 +74,8 @@
 
 		<column name="account" param="INT NOT NULL" />
 		<column name="name" param="VARCHAR(255) NOT NULL" />
+		<column name="parent" param="INT" /> <!-- Can create child folders or not -->
+		<column name="separator" param="VARCHAR(4)" /> <!-- Folder name separater -->
 		<column name="updated" param="DATETIME" />
 
 		<column name="UNIQUE" param="(user, account, name)" />
@@ -114,10 +117,10 @@
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 		<column name="mail" param="INT NOT NULL" />
 
-		<column name="name" param="TEXT NOT NULL" />
-		<column name="type" param="VARCHAR(255)" />
+		<column name="name" param="TEXT NOT NULL" /> <!-- File name -->
+		<column name="type" param="VARCHAR(255)" /> <!-- Mime type -->
 
-		<column name="position" param="VARCHAR(255)" />
+		<column name="position" param="VARCHAR(255)" /> <!-- Position of this attachment in the mime structure -->
 		<column name="body" param="BLOB" />
 
 		<index name="mail" />

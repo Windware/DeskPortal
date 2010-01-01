@@ -112,11 +112,11 @@
 
 			foreach($cat as $index => $category) #Create a list of categories to be appended on the query
 			{
-				$filter[] = "rl.category = :category{$index}_index";
+				$filter[] = ":category{$index}_index";
 				$values[":category{$index}_index"] = $category;
 			}
 
-			if(count($filter)) $filter = ' AND ('.implode(' OR ', $filter).')'; #Concatenate the query
+			if(count($filter)) $filter = ' AND rl.category IN ('.implode(',', $filter).')'; #Concatenate the query
 			else $filter = '';
 
 			$statement = "SELECT bm.id, count(rl.bookmark), bm.added, bm.name, bm.viewed FROM {$database->prefix}bookmark as bm LEFT JOIN {$database->prefix}relation as rl

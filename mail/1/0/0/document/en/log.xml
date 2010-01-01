@@ -1,6 +1,19 @@
 <root>
 	<!-- USER -->
+	<!-- folder.js -->
+	<string name="user/folder/list" value="Failed to list folders." />
+	<string name="user/folder/list/solution" value="Please try again later and check your account settings." />
+
+	<!-- gui.js -->
+	<string name="user/gui/search" value="Search term must be bigger than %% letters and smaller than %% letters." />
+	<string name="user/gui/search/solution" value="Please specify correct length for search term." />
+
 	<!-- item.js -->
 	<string name="user/show/error" value="Displaying the email failed" />
 	<string name="user/show/solution" value="Please reload the page and try again" />
+
+	<!-- DEVELOPER -->
+	<!-- gui.js -->
+	<string name="dev/gui/filter" value="Wrong type of filter given" />
+	<string name="dev/gui/filter/solution" value="Filter must be either 'marked', 'read' or 'search'." />
 </root>

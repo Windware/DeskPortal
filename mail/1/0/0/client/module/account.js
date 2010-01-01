@@ -6,16 +6,20 @@
 		this.change = function(account) //Change the displayed account
 		{
 			var log = $system.log.init(_class + '.change');
-			if(!$system.is.digit(account)) return log.param();
+			if(!$system.is.element(account) || !$system.is.digit(account.value)) return log.param();
 
-			var list = function() { if(__folder[account].INBOX) $self.folder.change(__folder[account].INBOX.id); } //Get mails for the default mail box
-			$self.folder.get(account, list); //List the folders
+			var list = function(value) { if($system.is.digit(__inbox[value])) $self.folder.change(__inbox[value]); } //Get mails for the default mail box
+
+			$self.folder.get(account.value, $system.app.method(list, [account.value])); //List the folders
+			$self.folder.update(account.value); //Update the list
+
+			if($system.browser.engine == 'trident') document.body.focus(); //Let focus off the selection to allow mouse wheel use on other parts after selection
 		}
 
 		this.get = function(callback) //Get list of accounts
 		{
 			var select = $system.node.id($id + '_account');
-			var index = select.value; //Keep the current value
+			var index = select.value || ''; //Keep the current value
 
 			select.innerHTML = ''; //Clean up the entries
 

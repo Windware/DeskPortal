@@ -46,11 +46,11 @@
 
 			foreach($sub as $index => $id)
 			{
-				$param[] = "feed = :id{$index}_index";
+				$param[] = ":id{$index}_index";
 				$value[":id{$index}_index"] = $id;
 			}
 
-			$base = "FROM {$database->prefix}entry WHERE (".implode(' OR ', $param).") AND (subject LIKE :phrase $database->escape OR section LIKE :phrase $database->escape OR description LIKE :phrase $database->escape)";
+			$base = "FROM {$database->prefix}entry WHERE feed IN (".implode(',', $param).") AND (subject LIKE :phrase $database->escape OR section LIKE :phrase $database->escape OR description LIKE :phrase $database->escape)";
 
 			$query = $database->prepare("SELECT COUNT(id) $base"); #Count the results
 			$query->run($value);

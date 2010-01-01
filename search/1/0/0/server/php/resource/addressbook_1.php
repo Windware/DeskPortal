@@ -25,11 +25,9 @@
 			$column = array(); #List of patterns to check
 
 			foreach($target as $item) $column[] = "$item LIKE :phrase $database->escape"; #Construct column query string
-			$column = implode(' OR ', $column);
-
 			$value = array(':user' => $user->id, ':phrase' => '%'.$system->database_escape($phrase).'%'); #Query values
 
-			$query = $database->prepare("SELECT id, name, groups FROM {$database->prefix}address WHERE user = :user AND ($column)");
+			$query = $database->prepare("SELECT id, name, groups FROM {$database->prefix}address WHERE user = :user AND (".implode(' OR ', $column).')');
 			$query->run($value);
 
 			if(!$query->success) return false;

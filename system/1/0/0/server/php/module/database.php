@@ -3,7 +3,7 @@
 	{
 		private $_system;
 
-		protected static $character = '$'; #Escape character for 'LIKE' statement special characters
+		protected static $character = '$'; #Escape character for 'LIKE' statement special characters ('%' and '_')
 
 		public $adapter, $caller, $handler, $logger, $prefix, $app, $success, $type, $user, $version;
 

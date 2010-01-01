@@ -50,13 +50,13 @@
 
 			foreach(array_keys($list) as $index => $id)
 			{
-				$param[] = "id = :id{$index}_index";
+				$param[] = ":id{$index}_index";
 				$value[":id{$index}_index"] = $id;
 			}
 
 			$paging = Search_1_0_0_Item::limit($limit, $page); #Result limit
 
-			$query = $database->prepare("SELECT id, name FROM {$database->prefix}memo WHERE ".implode(' OR ', $param)." AND user = :user $paging");
+			$query = $database->prepare("SELECT id, name FROM {$database->prefix}memo WHERE id IN (".implode(',', $param).") AND user = :user $paging");
 			$query->run($value);
 
 			if(!$query->success) return false;

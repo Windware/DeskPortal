@@ -1,5 +1,13 @@
 <root>
 	<!-- USER -->
+	<!-- folder.js -->
+	<string name="user/folder/list" value="フォルダー一覧の作成に失敗しました。" />
+	<string name="user/folder/list/solution" value="時間をおいて再度読み込みを行ってください。またアカウントの設定を確認してください。" />
+
+	<!-- gui.js -->
+	<string name="user/gui/search" value="検索語は%%文字以上、%%文字以下でなければいけません。" />
+	<string name="user/gui/search/solution" value="正しい文字数を入力してください。" />
+
 	<!-- item.js -->
 	<string name="user/show/error" value="メールの表示に失敗しました" />
 	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />

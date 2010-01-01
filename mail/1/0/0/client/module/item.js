@@ -11,7 +11,13 @@
 
 		var _lock = false; //Do not allow updating multiple folders simultaneously
 
+		var _page = {}; //Selected page for each folders
+
 		var _preserve = 5; //Amount of minutes to keep local cache for each folder listings
+
+		var _scroll = {}; //Scroll amount for each folders
+
+		var _timer = {}; //Periodic folder update timer
 
 		var _update = {}; //Flag to indicate that a folder should be updated from the server
 
@@ -26,47 +32,59 @@
 				return false; //Wait for previous operation
 			}
 
-			if(!$system.is.digit(page)) page = $system.node.id($id + '_show').value;
+			var table = $system.node.id($id + '_read_zone'); //Mail listing table
+			_lock = true; //Wait until loading completes
 
-			var page = $system.node.id($id + '_show').value;
-			var order = $system.node.id($id + '_form').order.value;
-			var reverse = $system.node.id($id + '_form').reverse.checked ? 1 : 0;
+			if(__selected.folder == folder) _page[folder] = $system.node.id($id + '_show').value; //Get current page selection
+			else if(!$system.is.digit(_page[folder])) _page[folder] = 1;
 
-			$system.node.id($id + '_folder').value = folder;
-			__selected = {folder : folder, page : page, order : order, reverse : reverse};
+			var previous = __selected; //Remember previous selection
+			__selected = {folder : folder, page : _page[folder], marked : __filter.marked, unread : __filter.unread, order : __order.item, reverse : __order.reverse}; //Remember current selection
 
-			//Create cache storage
-			if(!_cache[folder]) _cache[folder] = {};
-			if(!_cache[folder][page]) _cache[folder][page] = {};
-			if(!_cache[folder][page][order]) _cache[folder][page][order] = {};
+			var search = $system.node.id($id + '_form').search.value; //Search value
 
 			var expire = function(folder, page, order, reverse) //Expire the cache
 			{
 				if(__selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
-					return _update[folder] = true; //If not currently displayed list, flag to note that this folder should be updated on next display
+					return _update[folder] = true; //If not currently displayed, flag to note that this folder should be updated on next display
 
-				delete _cache[folder]; //Remove the cache
+				delete _cache[folder][page][order][reverse]; //Remove the cache
 				$self.item.get(folder, true); //Update the displaying list
 			}
 
-			var list = function(folder, page, order, reverse, request) //List the mails upon receiving the contents
+			var list = function(folder, page, order, reverse, marked, unread, search, previous, update, request) //List the mails upon receiving the contents
 			{
-				if($system.dom.status(request.xml) != 0) return false; //TODO - Show some error
-
-				//Create cache storage
-				if(!_cache[folder]) _cache[folder] = {};
-				if(!_cache[folder][page]) _cache[folder][page] = {};
-				if(!_cache[folder][page][order]) _cache[folder][page][order] = {};
-
-				_cache[folder][page][order][reverse] = request;
+				if($system.dom.status(request.xml) != 0) return _lock = false; //TODO - Show some error
+				_cache[folder][page][order][reverse][marked][unread][search] = request;
 
 				var language = $system.language.strings($id);
 				var section = $system.array.list('subject from date'); //List of columns to display
 
-				var table = $system.node.id($id + '_read_mail'); //Display table
-				while(table.firstChild) table.removeChild(table.firstChild); //Clean up the field (innerHTML on table breaks khtml)
+				var max = $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total');
+				if(!$system.is.digit(max)) max = 1;
 
-				table.scrollTop = 0; //Go to top
+				var zone = $system.node.id($id + '_paging');
+				zone.innerHTML = '';
+
+				var select = document.createElement('select');
+
+				select.id = $id + '_show'; //NOTE : Using 'id' instead of 'name' since IE6 cannot set 'name' on a dynamically created select object
+				select.onchange = $system.app.method($self.item.get, [__selected.folder]);
+
+				for(var i = 1; i <= max; i++)
+				{
+					var option = document.createElement('option');
+
+					option.value = i;
+					$system.node.text(option, i);
+
+					select.appendChild(option);
+				}
+
+				select.value = page;
+
+				zone.appendChild(select);
+				zone.appendChild(document.createTextNode(' / ' + max));
 
 				var row = document.createElement('tr');
 				row.id = $id + '_read_header';
@@ -76,42 +94,25 @@
 					var header = document.createElement('th');
 					header.className = $id + '_row_' + section[i];
 
-					header.onclick = $system.app.method($self.gui.sort, [section[i]]);
+					var sort = section[i] == 'date' ? 'sent' : section[i];
+					$system.tip.set(header, $id, 'sort/' + sort);
+
+					header.style.cursor = 'pointer';
+					header.onclick = $system.app.method($self.gui.sort, [sort]);
+
 					$system.node.text(header, language[section[i]]);
 
+					var sign = document.createElement('span'); //Create an area to put sort sign
+					sign.id = $id + '_sign_' + sort;
+
+					if(sort == __order.item) sign.innerHTML = !__order.reverse ? ' &uarr;' : ' &darr;';
+
+					header.appendChild(sign);
 					row.appendChild(header);
 				}
 
-				table.appendChild(row);
-
-				var max = $system.dom.tags(request.xml, 'page')[0];
-				max = $system.dom.attribute(max, 'total');
-
-				if($system.is.digit(max))
-				{
-					var zone = $system.node.id($id + '_paging');
-					zone.innerHTML = '';
-
-					var select = document.createElement('select');
-
-					select.id = $id + '_show'; //NOTE : Using 'id' instead of 'name' since IE6 cannot set 'name' on a dynamically created select object
-					select.onchange = $system.app.method($self.item.get, [__selected.folder]);
-
-					for(var i = 1; i <= max; i++)
-					{
-						var option = document.createElement('option');
-
-						option.value = i;
-						$system.node.text(option, i);
-
-						select.appendChild(option);
-					}
-
-					select.value = page;
-					zone.appendChild(select);
-
-					zone.appendChild(document.createTextNode(' / ' + max));
-				}
+				var body = document.createElement('tbody');
+				body.appendChild(row);
 
 				var part = ['from', 'to', 'cc'];
 				var mail = $system.dom.tags(request.xml, 'mail');
@@ -125,12 +126,7 @@
 					row.style.cursor = 'pointer';
 
 					$system.node.hover(row, $id + '_hover'); //Give mouse hovered style
-					row.onclick = $system.app.method($self.item.show, [id]); //Display the message pane on click
-
-					var preview = $system.text.escape($system.dom.attribute(mail[i], 'preview')); //Grab the message preview
-					if(!preview.match(/\S/)) preview = '(' + language.empty + ')';
-
-					$system.tip.set(row, $system.info.id, 'blank', [preview.replace(/\\n/g, '\n')], true); //Show the preview with a tooltip
+					row.onclick = $system.app.method($self.item.show, [id, row]); //Display the message pane on click
 
 					for(var j = 0; j < mail[i].attributes.length; j++) //Keep mail attributes
 					{
@@ -139,7 +135,8 @@
 					}
 
 					if(storage.read != '1') $system.node.classes(row, $id + '_mail_unread', true); //For unread mails
-					if(storage.marked) $system.node.classes(row, $id + '_mail_marked', true); //For marked mails
+					if(storage.marked == '1') $system.node.classes(row, $id + '_mail_marked', true); //For marked mails
+					if(storage.replied == '1') $system.node.classes(row, $id + '_mail_replied', true); //For replied mails
 
 					for(var j = 0; j < section.length; j++) //For all the columns
 					{
@@ -147,7 +144,7 @@
 
 						switch(section[j]) //Pick the parameters to display on the interface
 						{
-							case 'subject' : display = storage[section[j]]; break;
+							case 'subject' : display = storage[section[j]] || '(' + language.empty + ')'; break;
 
 							case 'date' : display = $system.date.create(storage.sent).format($global.user.pref.format.monthdate); break;
 
@@ -184,8 +181,29 @@
 						row.appendChild(cell);
 					}
 
-					table.appendChild(row);
+					body.appendChild(row);
 				}
+
+				if(previous && $system.is.digit(previous.folder)) //If a folder was previously selected
+				{
+					if(!_scroll[previous.folder]) _scroll[previous.folder] = {};
+					_scroll[previous.folder][previous.page] = {order : previous.order, reverse : previous.reverse, position : table.parentNode.scrollTop}; //Remember the scroll height
+				}
+
+				while(table.firstChild) table.removeChild(table.firstChild); //Clean up the listing (innerHTML on table breaks khtml)
+				table.appendChild(body);
+
+				var scroll = _scroll[folder] && _scroll[folder][page]; //Check if the scroll position cache is still valid
+
+				if(scroll) //If the scroll position is declared
+				{
+					scroll = scroll.order == order && scroll.reverse == reverse && scroll.position; //Check if order has changed
+
+					if($system.is.digit(scroll)) table.parentNode.scrollTop = scroll; //Recover the scroll height
+					else delete _scroll[folder]; //If any of the display order changes, discard the positions
+				}
+
+				if(!scroll) table.parentNode.scrollTop = 0; //Move to top of page
 
 				_lock = false;
 				$system.app.callback(_class + '.get', callback);
@@ -207,26 +225,42 @@
 				return true;
 			}
 
-			_lock = true;
+			//Create cache storage
+			if(!_cache[folder]) _cache[folder] = {};
+			if(!_cache[folder][_page[folder]]) _cache[folder][_page[folder]] = {};
+			if(!_cache[folder][_page[folder]][__order.item]) _cache[folder][_page[folder]][__order.item] = {};
 
-			if($system.is.object(request)) return list(folder, page, order, reverse, request); //If updating, use the passed object
-			if(!update && _cache[folder][page][order][reverse]) return list(folder, page, order, reverse, _cache[folder][page][order][reverse]); //If already cached, use it
+			var hash = _cache[folder][_page[folder]][__order.item]; //A little shortcut
 
-			setTimeout($system.app.method(expire, [folder, page, order, reverse]), _preserve * 60000); //Update local cache after a period
+			if(!hash[__order.reverse]) hash[__order.reverse] = {};
+			if(!hash[__order.reverse][__filter.marked]) hash[__order.reverse][__filter.marked] = {};
+			if(!hash[__order.reverse][__filter.marked][__filter.unread]) hash[__order.reverse][__filter.marked][__filter.unread] = {};
 
-			var param = {task : 'item.get', folder : folder, page : page, order : order, reverse : reverse ? 1 : 0, update : update === true ? 1 : 0};
-			return $system.network.send($self.info.root + 'server/php/front.php', param, null, $system.app.method(list, [folder, page, order, reverse]));
+			var items = [folder, _page[folder], __order.item, __order.reverse, __filter.marked, __filter.unread, search, previous, !!update];
+			var run = $system.app.method(list, items);
+
+			if($system.is.object(request)) return run(request); //If updating, use the passed object
+
+			var stored = hash[__order.reverse][__filter.marked][__filter.unread][search];
+			if(update !== true && $system.is.object(stored)) return run(stored); //If already cached, use it
+
+			if(_timer[folder]) clearTimeout(_timer[folder]);
+			_timer[folder] = setTimeout($system.app.method(expire, items), _preserve * 60000); //Update local cache after a period
+
+			var param = {task : 'item.get', folder : folder, page : _page[folder], order : __order.item, reverse : __order.reverse ? 1 : 0, marked : __filter.marked ? 1 : 0, unread : __filter.unread ? 1 : 0, search : search, update : update === true ? 1 : 0};
+			return $system.network.send($self.info.root + 'server/php/front.php', param, null, run);
 		}
 
 		this.update = function() { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder) : false; } //Reload the mails from the server
 
-		this.show = function(id, callback) //Display the mail window
+		this.show = function(id, row, callback) //Display the mail window
 		{
 			var log = $system.log.init(_class + '.show');
 
 			if(!$system.is.digit(id)) return log.param();
 			if(!__mail[id]) return log.user($global.log.warning, 'user/show/error', 'user/show/solution');
 
+			var language = $system.language.strings($id);
 			var node = $id + '_mail_' + id;
 
 			if($system.node.id(node))
@@ -247,10 +281,11 @@
 				$system.app.callback(_class + '.show.display', callback);
 			}
 
+			$system.node.classes(row, $id + '_mail_unread', false); //Remove the unread style
 			var parameter = __mail[id];
 
 			var section = ['from', 'to', 'cc'];
-			var value = {index : id, sent : $system.date.create(parameter.sent).format($global.user.pref.format.full), subject : parameter.subject};
+			var value = {index : id, sent : $system.date.create(parameter.sent).format($global.user.pref.format.full), subject : parameter.subject || '(' + language.empty + ')'};
 
 			var replace = function(phrase, match) { return variable[match]; }
 

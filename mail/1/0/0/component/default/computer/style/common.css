@@ -17,22 +17,26 @@
 
 	tr.%id%_mail_marked { background-color : #dca; }
 
+	tr.%id%_mail_replied { font-style : italic; }
+
 	tr.%id%_hover { background-color : #c97; }
 
-	div#%id%_folder { border : 1px #333 solid; overflow : auto; height : 300px; }
+	div.%id%_pane { border : 1px #333 solid; overflow : auto; height : 300px; background-color : #fff; }
 
-	div#%id%_folder a { display : block; background-color : #ddc; border-bottom : 1px #333 solid; padding : 5px; }
+	td#%id%_folder a { display : block; background-color : #ddc; border-bottom : 1px #333 solid; padding : 5px; }
 
-	div#%id%_folder a:hover { background-color : #ca8; }
+	a.%id%_hilight { background-color : #ca8 !important; }
 
-	a.%id%_displayed { background-color : #fea !important; font-weight : bold; }
+	div.%id%_folder_header { background-color : #cca; text-align : center; padding : 5px; border-bottom : 1px #333 solid; }
+
+	a.%id%_displayed { background-color : #fea !important; }
 
 	th.%id%_row_from { width : 200px; }
 
 	th.%id%_row_date { width : 120px; }
 
 	/* Mail window */
-	h2.%id%_mail_subject { text-align : center; font-weight : bold; border : 1px #333 solid; padding : 5px; }
+	h2.%id%_mail_subject { background-color : #333; text-align : center; font-weight : bold; border : 1px #ccc solid; padding : 5px; }
 
 	div.%id%_mail_body { word-break : all; overflow : auto; height : 300px; text-align : left; background-color : #eee; color : #333; padding : 10px; }
 

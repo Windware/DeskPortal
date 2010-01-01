@@ -44,13 +44,11 @@
 
 			foreach(array_keys($list) as $index => $id) #FIXME - Query length could become huge
 			{
-				$param[] = "id = :id{$index}_index";
+				$param[] = ":id{$index}_index";
 				$value[":id{$index}_index"] = $id;
 			}
 
-			$paging = Search_1_0_0_Item::limit($limit, $page); #Result limit
-
-			$query = $database->prepare("SELECT day, title FROM {$database->prefix}schedule WHERE ".implode(' OR ', $param)." AND user = :user ORDER BY day DESC $paging");
+			$query = $database->prepare("SELECT day, title FROM {$database->prefix}schedule WHERE id IN (".implode(',', $param).") AND user = :user ORDER BY day DESC ".Search_1_0_0_Item::limit($limit, $page));
 			$query->run($value);
 
 			if(!$query->success) return false;
