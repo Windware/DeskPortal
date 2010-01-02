@@ -8,6 +8,10 @@
 
 		var _design; //Box background image design URL parameters
 
+		var _interval = 50; //Number of milliseconds to wait for each 'onmousemove' event to be triggered
+
+		var _lock; //Lock to avoid the 'onmousemove' from getting triggered as fast as possible
+
 		var _mover; //An object for keeping the movement parameters
 
 		var _static = ['A', 'IMG', 'INPUT', 'LABEL', 'SELECT', 'OPTION', 'TEXTAREA']; //Nodes that should not trigger dragging
@@ -80,8 +84,19 @@
 			$system.image.set(image, _design); //Preload the box background image
 		}
 
-		this.move = function(event) //Move the window (Have as less computation as possible)
+		this.move = function(event) //Moves the window by mouse dragging (Have as less computation as possible)
 		{
+			if(_lock) return true; //If throttled, do not execute anything
+
+			_lock = true; //Lock for a short while
+			setTimeout(function() { _lock = false; }, _interval); //Give a lock to throttle mouse move event from triggering as often as possible
+
+			if(__tip.timer) //If a tip is given timer for display, track mouse position
+			{
+				if($system.is.digit(event.pageX)) __tip.position = {x : event.pageX, y : event.pageY}; //If pageX/Y is available, use them
+				else __tip.position = {x : event.clientX + document.body.scrollLeft || document.documentElement.scrollLeft, y : event.clientY + document.body.scrollTop || document.documentElement.scrollTop};
+			}
+
 			if(!_mover) return true;
 
 			//Find the mouse event that triggered

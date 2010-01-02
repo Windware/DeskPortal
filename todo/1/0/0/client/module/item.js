@@ -144,8 +144,37 @@
 
 								if(left <= 0) left = 0; //Don't show negative expiration time
 
-								var time = $system.date.create([info.year, info.month, info.day, info.hour, info.minute]);
-								var display = time.format($global.user.pref.format.date) + ' ' + time.format($global.user.pref.format.time);
+								//Format the time according to available parameters
+								if(info.year)
+								{
+									if(info.month)
+									{
+										if(info.day)
+										{
+											if(info.hour)
+											{
+												var time = $system.date.create([info.year, info.month, info.day, info.hour, info.minute]);
+												var display = time.format($global.user.pref.format.full);
+											}
+											else
+											{
+												var time = $system.date.create([info.year, info.month, info.day]);
+												var display = time.format($global.user.pref.format.date);
+											}
+										}
+										else
+										{
+											var time = $system.date.create([info.year, info.month, info.day]);
+											var display = time.format($global.user.pref.format.month);
+										}
+									}
+									else
+									{
+										var time = $system.date.create([info.year, info.month, info.day]);
+										var display = time.format($global.user.pref.format.year);
+									}
+								}
+								else var display = '';
 
 								var days = language.left.replace('%%', left);
 								if(info.status == 0 && left <= 3) days = '<span class="' + $id + '_close">' + days + '</span>'; //Hilight expiring entry

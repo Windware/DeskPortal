@@ -62,7 +62,7 @@
 
 		this.clear = function(node, event) //Function to remove tip on scroll (And fix IE6 bug having selection box corrupted on scroll)
 		{
-			if($system.tip.on) $system.tip.clear(); //If tip is on, remove it on scroll
+			if(__tip.on) $system.tip.clear(); //If tip is on, remove it on scroll
 			if($system.browser.engine != 'trident' || $system.browser.version > 6) return true; //Only do the fix for IE6
 
 			if(!$system.is.element(node)) return false;

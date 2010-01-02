@@ -13,8 +13,8 @@
 		{
 			var list = ''; //Text to return
 
-			if(!$system.is.object(object)) return list; //If not an object, quit
-			if(match !== undefined && !$system.is.text(match) && !(match instanceof RegExp)) return list;
+			if(!$system.is.object(object)) return alert('(Not an object)'); //If not an object, quit
+			if(match !== undefined && !$system.is.text(match) && !(match instanceof RegExp)) return alert('(Invalid second paramter)');
 
 			if(typeof match == 'string') match = RegExp($system.text.regexp(match)); //Make sure escape strings don't act funny
 
@@ -35,8 +35,7 @@
 				}
 			}
 
-			alert(list);
-			return list;
+			return alert(list);
 		}
 
 		this.status = function(xml, key) //Return the status string returned from server

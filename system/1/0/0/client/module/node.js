@@ -3,17 +3,13 @@
 	{
 		var _class = $id + '.node';
 
-		var _speed = 10; //Amount of difference each fading makes (Bigger the less burden but less smooth)
+		var _speed = 10; //Amount of difference each fading makes (Bigger the less cpu use but less smooth)
 
-		var _hidden = $id + '_hidden'; //Hidden element class
-
-		var _level = 5; //Fade stepping in 10th of a second
-
-		this.fading = {}; //Publically accessible fade state
+		var _level = 5; //Fade stepping in 10th of a second out of 100
 
 		var _display = function(id) //Fade process that is called repeatedly (Make it as less computational as possible)
 		{
-			var target = $system.node.fading[id]; //Keep the fade state
+			var target = __node.fading[id]; //Keep the fade state
 			if(!target) return;
 
 			target.level += target.way; //Level of opacity at this cycle
@@ -25,17 +21,17 @@
 					$system.node.opacity(target.node, 0); //Set its style opacity to zero
 
 					if(target.destroy) $system.node.remove(target.node); //If it's set to destroy the node, do so
-					else $system.node.classes(id, _hidden, true); //If not, set a hidden class attribute
+					else $system.node.hide(id, true); //If not, set a hidden class attribute
 				}
 				else $system.node.opacity(target.node, 100); //Otherwise, set to fully opaque
 
-				if($global.user.pref.fade) clearInterval($system.node.fading[id].timer); //Let go of the interval timer
+				if($global.user.pref.fade) clearInterval(__node.fading[id].timer); //Let go of the interval timer
 				if($system.browser.engine == 'trident') target.node.style.removeAttribute('filter');
 
 				//Remove the 'filter' attribute completely to allow anti aliasing again on the node
 				if(typeof target.execute == 'function') target.execute(); //If a function was set, execute it
 
-				delete $system.node.fading[id]; //Let go of the state object
+				delete __node.fading[id]; //Let go of the state object
 			}
 			else $system.node.opacity(target.node, target.level); //Set the opacity to the current level
 		}
@@ -63,7 +59,7 @@
 			var node = $system.node.id(id); //The node element
 			if(!node) return log.dev($global.log.info, 'dev/fade', 'dev/exist', [id]);
 
-			if($system.node.fading[id]) return; //Do not let it fade while fading
+			if(__node.fading[id]) return; //Do not let it fade while fading
 
 			if(direction === undefined) //If direction is not defined, try to flip the current visibility
 			{
@@ -83,31 +79,31 @@
 				var fade = 0;
 				var way = _speed;
 
-				$system.node.classes(id, _hidden, false); //Remove the element class for hiding
+				$system.node.hide(id, false); //Remove the element class for hiding
 			}
 
-			$system.node.fading[id] = {node : node, destroy : destroy, execute : execute} //Keep the state of the parameters
+			__node.fading[id] = {node : node, destroy : destroy, execute : execute} //Keep the state of the parameters
 
 			if(quick !== true && $global.user.pref.fade) //Set fade process parameter
 			{
-				$system.node.fading[id].level = fade;
-				$system.node.fading[id].way = way;
+				__node.fading[id].level = fade;
+				__node.fading[id].way = way;
 
 				var duration = _level * _speed;
-				$system.node.fading[id].timer = setInterval($system.app.method(_display, [id]), duration); //Do gradual opacity
+				__node.fading[id].timer = setInterval($system.app.method(_display, [id]), duration); //Do gradual opacity
 
 				_display(id); //Do the initial step before the interval arrives
 			}
 			else //If fading is disabled, set it to instantly stop fading
 			{
-				$system.node.fading[id].level = 100 - fade;
-				$system.node.fading[id].way = 0;
+				__node.fading[id].level = 100 - fade;
+				__node.fading[id].way = 0;
 
 				_display(id);
 			}
 		}
 
-		this.hidden = function(node) { return $system.node.classes(node, _hidden); } //Finds if a node is hidden or not
+		this.hidden = function(node) { return $system.node.classes(node, $id + '_hidden'); } //Finds if a node is hidden or not
 
 		this.hide = function(node, mode, destroy) //Hides or unhides a node : TODO - Apply animation effect
 		{
@@ -115,7 +111,7 @@
 			if(!$system.is.element(node)) return false;
 
 			if(mode === undefined) mode = !$system.node.hidden(node);
-			$system.node.classes(node, _hidden, mode); //Set the hiding class on or off
+			$system.node.classes(node, $id + '_hidden', mode); //Set the hiding class on or off
 
 			if(mode && destroy) $system.node.remove(node);
 		}

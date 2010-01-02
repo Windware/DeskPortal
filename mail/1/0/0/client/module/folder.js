@@ -78,7 +78,9 @@
 					return true;
 				}
 
-				if(!construct(request.xml.childNodes[0], 0)) //Create folder listing
+				var section = $system.browser.engine == 'trident' ? 1 : 0; //IE counts first 'xml' tag as first node
+
+				if(!construct(request.xml.childNodes[section], 0)) //Create folder listing
 					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/solution');
 
 				if(_previous) $system.node.classes($id + '_folder_' + _previous, $id + '_displayed', true);

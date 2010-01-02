@@ -1,6 +1,13 @@
 
 	//Code to be loaded after other modules are read
-	//Note that the order of execution is important as some modules rely on other modules to be initiated
+	//NOTE : The order of execution is important as some modules rely on other modules to be initiated
+
+	//Class based local variables
+	var __conf = {pages : {}};
+
+	var __node = {fading : {}};
+
+	var __tip = {};
 
 	new function()
 	{

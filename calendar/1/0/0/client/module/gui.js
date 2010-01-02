@@ -32,7 +32,7 @@
 			if($system.is.digit(year)) __current = $system.date.create([year, month, 1]);
 			else __current = $system.date.create([today.year, today.month, 1]);
 
-			var show = __current.format($global.user.pref.format.month);
+			var show = __current.format($global.user.pref.format.month) + ' '; //NOTE : Putting a space behind for IE6 since it trims the space behind the element
 			$system.node.text($id + '_month', show); //Set current month
 
 			//Keep the values not to make calls to the date object repeatedly
@@ -81,6 +81,9 @@
 				var field = $system.node.id($id + '_display'); //Area where the calendar goes to
 				while(field.firstChild) field.removeChild(field.firstChild); //Clean up the field (innerHTML on table breaks khtml)
 
+				field.style.visibility = 'hidden'; //Hide till all filled
+
+				var body = document.createElement('tbody');
 				var weeks = document.createElement('tr'); //First line of the table for week day names
 
 				for(var i = 0; i <= 6; i++) //For each of the week days
@@ -103,7 +106,7 @@
 					weeks.appendChild(day); //Append the cell to the row
 				}
 
-				field.appendChild(weeks); //Set the row to the area
+				body.appendChild(weeks); //Set the row to the area
 
 				var index = 0; //To count days
 				var last = (new Date(__current.year, __current.month, 0)).getDate(); //Find out the last day of the month
@@ -154,15 +157,18 @@
 						row.appendChild(cell);
 					}
 
-					field.appendChild(row);
+					body.appendChild(row);
 					if(index >= last) break; //If the end of the month is reached, do not add an empty row
 				}
+
+				field.appendChild(body);
+				field.style.visibility = '';
 
 				_loading = false;
 				$system.node.fade(field.id, false);
 
 				log.user($global.log.info, 'user/display', '', [show]);
-				if(typeof callback == 'function') callback();
+				$system.app.callback(_class + '.list.set', callback);
 			}
 
 			_loading = true; //Request the schedule listing

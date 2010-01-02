@@ -63,6 +63,8 @@
 				var max = $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total');
 				if(!$system.is.digit(max)) max = 1;
 
+				var language = $system.language.strings($id);
+
 				var zone = $system.node.id($id + '_paging');
 				zone.innerHTML = '';
 
@@ -138,9 +140,12 @@
 					if(storage.marked == '1') $system.node.classes(row, $id + '_mail_marked', true); //For marked mails
 					if(storage.replied == '1') $system.node.classes(row, $id + '_mail_replied', true); //For replied mails
 
+					var info = ''; //Tip to display when mouse is over
+
 					for(var j = 0; j < section.length; j++) //For all the columns
 					{
 						var display = ''; //Parameter to display
+						info += language[section[j]] + ' : \n';
 
 						switch(section[j]) //Pick the parameters to display on the interface
 						{
@@ -181,6 +186,7 @@
 						row.appendChild(cell);
 					}
 
+					$system.tip.set(row, $system.info.id, 'blank', [info], true);
 					body.appendChild(row);
 				}
 

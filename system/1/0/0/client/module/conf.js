@@ -11,8 +11,6 @@
 
 		var _viewed; //Currnetly displayed page for manual
 
-		this.pages = {}; //List of info panel page caches
-
 		this.apply = function(id, form) //Apply change to the general configuration panel
 		{
 			var log = $system.log.init(_class + '.apply');
@@ -80,7 +78,7 @@
 
 			if(!element) return log.dev($global.log.error, 'dev/tool/element', 'dev/exist', [node]);
 
-			try { element.innerHTML = $system.conf.pages[id][section][page]; }
+			try { element.innerHTML = __conf.pages[id][section][page]; }
 
 			catch(error) { return log.dev($global.log.error, 'dev/tool/page', 'dev/tool/page/solution', [[id, section, page].join (' - ')]); }
 
@@ -305,7 +303,7 @@
 
 					var language = $system.language.strings(id, panel + '.xml');
 
-					for(var name in $system.conf.pages[id][panel])
+					for(var name in __conf.pages[id][panel])
 					{
 						var dot = document.createElement('li');
 						var link = document.createElement('a');

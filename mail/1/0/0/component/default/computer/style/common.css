@@ -29,7 +29,7 @@
 
 	div.%id%_folder_header { background-color : #cca; text-align : center; padding : 5px; border-bottom : 1px #333 solid; }
 
-	a.%id%_displayed { background-color : #fea !important; }
+	a.%id%_displayed { background-color : #777 !important; color : #ccc; }
 
 	th.%id%_row_from { width : 200px; }
 

@@ -247,11 +247,11 @@
 					tab.style.color = $system.is.id(id) && $system.is.color(info.color) ? '#' + info.color : '';
 				}
 
-				$system.conf.pages[id] = {}; //Tab page caches
+				__conf.pages[id] = {}; //Tab page caches
 
 				for(var i = 0; i < section.length; i++)
 				{
-					$system.conf.pages[id][section[i]] = {};
+					__conf.pages[id][section[i]] = {};
 
 					switch(section[i])
 					{
@@ -263,7 +263,7 @@
 							var request = $system.network.item($global.top[id].info.devroot + 'template/' + section[i] + '/*.html', true);
 
 							for(var j = 0; j < request.length; j++) //Cache pages
-								if(request[j].valid()) $system.conf.pages[id][section[i]][request[j].file.replace(/\.html$/, '')] = $system.language.apply(id, request[j].text, section[i] + '.xml');
+								if(request[j].valid()) __conf.pages[id][section[i]][request[j].file.replace(/\.html$/, '')] = $system.language.apply(id, request[j].text, section[i] + '.xml');
 						break;
 					}
 

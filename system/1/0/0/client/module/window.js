@@ -294,7 +294,7 @@
 			if(!($system.window.list[id] instanceof _window)) //Make sure it's an application window
 				return log.dev($global.log.warning, 'dev/window/wrong', 'dev/window/wrong/solution', [id]);
 
-			if($system.node.fading[id]) return; //Do not let it fade while fading
+			if(__node.fading[id]) return; //Do not let it fade while fading
 			if(!direction && !stay) $system.window.raise(id); //Raise the window if appearing
 
 			var completion = function(id, direction, execute, destroy) //On fading completion

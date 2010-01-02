@@ -1,5 +1,8 @@
 
+	/* Interface */
 	strong.%id%_new { color : #953; }
+
+	span.%id%_spacer { margin : 10px; border : none !important; }
 
 	/* Description row */
 	th.%id%_section { padding : 5px; background-color : #333; color : #ccc; text-align : center; border : 1px #ccc solid; font-weight : bold; }

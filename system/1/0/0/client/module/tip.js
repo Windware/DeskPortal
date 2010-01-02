@@ -3,44 +3,29 @@
 	{
 		var _class = $id + '.tip';
 
-		var _timer; //Tip display delay timer
+		var _count = 0; //Tip ID counter
 
-		var _node = $id + '_tip'; //Name of the tip node
+		var _displayed = []; //List of displayed tips
+
+		var _node = $id + '_tip_'; //Name of the tip node
 
 		var _margin = 5; //Amount of pixel from the event coordinate to put the tip at
 
-		var _display = function(log, id, section, x, y, format) //Create the actual tip and append it onto HTML body
-		{
-			var clue = $system.language.strings(id, 'tip.xml'); //Get the tip string template
-			if(!$system.is.text(clue[section])) return log.dev($global.log.error, 'dev/tip/empty', 'dev/tip/empty/solution', [id, section]);
-
-			$system.tip.clear(); //Remove any remaining tip
-
-			//Create the tip element and apply properties
-			var tip = document.createElement('div');
-			tip.id = _node; //TODO - Need multiple slots for newer tips to be displayed while the old one fades out
-
-			//Set its position
-			if(typeof x == 'number') tip.style.left = x + 'px';
-			if(typeof y == 'number') tip.style.top = y + 'px';
-
-			//Format the tip if values are specified and put the content inside the node
-			tip.innerHTML = $system.text.format(clue[section], format);
-
-			document.body.appendChild(tip); //Apply to the body : TODO - Do fading
-			tip.style.zIndex = $system.window.depth + 1; //Raise the tip to the front most
-
-			$system.tip.on = true; //Indicate "motion.js" that tip exists
-		}
-
-		this.on = false; //Flag to determine whether tip is on or off quickly in 'motion.js' and 'gui.js'
-
 		this.clear = function() //Remove an already displayed or pending tip
 		{
-			if(_timer) _timer = clearTimeout(_timer); //If timer is alive, clear it
+			if(__tip.timer) __tip.timer = clearTimeout(__tip.timer); //If timer is alive, clear it
 
-			if($system.node.id(_node)) $system.node.remove(_node); //Remove the tip node
-			$system.tip.on = false; //Set that it's off
+			for(var i = 0; i < _displayed.length; i++) //Remove any tips displayed
+			{
+				var id = _node + _displayed[i]; //Tip object ID
+				if(!$system.node.id(id)) continue;
+
+				delete __node.fading[id]; //Force allow fading out even while fading in by removing the fade object
+				$system.node.fade(id, true, null, true); //Remove the tip
+			}
+
+			_displayed = []; //Clear out the list of displayed tips
+			delete __tip.on; //Set that it's off for 'gui.js'
 		}
 
 		//Returns HTML portion to create a tip on an element ('phrase' is required since this function will be used as a callback of String.replace)
@@ -58,19 +43,45 @@
 			var event = $system.event.source(arguments);
 
 			if(!event) return log.param();
-
 			event.cancelBubble = true; //Do not let any other elements behind it to trigger the tip as well
+
 			if(!$system.is.path($system.app.path(id)) || !$system.is.text(section)) return log.param();
+			if(__tip.timer) clearTimeout(__tip.timer); //If timer is alive, clear it
 
-			var scroll = $system.browser.scroll(); //Get amount of scrolling done
+			var display = function(id, section, format) //Create the actual tip and append it onto HTML body
+			{
+				var log = $system.log.init(_class + '.make.display');
+				var clue = $system.language.strings(id, 'tip.xml'); //Get the tip string template
 
-			//Set the position where to display the tip at
-			var offset = {x : event.clientX + scroll.x + _margin, y : event.clientY + scroll.y + _margin};
-			if(_timer) clearTimeout(_timer); //If timer is alive, clear it
+				if(!$system.is.text(clue[section])) return log.dev($global.log.error, 'dev/tip/empty', 'dev/tip/empty/solution', [id, section]);
+				$system.tip.clear(); //Remove any remaining tip
 
-			//Create the function to get the tip displayed
-			var appearance = $system.app.method(_display, [log, id, section, offset.x, offset.y, format]);
-			_timer = setTimeout(appearance, $global.user.pref.delay * 1000); //Set a timer event to display the tip
+	 			if(!__tip.position || !$system.is.digit(__tip.position.x) || !$system.is.digit(__tip.position.y)) return false; //If mouse position isn't tracked, quit
+
+				//Create the tip element and apply properties
+				var tip = document.createElement('div');
+
+				tip.id = _node + (++_count);
+				tip.className = $id + '_helper';
+
+				//Set its position
+				tip.style.left = __tip.position.x + 5 + 'px';
+				tip.style.top = __tip.position.y + 5 + 'px';
+
+				tip.style.zIndex = $system.window.depth + 1; //Raise the tip to the front most
+				tip.innerHTML = $system.text.format(clue[section], format); //Format the tip if values are specified and put the content inside the node
+
+				document.body.appendChild(tip); //Apply to the body
+				$system.node.fade(tip.id, false); //Fade it in
+
+				delete __tip.timer; //Stop tracking the mouse position
+				delete __tip.position;
+
+				__tip.on = true; //Indicate 'gui.js' that tip exists to be cleared on scrolling
+				_displayed.push(_count);
+			}
+
+			__tip.timer = setTimeout($system.app.method(display, [id, section, format]), $global.user.pref.delay * 1000); //Set a timer event to display the tip
 		}
 
 		this.remove = function(node) //Removes the tip off a node

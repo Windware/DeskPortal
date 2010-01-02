@@ -6,6 +6,7 @@
 	<string name="article" value="Article" />
 	<string name="view" value="View" />
 	<string name="unavailable" value="Unavailable" />
+	<string name="loading" value="Loading..." />
 
 	<!-- Categories -->
 	<string name="all" value="All" />

@@ -35,6 +35,15 @@
 			options.feed = id;
 			options.page = page;
 
+			//Change the look of the selected feed and reset the previously selected feed to normal style
+			if(__selected) $system.node.classes($id + '_feed_' + __selected, $id + '_chosen', false);
+			$system.node.classes($id + '_feed_' + id, $id + '_chosen', true);
+
+			var language = $system.language.strings($id);
+
+			var area = $system.node.id($id + '_entries'); //The entry area
+			area.innerHTML = $system.text.format('<span class="%%_spacer">%%</span>', [$id, language.loading]); //Show current state
+
 			var list = function(id, page, callback, request)
 			{
 				log.user($global.log.info, 'user/entry/get', '', [__feed[id] ? __feed[id].description : id]);
@@ -42,24 +51,18 @@
 				clearTimeout(timer); //Release the lock timer
 				release(); //Release the lock
 
-				var area = $system.node.id($id + '_entries'); //The entry HTML area
 				if(!$system.is.element(area, 'form')) return false; //Make sure the HTML node exists
-
-				//Change the look of the selected feed and reset the previously selected feed to normal style
-				if(__selected) $system.node.classes($id + '_feed_' + __selected, $id + '_chosen', false);
-				$system.node.classes($id + '_feed_' + id, $id + '_chosen', true);
 
 				__apply(id, true); //Set the form values from the stored values
 				__swap($system.node.id($id + '_selection_span').period.value); //Swap the necessary select form element
 
 				__selected = id; //Keep the selected feed ID
-
-				area.innerHTML = ''; //Clear the current entries
+				$system.node.hide(area, true);
 
 				var holder = $system.array.list('%index% %category% %star% %subject% %new%'); //Template variables
 				var entries = $system.dom.tags(request.xml, 'entry'); //List of entries
 
-				var language = $system.language.strings($id);
+				area.innerHTML = ''; //Clear the current entries
 				var display; //Current line's date
 
 				for(var i = 0; i < entries.length; i++)

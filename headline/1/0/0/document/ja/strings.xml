@@ -6,6 +6,7 @@
 	<string name="article" value="記事" />
 	<string name="view" value="閲覧" />
 	<string name="unavailable" value="利用不可" />
+	<string name="loading" value="読み込み中・・・" />
 
 	<!-- カテゴリー -->
 	<string name="all" value="全て" />
