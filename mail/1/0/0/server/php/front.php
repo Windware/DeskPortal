@@ -17,12 +17,7 @@
 		break;
 
 		case 'folder.get' : #Get list of folders for an account
-			$data = Mail_1_0_0_Folder::get($_GET['account']);
-			print $system->xml_send($data !== false, $data);
-		break;
-
-		case 'folder.update' : #Update list of folders for an account
-			$update = Mail_1_0_0_Folder::update($_GET['account']);
+			$update = $_GET['update'] ? Mail_1_0_0_Folder::update($_GET['account']) : true;
 			$data = Mail_1_0_0_Folder::get($_GET['account']);
 
 			print $system->xml_send($update !== false && $data !== false, $data);
@@ -33,6 +28,14 @@
 			$data = Mail_1_0_0_Item::get($_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse'], $_GET['marked'], $_GET['unread'], $_GET['search']); #Get list from database
 
 			print $system->xml_send($update !== false && $data !== false, $data, null, true);
+		break;
+
+		case 'item.mark' : #Mark a mail
+			print $system->xml_send(Mail_1_0_0_Item::mark($_POST['id'], $_POST['mode']));
+		break;
+
+		case 'item.remove' : #Remove a mail
+			print $system->xml_send(Mail_1_0_0_Item::remove($_POST['id']));
 		break;
 
 		case 'item.show' : #Get message body of a mail #TODO - Send caching header

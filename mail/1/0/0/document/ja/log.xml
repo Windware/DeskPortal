@@ -11,4 +11,11 @@
 	<!-- item.js -->
 	<string name="user/show/error" value="メールの表示に失敗しました" />
 	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />
+
+	<string name="user/item/delete" value="メールの削除に失敗しました" />
+
+	<string name="user/item/mark" value="メールのマークを変更しました" />
+	<string name="user/item/mark/error" value="メールのマークの変更に失敗しました" />
+
+	<string name="user/generic/solution" value="ネットワーク接続を確認の上、時間をおいて再度試してください" />
 </root>

@@ -1,7 +1,7 @@
 <form id="%id%_conf_form" style="text-align: left" onsubmit="return %top%.%id%.conf.account(this)">
 	<p>%string:account% : <select name="account"><option value="0">(%string:new%)</option></select></p>
 
-	<table id="%id%_account" style="width : 100%" cellpadding="10" cellspacing="0"><tbody>
+	<table style="width : 100%" cellpadding="10" cellspacing="0"><tbody id="%id%_conf_account">
 		<tr><td colspan="2"><em>* %string:required%</em></td></tr>
 		<tr><th colspan="2">%string:basic%</th></tr>
 
@@ -39,7 +39,7 @@
 			</td>
 		</tr>
 
-		<tr id="%id%_conf_receive">
+		<tr class="%id%_conf_detail">
 			<td class="%id%_conf_row">* %string:server% / %string:port%</td>
 			<td>
 				<input type="text" style="width : 150px" name="receive_host" /> /
@@ -51,7 +51,7 @@
 			</td>
 		</tr>
 
-		<tr id="%id%_conf_receive_user">
+		<tr class="%id%_conf_detail">
 			<td class="%id%_conf_row">%string:user%</td>
 			<td><input type="text" style="width : 150px" name="receive_user" /></td>
 		</tr>
@@ -73,9 +73,9 @@
 			</td>
 		</tr>-->
 
-		<tr id="%id%_conf_send"><th colspan="2">%string:send%</th></tr>
+		<tr class="%id%_conf_detail"><th colspan="2">%string:send%</th></tr>
 
-		<tr id="%id%_conf_send_host">
+		<tr class="%id%_conf_detail">
 			<td class="%id%_conf_row">* %string:server% / %string:port%</td>
 			<td>
 				<input type="text" style="width : 150px" name="send_host" /> /
@@ -87,29 +87,29 @@
 			</td>
 		</tr>
 
-		<tr id="%id%_conf_send_user">
+		<tr class="%id%_conf_detail">
 			<td class="%id%_conf_row">%string:user%</td>
 			<td><input type="text" style="width : 150px" name="send_user" /></td>
 		</tr>
 
-		<tr id="%id%_conf_send_pass">
-			<td class="%id%_conf_row">%string:pass%</td>
+		<tr class="%id%_conf_detail">
+			<td class="%id%_conf_detail %id%_conf_row">%string:pass%</td>
 			<td><input type="password" style="width : 150px" name="send_pass" /></td>
 		</tr>
 
-		<tr id="%id%_conf_folder" class="%system%_hidden"><th colspan="2">%string:folder%</th></tr>
+		<tr class="%id%_conf_detail %system%_hidden"><th colspan="2">%string:folder%</th></tr>
 
-		<tr id="%id%_conf_folder_draft" class="%system%_hidden">
+		<tr class="%id%_conf_detail %system%_hidden">
 			<td class="%id%_conf_row">%string:draft%</td>
-			<td><select name="folder_draft"></select></td>
+			<td><select name="folder_drafts"></select></td>
 		</tr>
 
-		<tr id="%id%_conf_folder_sent" class="%system%_hidden">
+		<tr class="%id%_conf_detail %system%_hidden">
 			<td class="%id%_conf_row">%string:sent%</td>
 			<td><select name="folder_sent"></select></td>
 		</tr>
 
-		<tr id="%id%_conf_folder_trash" class="%system%_hidden">
+		<tr class="%id%_conf_detail %system%_hidden">
 			<td class="%id%_conf_row">%string:trash%</td>
 			<td><select name="folder_trash"></select></td>
 		</tr>

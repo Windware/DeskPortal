@@ -1,11 +1,11 @@
 <form id="%id%_form" style="margin : 10px 0px" onsubmit="%top%.%id%.item.update(); return false">
-	<p>
-		<input type="button" value="%string:new%" />
-		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this)"%tip:account%></select>]
-		[<strong>%string:status%</strong> : <span id="%id%_status"></span>]
-	</p>
+	<p style="background-color : #cba; padding : 5px; border : 1px #333 solid">
+		[<img class="%system%_icon" style="cursor : pointer" src="%image:new.png%" onclick="%top%.%id%.item.edit()"%tip:new% />]
 
-	<p>
+		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this)"%tip:account%></select>]
+
+		[<span%tip:page% style="cursor : help"><strong>%string:page%</strong> : <span id="%id%_paging"><select id="%id%_show"><option value="1">1</option></select></span></span>]
+
 		[<strong>%string:filter%</strong> :
 		<label for="%id%_marked"%tip:marked%>
 			<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter('marked', this.checked)" name="marked"> %string:marked%
@@ -16,7 +16,8 @@
 		</label>]
 
 		[<span%tip:search% style="cursor : help"><strong>%string:search%</strong> : <input type="text" name="search" style="width : 120px" /></span>]
-		[<span%tip:page% style="cursor : help"><strong>%string:page%</strong> : <span id="%id%_paging"></span></span>]
+
+		<img id="%id%_indicator" src="%image:loading.gif%" class="%system%_hidden"></img>
 	</p>
 
 	<input type="submit" style="display : none" />

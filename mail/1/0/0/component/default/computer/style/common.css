@@ -1,6 +1,6 @@
 
 	/* Configuration */
-	table#%id%_account th { border : 1px #333 solid; text-align : center; font-weight : bold; padding : 5px; background-color : #da8; }
+	tbody#%id%_conf_account th { border : 1px #333 solid; text-align : center; font-weight : bold; padding : 5px; background-color : #da8; }
 
 	td.%id%_conf_row { text-align : right; border-right : 1px #333 dotted; }
 
@@ -9,31 +9,33 @@
 
 	table#%id%_tab th { cursor : pointer; border : 1px #333 solid; }
 
-	table#%id%_read_zone { background-color : #fff; empty-cells : show; border-collapse : collapse; width : 100%; }
+	table#%id%_read_zone { background-color : #fafafa; empty-cells : show; border-collapse : collapse; width : 100%; }
 
-	tr#%id%_read_header { background-color : #cca; }
+	tr#%id%_read_header { background-color : #a87; }
 
 	tr.%id%_mail_unread { font-weight : bold; }
 
-	tr.%id%_mail_marked { background-color : #dca; }
+	tr.%id%_mail_marked { background-color : #bba; }
 
 	tr.%id%_mail_replied { font-style : italic; }
 
 	tr.%id%_hover { background-color : #c97; }
 
-	div.%id%_pane { border : 1px #333 solid; overflow : auto; height : 300px; background-color : #fff; }
+	div.%id%_pane { border : 1px #333 solid; overflow : auto; height : 300px; background-color : #fafafa; }
 
-	td#%id%_folder a { display : block; background-color : #ddc; border-bottom : 1px #333 solid; padding : 5px; }
+	td#%id%_folder a { display : block; background-color : #ddc; border-bottom : 1px #ccc solid; padding : 5px; }
 
-	a.%id%_hilight { background-color : #ca8 !important; }
+	a.%id%_hilight { background-color : #c97 !important; }
 
-	div.%id%_folder_header { background-color : #cca; text-align : center; padding : 5px; border-bottom : 1px #333 solid; }
+	div.%id%_folder_header { background-color : #a87; text-align : center; padding : 5px; border-bottom : 1px #333 solid; }
 
-	a.%id%_displayed { background-color : #777 !important; color : #ccc; }
+	a.%id%_displayed { background-color : #555 !important; color : #fff; }
 
 	th.%id%_row_from { width : 200px; }
 
 	th.%id%_row_date { width : 120px; }
+
+	img.%id%_indicator { width : 16px; height : 16px; }
 
 	/* Mail window */
 	h2.%id%_mail_subject { background-color : #333; text-align : center; font-weight : bold; border : 1px #ccc solid; padding : 5px; }

@@ -2,7 +2,7 @@
 	window = 'eeddcc';
 
 	border = 'cccccc';
-	hover = '776655';
+	hover = '333333';
 
 	bar = true;
 	up = true;

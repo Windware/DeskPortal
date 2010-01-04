@@ -1,9 +1,13 @@
 <root>
 	<string name="account" value="アカウント" />
 	<string name="folder" value="フォルダー" />
+	<string name="loading" value="読み込み中..." />
 
-	<string name="list" value="一覧" />
-	<string name="compose" value="作成" />
+	<!-- 特別フォルダー -->
+	<string name="inbox" value="受信箱" />
+	<string name="drafts" value="下書き" />
+	<string name="sent" value="送信済み" />
+	<string name="trash" value="ごみ箱" />
 
 	<!-- フィルター -->
 	<string name="all" value="全て" />
@@ -11,7 +15,7 @@
 
 	<string name="filter" value="フィルター" />
 	<string name="state" value="状態" />
-	<string name="marked" value="マーク済み" />
+	<string name="marked" value="マーク済" />
 	<string name="unread" value="未読" />
 	<string name="page" value="ページ" />
 	<string name="order" value="順序" />
@@ -19,16 +23,20 @@
 	<string name="search" value="検索" />
 
 	<!-- メール一覧 -->
-	<string name="new" value="新規作成" />
+	<string name="new" value="新規" />
 	<string name="to" value="宛先" />
 	<string name="from" value="送信者" />
 	<string name="size" value="サイズ" />
-	<string name="received" value="受信日" />
-	<string name="sent" value="送信日" />
+	<string name="received_date" value="受信日" />
+	<string name="sent_date" value="送信日" />
 	<string name="cc" value="Cc" />
 	<string name="subject" value="題名" />
 	<string name="date" value="日付" />
 	<string name="empty" value="空" />
+	<string name="read" value="既読" />
+	<string name="replied" value="返信済" />
+	<string name="yes" value="はい" />
+	<string name="no" value="いいえ" />
 
 	<!-- メールウインドウ -->
 	<string name="reply" value="返信" />
@@ -39,5 +47,6 @@
 	<string name="delete" value="削除" />
 	<string name="mark" value="マーク" />
 	<string name="close" value="閉じる" />
-	<string name="loading" value="読み込み中..." />
+	<string name="on" value="有" />
+	<string name="off" value="無" />
 </root>

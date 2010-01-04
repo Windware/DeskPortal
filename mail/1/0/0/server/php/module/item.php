@@ -3,7 +3,7 @@
 	{
 		protected static $_max = 300000; #Max bytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger.
 
-		protected static $_page = 30; #Default number of mails to display per page
+		protected static $_page = 50; #Default number of mails to display per page
 
 		protected static function _dig($parts, $position = '') #Dig the multi part message and find the main body section
 		{
@@ -30,6 +30,88 @@
 
 			$encoding = mb_detect_encoding($decoded); #Check if it is properly converted
 			return $encoding == 'ASCII' || $encoding == 'UTF-8' ? $decoded : '(?)'; #Avoid other character sets to avoid outputting XML from corrupting
+		}
+
+		public static function find($id, System_1_0_0_User $user = null) #Find sequence number on the mail server for a mail by ID
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT folder, uid, sequence, signature FROM {$database->prefix}mail WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $id, ':user' => $user->id));
+
+			if(!$query->success) return false;
+			$identity = $query->row(); #Get the mail's identifiers
+
+			$query = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $identity['folder'], ':user' => $user->id));
+
+			if(!$query->success) return false;
+			$link = Mail_1_0_0_Account::connect($query->column(), $identity['folder'], $user); #Connect to the server
+
+			$content = imap_check($link['connection']);
+			if(!$content) $log->user(LOG_ERR, "Invalid mailbox '$folder' on host '{$link['host']}'", 'Check the mail server or configuration');
+
+			if($identity['uid']) #If the mail has an unique identifier, set the target for that mail (NOTE : This block is an optional procedure to speed up the message look up)
+			{
+				if($link['info']['receive_type'] == 'imap') $sequence = imap_msgno($link['connection'], $identity['uid']); #Get message number from the ID
+				elseif($link['info']['receive_type'] == 'pop3') #List the unique ID and find the message number for POP3
+				{
+					if((@include_once('Auth/SASL.php')) && (@include_once('Net/POP3.php'))) #NOTE : Requires these PHP PEAR packages - FIXME - Have a local copy of PEAR
+					{
+						$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
+						$pop3 =& new Net_POP3();
+
+						if($pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port'])) #Connect
+						{
+							if($pop3->login($link['info']['receive_user'], $link['info']['receive_pass']))
+							{
+								$all = $pop3->getListing();
+								if(is_array($all)) foreach($all as $list) if($list['uidl'] == $identity['uid']) $sequence = $list['msg_id'];
+							}
+
+							$pop3->disconnect();
+						}
+					}
+				}
+
+				if($system->is_digit($sequence))
+				{
+					$signature = md5(imap_fetchheader($link['connection'], $sequence));
+					if($signature == $identity['signature']) $target = $sequence;
+				}
+			}
+
+			if(!$target) #If no unique identifier is given
+			{
+				if($identity['sequence'])
+				{
+					$signature = md5(imap_fetchheader($link['connection'], $identity['sequence'])); #Try to see if the sequence number still matches
+					if($signature == $identity['signature']) $target = $sequence; #Use it if it matches
+				}
+
+				if(!$target) #Otherwise, go through entire messages and find the matching mail
+				{
+					for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++)
+					{
+						$signature = md5(imap_fetchheader($link['connection'], $sequence)); #Signature of a message
+						if($signature != $identity['signature']) continue; #Find the message
+
+						$target = $sequence;
+						break;
+					}
+				}
+
+				if(!$target) return $log->dev(LOG_WARNING, "Cannot find the mail data on the server for mail ID '$id'", 'Mail may have been deleted from another client');
+			}
+
+			return array($link, $target);
 		}
 
 		public static function get($folder, $page, $order = 'sent', $reverse = true, $marked = false, $unread = false, $search = '', $amount = null, System_1_0_0_User $user = null) #Get list of mails
@@ -119,7 +201,33 @@
 			return $xml;
 		}
 
-		public static function show($id, System_1_0_0_User $user = null) #Get the body of a message
+		public static function mark($id, $mode, System_1_0_0_User $user = null)
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($id)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			list($link, $target) = self::find($id); #Find the sequence number for the mail ID
+			if(!$system->is_digit($target)) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("UPDATE {$database->prefix}mail SET marked = :marked WHERE id = :id AND user = :user");
+			$query->run(array(':marked' => $mode ? 1 : 0, ':id' => $id, ':user' => $user->id));
+
+			if(!$query->success) return false;
+
+			#Change the flagged state
+			if($mode) imap_setflag_full($link['connection'], $target, '\\Flagged');
+			else imap_clearflag_full($link['connection'], $target, '\\Flagged');
+		}
+
+		public static function remove($id, System_1_0_0_User $user = null)
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -131,74 +239,20 @@
 
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
+		}
 
-			$query = $database->prepare("SELECT folder, uid, sequence, signature FROM {$database->prefix}mail WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id));
+		public static function show($id, System_1_0_0_User $user = null) #Get the body of a message
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
 
-			if(!$query->success) return false;
-			$identity = $query->row(); #Get the mail's identifiers
+			if(!$system->is_digit($id)) return $log->param();
 
-			$query = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $identity['folder'], ':user' => $user->id));
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
 
-			if(!$query->success) return false;
-			$link = Mail_1_0_0_Account::connect($query->column(), $identity['folder'], $user); #Connect to the server
-
-			$content = imap_check($link['connection']);
-			if(!$content) $log->user(LOG_ERR, "Invalid mailbox '$folder' on host '{$link['host']}'", 'Check the mail server or configuration');
-
-			if($identity['uid']) #If the mail has an unique identifier, set the target for that mail (NOTE : This block is an optional procedure to speed up the message look up)
-			{
-				if($link['info']['receive_type'] == 'imap') $sequence = imap_msgno($link['connection'], $identity['uid']); #Get message number from the ID
-				elseif($link['info']['receive_type'] == 'pop3') #List the unique ID and find the message number for POP3
-				{
-					if((@include_once('Auth/SASL.php')) && (@include_once('Net/POP3.php'))) #NOTE : Requires these PHP PEAR packages - FIXME - Have a local copy of PEAR
-					{
-						$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
-						$pop3 =& new Net_POP3();
-
-						if($pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port'])) #Connect
-						{
-							if($pop3->login($link['info']['receive_user'], $link['info']['receive_pass']))
-							{
-								$all = $pop3->getListing();
-								if(is_array($all)) foreach($all as $list) if($list['uidl'] == $identity['uid']) $sequence = $list['msg_id'];
-							}
-
-							$pop3->disconnect();
-						}
-					}
-				}
-
-				if($system->is_digit($sequence))
-				{
-					$signature = md5(imap_fetchheader($link['connection'], $sequence));
-					if($signature == $identity['signature']) $target = $sequence;
-				}
-			}
-
-			if(!$target) #If no unique identifier is given
-			{
-				if($identity['sequence'])
-				{
-					$signature = md5(imap_fetchheader($link['connection'], $identity['sequence'])); #Try to see if the sequence number still matches
-					if($signature == $identity['signature']) $target = $sequence; #Use it if it matches
-				}
-
-				if(!$target) #Otherwise, go through entire messages and find the matching mail
-				{
-					for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++)
-					{
-						$signature = md5(imap_fetchheader($link['connection'], $sequence)); #Signature of a message
-						if($signature != $identity['signature']) continue; #Find the message
-
-						$target = $sequence;
-						break;
-					}
-				}
-
-				if(!$target) return $log->dev(LOG_WARNING, "Cannot find the mail data on the server for mail ID '$id'", 'Mail may have been deleted from another client');
-			}
+			list($link, $target) = self::find($id); #Find the sequence number for the mail ID
+			if(!$system->is_digit($target)) return false;
 
 			$structure = imap_fetchstructure($link['connection'], $target); #Get the mail's structure
 			$body = ''; #The message body
@@ -240,6 +294,9 @@
 				$encoding = mb_detect_encoding($body);
 				if($encoding != 'ASCII' && $encoding != 'UTF-8') $body = '(?)'; #If it cannot be converted, do not send the content to avoid corrupting XML
 			}
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
 
 			$query = $database->prepare("UPDATE {$database->prefix}mail SET read = :read WHERE id = :id AND user = :user");
 			$query->run(array(':read' => 1, ':id' => $id, ':user' => $user->id)); #Update the read status
@@ -356,7 +413,7 @@
 				$addresses = array(); #List of 'from', 'to' and 'cc' addresses
 
 				$signature = md5(imap_fetchheader($link['connection'], $sequence)); #Keep a unique signature of the message
-				$attributes = array(':user' => $user->id, ':folder' => $folder, ':sequence' => $sequence, ':signature' => $signature, ':uid' => isset($unique[$sequence]) ? $unique[$sequence] : null); #Mail information parameters
+				$attributes = array(':user' => $user->id, ':folder' => $folder, ':sequence' => $sequence, ':signature' => $signature, ':subject' => '', ':uid' => isset($unique[$sequence]) ? $unique[$sequence] : null); #Mail information parameters
 
 				foreach(imap_headerinfo($link['connection'], $sequence) as $key => $value) #Get mail information
 				{
@@ -413,6 +470,8 @@
 				}
 
 				$query['insert']->run($attributes); #Insert the mail in the database
+				if(!$query['insert']->success) return false;
+
 				$id = $database->id(); #Id for the mail in the database
 
 				foreach(array('from', 'to', 'cc') as $section) #Insert the addresses

@@ -5,15 +5,26 @@
 	<tr><th>%string:to%</th><td>%value:to%</td></tr>
 	<tr><th>%string:cc%</th><td>%value:cc%</td></tr>
 	<tr><th>%string:date%</th><td>%value:sent%</td></tr>
+	<tr>
+		<th>%string:mark%</th>
+		<td><form>
+			<label for="%id%_marker_%value:index%_on">
+				<input id="%id%_marker_%value:index%_on" type="radio" name="marked" onclick="%top%.%id%.item.mark(%value:index%, true)"%value:marked% /> %string:on%
+			</label>
+
+			<label for="%id%_marker_%value:index%_off">
+				<input id="%id%_marker_%value:index%_off" type="radio" name="marked" onclick="%top%.%id%.item.mark(%value:index%, false)"%value:unmarked% /> %string:off%
+			</label>
+		</form></td>
+	</tr>
 </tbody></table>
 
 <form style="text-align : center; margin : 10px 0px" class="%id%_mail_action">
 	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%, ['from'])" value="%string:reply%" />
 	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%, ['from', 'cc'])" value="%string:reply_all%" />
 	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%)" value="%string:forward%" />
-	<input type="button" onclick="%top%.%id%.gui.mark(%value:index%)" value="%string:mark%" />
-	<input type="button" onclick="%top%.%id%.gui.remove(%value:index%)" value="%string:delete%" />
-	<input type="button" onclick="%top%.%system%.window.fade('%id%_mail_%value:index%', undefined, undefined, true)" value="%string:close%" />
+	<input type="button" onclick="%top%.%id%.item.remove(%value:index%)" value="%string:delete%" />
+	<input type="button" onclick="%top%.%system%.window.fade('%id%_mail_%value:index%')" value="%string:close%" style="background-color : #a98" />
 </form>
 
 <div class="%id%_mail_body"%scroll%><table cellpadding="0" cellspacing="0" class="%system%_full"%lock%><tbody><tr>

@@ -87,7 +87,7 @@
 				}
 
 				for(var i = 0; i < expand.length; i++) $system.node.hide($id + '_list_' + expand[i], false); //Expand the categories
-				if(typeof callback == 'function') callback();
+				$system.app.callback(_class + '.list.display', callback);
 			}
 
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.list', language : $global.user.language}, null, $system.app.method(display, [callback]));

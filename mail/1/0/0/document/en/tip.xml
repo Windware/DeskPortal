@@ -4,6 +4,7 @@
 	<string name="leave" value="To leave the copy of mails on the server or not. Leave the number of days empty to keep it forever or enter the number of days to delete the copy off the server after specified days." />
 
 	<!-- Main window -->
+	<string name="new" value="Compose a new mail" />
 	<string name="account" value="Select an account to display" />
 	<string name="marked" value="Select this option to display only marked mails" />
 	<string name="unread" value="Select this option to display only unread mails" />

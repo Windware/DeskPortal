@@ -5,6 +5,8 @@
 
 		var _limit = 50; //Maximum search string length
 
+		var _process = 0; //Amount of process to count to show the indicator
+
 		this.add = function(address, name) //Add email address to address book app
 		{
 			var log = $system.log.init(_class + '.add');
@@ -50,6 +52,14 @@
 			$self.item.update(); //Update the listing
 
 			return false; //Avoid form submission
+		}
+
+		this.indicator = function(on) //Manage indicator to show progress
+		{
+			_process += on ? 1 : -1;
+			if(_process < 0) _process = 0;
+
+			return $system.node.hide($system.node.id($id + '_indicator'), !_process);
 		}
 
 		this.sort = function(section) //Sort the columns

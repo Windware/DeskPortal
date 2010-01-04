@@ -22,7 +22,7 @@
 			if(!$system.is.digit(id)) return log.param();
 			if(_lock) return false;
 
-			var release = function() { _lock = false; } //Release the lock in case the network chokes
+			var release = function() { return _lock = false; } //Release the lock in case the network chokes
 
 			_lock = true; //Lock it from getting processed while the last operation taking place
 			var timer = setTimeout(release, 5000); //Remove the lock if the network fails for some reason
@@ -49,9 +49,7 @@
 				log.user($global.log.info, 'user/entry/get', '', [__feed[id] ? __feed[id].description : id]);
 
 				clearTimeout(timer); //Release the lock timer
-				release(); //Release the lock
-
-				if(!$system.is.element(area, 'form')) return false; //Make sure the HTML node exists
+				if(!$system.is.element(area, 'form')) return release(); //Make sure the HTML node exists
 
 				__apply(id, true); //Set the form values from the stored values
 				__swap($system.node.id($id + '_selection_span').period.value); //Swap the necessary select form element
@@ -181,9 +179,9 @@
 				area.appendChild(paging);
 
 				$self.gui.scroll(); //Scroll to the top of the list
-				$system.node.fade(area.id, false);
+				$system.node.fade(area.id, false, release);
 
-				if(typeof callback == 'function') callback(); //Run the specified function
+				$system.app.callback(_class + '.get.list', callback);
 			}
 
 			for(var section in __feed[id]) if(section != 'description') options[section] = __feed[id][section]; //Set the date span

@@ -1,9 +1,13 @@
 <root>
 	<string name="account" value="Account" />
 	<string name="folder" value="Folder" />
+	<string name="loading" value="Loading..." />
 
-	<string name="list" value="List" />
-	<string name="compose" value="Compose" />
+	<!-- Special folders -->
+	<string name="inbox" value="Inbox" />
+	<string name="drafts" value="Drafts" />
+	<string name="sent" value="Sent" />
+	<string name="trash" value="Trash" />
 
 	<!-- Filters -->
 	<string name="all" value="All" />
@@ -19,16 +23,20 @@
 	<string name="search" value="Search" />
 
 	<!-- Mail list -->
-	<string name="new" value="Compose new mail" />
+	<string name="new" value="New" />
 	<string name="to" value="To" />
 	<string name="from" value="From" />
 	<string name="size" value="Size" />
-	<string name="received" value="Received" />
-	<string name="sent" value="Sent" />
+	<string name="date_received" value="Received" />
+	<string name="date_sent" value="Sent" />
 	<string name="cc" value="Cc" />
 	<string name="subject" value="Subject" />
 	<string name="date" value="Date" />
 	<string name="empty" value="Empty" />
+	<string name="read" value="Read" />
+	<string name="replied" value="Replied" />
+	<string name="yes" value="Yes" />
+	<string name="no" value="No" />
 
 	<!-- Mail window -->
 	<string name="reply" value="Reply" />
@@ -39,5 +47,6 @@
 	<string name="delete" value="Delete" />
 	<string name="mark" value="Mark" />
 	<string name="close" value="Close" />
-	<string name="loading" value="Loading..." />
+	<string name="on" value="On" />
+	<string name="off" value="Off" />
 </root>

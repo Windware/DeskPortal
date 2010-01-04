@@ -68,10 +68,8 @@
 
 			foreach($result as $row)
 			{
-				$exclude = explode(' ', 'user receive_pass send_pass');
-
-				$signature = str_replace("\n", '\\n', $row['signature']);
-				$account .= $system->xml_node('account', $row, null, $exclude);
+				$row['signature'] = str_replace("\n", '\\n', $row['signature']);
+				$account .= $system->xml_node('account', $row, null, explode(' ', 'user receive_pass send_pass'));
 			}
 
 			return $account;

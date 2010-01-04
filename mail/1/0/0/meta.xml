@@ -21,13 +21,15 @@
 			<folder name="component">
 				<folder name="default">
 					<folder name="computer">
-						<folder name="graphic">
+						<folder name="graphic" license="Free commercial use license">
+							<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+
 							<file name="icon.png" license="Public Domain">
 								<author name="Open Clip Art" contact="http://openclipart.org/media/people/contact/admin" site="http://openclipart.org/" />
 							</file>
 
-							<file name="add.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							<file name="loading.gif" license="Free use license">
+								<author name="Kath" contact="http://www.kath.fr/" site="http://www.ajaxload.info/" />
 							</file>
 						</folder>
 					</folder>

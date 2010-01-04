@@ -55,11 +55,11 @@
 		this.type = function(type) //Alter values and mail keep option by specified receive type
 		{
 			var log = $system.log.init(_class + '.type');
+			var nodes = $system.node.id($id + '_conf_account').childNodes;
 
-			var section = $system.array.list('receive receive_user send send_host send_user send_pass folder folder_draft folder_sent folder_trash');
-			var state = !$system.array.find(['pop3', 'imap'], type);
-
-			for(var i = 0; i < section.length; i++) $system.node.hide($id + '_conf_' + section[i], state);
+			for(var i = 0; i < nodes.length; i++) //Hide redundant fields for predefined account types
+				if(nodes[i].nodeType == 1 && nodes[i].nodeName == 'TR' && $system.node.classes(nodes[i], $id + '_conf_detail'))
+					$system.node.hide(nodes[i], !$system.array.find(['pop3', 'imap'], type));
 
 			//$system.node.hide($id + '_conf_preserve', type != 'pop3'); //Show or hide mail preservation option for POP
 			$self.conf.port('receive'); //Update the port number

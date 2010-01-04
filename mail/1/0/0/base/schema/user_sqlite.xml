@@ -23,7 +23,7 @@
 		<column name="send_user" param="VARCHAR(255)" />
 		<column name="send_pass" param="VARCHAR(255)" />
 
-		<column name="folder_draft" param="VARCHAR(255)" />
+		<column name="folder_drafts" param="VARCHAR(255)" />
 		<column name="folder_sent" param="VARCHAR(255)" />
 		<column name="folder_trash" param="VARCHAR(255)" />
 

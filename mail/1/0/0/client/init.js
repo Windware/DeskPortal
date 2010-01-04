@@ -1,5 +1,7 @@
 
-	var __account = {}; //List of account names
+	var __active = {}; //Interval timer for updating folder lists
+
+	var __box = {}; //List of special folders for accounts (Inbox, drafts, sent and trash)
 
 	var __filter = {}; //List filter options
 
@@ -9,6 +11,8 @@
 
 	var __order = {item : 'sent', reverse : true}; //Current sort order method
 
-	var __selected = {}; //Current displayed account, folder and page
+	var __refresh = {}; //Periodic folder update timer
 
-	var __update; //Mail update process
+	var __selected = {}; //Currently displayed account, folder and page
+
+	var __special = ['inbox', 'drafts', 'sent', 'trash']; //Special folders
