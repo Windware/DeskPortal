@@ -44,9 +44,7 @@
 			var states = $system.dom.tags(xml, 'status'); //Check the value on the specified key
 
 			if(key === undefined) return $system.dom.attribute(states[0], 'value');
-
-			for(var i = 0; i < states.length; i++)
-				if($system.dom.attribute(states[i], 'key') == key) return $system.dom.attribute(states[i], 'value');
+			for(var i = 0; i < states.length; i++) if($system.dom.attribute(states[i], 'key') == key) return $system.dom.attribute(states[i], 'value');
 
 			return false;
 		}

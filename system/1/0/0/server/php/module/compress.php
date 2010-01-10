@@ -10,6 +10,107 @@
 			return $log->dev(LOG_ERR, 'Could not find a method to compress a string', 'Make sure zlib library is enabled', $string);
 		}
 
+		#http://php.net/manual/en/function.gzdecode.php
+		public static function decode($data) #A custom function to decode gzipped data since gzdecode is only in PHP 6
+		{
+			$size = strlen($data);
+			if($size < 18 || substr($data, 0, 2) != "\x1f\x8b") return ''; #Not in gzipped format
+
+			$method = ord(substr($data, 2, 1)); #Compression method
+			$flags = ord(substr($data, 3, 1)); #Flags
+
+			if($flags & 31 != $flags) return ''; #Reserved bits not allowed
+
+			#NOTE: $mtime may be negative (PHP integer limitations)
+			$mtime = unpack('V', substr($data, 4, 4));
+			$mtime = $mtime[1];
+
+			$xfl = substr($data, 8, 1);
+			$os = substr($data, 8, 1);
+
+			$headerlen = 10;
+			$extralen = 0;
+			$extra = '';
+
+			if($flags & 4)
+			{
+				if($size - $headerlen - 2 < 8) return ''; #Invalid
+
+				$extralen = unpack('v',substr($data, 8, 2));
+				$extralen = $extralen[1];
+
+				if($size - $headerlen - 2 - $extralen < 8) return ''; #Invalid
+
+				$extra = substr($data, 10, $extralen);
+				$headerlen += 2 + $extralen;
+			}
+
+			$filenamelen = 0;
+			$filename = '';
+
+			if($flags & 8)
+			{
+				if($size - $headerlen - 1 < 8) return ''; #Invalid
+
+				$filenamelen = strpos(substr($data, $headerlen), chr(0));
+				if($filenamelen === false || $size - $headerlen - $filenamelen - 1 < 8) return ''; #Invalid
+
+				$filename = substr($data, $headerlen, $filenamelen);
+				$headerlen += $filenamelen + 1;
+			}
+
+			$commentlen = 0;
+			$comment = '';
+
+			if($flags & 16)
+			{
+				if($size - $headerlen - 1 < 8) return ''; #Invalid
+
+				$commentlen = strpos(substr($data, $headerlen), chr(0));
+				if($commentlen === false || $size - $headerlen - $commentlen - 1 < 8) return ''; #Invalid
+
+				$comment = substr($data, $headerlen, $commentlen);
+				$headerlen += $commentlen + 1;
+			}
+
+			$headercrc = '';
+
+			if($flags & 2) #2-bytes (lowest order) of CRC32 on header present
+			{
+				if($size - $headerlen - 2 < 8) return false; #Invalid
+				$calccrc = crc32(substr($data, 0, $headerlen)) & 0xffff;
+
+				$headercrc = unpack('v', substr($data, $headerlen, 2));
+				$headercrc = $headercrc[1];
+
+				if($headercrc != $calccrc) return ''; #Bad header CRC
+				$headerlen += 2;
+			}
+
+			#gzip footer
+			$datacrc = unpack('V',substr($data, -8, 4));
+			$datacrc = sprintf('%u',$datacrc[1] & 0xFFFFFFFF);
+
+			$isize = unpack('V', substr($data, -4));
+			$isize = $isize[1];
+
+			#decompression
+			$bodylen = $size - $headerlen - 8;
+			if($bodylen < 1) return ''; #Implementation bug
+
+			$body = substr($data, $headerlen, $bodylen);
+			$data = '';
+
+			if($bodylen > 0)
+			{
+				if($method == 8) $data = gzinflate($body, $maxlength); #Currently the only supported compression method:
+				else return '';
+			}
+
+			if($isize != strlen($data) || sprintf('%u', crc32($data)) != $datacrc) return ''; #Verifiy CRC32
+			return $data;
+		}
+
 		public static function header(&$system) #Determine the possibility of compressing and send the header if possible
 		{
 			$log = $system->log(__METHOD__);
@@ -52,11 +153,10 @@
 			if(!$conf['compress']) #If not configured in configuration, quit
 			{
 				$problem = 'Compression disabled in configuration';
-				return $_possibility = $log->dev(LOG_NOTICE, $problem, 'Enable "compress" option in the configuration');
+				return $_possibility = $log->dev(LOG_NOTICE, $problem, 'Enable "compress" option in the system configuration');
 			}
 
-			#If gzip function exists, it's possible
-			if(function_exists('gzencode') && function_exists('gzinflate')) return $_possibility = true;
+			if(function_exists('gzencode')) return $_possibility = true; #If gzip function exists, it's possible
 
 			$solution = 'Need PHP with zlib library support'; #If nothing is available
 			return $_possibility = $log->dev(LOG_NOTICE, 'No gzipping capability found in the system', $solution);

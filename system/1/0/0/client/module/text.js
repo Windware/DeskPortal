@@ -37,6 +37,26 @@
 			}
 		}
 
+		this.link = function(text, local, tip) //Turn URL into HTML links
+		{
+			if(!$system.is.text(text)) return '';
+			local = local ? '' : ' target="_blank"';
+
+			//TODO - Also link texts starting with 'www.' or ending with '.com/net/org'
+			return text.replace(/\b((mailto|https?|ftp|irc):\/\/[\w\.,\-@%&\+=~\?\/:#;\*]+)/g, '<a href="$1"' + local + '>$1</a>');
+		}
+
+		this.mail = function(text, run, tip) //Turn mail addresses into function links
+		{
+			if(!$system.is.text(text)) return '';
+
+			if(!$system.is.text(run)) run = $global.root + ".mail_1_0_0.item.create('$1')"; //Give a default mail creation link
+			run = $system.text.template(run).replace(/%match%/g, '$1');
+
+			var component = '[\\w\.\-]+';
+			return text.replace(RegExp('(' + component + '@' + component + '\\.' + component + ')', 'g'), '<a onclick="' + run + '">$1</a>');
+		}
+
 		this.regexp = function(text) //Escapes the string to be included inside a regular expression string
 		{
 			if(!$system.is.text(text)) return '';

@@ -74,7 +74,7 @@
 						if(!array_key_exists($index, $conf)) $conf[$index] = $system->app_conf($name, $major);
 
 						$body = $system->file_read($path); #Get the file content
-						if($conf['system_static']['minify'] && $content['mime'] == 'text/javascript') $body = $system->app_minify($body);
+						if($content['mime'] == 'text/javascript') $body = $system->minify_js($body);
 
 						$content['content'] = $system->xml_data(preg_replace('/%conf:(.+?)%/e', '$conf[$index]["$1"]', $body));
 					}

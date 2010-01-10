@@ -54,6 +54,14 @@
 			return false; //Avoid form submission
 		}
 
+		this.format = function(node) //Turn links and mail addresses clickable
+		{
+			var log = $system.log.init(_class + '.format');
+			if(!$system.is.element(node)) return log.param();
+
+			node.innerHTML = $system.text.link($system.text.mail(node.innerHTML));
+		}
+
 		this.indicator = function(on) //Manage indicator to show progress
 		{
 			_process += on ? 1 : -1;
@@ -64,7 +72,7 @@
 
 		this.sort = function(section) //Sort the columns
 		{
-			var log = $system.log.init(_class + '.filter');
+			var log = $system.log.init(_class + '.sort');
 			if(!$system.is.text(section)) return log.param();
 
 			__order = {item : section, reverse : __order.item == section && !__order.reverse}; //Set order option

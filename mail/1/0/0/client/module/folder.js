@@ -79,7 +79,7 @@
 							$system.image.set(icon, $self.info.devroot + 'graphic/folder.png');
 
 							icon.className = $id + '_indicator';
-							icon.style.paddingLeft = depth * _space + 'px';
+							icon.style.marginLeft = depth * _space + 'px';
 
 							link.appendChild(icon);
 						}
@@ -133,7 +133,7 @@
 
 				var section = $system.browser.engine == 'trident' ? 1 : 0; //IE counts first 'xml' tag as first node
 
-				if(!request.xml.childNodes || !construct(request.xml.childNodes[section], 0)) //Create folder listing
+				if(!request.xml || !request.xml.childNodes || !construct(request.xml.childNodes[section], 0)) //Create folder listing
 					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/solution');
 
 				for(var i = 0; i < group.length; i++) //Create the folder listing from the special folders

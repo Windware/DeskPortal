@@ -33,7 +33,7 @@
 	#TODO - cache the result but to where? (separate config file with 1 line of file location?)
 	$conf = &System_Static::app_conf('system', 'static'); #Read the configuration XML
 
-	if($conf['demo'] && count($_POST)) exit; #Avoid writing data under demo mode
+	if($conf['system_demo'] && count($_POST)) exit; #Avoid writing data under demo mode
 
 	if(!is_array($conf)) #Quit if configuration is unreadable, cannot even log
 	{

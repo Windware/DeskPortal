@@ -35,7 +35,7 @@
 
 			$conf = $system->app_conf('system', 'static');
 
-			if(!$conf['demo']) #If not under demo mode
+			if(!$conf['system_demo']) #If not under demo mode
 			{
 				$database = $system->database('system', __METHOD__, null, 'system', 'static'); #Open the database
 				if(!$database->success) return self::$_mode['error'];
@@ -140,7 +140,7 @@
 			setcookie('name', $name, $end);
 			setcookie('ticket', $ticket, $end);
 
-			if(!$conf['demo'])
+			if(!$conf['system_demo'])
 			{
 				#Record login history to the user's database
 				$query = $database->prepare("INSERT INTO {$database->prefix}record (user, time, ip, success) VALUES (:user, :time, :ip, :success)");
@@ -164,7 +164,7 @@
 				return $log->system(LOG_NOTICE, "User authorization failed for user '$name'", 'Check login credentials');
 
 			#If set to create the user automatically, try to create one, otherwise look for an existing one and return the user ID
-			return $conf['user_create'] && !$conf['demo'] ? $system->user_create($name, $pass) : $system->user_find($name)->id;
+			return $conf['user_create'] && !$conf['system_demo'] ? $system->user_create($name, $pass) : $system->user_find($name)->id;
 		}
 
 		public static function process($name, $pass, $keep) #Sends back the authorization result (0 : success, 1 : failure, 2 : error)
@@ -186,7 +186,7 @@
 				#it will be odd to issue status code other than 0 beyond this point,
 				#but in rare cases that something fails during this period, status 2 is sent
 				#and the client side should handle what to do in that case
-				if($status === 0 && !$conf['demo']) #On success
+				if($status === 0 && !$conf['system_demo']) #On success
 				{
 					$log->dev(LOG_INFO, 'Getting the last logged in information');
 

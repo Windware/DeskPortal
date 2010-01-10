@@ -23,9 +23,10 @@
 		<column name="send_user" param="VARCHAR(255)" />
 		<column name="send_pass" param="VARCHAR(255)" />
 
-		<column name="folder_drafts" param="VARCHAR(255)" />
-		<column name="folder_sent" param="VARCHAR(255)" />
-		<column name="folder_trash" param="VARCHAR(255)" />
+		<column name="folder_inbox" param="INT" />
+		<column name="folder_drafts" param="INT" />
+		<column name="folder_sent" param="INT" />
+		<column name="folder_trash" param="INT" />
 
 		<column name="UNIQUE" param="(user, description)" />
 		<index name="user" />
@@ -37,7 +38,7 @@
 		'signature' is a md5 sum of the header of a mail to identify the message.
 
 		NOTE : 'sequence' and 'signature' are provided, so that under POP3, since UIDL command is optional,
-		a message can be identified in another way to download the body and attachments separately.
+		a message can be identified in another way to download the attachments separately.
 	-->
 	<table name="mail">
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
@@ -49,17 +50,22 @@
 		<column name="signature" param="CHAR(32)" />
 
 		<column name="subject" param="TEXT NOT NULL" />
-		<column name="preview" param="TEXT" />
-		<column name="mail" param="TEXT" />
+		<column name="mail" param="TEXT" /> <!-- Entire mail content -->
 
 		<column name="size" param="INT" />
 		<column name="sent" param="DATETIME" />
 		<column name="received" param="DATETIME" />
 
-		<column name="marked" param="INT" /> <!-- Corresponds to IMAP 'flagged' -->
+		<column name="preview" param="TEXT" /> <!-- Partial excerpt of the plain text version. Uncompressed to be sent inside XML. -->
+		<column name="plain" param="TEXT" /> <!-- Plain text version of the body. Uncompressed for search purpose. -->
+		<column name="html" param="BLOB" /> <!-- HTML version of the body compressed -->
+		<column name="encode" param="VARCHAR(32)" /> <!-- Character encoding type for HTML version -->
+
+		<column name="marked" param="INT" /> <!-- Corresponds to IMAP flag 'Flagged' -->
+		<column name="read" param="INT" /> <!-- Corresponds to IMAP flag 'Seen' -->
+		<column name="replied" param="INT" /> <!-- Corresponds to IMAP flag 'Answered' -->
+		<column name="draft" param="INT" /> <!-- Corresponds to IMAP flag 'Draft' -->
 		<column name="color" param="CHAR(6)" />
-		<column name="read" param="INT" /> <!-- Corresponds to IMAP 'seen' -->
-		<column name="replied" param="INT" /> <!-- Corresponds to IMAP 'answered' -->
 
 		<column name="UNIQUE" param="(user, folder, uid)" />
 		<index name="user, folder, uid" />
@@ -122,16 +128,6 @@
 
 		<column name="position" param="VARCHAR(255)" /> <!-- Position of this attachment in the mime structure -->
 		<column name="body" param="BLOB" />
-
-		<index name="mail" />
-	</table>
-
-	<!-- Message body -->
-	<table name="body">
-		<column name="mail" param="INT NOT NULL" />
-
-		<column name="plain" param="TEXT" />
-		<column name="html" param="TEXT" />
 
 		<index name="mail" />
 	</table>

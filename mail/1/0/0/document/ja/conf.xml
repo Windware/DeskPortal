@@ -1,5 +1,6 @@
 <root>
 	<string name="_1_account" value="アカウント" />
+	<string name="_2_folder" value="フォルダー" />
 
 	<string name="required" value="必須項目" />
 	<string name="account" value="アカウント" />

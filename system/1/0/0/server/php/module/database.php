@@ -153,10 +153,10 @@
 			$this->prefix = "{$conf['db_prefix']}{$app}_{$version}_"; #Set table prefix
 
 			#Set up the PDO string. Since the format may vary from use to use, it is set placed configuration folder
-			$conf = 'system/static/conf/database/database.php';
-			$this->logger(LOG_INFO, "Loading database connection configuration file '$conf'");
+			$setting = 'system/static/conf/database/database.php';
+			$this->logger(LOG_INFO, "Loading database connection configuration file '$setting'");
 
-			require_once($system->global['define']['top'].$conf); #Load database specific connection configuration
+			require_once($system->global['define']['top'].$setting); #Load database specific connection configuration
 
 			#Get the connection string
 			$method = System_Static_Database::connection($sector, $adapter, $host, $port, $database);
@@ -164,7 +164,8 @@
 
 			try #Open up a database connection
 			{
-				$this->handler = new PDO($method, $name, $pass, array(PDO::ATTR_PERSISTENT => !!$conf['db_persistent']));
+				#NOTE : Avoid persistent connection under locked mode as trasnaction can possibly drag over to the next connection
+				$this->handler = new PDO($method, $name, $pass, array(PDO::ATTR_PERSISTENT => !$conf['db_lock'] && !!$conf['db_persistent']));
 				$this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			}
 
@@ -189,12 +190,34 @@
 			$this->logger(LOG_INFO, 'Connection successful');
 			$this->success = true; #Report the success for opening the database
 
+			if($conf['db_lock']) $this->begin(); #Avoid database changes under locked mode and make all operations under a single transaction to be rolled back
+			$this->locked = $conf['db_lock']; #No write locked mode
+
 			return $this->_create(); #Check for table availability
 		}
 
-		public function begin() { return $this->success ? $this->handler->beginTransaction() : false; } #Start a transaction
+		public function __destruct() { if($this->locked && $this->success) return $this->rollback(); } #Rollback changes under locked mode
 
-		public function commit() { return $this->success ? $this->handler->commit() : false; } #Commit the changes atomically
+
+		public function begin() #Start a transaction
+		{
+			if(!$this->success) return false;
+			if($this->locked) return true; #Do not allow transaction on locked mode
+
+			try { return $this->handler->beginTransaction(); }
+
+			catch(PDOException $error) { return $this->logger(LOG_ERR, 'Cannot start a transaction : '.$error->getMessage(), 'Check the error'); }
+		}
+
+		public function commit() #Commit the changes atomically
+		{
+			if(!$this->success) return false;
+			if($this->locked) return true; #Do not allow transaction on locked mode
+
+			try { return $this->handler->commit(); }
+
+			catch(PDOException $error) { return $this->logger(LOG_ERR, 'Cannot commit changes of a transaction : '.$error->getMessage(), 'Check the error'); }
+		}
 
 		#Escape string for 'LIKE' operators
 		public static function escape($string) { return is_string($string) ? str_replace(array(self::$character, '%', '_'), array(self::$character.self::$character, self::$character.'%', self::$character.'_'), $string) : ''; }
@@ -293,7 +316,15 @@
 			return $log->dev($level, $message, $solution, $value); #Report the error with the error message given
 		}
 
-		public function rollback() { return $this->handler->rollBack(); } #Rollback the transaction
+		public function rollback() #Rollback the transaction
+		{
+			if(!$this->success) return false;
+			if($this->locked) return true; #Do not allow transaction on locked mode
+
+			try { return $this->handler->rollback(); }
+
+			catch(PDOException $error) { return $this->logger(LOG_ERR, 'Cannot rollback changes of a transaction : '.$error->getMessage(), 'Check the error'); }
+		}
 
 		#Make a prepared statement (Second parameter is only used from the logging module to avoid looping)
 		public function prepare($query, $level = LOG_EMERG) { return new System_1_0_0_Database_Query($this, $query, $level); }
@@ -390,3 +421,4 @@
 			}
 		}
 	}
+?>

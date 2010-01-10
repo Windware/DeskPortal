@@ -1,5 +1,6 @@
 <root>
 	<string name="_1_account" value="Accounts" />
+	<string name="_2_folder" value="Folders" />
 
 	<string name="required" value="Required fields" />
 	<string name="account" value="Account" />

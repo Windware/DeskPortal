@@ -22,6 +22,7 @@
 				if(!$system->is_digit($expire)) $expire = self::$_expire; #Use default seconds for caches to be valid if not set
 				$end = preg_replace('/ \+0000$/', '', gmdate('r', time() + $expire)); #Time for the cache expiration
 
+				foreach(headers_list() as $line) if(preg_match('/^Pragma: /', $line)) header('Pragma: '); #Override the previous header if sent
 				header("Cache-Control: public, max-age=$expire"); #If to be cached
 			}
 

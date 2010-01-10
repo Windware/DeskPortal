@@ -77,9 +77,19 @@
 			<folder name="server">
 				<folder name="php">
 					<folder name="module">
-						<file name="jsmin.php" license="MIT License">
+						<file name="minify_css.php" license="BSD License">
+							<author name="Steve Clay" contact="steve@mrclay.org" site="http://code.google.com/p/minify/" />
+						</file>
+
+						<file name="minify_html.php" license="BSD License">
+							<author name="Steve Clay" contact="steve@mrclay.org" site="http://code.google.com/p/minify/" />
+							<author name="Ryan Grove" contact="ryan@wonko.com" />
+						</file>
+
+						<file name="minify_js.php" license="MIT License">
 							<author name="Douglas Crockford" contact="douglas@crockford.com" note="Original author" />
 							<author name="Ryan Grove" contact="ryan@wonko.com" note="PHP port" />
+							<author name="Steve Clay" contact="steve@mrclay.org" site="http://code.google.com/p/minify/" />
 						</file>
 					</folder>
 				</folder>

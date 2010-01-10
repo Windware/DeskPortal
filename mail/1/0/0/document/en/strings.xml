@@ -37,6 +37,7 @@
 	<string name="replied" value="Replied" />
 	<string name="yes" value="Yes" />
 	<string name="no" value="No" />
+	<string name="wait" value="Downloading list of mails. This may take a while." />
 
 	<!-- Mail window -->
 	<string name="reply" value="Reply" />
@@ -49,4 +50,7 @@
 	<string name="close" value="Close" />
 	<string name="on" value="On" />
 	<string name="off" value="Off" />
+
+	<string name="trash" value="This mail will be moved to the trash folder" />
+	<string name="remove" value="This mail will be deleted" />
 </root>

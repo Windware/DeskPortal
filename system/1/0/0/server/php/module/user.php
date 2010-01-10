@@ -43,7 +43,7 @@
 
 			if($id === null) #For logged in user
 			{
-				if($conf['demo']) #For demo mode
+				if($conf['system_demo']) #For demo mode
 				{
 					$query = $database->prepare("SELECT id, invalid, name FROM {$database->prefix}user WHERE name = :name");
 					$parameters = array(':name' => $_COOKIE['name']);

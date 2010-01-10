@@ -57,11 +57,14 @@
 			var log = $system.log.init(_class + '.type');
 			var nodes = $system.node.id($id + '_conf_account').childNodes;
 
-			for(var i = 0; i < nodes.length; i++) //Hide redundant fields for predefined account types
-				if(nodes[i].nodeType == 1 && nodes[i].nodeName == 'TR' && $system.node.classes(nodes[i], $id + '_conf_detail'))
-					$system.node.hide(nodes[i], !$system.array.find(['pop3', 'imap'], type));
+			for(var i = 0; i < nodes.length; i++) //Hide redundant fields for certain account types
+			{
+				if(nodes[i].nodeType != 1 || nodes[i].nodeName != 'TR') continue;
 
-			//$system.node.hide($id + '_conf_preserve', type != 'pop3'); //Show or hide mail preservation option for POP
+				if($system.node.classes(nodes[i], $id + '_conf_detail')) $system.node.hide(nodes[i], !$system.array.find(['pop3', 'imap'], type));
+				else if($system.node.classes(nodes[i], $id + '_conf_pop3')) $system.node.hide(nodes[i], type != 'pop3');
+			}
+
 			$self.conf.port('receive'); //Update the port number
 		}
 	}

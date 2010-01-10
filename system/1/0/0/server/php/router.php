@@ -41,7 +41,7 @@
 	$output = $system->file_read($request, LOG_WARNING); #Get the raw file content
 
 	#If the output is a JavaScript file, minify it, safely
-	if($conf['minify'] && $info['mime'] == 'text/javascript') $output = $system->app_minify($output);
+	if($info['mime'] == 'text/javascript') $output = $system->minify_js($output);
 
 	if(!$conf['cache'] || !$info['compress']) #If caching is disabled or compression is not required
 	{

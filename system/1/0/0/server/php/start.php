@@ -45,11 +45,11 @@
 
 		#Get the base system part of the script
 		$static = $system->file_read("{$system->global['define']['top']}system/static/client/start.js", LOG_CRIT)."\n";
-		if($conf['demo']) $demo = $system->file_conf('system/static/conf/auth/demo.xml'); #Pick the demo user credential
+		if($conf['system_demo']) $demo = $system->file_conf('system/static/conf/auth/demo.xml'); #Pick the demo user credential
 
 		#Replace variables in the JavaScript
 		$source = array('%demo%', '%demo_user%', '%demo_pass%');
-		$replacer = array($conf['demo'] ? 'true' : 'false', $demo['user'], $demo['pass']);
+		$replacer = array($conf['system_demo'] ? 'true' : 'false', $demo['user'], $demo['pass']);
 
 		foreach(explode(' ', 'brand brand_site brand_info developer developer_site root') as $holder)
 		{
@@ -81,7 +81,7 @@
 
 		#Insert the code in the start script
 		$code = str_replace('%run%', $run, str_replace('%version%', $system->global['define']['system'], $static));
-		if($conf['minify']) $code = $system->app_minify($code); #Strip unnecessary strings
+		$code = $system->minify_js($code); #Minify the script
 
 		$system->cache_set('library.js', $code, true); #Store it as a cache (With a compressed version as well)
 		$code = $system->compress_output($code); #Compress the script if necessary for output

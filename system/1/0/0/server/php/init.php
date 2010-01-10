@@ -33,12 +33,6 @@
 
 		public function app_info($id) { return System_1_0_0_App::info($this, $id); }
 
-		public function app_minify($code)
-		{
-			$minify = new System_1_0_0_Jsmin($code);
-			return $minify->min();
-		}
-
 		public function app_public($name) { return System_1_0_0_App::pub($this, $name); }
 
 		public function app_path($name, $version = null) { return System_1_0_0_App::path($this, $name, $version); }
@@ -68,6 +62,8 @@
 
 
 		public function compress_build($string) { return System_1_0_0_Compress::build($this, $string); }
+
+		public function compress_decode($string) { return System_1_0_0_Compress::decode($string); }
 
 		public function compress_header() { return System_1_0_0_Compress::header($this); }
 
@@ -219,6 +215,13 @@
 		}
 
 		public function log_query($mode = 2) { $this->app_conf('system', 'static', 'log_query', $mode); } #Debugging shortcut
+
+
+		public function minify_css($code) { return System_1_0_0_Minify::css($this, $code); }
+
+		public function minify_html($code) { return System_1_0_0_Minify::html($this, $code); }
+
+		public function minify_js($code) { return System_1_0_0_Minify::js($this, $code); }
 
 
 		public function network_http($request) { return System_1_0_0_Network::http($this, $request); }

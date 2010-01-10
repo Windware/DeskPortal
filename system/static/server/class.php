@@ -40,6 +40,8 @@
 			if(!isset($conf[$id])) $conf[$id] = self::file_conf("system/static/conf/app/$id.xml");
 			if(!is_array($conf[$id])) return false;
 
+			if($id == 'system_static' && $conf[$id]['system_demo']) $conf[$id]['db_lock'] = '1'; #Force turn on database locking under demo mode
+
 			if($key === null) return $conf[$id]; #Send the entire hash
 			elseif($value === null) return $conf[$id][$key]; #Send only the given key value
 

@@ -62,7 +62,7 @@
 					select.appendChild(option);
 
 					__box[option.value] = {}; //Remember special folder names
-					for(var j = 0; j < __special.length; j++) __box[option.value][__special[j]] = $system.dom.attribute(accounts[j], 'folder_' + __special[j]) || __special[j];
+					for(var j = 0; j < __special.length; j++) __box[option.value][__special[j]] = $system.dom.attribute(accounts[j], 'folder_' + __special[j]);
 				}
 
 				select.value = index;

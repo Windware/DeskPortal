@@ -30,17 +30,25 @@
 			print $system->xml_send($update !== false && $data !== false, $data, null, true);
 		break;
 
-		case 'item.mark' : #Mark a mail
-			print $system->xml_send(Mail_1_0_0_Item::mark($_POST['id'], $_POST['mode']));
+		case 'item.mark' : #Mark mails
+			print $system->xml_send(Mail_1_0_0_Item::flag($_POST['id'], 'Flagged', !!$_POST['mode']));
 		break;
 
-		case 'item.remove' : #Remove a mail
-			print $system->xml_send(Mail_1_0_0_Item::remove($_POST['id']));
+		case 'item.move' : #Move mails
+			print $system->xml_send(Mail_1_0_0_Item::move($_POST['id'], $_POST['folder']));
 		break;
 
-		case 'item.show' : #Get message body of a mail #TODO - Send caching header
-			$data = Mail_1_0_0_Item::show($_GET['message']);
-			print $system->xml_send($data !== false, $data, null, true);
+		case 'item.trash' : #Move mails to trash
+			print $system->xml_send(Mail_1_0_0_Item::special($_POST['id'], 'trash', $_POST['account']));
+		break;
+
+		case 'item.show' : #Get message body of a mail and return as is
+			$system->cache_header(); #Cache mail body
+			print Mail_1_0_0_Item::show($_GET['message']);
+		break;
+
+		case 'item.trash' : #Trash mails
+			print $system->xml_send(Mail_1_0_0_Item::trash($_POST['id']));
 		break;
 	}
 ?>

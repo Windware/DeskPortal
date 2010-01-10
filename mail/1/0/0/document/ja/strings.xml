@@ -37,6 +37,7 @@
 	<string name="replied" value="返信済" />
 	<string name="yes" value="はい" />
 	<string name="no" value="いいえ" />
+	<string name="wait" value="メールの一覧をダウンロード中です。しばらくかかる場合があります。" />
 
 	<!-- メールウインドウ -->
 	<string name="reply" value="返信" />
@@ -49,4 +50,7 @@
 	<string name="close" value="閉じる" />
 	<string name="on" value="有" />
 	<string name="off" value="無" />
+
+	<string name="trash" value="このメールはごみ箱に移動されます" />
+	<string name="remove" value="このメールは削除されます" />
 </root>
