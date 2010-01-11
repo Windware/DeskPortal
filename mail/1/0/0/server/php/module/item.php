@@ -193,11 +193,11 @@
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
 
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
 			if($flag != 'Deleted') #Nothing to flag for 'Deleted' on the database
 			{
-				$database = $system->database('user', __METHOD__, $user);
-				if(!$database->success) return false;
-
 				foreach(self::$_flag as $column => $mark) if($mark == $flag) $set = $column; #Find the column name for the flag
 
 				for($i = 0; $i < count($list); $i += self::$_limit) #Split into flagging limit count ID at once to avoid place holder limitation
@@ -222,7 +222,11 @@
 				}
 			}
 
-			if($link['type'] != 'imap') return true; #Only flag on server for IMAP
+			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.account = account.id");
+			$query->run(array(':id' => $list[0], ':user' => $user->id)); #Pick the account type the mail belongs to
+
+			if(!$query->success) return false;
+			if(Mail_1_0_0_Account::type($query->column()) != 'imap') return true; #Only flag on server for IMAP
 
 			list($link, $sequence) = self::find($list, $user); #Find the sequence number for the mail ID
 			if(!$link || !$sequence) return false;
@@ -287,6 +291,12 @@
 			$reverse = $reverse ? ' DESC' : '';
 			$start = ($page - 1) * $amount;
 
+			$query['account'] = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query['account']->run(array(':id' => $folder, ':user' => $user->id));
+
+			if(!$query['account']->success) return false;
+			$account = $query['account']->column();
+
 			$query['count'] = $database->prepare("SELECT count(id) FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter");
 			$query['count']->run($param);
 
@@ -297,7 +307,7 @@
 
 			$xml = $system->xml_node('page', array('total' => floor($total / ($amount + 1)) + 1)); #Get the total count
 
-			$query['all'] = $database->prepare("SELECT id, subject, sent, received, marked, read, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
+			$query['all'] = $database->prepare("SELECT id, subject, sent, received, preview, marked, read, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
 			$query['all']->run($param);
 
 			if(!$query['all']->success) return false;
@@ -325,12 +335,16 @@
 
 			foreach($all as $row)
 			{
-				$addresses = '';
+				$inner = '';
 
 				foreach(array('from', 'to', 'cc') as $section) #Construct the mail address lists
-					if(is_array($mail[$row['id']][$section])) foreach($mail[$row['id']][$section] as $line) $addresses .= $system->xml_node($section, $line);
+					if(is_array($mail[$row['id']][$section])) foreach($mail[$row['id']][$section] as $line) $inner .= $system->xml_node($section, $line);
 
-				$xml .= $system->xml_node('mail', $row, $addresses);
+				$inner .= $system->xml_node('preview', null, $system->xml_data($row['preview']));
+				unset($row['preview']);
+
+				$row['account'] = $account;
+				$xml .= $system->xml_node('mail', $row, $inner);
 			}
 
 			return $xml;
@@ -464,15 +478,16 @@
 
 			if(!$local) #If set to also remove from the mail server
 			{
-				self::flag($list, 'Deleted', true, $user); #Flag as deleted
-
-				$op = imap_expunge($link['connection']); #Delete the mails permanently
-				if(!$op) return Mail_1_0_0_Account::error($link['host']);
+				if(self::flag($list, 'Deleted', true, $user)) #Flag as deleted
+				{
+					$op = imap_expunge($link['connection']); #Delete the mails permanently
+					if(!$op) return Mail_1_0_0_Account::error($link['host']);
+				}
 			}
 
 			$database->begin(); #Make the deletion atomic
 
-			for($i = 0; $i < count($exist); $i += self::$_limit) #Split by maximum possible place holder number
+			for($i = 0; $i < count($list); $i += self::$_limit) #Split by maximum possible place holder number
 			{
 				$param = $target = array();
 
@@ -648,7 +663,7 @@
 				#TODO - What does it return when UID is not supported? It may confuse the script that the server supports UID if a list is returned
 				$unique = imap_search($link['connection'], 'ALL', SE_UID); #Get the UID list from the mail server
 
-				if(!is_array($unique) || !count($unique)) foreach($flag as $column => $mark) #Prepare for later manipulation when no UID is available
+				if(!is_array($unique) || !count($unique)) foreach(self::$_flag as $column => $mark) if($column != 'deleted') #Prepare for later manipulation when no UID is available
 					$query[$column] = $database->prepare("UPDATE {$database->prefix}mail SET $column = :$column WHERE user = :user AND folder = :folder AND signature = :signature");
 
 				if(is_array($unique)) array_unshift($unique, null); #Make sure the sequence number starts from 1
@@ -768,7 +783,7 @@
 						list($data[$type], $position) = self::_dig($structure->parts, $type); #Dig the message and find the body part
 						if(!$data[$type] || $data[$type]->bytes >= self::$_max) continue;
 
-						$body[$type] = imap_fetchbody($link['connection'], $sequence, $position); #Get mail body
+						$body[$type] = imap_fetchbody($link['connection'], $sequence, $position, FT_PEEK); #Get mail body
 						if($body[$type] === false) return Mail_1_0_0_Account::error($link['host']);
 					}
 				}
@@ -776,7 +791,7 @@
 				{
 					$data[$subtype] = $structure; #Specify its structure
 
-					$body[$subtype] = imap_fetchbody($link['connection'], $sequence, 1); #Get the body on a single part message
+					$body[$subtype] = imap_fetchbody($link['connection'], $sequence, 1, FT_PEEK); #Get the body on a single part message
 					if($body[$subtype] === false) return Mail_1_0_0_Account::error($link['host']);
 				}
 
@@ -852,9 +867,12 @@
 
 				#Compress the HTML version - NOTE : In order to open a new window on links under iframe, this is the only way that works across browsers
 				$attributes[':html'] = $body['html'] ? gzencode('<head><base target="_blank" /></head>'.$body['html']) : null;
+				$raw = $attributes[':preview'];
 
 				$attributes[':preview'] = substr($attributes[':preview'], 0, self::$_preview[0]); #Limit the size of the message body TODO - This does not corrupt multi byte characters and the outputting XML?
-				$attributes[':preview'] = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', $attributes[':preview']); #Limit the lines of the message body
+				$attributes[':preview'] = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', preg_replace(array("/\r/", "/\n{2,}/"), array('', "\n"), $attributes[':preview'])); #Limit the lines of the message body
+
+				if($row != $attributes[':preview']) $attributes[':preview'] .= '...'; #Note the truncate
 
 				$database->begin(); #NOTE : Only do transaction per mail, as network failure during fetching mails will not rollback for the mails already saved
 				$query['insert']->run($attributes); #Insert the mail in the database
@@ -914,7 +932,17 @@
 
 					foreach(self::$_flag as $column => $mark)
 					{
-						for($i = 0; $i <= 1; $i++)
+						if($column == 'deleted') #If flagged for deletion
+						{
+							self::remove($set[1][$column], false, $user); #Remove from the database
+
+							$op = imap_expunge($link['connection']); #Delete the mails permanently flagged for deletion on the mail server
+							if(!$op) return Mail_1_0_0_Account::error($link['host']);
+
+							continue;
+						}
+
+						for($i = 0; $i <= 1; $i++) #For mails both flags set and unset 
 						{
 							for($j = 0; $j < count($set[$i][$column]); $j += self::$_limit) #Split by maximum possible place holder number
 							{

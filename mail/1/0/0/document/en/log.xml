@@ -1,23 +1,23 @@
 <root>
 	<!-- USER -->
+	<string name="user/generic/again/solution" value="Please try again later and check your account settings." />
+
 	<!-- folder.js -->
-	<string name="user/folder/list" value="Failed to list folders." />
-	<string name="user/folder/list/solution" value="Please try again later and check your account settings." />
+	<string name="user/folder/list" value="Failed to get list of folders." />
 
 	<!-- gui.js -->
 	<string name="user/gui/search" value="Search term must be bigger than %% letters and smaller than %% letters." />
 	<string name="user/gui/search/solution" value="Please specify correct length for search term." />
 
 	<!-- item.js -->
-	<string name="user/show/error" value="Displaying the email failed" />
-	<string name="user/show/solution" value="Please reload the page and try again" />
+	<string name="user/show/error" value="Displaying the email failed." />
+	<string name="user/show/solution" value="Please reload the page and try again." />
 
-	<string name="user/item/delete" value="Failed to delete a mail" />
+	<string name="user/item/delete" value="Failed to delete a mail." />
+	<string name="user/item/list" value="Error occured during getting list of mails." />
 
-	<string name="user/item/mark" value="Changed marked state of a mail" />
-	<string name="user/item/mark/error" value="Failed to change marked state of a mail" />
-
-	<string name="user/generic/solution" value="Please check network connection and try again at a later time" />
+	<string name="user/item/mark" value="Changed marked state of a mail." />
+	<string name="user/item/mark/error" value="Failed to change marked state of a mail." />
 
 	<!-- DEVELOPER -->
 	<!-- gui.js -->

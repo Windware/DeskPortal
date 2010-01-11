@@ -1,8 +1,9 @@
 <root>
 	<!-- USER -->
+	<string name="user/generic/again/solution" value="時間をおいて再度読み込みを行ってください。またアカウントの設定を確認してください。" />
+
 	<!-- folder.js -->
-	<string name="user/folder/list" value="フォルダー一覧の作成に失敗しました。" />
-	<string name="user/folder/list/solution" value="時間をおいて再度読み込みを行ってください。またアカウントの設定を確認してください。" />
+	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
 
 	<!-- gui.js -->
 	<string name="user/gui/search" value="検索語は%%文字以上、%%文字以下でなければいけません。" />
@@ -13,9 +14,8 @@
 	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />
 
 	<string name="user/item/delete" value="メールの削除に失敗しました" />
+	<string name="user/item/list" value="メールの一覧取得中にエラーが発生しました" />
 
 	<string name="user/item/mark" value="メールのマークを変更しました" />
 	<string name="user/item/mark/error" value="メールのマークの変更に失敗しました" />
-
-	<string name="user/generic/solution" value="ネットワーク接続を確認の上、時間をおいて再度試してください" />
 </root>

@@ -11,6 +11,8 @@
 
 		var _margin = 5; //Amount of pixel from the event coordinate to put the tip at
 
+		var _opacity = 85; //Level of opacity for the tip
+
 		this.clear = function() //Remove an already displayed or pending tip
 		{
 			if(__tip.timer) __tip.timer = clearTimeout(__tip.timer); //If timer is alive, clear it
@@ -72,7 +74,9 @@
 				tip.innerHTML = $system.text.format(clue[section], format); //Format the tip if values are specified and put the content inside the node
 
 				document.body.appendChild(tip); //Apply to the body
-				$system.node.fade(tip.id, false); //Fade it in
+
+				var opaque = function() { $system.node.opacity(tip, _opacity); }
+				$system.node.fade(tip.id, false, opaque); //Fade it in
 
 				delete __tip.timer; //Stop tracking the mouse position
 				delete __tip.position;

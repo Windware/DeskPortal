@@ -64,14 +64,10 @@
 						link.onclick = $system.app.method($self.folder.change, [id]);
 						$system.node.hover(link, $id + '_hilight');
 
-						var compare = name.toLowerCase();
 						var special = false; //If this folder is special or not
 
-						if(depth == 0) //On base folders
-						{
-							//Give localized folder names for special folders
-							for(var j = 0; j < __special.length; j++) if(__box[account][__special[j]].toLowerCase() == compare) special = name = language[compare];
-						}
+						//On base folders, give localized folder names for special folders
+						if(depth == 0) for(var folder in __special) if(__special[folder][account] == id) special = name = language[folder];
 
 						if(!special)
 						{
@@ -93,9 +89,9 @@
 
 						if(depth == 0) //On base folders
 						{
-							for(var j = 0; j < __special.length; j++)
+							for(var folder in __special)
 							{
-								if(__box[account][__special[j]].toLowerCase() != compare) continue; //When it matches with special folder names
+								if(__special[folder][account] != id) continue; //When it matches with special folders
 
 								var spacer = document.createTextNode(' ');
 								link.insertBefore(spacer, link.firstChild);
@@ -108,11 +104,9 @@
 
 								group[j] = [link];
 								index = j;
-
-								if(compare == 'inbox') __inbox[account] = id; //Remember the folder ID for default mail box
 							}
 
-							if(!icon)
+							if(!icon) //If not special
 							{
 								group.push([link]);
 								index = group.length - 1;
@@ -129,7 +123,7 @@
 				var index; //Folder counter
 
 				var group = [];
-				group[__special.length] = null; //Reserve the space for special folders
+				group[3] = null; //Reserve the space in the array for special folders (So the next 'push' will be appended behind)
 
 				var section = $system.browser.engine == 'trident' ? 1 : 0; //IE counts first 'xml' tag as first node
 

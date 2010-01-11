@@ -3,8 +3,6 @@
 	{
 		var _class = $id + '.item';
 
-		var _body = {}; //Message body cache
-
 		var _cache = {}; //Message listing cache
 
 		var _fresh = {}; //Flag to indicate if a folder has been updated
@@ -43,7 +41,7 @@
 			var previous = __selected; //Remember previous selection
 			__selected = {account : __selected.account, folder : folder, page : _page[folder], marked : __filter.marked, unread : __filter.unread, order : __order.item, reverse : __order.reverse, search : $system.node.id($id + '_form').search.value}; //Remember current selection
 
-			var expire = function(length, folder, page, order, reverse) //Expire the cache
+			var expire = function(folder, page, order, reverse) //Expire the cache
 			{
 				if(__selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
 					return _update[folder] = true; //If not currently displayed, flag to note that this folder should be updated on next display
@@ -57,19 +55,56 @@
 				$self.gui.indicator(false); //Remove indicator
 				$system.node.hide($id + '_wait', true, true); //Remove the wait message
 
-				if($system.dom.status(request.xml) != 0) return false; //TODO - Show some error
-				_cache[folder][page][order][reverse][marked][unread][search] = request;
+				if($system.is.object(request) && $system.dom.status(request.xml) != 0) //Show message on error but do list if any data is returned
+				{
+					log.user($global.log.error, 'user/item/list', 'user/generic/again/solution');
+					//TODO - $system.gui.alert();
+				}
+
+				var section = $system.array.list('subject to from date'); //List of data to cache
+				var cache = _cache[folder][page][order][reverse][marked][unread][search]; //Page listing cache
+
+				if($system.is.object(request)) //If a new data is passed, create the cache
+				{
+					cache = _cache[folder][page][order][reverse][marked][unread][search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
+					if(!$system.is.digit(cache.max)) cache.max = 1;
+
+					var list = $system.dom.tags(request.xml, 'mail');
+
+					for(var i = 0; i < list.length; i++)
+					{
+						var id = $system.dom.attribute(list[i], 'id');
+						cache.list.push(id); //List the mails in the page cache
+
+						__mail[id] = {id : id, folder : folder};
+
+						for(var j = 0; j < list[i].attributes.length; j++) //Keep mail attributes
+						{
+							var parameter = list[i].attributes[j];
+							__mail[id][parameter.name] = parameter.value;
+						}
+
+						for(var j = 0; j < section.length; j++) //For all the columns
+						{
+							switch(section[j])
+							{
+								case 'from' : case 'to' : case 'cc' :
+									var address = $system.dom.tags(list[i], section[j]);
+									__mail[id][section[j]] = [];
+
+									for(var k = 0; k < address.length; k++) //Store all the address fields
+										__mail[id][section[j]].push({address : $system.dom.attribute(address[k], 'address'), name : $system.dom.attribute(address[k], 'name')});
+								break;
+							}
+						}
+
+						__mail[id].preview = $system.dom.text($system.dom.tags(list[i], 'preview')[0]);
+					}
+				}
 
 				//If displaying state changed, do not show it
 				if(__selected.folder != folder || __selected.page != page || __selected.marked != marked) return true;
 				if(__selected.unread != unread || __selected.order != order || __selected.reverse != reverse || __selected.search != search) return true;
-
-				var section = $system.array.list('subject to from date'); //List of data to use
-				var detail = $system.array.list('to'); //List of tips to display
-				var column = $system.array.list('subject from date'); //List of columns to display
-
-				var max = $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total');
-				if(!$system.is.digit(max)) max = 1;
 
 				var zone = $system.node.id($id + '_paging');
 				zone.innerHTML = '';
@@ -79,7 +114,7 @@
 				select.id = $id + '_show'; //NOTE : Using 'id' instead of 'name' since IE6 cannot set 'name' on a dynamically created select object
 				select.onchange = $system.app.method($self.item.get, [__selected.folder]);
 
-				for(var i = 1; i <= max; i++)
+				for(var i = 1; i <= cache.max; i++)
 				{
 					var option = document.createElement('option');
 
@@ -95,7 +130,9 @@
 				var row = document.createElement('tr');
 				row.id = $id + '_read_header';
 
-				for(var i = 0; i < column.length; i++) //Set headers
+				var column = $system.array.list('subject from date'); //List of columns to display
+
+				for(var i = 0; i < column.length; i++) //Create table header
 				{
 					var header = document.createElement('th');
 					header.className = $id + '_row_' + column[i];
@@ -120,61 +157,44 @@
 				var body = document.createElement('tbody');
 				body.appendChild(row);
 
-				var mail = $system.dom.tags(request.xml, 'mail');
-
-				for(var i = 0; i < mail.length; i++)
+				for(var i = 0; i < cache.list.length; i++)
 				{
-					var id = $system.dom.attribute(mail[i], 'id');
-					var storage = __mail[id] = {}; //Mail information
+					var mail = __mail[cache.list[i]]; //Mail information cache
+					if(!mail) continue; //If the mail is deleted, ignore
 
 					var row = document.createElement('tr');
+					row.id = $id + '_mail_row_' + mail.id;
+
 					row.style.cursor = 'pointer';
-
 					$system.node.hover(row, $id + '_hover'); //Give mouse hovered style
-					row.onclick = $system.app.method($self.item.show, [id, row]); //Display the message pane on click
 
-					for(var j = 0; j < mail[i].attributes.length; j++) //Keep mail attributes
-					{
-						var parameter = mail[i].attributes[j];
-						storage[parameter.name] = parameter.value;
-					}
+					row.onclick = $system.app.method($self.item.show, [mail.id]); //Display the message pane on click
 
-					if(storage.read != '1') $system.node.classes(row, $id + '_mail_unread', true); //For unread mails
-					if(storage.marked == '1') $system.node.classes(row, $id + '_mail_marked', true); //For marked mails
-					if(storage.replied == '1') $system.node.classes(row, $id + '_mail_replied', true); //For replied mails
+					if(mail.read != '1') $system.node.classes(row, $id + '_mail_unread', true); //For unread mails
+					if(mail.marked == '1') $system.node.classes(row, $id + '_mail_marked', true); //For marked mails
+					if(mail.replied == '1') $system.node.classes(row, $id + '_mail_replied', true); //For replied mails
 
-					var info = ''; //Tip to display when mouse is over
-
-					for(var j = 0; j < section.length; j++) //For all the columns
+					for(var j = 0; j < column.length; j++) //For all the columns
 					{
 						var display, tip;
 
-						switch(section[j]) //Pick the parameters to display on the interface
+						switch(column[j]) //Pick the parameters to display on the interface
 						{
-							case 'subject' : display = tip = storage[section[j]] || '(' + language.empty + ')'; break;
+							case 'subject' : display = tip = mail[column[j]] || '(' + language.empty + ')'; break;
 
-							case 'date' : display = tip = $system.date.create(storage.sent).format($global.user.pref.format.monthdate); break;
+							case 'date' : display = tip = $system.date.create(mail.sent).format($global.user.pref.format.monthdate); break;
 
 							case 'from' : case 'to' : case 'cc' : //Create mail addresses and concatenate
-								var address = $system.dom.tags(mail[i], section[j]);
-								storage[section[j]] = [];
-
-								for(var k = 0; k < address.length; k++)
-								{
-									var real = $system.dom.attribute(address[k], 'address');
-									if(real) storage[section[j]].push([real, $system.dom.attribute(address[k], 'name')]);
-								}
-
 								display = [];
 								tip = [];
 
-								for(var k = 0; k < storage[section[j]].length; k++)
+								for(var k = 0; k < mail[column[j]].length; k++)
 								{
-									var address = storage[section[j]][k];
-									var format = [$system.tip.link($system.info.id, null, 'blank', [$system.text.escape(address[0])]), $system.text.escape(address[1])];
+									var address = mail[column[j]][k];
+									var format = [$system.tip.link($system.info.id, null, 'blank', [$system.text.escape(address.address)]), $system.text.escape(address.name)];
 
-									display.push(address[1] ? $system.text.format('<span style="cursor : help"%%>%%</span>', format) : address[0]);
-									tip.push(address[1] ? address[1] + ' (' + address[0] + ')' : address[0]);
+									display.push(address.name ? $system.text.format('<span style="cursor : help"%%>%%</span>', format) : address.address);
+									tip.push(address.name ? address.name + ' (' + address.address + ')' : address.address);
 								}
 
 								display = display.join(', ');
@@ -184,16 +204,13 @@
 							default : continue; break;
 						}
 
-						if($system.array.find(detail, section[j])) info += $system.text.format('<strong>%%</strong> : %%\n', [language[section[j]], tip]); //Create row tip
-						if(!$system.array.find(column, section[j])) continue; //If not defined to be a column cell, don't crete cell for that item
-
 						var cell = document.createElement('td');
 						cell.innerHTML = display;
 
 						row.appendChild(cell);
 					}
 
-					$system.tip.set(row, $system.info.id, 'blank', [info], true);
+					$system.tip.set(row, $system.info.id, 'blank', [$system.text.escape(mail.preview) || '(' + language.empty + ')'], true); //Give message preview tip
 					body.appendChild(row);
 				}
 
@@ -251,9 +268,7 @@
 			var run = $system.app.method(list, items);
 
 			if($system.is.object(request)) return run(request); //If updating, use the passed object
-
-			var stored = hash[__selected.reverse][__selected.marked][__selected.unread][__selected.search];
-			if(update !== true && $system.is.object(stored)) return run(stored); //If already cached, use it
+			if(update !== true && $system.is.object(hash[__selected.reverse][__selected.marked][__selected.unread][__selected.search])) return run(null); //If already cached, use it
 
 			if(__refresh[folder]) clearTimeout(__refresh[folder]);
 			__refresh[folder] = setTimeout($system.app.method(expire, items), _preserve * 60000); //Update local cache after a period
@@ -278,7 +293,15 @@
 
 			var notify = function(request) //Show result
 			{
-				var message = $system.dom.status(request.xml) == '0' ? [$global.log.notice, 'user/item/mark'] : [$global.log.error, 'user/item/mark/error', 'user/generic/solution'];
+				if($system.dom.status(request.xml) == '0')
+				{
+					var message = [$global.log.notice, 'user/item/mark'];
+
+					__mail[id].marked = mode ? 1 : 0;
+					$system.node.classes($id + '_mail_row_' + id, $id + '_mail_marked', !!mode); //Change the style
+				}
+				else var message = [$global.log.error, 'user/item/mark/error', 'user/generic/again/solution'];
+
 				log.user(message[0], message[1], message[2]);
 			}
 
@@ -295,9 +318,14 @@
 
 			var update = function(request)
 			{
-				if($system.dom.status(request.xml) != 0) return log.user($global.log.error, 'user/item/delete', 'user/generic/solution');
+				if($system.dom.status(request.xml) != 0) return log.user($global.log.error, 'user/item/delete', 'user/generic/again/solution');
 				$system.node.fade($id + '_mail_' + id); //Remove mail window
-				//TODO - Remove it off the list locally without updating from server
+
+				var mail = __mail[id];
+				delete __mail[id];
+
+				$self.item.update();
+				_update[__special.trash[mail.account]] = _update[mail.folder] = true; //Set the current folder and trash for update on next access
 			}
 
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.trash'}, {id : id, account : $system.is.digit(account) ? account : ''}, update);
@@ -305,7 +333,7 @@
 
 		this.update = function() { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder) : false; } //Reload the mails from the server
 
-		this.show = function(id, row, callback) //Display the mail window
+		this.show = function(id) //Display the mail window
 		{
 			var log = $system.log.init(_class + '.show');
 
@@ -321,28 +349,28 @@
 				return $system.node.fade(node);
 			}
 
-			$system.node.classes(row, $id + '_mail_unread', false); //Remove the unread style
-			var parameter = __mail[id];
+			$system.node.classes($id + '_mail_row_' + id, $id + '_mail_unread', false); //Remove the unread style
+			__mail[id].read = '1';
 
 			var section = ['from', 'to', 'cc'];
-			var value = {index : id, sent : $system.date.create(parameter.sent).format($global.user.pref.format.full), subject : parameter.subject || '(' + language.empty + ')'};
+			var value = {index : id, sent : $system.date.create(__mail[id].sent).format($global.user.pref.format.full), subject : __mail[id].subject || '(' + language.empty + ')'};
 
-			if(parameter.marked == '1') value.marked = ' checked="checked"';
+			if(__mail[id].marked == '1') value.marked = ' checked="checked"';
 			else value.unmarked = ' checked="checked"';
 
 			var replace = function(phrase, match) { return variable[match] || ''; }
 
 			for(var i = 0; i < section.length; i++)
 			{
-				var list = parameter[section[i]];
+				var list = __mail[id][section[i]];
 				var address = [];
 
 				if($system.is.array(list))
 				{
 					for(var j = 0; j < list.length; j++)
 					{
-						var variable = {address : $system.text.escape(list[j][0]), show : $system.text.escape(list[j][1] ? list[j][1] : list[j][0]), name : list[j][1] ? $system.text.escape(list[j][1]) : ''};
-						variable.tip = $system.tip.link($system.info.id, null, 'blank', [$system.text.escape(list[j][0])]);
+						var variable = {address : $system.text.escape(list[j].address), show : $system.text.escape(list[j].name ? list[j].name : list[j].address), name : list[j].name ? $system.text.escape(list[j].name) : ''};
+						variable.tip = $system.tip.link($system.info.id, null, 'blank', [$system.text.escape(list[j].address)]);
 
 						address.push($self.info.template.address.replace(/%value:(.+?)%/g, replace));
 					}
@@ -356,6 +384,6 @@
 			var replace = function(phrase, match) { return value[match] || ''; }
 			var template = $self.info.template.mail.replace(/%value:(.+?)%/g, replace);
 
-			$system.window.create(node, $self.info.title, template, 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+			return $system.window.create(node, $self.info.title, template, 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
 		}
 	}

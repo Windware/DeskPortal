@@ -15,7 +15,7 @@
 			__selected.account = account.value;
 			if($system.browser.engine == 'trident') document.body.focus(); //Let focus off the selection to allow mouse wheel use on other parts after selection
 
-			var list = function(value) { if($system.is.digit(__inbox[value])) $self.folder.change(__inbox[value]); } //Get mails for the default mail box
+			var list = function(value) { if($system.is.digit(__special.inbox[value])) $self.folder.change(__special.inbox[value]); } //Get mails for the default mail box
 			$self.folder.get(account.value, !!__active[account], $system.app.method(list, [account.value])); //List the folders
 
 			if(__active[account]) return true;
@@ -60,9 +60,7 @@
 					$system.node.text(option, description);
 
 					select.appendChild(option);
-
-					__box[option.value] = {}; //Remember special folder names
-					for(var j = 0; j < __special.length; j++) __box[option.value][__special[j]] = $system.dom.attribute(accounts[j], 'folder_' + __special[j]);
+					for(var folder in __special) __special[folder][option.value] = $system.dom.attribute(accounts[i], 'folder_' + folder);
 				}
 
 				select.value = index;

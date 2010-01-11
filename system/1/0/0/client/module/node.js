@@ -132,13 +132,13 @@
 		//Returns the node by referring to its ID
 		this.id = function(name) { return $system.is.text(name) ? document.getElementById(name) : null; }
 
-		this.opacity = function(node, level)
+		this.opacity = function(node, level) //Sets a node's opacity
 		{
 			var node = $system.node.target(node);
 			if(!$system.is.element(node) || !$system.is.digit(level)) return;
 
 			if(node.style.opacity !== undefined) node.style.opacity = level / 100;
-			//TODO - For IE8, need to use DX filter (because?)
+			//TODO - For IE8, it is said that it needs to use DX filter (because?)
 			else if(node.style.filter !== undefined) node.style.filter = 'alpha(opacity=' + level + ')';
 		}
 

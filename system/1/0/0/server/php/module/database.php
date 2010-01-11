@@ -165,7 +165,7 @@
 			try #Open up a database connection
 			{
 				#NOTE : Avoid persistent connection under locked mode as trasnaction can possibly drag over to the next connection
-				$this->handler = new PDO($method, $name, $pass, array(PDO::ATTR_PERSISTENT => !$conf['db_lock'] && !!$conf['db_persistent']));
+				$this->handler = new PDO($method, $name, $pass, array(PDO::ATTR_PERSISTENT => !!$conf['db_persistent']));
 				$this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			}
 
