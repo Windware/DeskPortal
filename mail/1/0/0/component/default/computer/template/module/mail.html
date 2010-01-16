@@ -1,6 +1,6 @@
 <h2 class="%id%_mail_subject">
 	<span%lock%>%value:subject%</span>
-	<img id="%id%_mail_%value:id%_loading" src="%image:waiting.gif%" />
+	<img id="%id%_mail_%value:index%_loading" class="%id%_indicator" src="%image:loading/grey.gif%" />
 </h2>
 
 <table style="width : 100%" cellpadding="0" cellspacing="0"><tbody class="%id%_mail_header">
@@ -26,8 +26,8 @@
 	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%, ['from'])" value="%string:reply%" />
 	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%, ['from', 'cc'])" value="%string:reply_all%" />
 	<input type="button" onclick="%top%.%id%.gui.reply(%value:index%)" value="%string:forward%" />
-	<input type="button" onclick="%top%.%id%.item.trash([%value:index%])" value="%string:delete%" />
+	<input type="button" onclick="%top%.%id%.item.trash([%value:index%])" value="%string:trash%" />
 	<input type="button" onclick="%top%.%system%.window.fade('%id%_mail_%value:index%', true, null, true)" value="%string:close%" style="background-color : #a98" />
 </form>
 
-<iframe onload="%top%.%system%.node.fade('%id%_mail_%value:id%_loading', true)" style="width : 100%; height : 330px; background-color : #fff; color : #333; border : 1px #333 solid" src="%value:body%"></iframe>
+<iframe onload="%top%.%system%.node.fade('%id%_mail_%value:index%_loading', true)" style="width : 100%; height : 330px; background-color : #fff; color : #333; border : 1px #333 solid" src="%value:body%"></iframe>

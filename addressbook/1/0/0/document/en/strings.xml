@@ -19,7 +19,9 @@
 	<string name="male" value="Male" />
 	<string name="age" value="Age" />
 	<string name="birthday" value="Birthday" />
-	<string name="mail" value="Mail" />
+	<string name="mail_main" value="Mail" />
+	<string name="mail_mobile" value="Mail (Mobile)" />
+	<string name="mail_alt" value="Mail (Alt)" />
 	<string name="web" value="Web" />
 	<string name="mobile" value="Mobile" />
 	<string name="phone" value="Phone" />

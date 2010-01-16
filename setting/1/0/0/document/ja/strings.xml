@@ -32,7 +32,4 @@
 
 	<string name="license/db" value="'digitalblasphemy.com'のマークのある壁紙はDigital Blasphemyの作品であり、使用許可済みです。" />
 	<string name="license/p8" value="'Photos8.com'のマークのある壁紙はPhotos8.comの作品であり、使用許可済みです。" />
-
-	<string name="changed" value="設定変更完了" />
-	<string name="effect" value="変更はページの再読み込み後に反映されます" />
 </root>

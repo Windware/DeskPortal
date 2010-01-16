@@ -6,6 +6,7 @@
 	<string name="_1_intro" value="Introduction" />
 	<string name="intro" value="%brand% can be used to access your own data from any computer that has internet access at any time at any place without installing any software." />
 	<string name="guide" value="This guide will show you how to use %brand%." />
+	<string name="demo" value="Note that no data can be saved under this demo." />
 
 	<string name="_2_launch" value="Launching" />
 	<string name="start" value="The launcher bar on the left part of the screen groups applications by category. Click a category to reveal individual applications." />

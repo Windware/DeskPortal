@@ -6,6 +6,7 @@
 	<string name="_1_intro" value="初めに" />
 	<string name="intro" value="%brand%はインターネットにつながっているコンピューターからであれば、ソフトをインストールする必要なく、自分の情報にいつでも、どこからでもアクセスすることができます。" />
 	<string name="guide" value="このガイドでは%brand%についての使いかたを紹介します。" />
+	<string name="demo" value="また、デモ上ではデータの保存はできません。" />
 
 	<string name="_2_launch" value="起動" />
 	<string name="start" value="アプリケーションを起動するには画面左の'ランチャー'を使います。アプリケーションはカテゴリー別に並べられており、カテゴリーをクリックすると、使用したいアプリケーションを表示させる事ができます。" />

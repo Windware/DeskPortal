@@ -20,7 +20,7 @@
 			var log = $system.log.init(_class + '.alert');
 			if(!$system.is.id(id) || !$system.is.text(title) || !$system.is.text(message)) return log.param();
 
-			if(file === undefined) file = 'strings.xml';
+			if(file === undefined) file = 'log.xml';
 			var language = $system.language.strings(id, file); //Get the language strings
 
 			if(!language || !language[title] || !language[message])
@@ -51,12 +51,15 @@
 
 			switch(code)
 			{
-				case -1 : var message = {title : 'session/error', content : 'session/explain'}; break; //Session error
+				case -1 : //Session error
+					var title = 'user/session/error/title';
+					var message = 'user/session/error/message';
+				break;
 
-				default : return code; break;
+				default : return code; break; //Let individual handle the situations
 			}
 
-			$system.gui.alert($id, message.title, message.content); //Show alert
+			$system.gui.alert($id, title, message); //Show alert
 			return code;
 		}
 

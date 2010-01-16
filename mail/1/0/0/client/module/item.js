@@ -15,6 +15,28 @@
 
 		var _update = {}; //Flag to indicate that a folder should be updated from the server
 
+		this.clear = function(id, folder) //Remove a mail from folder listing cache
+		{
+			var log = $system.log.init(_class + '.clear');
+
+			if(!$system.is.digit(id) || !$system.is.digit(folder)) return log.param();
+			if(!$system.is.object(_cache[folder])) return false;
+
+			var remove = function(cache) //Go through the cache listing
+			{
+				for(var section in cache)
+				{
+					if($system.is.array(cache[section])) //On the mail list, remove the mail entry
+					{
+						for(var i = 0; i < cache[section].length; i++) if(id == cache[section][i]) return delete cache[section][i];
+					}
+					else if($system.is.object(cache[section])) remove(cache[section]);
+				}
+			}
+
+			return remove(_cache[folder]); //NOTE : Likely to return 'undefined'
+		}
+
 		this.create = function(account, to, cc, bcc, subject, message) //Create a new mail
 		{
 			alert(to);
@@ -55,7 +77,7 @@
 				$self.gui.indicator(false); //Remove indicator
 				$system.node.hide($id + '_wait', true, true); //Remove the wait message
 
-				if($system.is.object(request) && $system.dom.status(request.xml) != 0) //Show message on error but do list if any data is returned
+				if($system.dom.status(request.xml) != '0') //Show message on error but do list if any data is returned
 				{
 					log.user($global.log.error, 'user/item/list', 'user/generic/again/solution');
 					//TODO - $system.gui.alert();
@@ -239,15 +261,15 @@
 				if(!_fresh[folder]) //If never updated
 				{
 					_fresh[folder] = true;
-					return $self.item.get(folder, true); //Update it
+					return __account[__selected.account].type == 'pop3' && __special.inbox[__selected.account] != folder ? true : $self.item.get(folder, true); //Update it
 				}
 
-				if(_update[folder]) //If cache should be updated
+				if(_update[folder]) //If cache should be updated - TODO : May be better to only delete cache for specific setting
 				{
 					delete _cache[folder]; //Remove the entire cache for the folder
 					delete _update[folder];
 
-					return $self.item.get(folder, true); //Update it
+					return $self.item.get(folder, __account[__selected.account].type != 'pop3'); //Update it
 				}
 
 				return true;
@@ -268,7 +290,7 @@
 			var run = $system.app.method(list, items);
 
 			if($system.is.object(request)) return run(request); //If updating, use the passed object
-			if(update !== true && $system.is.object(hash[__selected.reverse][__selected.marked][__selected.unread][__selected.search])) return run(null); //If already cached, use it
+			if(update !== true && $system.is.object(hash[__selected.reverse][__selected.marked][__selected.unread][__selected.search])) return run({}); //If already cached, use it
 
 			if(__refresh[folder]) clearTimeout(__refresh[folder]);
 			__refresh[folder] = setTimeout($system.app.method(expire, items), _preserve * 60000); //Update local cache after a period
@@ -314,24 +336,29 @@
 			if(!$system.is.array(id)) return log.param();
 
 			var language = $system.language.strings($id);
-			if(!confirm(language.trash)) return false;
+			if(!confirm(language.remove)) return false;
 
 			var update = function(request)
 			{
-				if($system.dom.status(request.xml) != 0) return log.user($global.log.error, 'user/item/delete', 'user/generic/again/solution');
-				$system.node.fade($id + '_mail_' + id); //Remove mail window
-
-				var mail = __mail[id];
-				delete __mail[id];
-
-				$self.item.update();
-				_update[__special.trash[mail.account]] = _update[mail.folder] = true; //Set the current folder and trash for update on next access
+				if($system.dom.status(request.xml) != '0')
+				{
+					$self.item.update(true); //Recover the mail that failed to be trashed
+					return log.user($global.log.error, 'user/item/delete', 'user/generic/again/solution');
+				}
 			}
 
+			$system.node.fade($id + '_mail_' + id, true, null, true); //Remove mail window
+
+			var mail = __mail[id];
+			$self.item.clear(id, mail.folder); //Remove the mail from the folder listing
+
+			$self.item.update();
+
+			if(mail) _update[__special.trash[mail.account]] = true; //Set the trash for update on next access
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.trash'}, {id : id, account : $system.is.digit(account) ? account : ''}, update);
 		}
 
-		this.update = function() { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder) : false; } //Reload the mails from the server
+		this.update = function(update) { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder, update) : false; } //Reload the mails from the server
 
 		this.show = function(id) //Display the mail window
 		{

@@ -8,7 +8,9 @@
 		{
 			this.format = function()
 			{
-				if(parent.window.%top%) parent.window.%top%.%id%.gui.format(document.body); //Make links clickable
+				var base = parent.window.%top%;
+				if(base && base.%id%) base.%id%.gui.format(document.body); //Make links clickable
+
 				document.body.style.display = ''; //Make it visible after the format to avoid possible flickering
 			}
 		}

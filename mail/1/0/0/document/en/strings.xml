@@ -51,6 +51,6 @@
 	<string name="on" value="On" />
 	<string name="off" value="Off" />
 
-	<string name="trash" value="This mail will be moved to the trash folder" />
-	<string name="remove" value="This mail will be deleted" />
+	<string name="remove" value="This mail will be moved to the trash folder" />
+	<string name="delete" value="This mail will be deleted" />
 </root>

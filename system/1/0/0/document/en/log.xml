@@ -5,16 +5,33 @@
 	<string name="user/app/unload" value="Unloaded application '%%'." />
 	<string name="user/app/unload/fail" value="Failed unloading application '%%'." />
 
+	<string name="user/app/fail/title" value="Application failure" />
+	<string name="user/app/fail/message" value="Application '%%' failed to load" />
+
+	<!-- conf.js -->
+	<string name="user/conf/changed/title" value="Settings changed" />
+	<string name="user/conf/changed/message" value="Changes take effect after reload" />
+	<string name="user/conf/error/title" value="Server Error" />
+	<string name="user/conf/error/message" value="Please try again at a later time" />
+
+	<!-- gui.js -->
+	<string name="user/session/error/title" value="User session is invalid" />
+	<string name="user/session/error/message" value="Please log in again" />
+
 	<!-- image.js -->
 	<string name="user/wallpaper" value="Set a new wallpaper." />
 
 	<!-- network.js -->
 	<string name="user/network/error" value="Network error has occured." />
-	<string name="user/network/error/solution" value="Please try again in a few moments." />
+	<string name="user/network/error/solution" value="Please try again in a few moments or check your network connectivity." />
 
 	<!-- tool.js -->
 	<string name="user/tool/lock" value="Locked application '%%' window." />
 	<string name="user/tool/unlock" value="Unlocked application '%%' window." />
+
+	<!-- user.js -->
+	<string name="user/user/expire/title" value="Session limit" />
+	<string name="user/user/expire/message" value="This user will be logged out%%" />
 
 	<!-- window.js -->
 	<string name="user/window/create" value="Application '%%' failed to run." />

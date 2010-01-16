@@ -142,20 +142,20 @@
 			}
 
 			var info = []; //List of info.js address to load
-			var logger; //Notifier app ID to load first
+			var logger; //Notification app ID to load first
 
 			var load = []; //List of apps to load reordered
 
 			for(var i = 0; i < list.length; i++) //For all of the initially loaded applications
 			{
-				if(list[i].match(/^notifier_/)) logger = list[i];
+				if(list[i].match(/^notification_/)) logger = list[i];
 				else load.push(list[i]);
 
 				info.push($system.app.path(list[i]) + 'client/info.js');
 			}
 
 			$system.network.fetch(info); //Preload all the info.js at once instead of separately
-			if(logger) load.unshift(logger); //Load 'notifier' application first, so messages are processed when reported while loading others
+			if(logger) load.unshift(logger); //Load 'notification' application first, so messages are processed when reported while loading others
 
 			var fade = $global.user.pref.fade; //Get the fade preference value
 			$global.user.pref.fade = false; //Temporarily disable to load multiple apps quicker
@@ -202,7 +202,7 @@
 			if($global.user.pref.logout <= 0) return true;
 			if(++_inactivity < $global.user.pref.logout) return true; //Increase the inactive time
 
-			$system.gui.alert($id, 'user/expire', 'user/logout', null, null, [$system.info.template.cancel]);
+			$system.gui.alert($id, 'user/user/expire/title', 'user/user/expire/message', null, null, [$system.info.template.cancel]);
 			return _timer = setTimeout($system.app.method($system.user.logout, [true]), _wait * 1000); //Force logout the user
 		}
 	}

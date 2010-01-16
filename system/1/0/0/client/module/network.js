@@ -75,7 +75,7 @@
 			{
 				if(!request.valid()) //If request fails, quit
 				{
-					$system.gui.alert($id, 'network/error', 'network/explain');
+					$system.gui.alert($id, 'user/network/error', 'user/network/error/solution');
 
 					var log = $system.log.init(_class + '.reply');
 					return log.dev($global.log.error, 'dev/network/package', 'dev/network/package/solution');
@@ -246,7 +246,7 @@
 				else //If the request failed
 				{
 					if(typeof error == 'function') error(container);
-					$system.gui.alert($id, 'network/error', 'network/explain');
+					$system.gui.alert($id, 'user/network/error', 'user/network/error/solution');
 
 					log.user($global.log.error, 'user/network/error', 'user/network/error/solution');
 					log.dev($global.log.error, 'dev/network/error', 'dev/network/error/solution', [request.status]);

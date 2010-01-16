@@ -5,16 +5,33 @@
 	<string name="user/app/unload" value="アプリケーション'%%'を終了しました。" />
 	<string name="user/app/unload/fail" value="アプリケーション'%%'の終了に失敗しました。" />
 
+	<string name="user/app/fail/title" value="アプリケーションエラー" />
+	<string name="user/app/fail/message" value="アプリーケーション'%%'の起動に失敗しました" />
+
+	<!-- conf.js -->
+	<string name="user/conf/changed/title" value="設定変更完了" />
+	<string name="user/conf/changed/message" value="変更はページの再読み込み後に反映されます" />
+	<string name="user/conf/error/title" value="サーバーエラー" />
+	<string name="user/conf/error/message" value="時間をおいて再度試してください" />
+
+	<!-- gui.js -->
+	<string name="user/session/error/title" value="ユーザーのセッションが切れています" />
+	<string name="user/session/error/message" value="ログインし直してください" />
+
 	<!-- image.js -->
 	<string name="user/wallpaper" value="新しい壁紙を設定しました。" />
 
 	<!-- network.js -->
 	<string name="user/network/error" value="ネットワークエラーが発生しました。" />
-	<string name="user/network/error/solution" value="時間をおいて再度試行してください。" />
+	<string name="user/network/error/solution" value="時間をおいて再度試行してください。または、ネットワークの接続を確認してください。" />
 
 	<!-- tool.js -->
 	<string name="user/tool/lock" value="アプリケーション%%'のウインドウを固定しました。" />
 	<string name="user/tool/unlock" value="アプリケーション%%'のウインドウの固定を解除しました。" />
+
+	<!-- user.js -->
+	<string name="user/user/expire/title" value="セッションリミット" />
+	<string name="user/user/expire/message" value="このユーザーはログアウトされます%%" />
 
 	<!-- window.js -->
 	<string name="user/window/create" value="アプリケーション'%%'の起動に失敗しました。" />

@@ -5,9 +5,4 @@
 	<string name="session" value="Keep logged in" />
 	<string name="register" value="Register for a new account" />
 	<string name="recover" value="Recover lost password" />
-
-	<string name="login" value="Login" />
-	<string name="fail/login" value="Failed to login" />
-	<string name="fail/network" value="Network error occured. Please try again later." />
-	<string name="fail/error" value="Login error occured. Please try again later." />
 </root>

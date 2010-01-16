@@ -57,10 +57,9 @@
 
 			$value = array(':user' => $user->id);
 
-			$field = explode(' ', 'name sex age birth_year birth_month birth_day mail_user mail_domain phone mobile web address note groups updated');
+			$field = explode(' ', 'name sex age birth_year birth_month birth_day mail_main mail_mobile mail_alt phone mobile web address note groups updated');
 			foreach($field as $section) $value[":$section"] = $param[$section];
 
-			list($value[':mail_user'], $value[':mail_domain']) = explode('@', $param['mail']); #Split the mail address
 			if($value[':groups'] == '') $value[':groups'] = 0; #Give '0' for uncategorized group
 
 			$value[':updated'] = $system->date_datetime(); #Set the update time

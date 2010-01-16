@@ -49,8 +49,9 @@
 		<column name="sequence" param="INT" />
 		<column name="signature" param="CHAR(32)" />
 
-		<column name="subject" param="TEXT NOT NULL" />
-		<column name="mail" param="TEXT" /> <!-- Entire mail content -->
+		<column name="mail" param="BLOB" /> <!-- Entire mail content compressed -->
+		<column name="header" param="BLOB" /> <!-- Entire header compressed -->
+		<column name="subject" param="TEXT" />
 
 		<column name="size" param="INT" />
 		<column name="sent" param="DATETIME" />
@@ -79,9 +80,12 @@
 		<column name="user" param="INT NOT NULL" />
 
 		<column name="account" param="INT NOT NULL" />
+
 		<column name="name" param="VARCHAR(255) NOT NULL" />
 		<column name="parent" param="INT" /> <!-- Can create child folders or not -->
+
 		<column name="separator" param="VARCHAR(4)" /> <!-- Folder name separater -->
+		<column name="subscribed" param="INT" />
 		<column name="updated" param="DATETIME" />
 
 		<column name="UNIQUE" param="(user, account, name)" />

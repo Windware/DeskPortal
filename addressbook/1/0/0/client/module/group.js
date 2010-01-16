@@ -43,8 +43,7 @@
 			{
 				log.user($global.log.notice, 'user/group/remove', '', [_group.indexed[group.value] ? _group.indexed[group.value].name : group.value]);
 
-				//Clear out the input fields
-				$system.node.id($id + '_pick_name').value = '';
+				$system.node.id($id + '_pick_name').value = ''; //Clear out the input fields
 				$system.node.hide($id + '_pick_delete', true); //Remove the delete button
 
 				$self.group.update(request); //Update the group list

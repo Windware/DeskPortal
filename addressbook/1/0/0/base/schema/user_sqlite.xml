@@ -9,8 +9,9 @@
 		<column name="birth_year" param="INT" />
 		<column name="birth_month" param="INT" />
 		<column name="birth_day" param="INT" />
-		<column name="mail_user" param="VARCHAR(255)" />
-		<column name="mail_domain" param="VARCHAR(255)" />
+		<column name="mail_main" param="VARCHAR(255)" />
+		<column name="mail_mobile" param="VARCHAR(255)" />
+		<column name="mail_alt" param="VARCHAR(255)" />
 		<column name="phone" param="VARCHAR(255)" />
 		<column name="mobile" param="VARCHAR(255)" />
 		<column name="web" param="TEXT" />

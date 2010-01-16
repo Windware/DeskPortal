@@ -18,9 +18,7 @@
 			var language = $system.language.strings($id);
 
 			var focus = function() { if(!$system.node.hidden(node)) $system.node.id($id + '_form_name_' + id).focus(); } //Focus on the name field
-
 			if($system.node.id(node)) return $system.window.fade(node, undefined, focus);
-			var icon = {}; //Mail composing and site address icon
 
 			if(id == 0) var replace = ''; //On a new entry, keep the fields blank
 			else
@@ -31,18 +29,7 @@
 				{
 					switch(match)
 					{
-						case 'address' : case 'note' :
-							return _address[id][match].replace(/\\n/g, "\n"); //Honor new lines
-						break;
-
-						case 'mail' :
-							var mail = _address[id]['mail_user'];
-							if(_address[id]['mail_domain']) mail += '@' + _address[id]['mail_domain'];
-
-							return mail == '@' ? '' : (icon.mail = mail);
-						break;
-
-						case 'web' : return icon.web = _address[id][match]; break;
+						case 'address' : case 'note' : return _address[id][match].replace(/\\n/g, "\n"); break; //Convert line break marks
 
 						default : return _address[id][match]; break;
 					}
@@ -61,7 +48,7 @@
 				}
 				else
 				{
-					var pick = _address[id]['groups']; 
+					var pick = _address[id].groups
 
 					switch(_address[id].sex)
 					{
@@ -74,24 +61,7 @@
 				$self.gui.group($id + '_edit_group_' + id, undefined, pick); //Group selection
 			}
 
-			template = template.replace(/%value:(.+?)%/g, replace); //Load the variables
-
-			if(!icon.mail) var mail = '';
-			else //Create mail composing link
-			{
-				var link = '<img style="margin-left : 5px; cursor : pointer" src="%%" onclick="%%.%%.gui.mail(\'%%\')" class="%%_icon"%% />';
-				var mail = $system.text.format(link, [$system.image.source($id, 'mail.png'), $global.root, $id, icon.mail, $system.info.id, $system.tip.link($id, null, 'mail')]);
-			}
-
-			if(!icon.web) var web = '';
-			else //Create mail composing link
-			{
-				var link = '<img style="margin-left : 5px; cursor : pointer" src="%%" onclick="%%.%%.gui.web(\'%%\')" class="%%_icon"%% />';
-				var web = $system.text.format(link, [$system.image.source($id, 'web.png'), $global.root, $id, icon.web, $system.info.id, $system.tip.link($id, null, 'web')]);
-			}
-
-			template = template.replace('%mail%', mail).replace('%web%', web); //If the mail address is available, give composing icon link
-			return $system.window.create(node, $self.info.title + ' : ' + language['info'], template, $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, undefined, undefined, 350, undefined, true, false, true, focus, $system.app.method(list, [id]), true);
+			return $system.window.create(node, $self.info.title + ' : ' + language.info, template.replace(/%value:(.+?)%/g, replace), $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, undefined, undefined, 350, undefined, true, false, true, focus, $system.app.method(list, [id]), true);
 		}
 
 		this.get = function(group, refresh, callback) //Show the items
@@ -140,8 +110,7 @@
 				var language = $system.language.strings($id);
 				if(__search.length) var phrase = RegExp(__search, 'i'); //Set search phrase
 
-				//Attributes to skip as an individual line
-				var skip = $system.array.list('id groups mail_domain birth_month birth_day updated note');
+				var skip = $system.array.list('id groups birth_month birth_day updated note'); //Attributes to skip as an individual line
 
 				for(var i = 0; i < list.length; i++)
 				{
@@ -161,15 +130,7 @@
 						if(phrase && !hit && param.match(phrase)) hit = true; //Search for matches if a phrase is set
 						if($system.array.find(skip, name)) continue;
 
-						if(name == 'mail_user')
-						{
-							var domain = $system.dom.attribute(list[i], 'mail_domain');
-							if(domain) param += '@' + domain; //Append domain if valid
-
-							name = 'mail'; //Set to a translatable name
-							_address[id][name] = param; //Apply the value to the cache as well
-						}
-						else if(name == 'birth_year')
+						if(name == 'birth_year')
 						{
 							var birth = {month : $system.dom.attribute(list[i], 'birth_month') || '?', day : $system.dom.attribute(list[i], 'birth_day') || '?'};
 							birth.date = [param, birth.month, birth.day].join('/');
@@ -211,9 +172,27 @@
 								var desc = [language.female, language.male];
 								value = desc[value] || '';
 							break;
+
+							case 'mail_main' : case 'mail_mobile' : case 'mail_alt' :
+								if(value.match('@'))
+								{
+									value = $system.text.escape(value);
+									value = $system.text.template('<a onclick="%top%.%id%.gui.mail(\'' + value + '\')%cancel%"%tip:mail%>' + value + '</a>', $id);
+								}
+							break;
+
+							case 'web' :
+								if(value.length)
+								{
+									value = $system.text.escape(value);
+									value = $system.text.template('<a onclick="%top%.%id%.gui.web(\'' + value + '\')%cancel%"%tip:web%>' + value + '</a>', $id);
+								}
+							break;
+
+							default : value = $system.text.escape(value); break;
 						}
 
-						cell.innerHTML = $system.text.escape(value).replace(/\\n/g, '<br />\n');
+						cell.innerHTML = value.replace(/\\n/g, '<br />\n');
 						row.appendChild(cell); //Set the content cell on the row
 					}
 
@@ -275,8 +254,13 @@
 			var value = form.birth_day.value;
 			if(value && (!$system.is.digit(value) || value < 1 || value > 31)) return log.user($global.log.error, 'user/birth', 'user/birth/solution');
 
-			var value = form.mail.value; //Check on mail value
-			if(value && !value.match(/.@./)) return log.user($global.log.error, 'user/mail', 'user/mail/solution');
+			var section = ['mail_main', 'mail_mobile', 'mail_alt'];
+
+			for(var i = 0; i < section.length; i++)
+			{
+				var value = form[section[i]].value; //Check on mail value
+				if(value && !value.match(/.@./)) return log.user($global.log.error, 'user/mail', 'user/mail/solution');
+			}
 
 			var params = {id : id}; //The parameters to send
 

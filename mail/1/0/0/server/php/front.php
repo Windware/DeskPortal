@@ -4,23 +4,69 @@
 
 	switch($_GET['task'])
 	{
-		case 'conf.account' : #Save account information
-			$option = $_POST;
-			unset($option['account']);
-
-			print $system->xml_send(Mail_1_0_0_Account::save($_POST['account'], $option));
-		break;
-
 		case 'account.get' : #Get list of accounts
 			$data = Mail_1_0_0_Account::get();
 			print $system->xml_send($data !== false, $data);
 		break;
 
-		case 'folder.get' : #Get list of folders for an account
-			$update = $_GET['update'] ? Mail_1_0_0_Folder::update($_GET['account']) : true;
-			$data = Mail_1_0_0_Folder::get($_GET['account']);
+		case 'conf.create' : #Create a folder
+			$result = Mail_1_0_0_Folder::create($_POST['account'], $_POST['parent'], $_POST['name']);
+			$data = Mail_1_0_0_Folder::get($_POST['account'], false);
 
-			print $system->xml_send($update !== false && $data !== false, $data);
+			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.folder' : case 'folder.get' : #Get list of folders for an account
+			$result = $_GET['update'] ? Mail_1_0_0_Folder::update($_GET['account']) : true;
+			$data = Mail_1_0_0_Folder::get($_GET['account'], $_GET['subscribed']);
+
+			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.move' : #Move a folder
+			$result = Mail_1_0_0_Folder::move($_POST['folder'], $_POST['target']);
+			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false);
+
+			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.rename' : #Rename a folder
+			$result = Mail_1_0_0_Folder::rename($_POST['folder'], $_POST['name']);
+			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false);
+
+			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.remove' : #Delete folders
+			$account = Mail_1_0_0_Folder::account($_POST['folder'][0]);
+			$result = Mail_1_0_0_Folder::remove($_POST['folder'], true);
+
+			$data = Mail_1_0_0_Folder::get($account, false);
+			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.special' : #Set special folders
+			$folder = $_POST;
+			unset($folder['account']);
+
+			$result = Mail_1_0_0_Folder::special($_POST['account'], $folder);
+			$data = Mail_1_0_0_Account::get($_POST['account']);
+
+			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.subscribe' : #(Un)subscribe a folder
+			$result = Mail_1_0_0_Folder::subscribe($_POST['folder'], $_POST['mode']);
+			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false);
+
+			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.set' : #Save account information
+			$option = $_POST;
+			unset($option['account']);
+
+			print $system->xml_send(Mail_1_0_0_Account::set($_POST['account'], $option));
 		break;
 
 		case 'item.get' : #Get list of mails stored in the database

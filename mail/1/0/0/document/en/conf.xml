@@ -10,6 +10,7 @@
 	<string name="name" value="Name" />
 	<string name="address" value="Address" />
 	<string name="signature" value="Signature" />
+	<string name="max" value="Up to 500 characters" />
 
 	<string name="receive" value="Receive Settings" />
 	<string name="send" value="Send Settings" />
@@ -28,9 +29,25 @@
 	<string name="save" value="Save" />
 
 	<string name="folder" value="Folder" />
+	<string name="inbox" value="Inbox" />
 	<string name="draft" value="Draft" />
 	<string name="sent" value="Sent" />
 	<string name="trash" value="Trash" />
+
+	<string name="adjustment" value="Adjustment" />
+	<string name="special" value="Special Folders" />
+
+	<string name="delete" value="Delete" />
+	<string name="rename" value="Rename" />
+	<string name="move" value="Move" />
+	<string name="display" value="Display" />
+	<string name="on" value="On" />
+	<string name="off" value="Off" />
+	<string name="set" value="Set" />
+	<string name="create" value="Create" />
+	<string name="top" value="Top" />
+	<string name="parent" value="Parent Folder" />
+	<string name="remove" value="This will delete the folder %% and all of its mails. This cannot be undone." />
 
 	<string name="error" value="Error" />
 	<string name="fill" value="Please fill in the required fields marked with '*'." />

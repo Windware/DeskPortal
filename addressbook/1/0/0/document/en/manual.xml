@@ -5,7 +5,7 @@
 	<string name="1/add" value="To add a new contact, click on the 'New entry' button and fill in the information for that person." />
 	<string name="1/optional" value="All the fields except the name is optional." />
 	<string name="1/save" value="Click on the save button to save it." />
-	<string name="1/display" value="You will need to pick a group on the main window to display the saved entries. Each entries can be clicked to view and edit the data. You may also take the mouse over the entry to display the information summarized." />
+	<string name="1/display" value="You will need to pick a group on the main window to display the saved entries. Each entries can be clicked to view and edit the data. You may also take the mouse over the entry to display the information summarized and mail address and web address column data can be clicked to compose a new mail and show the web page respectively." />
 
 	<string name="_2_group" value="Grouping" />
 

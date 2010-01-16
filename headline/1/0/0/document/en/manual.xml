@@ -22,7 +22,7 @@
 	<string name="4/entry" value="By putting the mouse over the headline title, the summary of the article will be displayed. And by clicking on the star icon on the left side of the headline, the article will be marked. By marking an article, it will make it easier to find it later on, also by filtering to display only the marked articles." />
 	<string name="4/view" value="By clicking on the title of the article, it will open a new window that shows the original source of the article. Previously read articles will look different from others." />
 	<string name="4/category" value="To categorize an article, you need to add new categories, which will be explained in the next section." />
-	<string name="4/notice" value="If the 'Notifier' application is open, when new articles are published on the registered feeds, it will be displayed there." />
+	<string name="4/notice" value="If the 'Notification' application is open, when new articles are published on the registered feeds, it will be displayed there." />
 
 	<string name="_5_category" value="Category" />
 	<string name="5/register" value="In order to register a category, go to the 'Setting' tab of this window to the 'Category' section, input a new category name and click on the 'Set' button. These categories can be chosen on each article on the main window." />

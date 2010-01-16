@@ -28,12 +28,23 @@
 			var log = $system.log.init(_class + '.get');
 			if(!$system.is.digit(account)) return log.param();
 
+			var language = $system.language.strings($id);
+
+			if(account == '0') //On empty selection, clean up the area
+			{
+				$system.node.id($id + '_folder').innerHTML = '';
+
+				var table = $system.node.id($id + '_read_zone');
+				while(table.firstChild) table.removeChild(table.firstChild);
+
+				$system.app.callback(_class + '.get', callback);
+				return true;
+			}
+
 			var list = function(account, callback, request)
 			{
-				_cache[account] = request;
+				_cache[account] = request.xml || request;
 				if(__selected.account != account) return true; //If displaying account got changed, do not display the result
-
-				var language = $system.language.strings($id);
 
 				var area = $system.node.id($id + '_folder');
 				area.innerHTML = '';
@@ -66,10 +77,20 @@
 
 						var special = false; //If this folder is special or not
 
-						//On base folders, give localized folder names for special folders
-						if(depth == 0) for(var folder in __special) if(__special[folder][account] == id) special = name = language[folder];
+						if(depth == 0) //On base folders, give localized folder names for special folders
+						{
+							for(var j = 0; j < title.length; j++)
+							{
+								if(__special[title[j]][account] != id) continue;
 
-						if(!special)
+								name = language[title[j]];
+								special = {name : title[j], id : j}; //Remember the name and the position of the special folder
+
+								break;
+							}
+						}
+
+						if(special === false) //Create folder icon for regular folders
 						{
 							var icon = document.createElement('img');
 							$system.image.set(icon, $self.info.devroot + 'graphic/folder.png');
@@ -81,38 +102,36 @@
 						}
 
 						var display = document.createElement('strong');
+						display.onmousedown = $system.app.method($system.event.cancel, [display]);
 
 						display.appendChild(document.createTextNode(' ' + name));
-						link.appendChild(display);
+						link.appendChild(display); //Put the folder name
 
 						var icon = null;
 
 						if(depth == 0) //On base folders
 						{
-							for(var folder in __special)
+							if(special !== false) //When it's a special folder
 							{
-								if(__special[folder][account] != id) continue; //When it matches with special folders
-
 								var spacer = document.createTextNode(' ');
 								link.insertBefore(spacer, link.firstChild);
 
 								icon = document.createElement('img'); //Create an icon
 								icon.className = $id + '_indicator';
 
-								$system.image.set(icon, $self.info.devroot + 'graphic/' + __special[j] + '.png');
+								$system.image.set(icon, $self.info.devroot + 'graphic/' + special.name + '.png');
 								link.insertBefore(icon, link.firstChild); //Prepend an icon
 
-								group[j] = [link];
-								index = j;
+								group[special.id] = [link];
+								index = special.id;
 							}
-
-							if(!icon) //If not special
+							else //If not special
 							{
 								group.push([link]);
 								index = group.length - 1;
 							}
 						}
-						else group[index].push(link);
+						else group[index].push(link); //For child folders, place them below each base folders
 
 						if(!construct(nodes[i], depth + 1)) return false; //Look through child folders
 					}
@@ -122,15 +141,18 @@
 
 				var index; //Folder counter
 
+				var title = []; //Special folder name list
+				for(var folder in __special) title.push(folder);
+
 				var group = [];
-				group[3] = null; //Reserve the space in the array for special folders (So the next 'push' will be appended behind)
+				group[title.length] = null; //Reserve the space in the array for special folders (So the next 'push' will be appended behind)
 
 				var section = $system.browser.engine == 'trident' ? 1 : 0; //IE counts first 'xml' tag as first node
 
 				if(!request.xml || !request.xml.childNodes || !construct(request.xml.childNodes[section], 0)) //Create folder listing
 					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/solution');
 
-				for(var i = 0; i < group.length; i++) //Create the folder listing from the special folders
+				for(var i = 0; i < group.length; i++) //Create the folder listing starting from the special folders
 					if($system.is.array(group[i])) for(var j = 0; j < group[i].length; j++) area.appendChild(group[i][j]);
 
 				if(_previous) $system.node.classes($id + '_folder_' + _previous, $id + '_displayed', true);
@@ -139,11 +161,12 @@
 				return true;
 			}
 
-			__selected.account = account; //Keep the selected account
+			if(!update)
+			{
+				if($system.is.object(request)) return list(account, callback, request); //If cached object is given, call it directly
+				if(_cache[account]) return list(account, callback, _cache[account]); //If cached object is given, call it directly
+			}
 
-			if($system.is.object(request)) return list(account, callback, request); //If cached object is given, call it directly
-			if(_cache[account]) return list(account, callback, _cache[account]); //If cached object is given, call it directly
-
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account, update : update ? 1 : 0}, null, $system.app.method(list, [account, callback]));
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account, update : update ? 1 : 0, subscribed : 1}, null, $system.app.method(list, [account, callback]));
 		}
 	}

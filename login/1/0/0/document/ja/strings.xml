@@ -5,9 +5,4 @@
 	<string name="session" value="ログイン情報を保存する" />
 	<string name="register" value="新しいアカウントを作成する" />
 	<string name="recover" value="パスワードを再取得する" />
-
-	<string name="login" value="ログイン" />
-	<string name="fail/login" value="ログインに失敗しました" />
-	<string name="fail/network" value="ネットワークエラーが起きました。しばらく経ってからもう一度試行してください。" />
-	<string name="fail/error" value="ログインエラーが起きました。しばらく経ってからもう一度試行してください。" />
 </root>

@@ -1,6 +1,7 @@
 <root>
 	<!-- General -->
 	<string name="loading" value="Loading..." />
+	<string name="error" value="Error" />
 	<string name="close" value="Close" />
 
 	<!-- Configuration tabs -->
@@ -49,33 +50,4 @@
 	<string name="speed" value="Speed" />
 	<string name="temperature" value="Temperature" />
 	<string name="currency" value="Currency" />
-
-	<!-- Network -->
-	<string name="network/error" value="Network error occured" />
-	<string name="network/explain" value="There is a problem on the network" />
-
-	<!-- Logout -->
-	<string name="user/expire" value="Session limit" />
-	<string name="user/logout" value="This user will be logged out%%" />
-
-	<!-- Session -->
-	<string name="session/error" value="User session is invalid" />
-	<string name="session/explain" value="Please log in again" />
-
-	<!-- Cookie -->
-	<string name="bad/cookie" value="Browser does not support cookie. Please enable cookie support." />
-	<string name="bad/request" value="Browser does not support the necessary feature to run. Please use supported browser." />
-
-	<!-- Configuration panel -->
-	<string name="conf/changed" value="Settings changed" />
-	<string name="conf/effect" value="Changes take effect after reload" />
-	<string name="conf/error" value="Server Error" />
-	<string name="conf/again" value="Please try again at a later time" />
-
-	<!-- Error messages -->
-	<string name="app/fail" value="Application failure" />
-	<string name="app/load" value="Application '%%' failed to load" />
-
-	<string name="error" value="Error" />
-	<string name="error_history" value="Version history could not be retrieved" />
 </root>

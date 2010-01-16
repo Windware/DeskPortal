@@ -3,6 +3,35 @@
 	{
 		var _class = $id + '.text';
 
+		this.dump = function(object, match, detail) //Dump an object's elements as a concatenated string
+		{
+			var list = ''; //Text to return
+
+			if(!$system.is.object(object)) return alert('(Not an object)'); //If not an object, quit
+			if(match !== undefined && !$system.is.text(match) && !(match instanceof RegExp)) return alert('(Invalid second paramter)');
+
+			if(typeof match == 'string') match = RegExp($system.text.regexp(match)); //Make sure escape strings don't act funny
+
+			if(object instanceof Array) //If it is an array
+			{
+				//Iterate over and add the content
+				for(var i = 0; i < object.length; i++) if(!match || object[i].match(match)) list += object[i] + '\n';
+			}
+			else //If an object
+			{
+				for(var i in object) //Iterate over the object's members
+				{
+					if(match && !i.match(match)) continue; //If not matching, try next
+
+					//If needs detailed dump, dump the content of a function too
+					var functions = (detail || typeof object[i] != 'function') ? object[i] : '(function)';
+					list += i + ' : ' + functions + '\n';
+				}
+			}
+
+			return alert(list);
+		}
+
 		this.escape = function(text) //Escapes the HTML sensitive characters
 		{
 			return $system.text.replace(text, $system.array.list('& " \' < >'), $system.array.list('&amp; &quot; &#039; &lt; &gt;'));

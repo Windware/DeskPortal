@@ -18,4 +18,5 @@
 		}
 
 		$self.gui.page('_1_intro'); //Show the introduction page
+		if($global.demo.mode) $system.node.hide($id + '_demo', false)
 	}

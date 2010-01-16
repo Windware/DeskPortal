@@ -1,5 +1,5 @@
 
 	window = '998866';
-	hover = 'cccccc';
+	hover = '998877';
 
 	width = 400;

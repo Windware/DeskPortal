@@ -6,10 +6,11 @@
 	<string name="account" value="アカウント" />
 	<string name="new" value="新規" />
 	<string name="basic" value="基本設定" />
-	<string name="description" value="名称" />
+	<string name="description" value="説明" />
 	<string name="name" value="名前" />
 	<string name="address" value="メールアドレス" />
 	<string name="signature" value="署名" />
+	<string name="max" value="500文字以内" />
 
 	<string name="receive" value="受信設定" />
 	<string name="send" value="送信設定" />
@@ -28,9 +29,25 @@
 	<string name="save" value="保存" />
 
 	<string name="folder" value="フォルダー" />
+	<string name="inbox" value="受信箱" />
 	<string name="draft" value="下書き" />
 	<string name="sent" value="送信済み" />
-	<string name="trash" value="ゴミ箱" />
+	<string name="trash" value="ごみ箱" />
+
+	<string name="adjustment" value="調整" />
+	<string name="special" value="特殊フォルダー" />
+
+	<string name="delete" value="削除" />
+	<string name="rename" value="名前変更" />
+	<string name="move" value="移動" />
+	<string name="display" value="表示" />
+	<string name="on" value="する" />
+	<string name="off" value="しない" />
+	<string name="set" value="設定" />
+	<string name="create" value="作成" />
+	<string name="top" value="トップ" />
+	<string name="parent" value="親フォルダー" />
+	<string name="remove" value="%%フォルダーとその中のメールを削除します。この操作は取り消せません。" />
 
 	<string name="error" value="エラー" />
 	<string name="fill" value="*印でマークされた箇所に全て入力してください。" />

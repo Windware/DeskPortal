@@ -2,6 +2,16 @@
 	<!-- USER -->
 	<string name="user/generic/again/solution" value="時間をおいて再度読み込みを行ってください。またアカウントの設定を確認してください。" />
 
+	<!-- conf.js -->
+	<string name="user/conf/error/title" value="エラーが起きました" />
+	<string name="user/conf/error/message" value="設定の保存に失敗しました" />
+
+	<string name="user/conf/success/title" value="保存完了" />
+	<string name="user/conf/success/message" value="設定が保存されました" />
+
+	<string name="user/conf/connect/title" value="認証失敗" />
+	<string name="user/conf/connect/message" value="アカウントへの認証に失敗しました" />
+
 	<!-- folder.js -->
 	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
 

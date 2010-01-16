@@ -45,12 +45,11 @@
 	<string name="forward" value="転送" />
 	<string name="copy" value="コピー" />
 	<string name="move" value="移動" />
-	<string name="delete" value="削除" />
 	<string name="mark" value="マーク" />
 	<string name="close" value="閉じる" />
 	<string name="on" value="有" />
 	<string name="off" value="無" />
 
-	<string name="trash" value="このメールはごみ箱に移動されます" />
-	<string name="remove" value="このメールは削除されます" />
+	<string name="remove" value="このメールはごみ箱に移動されます" />
+	<string name="delete" value="このメールは削除されます" />
 </root>

@@ -1,31 +1,86 @@
-<p>account : <select></select></p>
+<form id="%id%_conf_folder_form_account">
+	<p>
+		%string:account% : <select name="account" onchange="%top%.%id%.conf.folder(this.value)"><option value="0">-----</option></select>
+		<img id="%id%_conf_folder_loading" class="%system%_hidden %id%_indicator" src="%image:loading/white.gif%" />
+	</p>
+</form>
 
-<table><tbody>
-	<tr><th colspan="2">%string:folder%</th></tr>
+<div id="%id%_conf_folder_area" class="%system%_hidden">
+	<form id="%id%_conf_folder_form_adjust" onsubmit="%top%.%id%.conf.rename(); return false">
+		<div>%string:adjustment%</div>
+		<p>%string:folder% : <select name="source" onchange="%top%.%id%.conf.adjust(this.value)"><option value="">-----</option></select></p>
 
-	<tr>
-		<td class="%id%_conf_row">%string:draft%</td>
-		<td><select name="folder_drafts"></select></td>
-	</tr>
+		<table style="width : 100%; text-align : left" id="%id%_conf_folder_list" class="%system%_hidden" cellpadding="5" cellspacing="0"><tbody>
+			<tr%tip:move%>
+				<td style="width : 50%" class="%id%_conf_row">
+					<input type="button" class="%id%_conf_folder_inbox" value="%string:move%" onclick="%top%.%id%.conf.move()" />
+				</td>
+				<td><select class="%id%_conf_folder_inbox" name="move"><option value="">-----</option></select></td>
+			</tr>
 
-	<tr>
-		<td class="%id%_conf_row">%string:sent%</td>
-		<td><select name="folder_sent"></select></td>
-	</tr>
+			<tr%tip:rename%>
+				<td class="%id%_conf_row"><input type="button" class="%id%_conf_folder_inbox" value="%string:rename%" onclick="%top%.%id%.conf.rename()" /></td>
+				<td><input type="text" class="%id%_conf_folder_inbox" name="rename" style="width : 120px" /></td>
+			</tr>
 
-	<tr>
-		<td class="%id%_conf_row">%string:trash%</td>
-		<td><select name="folder_trash"></select></td>
-	</tr>
-</tbody></table>
+			<tr%tip:display%>
+				<td class="%id%_conf_row">
+					<input type="button" class="%id%_conf_folder_custom" value="%string:display%" onclick="%top%.%id%.conf.subscribe()" />
+				</td>
+				<td>
+					<label for="%id%_conf_folder_displayed">
+						<input class="%id%_conf_folder_custom" id="%id%_conf_folder_displayed" type="radio" name="subscribed" value="1" /> %string:on%
+					</label>
 
-<table><tbody>
-	<tr>
-		<td>list of folders</td>
-		<td>
-			<p><input type="button" value="delete" /></p>
-			<p>rename : <input type="text" /></p>
-			<p>move : <select></select></p>
-		</td>
-	</tr>
-</tbody></table>
+					<label for="%id%_conf_folder_hidden">
+						<input class="%id%_conf_folder_custom" id="%id%_conf_folder_hidden" type="radio" name="subscribed" value="0" /> %string:off%
+					</label>
+				</td>
+			</tr>
+
+			<tr%tip:delete%>
+				<td class="%id%_conf_row">
+					<input type="button" class="%id%_conf_folder_custom" value="%string:delete%" onclick="%top%.%id%.conf.remove()" />
+				</td>
+				<td></td>
+			</tr>
+		</tbody></table>
+	</form>
+
+	<form id="%id%_conf_folder_form_create" onsubmit="%top%.%id%.conf.create(); return false">
+		<div>%string:new%</div>
+		<p>%string:parent% : <select name="base"><option value="0">(%string:top%)</option></select></p>
+		<p>
+			<input type="text" name="create" style="width : 120px" />
+			<input type="button" value="%string:create%" onclick="%top%.%id%.conf.create()" />
+		</p>
+	</form>
+
+	<div>%string:special%</div>
+
+	<form id="%id%_conf_folder_form_assign">
+		<table style="width : 100%; text-align : left" cellpadding="5" cellspacing="0"><tbody>
+			<tr>
+				<td style="width : 30%" class="%id%_conf_row">%string:inbox%</td>
+				<td style="width : 70%">INBOX</td>
+			</tr>
+
+			<tr>
+				<td style="width : 30%" class="%id%_conf_row">%string:draft%</td>
+				<td style="width : 70%"><select name="folder_drafts"></select></td>
+			</tr>
+
+			<tr>
+				<td class="%id%_conf_row">%string:sent%</td>
+				<td><select name="folder_sent"></select></td>
+			</tr>
+
+			<tr>
+				<td class="%id%_conf_row">%string:trash%</td>
+				<td><select name="folder_trash"></select></td>
+			</tr>
+		</tbody></table>
+	</form>
+
+	<p style="text-align : center"><input type="button" onclick="%top%.%id%.conf.special()" value="%string:set%" /></p>
+</div>

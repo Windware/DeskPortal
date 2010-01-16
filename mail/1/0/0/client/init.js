@@ -1,4 +1,6 @@
 
+	var __account = []; //List of accounts
+
 	var __active = {}; //Interval timer for updating folder lists
 
 	var __filter = {}; //List filter options

@@ -92,7 +92,7 @@
 			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server
 
 			$content = imap_check($link['connection']);
-			if(!is_object($content)) return Mail_1_0_0_Account::error($link['host']);
+			if(!is_object($content)) { print '-A-'; return Mail_1_0_0_Account::error($link['host']); }
 
 			$numbers = array(); #Returning sequence numbers
 			$target = null;
@@ -104,7 +104,7 @@
 					if($link['type'] == 'imap')
 					{
 						$sequence = imap_msgno($link['connection'], $identity['uid']); #Get message number from the ID
-						if(!$sequence) return Mail_1_0_0_Account::error($link['host']);
+						if(!$sequence) continue; #If somehow not found, leave it - TODO : Or go through and search the entire messages for a match?
 					}
 					elseif($link['type'] == 'pop3') #List the unique ID and find the message number for POP3
 					{
@@ -137,7 +137,7 @@
 					if($system->is_digit($sequence) && $sequence != 0 && $sequence <= $content->Nmsgs) #Really make sure it's the targetting mail - TODO : Necessary for the performance loss?
 					{
 						$signature = imap_fetchheader($link['connection'], $sequence);
-						if(!$signature) return Mail_1_0_0_Account::error($link['host']);
+						if(!$signature) { print '-C-'; return Mail_1_0_0_Account::error($link['host']); }
 
 						$signature = md5($signature);
 						if($signature == $identity['signature']) $target = $sequence;
@@ -149,7 +149,7 @@
 					if($identity['sequence'] && $identity['sequence'] <= $content->Nmsgs) #Reuse the sequence number
 					{
 						$signature = imap_fetchheader($link['connection'], $identity['sequence']); #Try to see if the sequence number still matches
-						if(!$signature) return Mail_1_0_0_Account::error($link['host']);
+						if(!$signature) { print '-D-'; return Mail_1_0_0_Account::error($link['host']); }
 
 						$signature = md5($signature);
 						if($signature == $identity['signature']) $target = $sequence; #Use it if it matches
@@ -161,7 +161,7 @@
 						for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++)
 						{
 							$signature = imap_fetchheader($link['connection'], $sequence); #Signature of a message
-							if(!$signature) return Mail_1_0_0_Account::error($link['host']);
+							if(!$signature) { print '-E-'; return Mail_1_0_0_Account::error($link['host']); }
 
 							$signature = md5($signature);
 							if($signature != $identity['signature']) continue; #Find the message
@@ -229,13 +229,23 @@
 			if(Mail_1_0_0_Account::type($query->column()) != 'imap') return true; #Only flag on server for IMAP
 
 			list($link, $sequence) = self::find($list, $user); #Find the sequence number for the mail ID
-			if(!$link || !$sequence) return false;
+			if(!$link || !is_array($sequence)) return false;
+
+			if(!count($sequence)) return true;
 
 			#Change the flagged state #TODO - Any max number of list to send at once?
 			if($mode) $op = imap_setflag_full($link['connection'], implode(',', $sequence), "\\$flag");
 			else $op = imap_clearflag_full($link['connection'], implode(',', $sequence), "\\$flag");
 
-			return $op ? true : Mail_1_0_0_Account::error($link['host']);
+			if(!$op) return Mail_1_0_0_Account::error($link['host']);
+
+			if($flag == 'Deleted') #Remove the flagged mails
+			{
+				$op = imap_expunge($link['connection']); #Delete the mails permanently
+				if(!$op) return Mail_1_0_0_Account::error($link['host']);
+			}
+
+			return true;
 		}
 
 		public static function get($folder, $page, $order = 'sent', $reverse = true, $marked = false, $unread = false, $search = '', $amount = null, System_1_0_0_User $user = null) #Get list of mails
@@ -390,9 +400,9 @@
 				if(!$system->is_text($target)) return false;
 
 				list($link, $sequence) = self::find($list, $user); #Get the message numbers for the mails
-				if(!$link || !$sequence) return false;
+				if(!$link || !is_array($sequence)) return false;
 
-				if(!Mail_1_0_0_Folder::create($account['id'], $target, $user)) return false; #Create the target folder in case it is missing on the mail server side
+				if(!count($sequence)) return true;
 
 				$link = Mail_1_0_0_Account::connect($account['id'], $current['id'], $user); #Connect to the target folder first
 				if(!$link) return false;
@@ -405,8 +415,8 @@
 					$op = imap_expunge($link['connection']); #Clean up the mails after move
 					if(!$op) return Mail_1_0_0_Account::error($link['host']);
 
-					#NOTE : Aquiring the new UID of the moved messages is not easy, thus not keeping the local copies by updating the folder of the messages
-					self::remove($list); #Remove mails in the source folder (Target folder will be in sync next time updated)
+					#NOTE : Aquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies by updating the folder of the messages
+					self::remove($list, true); #Remove mails in the source folder (Target folder will be in sync next time updated)
 				}
 				else
 				{
@@ -476,15 +486,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			if(!$local) #If set to also remove from the mail server
-			{
-				if(self::flag($list, 'Deleted', true, $user)) #Flag as deleted
-				{
-					$op = imap_expunge($link['connection']); #Delete the mails permanently
-					if(!$op) return Mail_1_0_0_Account::error($link['host']);
-				}
-			}
-
+			if(!$local && !self::flag($list, 'Deleted', true, $user)) return false; #If set to also remove from the mail server, flag and expunge
 			$database->begin(); #Make the deletion atomic
 
 			for($i = 0; $i < count($list); $i += self::$_limit) #Split by maximum possible place holder number
@@ -603,7 +605,7 @@
 				$account = $query->column();
 			}
 
-			$query = $database->prepare("SELECT folder_$type FROM {$database->prefix}account WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT folder.name FROM {$database->prefix}account as account, {$database->prefix}folder as folder WHERE account.id = :id AND account.user = :user AND account.folder_$type = folder.id AND folder.user = :user");
 			$query->run(array(':id' => $account, ':user' => $user->id)); #Pick the special folder on the specified account
 
 			if(!$query->success) return false;
@@ -611,7 +613,7 @@
 			$special = $query->column();
 			if(!$special) $special = ucfirst($type); #If not defined, use a generic name
 
-			$folder = Mail_1_0_0_Folder::create($account, $special, $user); #Try to create it in case it is missing
+			$folder = Mail_1_0_0_Folder::create($account, null, $special, $user); #Try to create it in case it is missing
 			if(!$system->is_digit($folder)) return false;
 
 			return self::move($list, $folder, false, $user); #Move the mails to the folder
@@ -649,6 +651,8 @@
 			$current = array(); #List of currently existing UID
 			foreach($query->all() as $row) if(strlen($row['uid'])) $current[$row['uid']] = true;
 
+			$supported = !!count($current); #If UID can be used to make queries shorter to the mail server : TODO - If the mail server changes its UID capability during use, it will break mail lookup
+
 			#Prepare to check for mail's existence
 			$query = array('check' => $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND signature = :signature"));
 
@@ -656,7 +660,7 @@
 				$query[$section] = $database->prepare("INSERT INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
 
 			#Mail info insertion query
-			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, sequence, signature, subject, sent, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :sequence, :signature, :subject, :sent, :read, :preview, :plain, :html, :encode)");
+			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, sequence, header, signature, subject, sent, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :sequence, :header, :signature, :subject, :sent, :read, :preview, :plain, :html, :encode)");
 
 			if($link['type'] == 'imap') #For IMAP
 			{
@@ -689,9 +693,7 @@
 			}
 
 			$exist = array(); #List of header md5 sum of mails existing in the mail box
-
 			$field = explode(' ', 'date subject to from unseen'); #List of fields to get
-			$supported = is_array($unique) && count($unique); #If UID can be used to make queries shorter to the mail server : TODO - If the mail server changes its UID capability during use, it will break mail lookup
 
 			for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++) #For all of the messages found in the mail box
 			{
@@ -701,13 +703,16 @@
 					continue; #If already stored, move on
 				}
 
+				$attributes = array(':user' => $user->id, ':folder' => $folder, ':sequence' => $sequence, ':uid' => isset($unique[$sequence]) ? $unique[$sequence] : null); #Mail information parameters
+				foreach(explode(' ', 'encode plain html preview sent subject header') as $empty) $attributes[":$empty"] = null; #NOTE : PHP bug? (Without setting them to null here, random values get inserted)
+
+				$attributes[':header'] = imap_fetchheader($link['connection'], $sequence); #Get the mail header
+				if(!$attributes[':header']) return Mail_1_0_0_Account::error($link['host']);
+
+				$attributes[':signature'] = md5($attributes[':header']); #Make a unique signature of the message
+				$attributes[':header'] = gzencode($attributes[':header']); #Compress the header for storing
+
 				$addresses = array(); #List of 'from', 'to' and 'cc' addresses
-
-				$signature = imap_fetchheader($link['connection'], $sequence); #Keep a unique signature of the message
-				if(!$signature) return Mail_1_0_0_Account::error($link['host']);
-
-				$signature = md5($signature);
-				$attributes = array(':user' => $user->id, ':folder' => $folder, ':sequence' => $sequence, ':signature' => $signature, ':subject' => '', ':uid' => isset($unique[$sequence]) ? $unique[$sequence] : null, ':encode' => null, ':plain' => null, ':html' => null, ':preview' => null); #Mail information parameters
 
 				$header = imap_headerinfo($link['connection'], $sequence);
 				if(!is_object($header)) return Mail_1_0_0_Account::error($link['host']);
@@ -756,15 +761,15 @@
 
 				if(!$supported) #If no UID support
 				{
-					$exist[] = $signature; #Keep remembering the header signatures
+					$exist[] = $attributes[':signature']; #Keep remembering the header signatures
 
-					$query['check']->run(array(':user' => $user->id, ':folder' => $folder, ':signature' => $signature));
+					$query['check']->run(array(':user' => $user->id, ':folder' => $folder, ':signature' => $attributes[':signature']));
 					if(!$query['check']->success) return false; #Quit the entire function if it fails
 
 					if($query['check']->column()) #Check mail existance by header signature
 					{
 						foreach(self::$_flag as $column => $mark) if($query[$column]) #Flag the states
-							$query[$column]->run(array(":$column" => $attributes[':'.strtolower($mark)] ? 0 : 1, ':user' => $user->id, ':folder' => $folder, ':signature' => $signature));
+							$query[$column]->run(array(":$column" => $attributes[':'.strtolower($mark)] ? 0 : 1, ':user' => $user->id, ':folder' => $folder, ':signature' => $attributes[':signature']));
 
 						continue; #Check for the next message (TODO - This avoids having duplicate messages in the mailbox, even possibly with different body)
 					}
@@ -968,6 +973,17 @@
 
 				foreach($current as $key => $value) if(strlen($key)) $exist[] = $key; #List of UID not existing on the server anymore
 			}
+			elseif(!count($exist)) #If no mail is on the server for this folder
+			{
+				$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
+				$query->run(array(':user' => $user->id, ':folder' => $folder)); #Pick all mails in the folder
+
+				if(!$query->success) return false;
+				$target = array();
+
+				foreach($query->all() as $row) $target[] = $row['id'];
+				self::remove($target, true, $user); #Remove all the mails in this folder
+			}
 
 			if(count($exist)) #If mails should be deleted
 			{
@@ -979,10 +995,11 @@
 					foreach(array_slice($exist, $i, self::$_limit) as $index => $id)
 					{
 						$value = $target[] = ":i{$index}d";
-						$param[$value] = $exist[$i];
+						$param[$value] = $exist[$index];
 					}
 
 					$target = implode(', ', $target); #Concatenate the identifiers
+					$system->log_query();
 
 					#Match on UID for deletion that was not found on the mail server. Otherwise, go through the header hashes for deletion
 					$sql = $supported ? "uid IN ($target)" : "signature NOT IN ($target)";

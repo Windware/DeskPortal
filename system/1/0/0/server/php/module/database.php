@@ -387,11 +387,9 @@
 			return is_array($rows) ? $rows : array();
 		}
 
-		#Closes the unfinished (has not read all the results back) statement handler to start another query
-		public function close() { return $this->handler->closeCursor(); }
+		public function close() { return $this->handler->closeCursor(); } #Closes the unfinished (has not read all the results back) statement handler to start another query
 
-		#Returns the first value of the first row
-		public function column() { return $this->success ? $this->handler->fetchColumn() : null; }
+		public function column() { return $this->success ? $this->handler->fetchColumn() : null; } #Returns the first value of the first row
 
 		public function row() #Returns the next row found
 		{

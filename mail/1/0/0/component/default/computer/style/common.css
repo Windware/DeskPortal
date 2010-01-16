@@ -1,6 +1,6 @@
 
 	/* Configuration */
-	tbody#%id%_conf_account th { border : 1px #333 solid; text-align : center; font-weight : bold; padding : 5px; background-color : #da8; }
+	tbody#%id%_conf_account th, div#%id%_conf_folder_area div { border : 1px #333 solid; text-align : center; font-weight : bold; padding : 5px; background-color : #da8; }
 
 	td.%id%_conf_row { text-align : right; border-right : 1px #333 dotted; }
 

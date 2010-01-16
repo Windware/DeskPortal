@@ -14,6 +14,9 @@
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
+
+			$this->count = 0;
+			$this->result['item'] = array();
 		}
 	}
 ?>

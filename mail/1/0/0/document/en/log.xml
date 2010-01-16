@@ -2,6 +2,16 @@
 	<!-- USER -->
 	<string name="user/generic/again/solution" value="Please try again later and check your account settings." />
 
+	<!-- conf.js -->
+	<string name="user/conf/error/title" value="Error occured" />
+	<string name="user/conf/error/message" value="Error occured while saving the configuration" />
+
+	<string name="user/conf/success/title" value="Success saving" />
+	<string name="user/conf/success/message" value="Configuration saved" />
+
+	<string name="user/conf/connect/title" value="Failed authentication" />
+	<string name="user/conf/connect/message" value="Failed to authenticate to the mail server" />
+
 	<!-- folder.js -->
 	<string name="user/folder/list" value="Failed to get list of folders." />
 

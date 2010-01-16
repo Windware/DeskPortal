@@ -20,13 +20,13 @@
 			{
 				if(request.code === 0)
 				{
-					var title = 'conf/changed';
-					var message = 'conf/effect';
+					var title = 'user/conf/changed/title';
+					var message = 'user/conf/changed/message';
 				}
 				else
 				{
-					var title = 'conf/error';
-					var message = 'conf/again';
+					var title = 'user/conf/error/title';
+					var message = 'user/conf/error/message';
 				}
 
 				$system.gui.alert($id, title, message);

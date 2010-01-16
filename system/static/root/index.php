@@ -7,4 +7,3 @@
 
 	System_Static::file_load('router-php.'.System_Static::app_conf('system', 'static', 'ext_php')); #Pass processing to the router script
 ?>
-

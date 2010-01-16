@@ -32,7 +32,4 @@
 
 	<string name="license/db" value="Wallpapers marked with 'digitalblasphemy.com' are the works of Digital Blasphemy and are approved for use." />
 	<string name="license/p8" value="Wallpapers marked with 'Photos8.com' are the works of Photos8.com and are approved for use." />
-
-	<string name="changed" value="Settings changed" />
-	<string name="effect" value="Changes take effect after page reload" />
 </root>
