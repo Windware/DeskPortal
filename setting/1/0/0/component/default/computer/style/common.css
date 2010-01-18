@@ -5,7 +5,7 @@
 
 	img.%id%_wallpaper { width : 120px; height : 90px; margin : 5px; cursor : pointer; }
 
-	div#%id%_list { overflow-y : auto; border : 1px #333 solid; background-color : #fff; height : 300px; }
+	div#%id%_list { overflow : auto; border : 1px #333 solid; background-color : #fff; height : 300px; }
 
 	table#%id% h3 { margin : 5px; border-bottom : 1px #333 dotted; }
 

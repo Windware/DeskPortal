@@ -92,7 +92,7 @@
 
 	.%id%_full { width : 100%; height : 100%; } /* To make a node at 100% size */
 
-	.%id%_invisible { visibility : hidden; } /* Class name for making an element invisible */
+	.%id%_hide { visibility : hidden; } /* Class name for making an element invisible */
 
 	.%id%_hidden { display : none; } /* Class name for hiding an element's presence */
 

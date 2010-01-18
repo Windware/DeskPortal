@@ -366,7 +366,7 @@
 			}
 			//For window border clone to be on the same height as the window not to increase the depth count to avoid repeated raise
 			else if(over) node.style.zIndex = $system.window.depth;
-			else node.style.zIndex = ++$system.window.depth //Set the window's z axis to the highest value
+			else node.style.zIndex = ++$system.window.depth; //Set the window's z axis to the highest value
 
 			if(quick !== true && $system.window.list[node.id]) $system.window.save(node.id, {depth : $system.window.depth});
 			return $system.window.depth;

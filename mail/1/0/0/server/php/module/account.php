@@ -88,17 +88,19 @@
 			$query->run($param);
 
 			if(!$query->success) return false;
+
 			$result = $query->all();
+			$list = '';
 
 			foreach($result as $row)
 			{
 				$row['signature'] = str_replace("\n", '\\n', $row['signature']);
 				$row['type'] = self::type($row['receive_type']);
 
-				$account .= $system->xml_node('account', $row, null, explode(' ', 'user receive_pass send_pass'));
+				$list .= $system->xml_node('account', $row, null, explode(' ', 'user receive_pass send_pass'));
 			}
 
-			return $account;
+			return $list;
 		}
 
 		public static function set($id, $param, System_1_0_0_User $user = null) #Save the account information

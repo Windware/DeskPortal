@@ -128,5 +128,19 @@
 			if(!$system.node.id(_menu)) return true;
 			if(!$system.node.hidden(_menu)) $system.window.fade(_menu);
 		}*/
+
+		this.select = function(mode) //Enables or disables text selection
+		{
+			if(!mode) //Disable
+			{
+				if(document.body.onselectstart !== undefined) document.body.onselectstart = function() { return false; } //IE
+				else document.body.onmousedown = function() { return false; } //Non IE
+			}
+			else //Enable
+			{
+				if(document.body.onselectstart !== undefined) document.body.onselectstart = function() { return true; } //IE
+				else document.body.onmousedown = function() { return true; } //Non IE
+			}
+		}
 	}
 

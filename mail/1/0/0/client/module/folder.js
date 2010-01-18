@@ -5,6 +5,8 @@
 
 		var _cache = {}; //Listing cache
 
+		var _structure = {}; //Temporary structure parameter for folder assembling
+
 		var _previous; //Previously selected folder
 
 		var _space = 10; //Amount of space to put on left for folders below another
@@ -21,6 +23,7 @@
 			$system.node.classes($id + '_folder_' + folder, $id + '_displayed', true);
 
 			_previous = folder;
+			return true;
 		}
 
 		this.get = function(account, update, callback, request) //List folders for an account
@@ -33,6 +36,7 @@
 			if(account == '0') //On empty selection, clean up the area
 			{
 				$system.node.id($id + '_folder').innerHTML = '';
+				$system.node.hide($id + '_mail_empty', true, true); //Remove the empty notification
 
 				var table = $system.node.id($id + '_read_zone');
 				while(table.firstChild) table.removeChild(table.firstChild);
@@ -77,17 +81,14 @@
 
 						var special = false; //If this folder is special or not
 
-						if(depth == 0) //On base folders, give localized folder names for special folders
+						for(var j = 0; j < title.length; j++)
 						{
-							for(var j = 0; j < title.length; j++)
-							{
-								if(__special[title[j]][account] != id) continue;
+							if(__special[title[j]][account] != id) continue;
 
-								name = language[title[j]];
-								special = {name : title[j], id : j}; //Remember the name and the position of the special folder
+							name = language[title[j]];
+							special = {name : title[j], id : j}; //Remember the name and the position of the special folder
 
-								break;
-							}
+							break;
 						}
 
 						if(special === false) //Create folder icon for regular folders
@@ -109,29 +110,36 @@
 
 						var icon = null;
 
-						if(depth == 0) //On base folders
+						if(special !== false) //When it's a special folder
 						{
-							if(special !== false) //When it's a special folder
-							{
-								var spacer = document.createTextNode(' ');
-								link.insertBefore(spacer, link.firstChild);
+							var spacer = document.createTextNode(' ');
+							link.insertBefore(spacer, link.firstChild);
 
-								icon = document.createElement('img'); //Create an icon
-								icon.className = $id + '_indicator';
+							icon = document.createElement('img'); //Create an icon
+							icon.className = $id + '_indicator';
 
-								$system.image.set(icon, $self.info.devroot + 'graphic/' + special.name + '.png');
-								link.insertBefore(icon, link.firstChild); //Prepend an icon
+							$system.image.set(icon, $self.info.devroot + 'graphic/' + special.name + '.png');
+							link.insertBefore(icon, link.firstChild); //Prepend an icon
 
-								group[special.id] = [link];
-								index = special.id;
-							}
-							else //If not special
+							group[special.id] = [link];
+							index = special.id;
+
+							_structure.depth = depth; //Remember the current depth
+							if(depth == 0) _structure.index = index;
+						}
+						else //If not special
+						{
+							if(depth == 0)
 							{
 								group.push([link]);
-								index = group.length - 1;
+								_structure.index = index = group.length - 1; //Remember the folder index
+							}
+							else
+							{
+								if(depth <= _structure.depth) index = _structure.index; //Revert the folder index when out of special folder tree
+								group[index].push(link); //For child folders, place them below each base folders
 							}
 						}
-						else group[index].push(link); //For child folders, place them below each base folders
 
 						if(!construct(nodes[i], depth + 1)) return false; //Look through child folders
 					}
@@ -161,7 +169,7 @@
 				return true;
 			}
 
-			if(!update)
+			if(update !== true)
 			{
 				if($system.is.object(request)) return list(account, callback, request); //If cached object is given, call it directly
 				if(_cache[account]) return list(account, callback, _cache[account]); //If cached object is given, call it directly

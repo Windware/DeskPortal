@@ -30,14 +30,20 @@
 	<string name="date_received" value="Received" />
 	<string name="date_sent" value="Sent" />
 	<string name="cc" value="Cc" />
+
+	<string name="check" value="*" />
 	<string name="subject" value="Subject" />
 	<string name="date" value="Date" />
+
 	<string name="empty" value="Empty" />
 	<string name="read" value="Read" />
 	<string name="replied" value="Replied" />
+
 	<string name="yes" value="Yes" />
 	<string name="no" value="No" />
+
 	<string name="wait" value="Downloading list of mails. This may take a while." />
+	<string name="none" value="Empty" />
 
 	<!-- Mail window -->
 	<string name="reply" value="Reply" />
@@ -53,4 +59,7 @@
 
 	<string name="remove" value="This mail will be moved to the trash folder" />
 	<string name="delete" value="This mail will be deleted" />
+
+	<string name="previous" value="Previous" />
+	<string name="next" value="Next" />
 </root>

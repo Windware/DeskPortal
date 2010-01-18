@@ -293,8 +293,6 @@
 					initial = $system.app.method($system.tool.history, [id, app[1]]); //Show the current version history
 				break;
 
-				case 'review' : content = $system.info.template[panel]; break; //Load the templates
-
 				case 'manual' : //For documents requiring custom pages, build the index
 					padding = 0; //Strip padding for manual page
 

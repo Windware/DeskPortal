@@ -3,7 +3,7 @@
 	div#%id%_set_groups { text-align : left; color : #333; }
 
 	/* Common */
-	div.%id%_groups { overflow-y : auto; background-color : #eee; border : 1px #333 solid; }
+	div.%id%_groups { overflow : auto; background-color : #eee; border : 1px #333 solid; }
 
 	/* Main interface */
 	a#%id%_create { display : block; text-align : center; border : 1px #333 solid; }

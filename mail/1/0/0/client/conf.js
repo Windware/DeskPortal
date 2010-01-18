@@ -7,9 +7,11 @@
 
 		var _max = 500; //Max characters allowed for the signature (NOTE : Translation files have the value hard coded)
 
+		var _shown; //Selected folder for folder manipulation
+
 		var _subscribed = {}; //Folder subscription
 
-		var _default = function(xml) //Default action against configuration saves
+		var _default = function(xml, removed) //Default action against configuration saves
 		{
 			switch($system.dom.status(xml))
 			{
@@ -18,15 +20,30 @@
 				default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 3); break;
 			}
 
-			var account = $system.node.id($id + '_conf_folder_form_account').account;
-			var choice = account.value;
+			var form = {account : $system.node.id($id + '_conf_folder_form_account').account, folder : $system.node.id($id + '_conf_folder_form_adjust').source};
+			var choice = {account : form.account.value, folder : form.folder.value}; //Remember the choices
 
-			$self.conf._2_folder(); //Update the folder listing
+			$self.conf._2_folder(); //Get account list
+			form.account.value = choice.account;
 
-			account.value = choice;
-			$self.conf.folder(choice); //Choose the previous selection
+			if(removed === true)
+			{
+				choice.folder = '0';
 
-			if(__selected.account == choice) $self.folder.get(choice, true); //Update the folder listing on the main interface
+				form.folder.value = choice.folder;
+				$self.conf.adjust(choice.folder); //Show selected folder
+			}
+
+			var run = function()
+			{
+				if(removed === true) return;
+
+				form.folder.value = choice.folder;
+				$self.conf.adjust(choice.folder); //Show selected folder
+			}
+
+			$self.conf.folder(choice.account, run); //Get folder list
+			if(__selected.account == choice.account) $self.folder.get(choice.account, true); //Update the folder listing on the main interface
 		}
 
 		this._1_account = function() { $self.account.get(true); } //Update account listing
@@ -99,25 +116,29 @@
 			if(!$system.is.digit(account) || !account) return false; //TODO - show some error
 			if(!$system.is.digit(base) || !$system.is.text(name)) return false; //TODO - show some error
 
-			var done = function(request)
-			{
-				_default(request.xml);
-				form.create.value = '';
-			}
+			form.create.value = '';
 
+			var done = function(request) { _default(request.xml); }
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.create'}, {account : account, parent : base, name : name}, done);
 		}
 
-		this.folder = function(account) //Pick the account for folder options
+		this.folder = function(account, callback) //Pick the account for folder options
 		{
 			var log = $system.log.init(_class + '.folder');
 			if(!$system.is.digit(account)) return log.param();
 
-			if(account == '0') return $system.node.fade($id + '_conf_folder_area', true); //Hide the options
+			if(account == '0')
+			{
+				$system.app.callback(_class + '.folder', callback);
+				return $system.node.fade($id + '_conf_folder_area', true); //Hide the options
+			}
+
 			$system.node.hide($id + '_conf_folder_loading', false);
 
 			var update = function(request)
 			{
+				if(account != _shown) return $system.app.callback(_class + '.folder', callback);
+
 				$system.node.hide($id + '_conf_folder_loading', true);
 				var form = {adjust : $system.node.id($id + '_conf_folder_form_adjust'), assign : $system.node.id($id + '_conf_folder_form_assign')};
 
@@ -210,7 +231,12 @@
 				all[title.length] = null; //Reserve the space in the array for special folders (So the next 'push' will be appended behind)
 
 				var section = $system.browser.engine == 'trident' ? 1 : 0; //IE counts first 'xml' tag as first node
-				if(!request.xml || !construct(request.xml.childNodes[section], 0, account)) return false; //TODO - Show error
+
+				if(!request.xml || !construct(request.xml.childNodes[section], 0, account))
+				{
+					$system.app.callback(_class + '.folder', callback);
+					return false; //TODO - Show error
+				}
 
 				for(var i = 0; i < all.length; i++) if($system.is.array(all[i])) for(var j = 0; j < all[i].length; j++) form.adjust.source.appendChild(all[i][j]);
 
@@ -229,9 +255,12 @@
 				}
 
 				for(var i = 1; i < title.length; i++) form.assign['folder_' + title[i]].value = __special[title[i]][account]; //Set the special custom folder selected
+
+				$system.app.callback(_class + '.folder', callback);
 				return $system.node.fade($id + '_conf_folder_area', false); //Show the options
 			}
 
+			_shown = account;
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.folder', account : account, update : 1, subscribed : 0}, null, update);
 		}
 
@@ -283,7 +312,7 @@
 			if(!$system.is.digit(folder) || !folder) return false;
 			if(!confirm(language.remove.replace('%%', _name[folder]))) return false;
 
-			var done = function(request) { _default(request.xml); }
+			var done = function(request) { _default(request.xml, true); }
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.remove'}, {folder : [folder]}, done);
 		}
 
@@ -296,13 +325,9 @@
 			var name = form.rename.value;
 
 			if(!$system.is.digit(folder) || !name.length || !folder) return false;
+			form.rename.value = '';
 
-			var done = function(request)
-			{
-				_default(request.xml);
-				form.rename.value = '';
-			}
-
+			var done = function(request) { _default(request.xml); }
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.rename'}, {folder : folder, name : name}, done);
 		}
 

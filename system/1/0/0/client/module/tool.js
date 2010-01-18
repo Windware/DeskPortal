@@ -161,15 +161,15 @@
 						var image = 'hide'; //New image name
 					}
 
-					$system.image.set($system.node.id(base + '_invisible').firstChild, $system.info.devroot + 'graphic/' +  image + '.png'); //Flip the graphic
+					$system.image.set($system.node.id(base + '_hide').firstChild, $system.info.devroot + 'graphic/' +  image + '.png'); //Flip the graphic
 					$system.tip.set(base + '_resize', $id, resize); //Flip the tip if window is not locked
 
-					$system.tip.set(base + '_hide', $id, hide); //Flip the tip on the right upper corner
-					$system.tip.set(base + '_invisible', $id, visibility ? 'show' : 'drop'); //Flip the tip message
+					$system.tip.set(base + '_invisible', $id, hide); //Flip the tip on the right upper corner
+					$system.tip.set(base + '_hide', $id, visibility ? 'show' : 'drop'); //Flip the tip message
 				}
 				else //When fading the toolbar
 				{
-					$system.tip.set(base + '_hide', $id, visibility ? 'restore' : 'remove'); //Flip the tip message
+					$system.tip.set(base + '_invisible', $id, visibility ? 'restore' : 'remove'); //Flip the tip message
 					node.parentNode.style.height = '1px'; //Reset the size to shrink the toolbar area (webkit doesn't like 0px : as of Safari 3)
 				}
 
@@ -311,4 +311,6 @@
 			pane.locked = !pane.locked; //Flip the locked state
 			if(quick !== true) $system.window.save(id, {locked : pane.locked ? 1 : 0}); //Save the locked state
 		}
+
+		this.sink = function(id) { return $system.window.sink(id); } //Puts the window behind others
 	}

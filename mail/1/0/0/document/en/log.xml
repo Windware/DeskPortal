@@ -22,9 +22,10 @@
 	<!-- item.js -->
 	<string name="user/show/error" value="Displaying the email failed." />
 	<string name="user/show/solution" value="Please reload the page and try again." />
-
 	<string name="user/item/delete" value="Failed to delete a mail." />
-	<string name="user/item/list" value="Error occured during getting list of mails." />
+
+	<string name="user/item/list/title" value="Error" />
+	<string name="user/item/list/message" value="Error occured during getting list of mails." />
 
 	<string name="user/item/mark" value="Changed marked state of a mail." />
 	<string name="user/item/mark/error" value="Failed to change marked state of a mail." />

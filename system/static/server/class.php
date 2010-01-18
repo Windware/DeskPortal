@@ -181,9 +181,7 @@
 		{
 			if(!is_string($path)) return '';
 
-			$top = str_replace('/', '\\/', preg_quote(self::$global['define']['top'])).'?'; #Keep it safe under regular expression
-			$relative = preg_replace("/^$top/", '', $path); #Strip the top path
-
+			$relative = preg_replace('/^'.preg_quote(self::$global['define']['top'], '/').'?/', '', $path); #Strip the top path
 			return $relative ? $relative : '.'; #Return the path and give self path if the string became empty
 		}
 

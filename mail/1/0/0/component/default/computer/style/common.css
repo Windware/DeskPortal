@@ -23,13 +23,15 @@
 
 	div.%id%_pane { border : 1px #333 solid; overflow : auto; height : 300px; background-color : #fafafa; }
 
-	td#%id%_folder a { display : block; background-color : #ddc; padding : 5px; }
+	td#%id%_folder a { display : block; padding : 5px; }
 
 	a.%id%_hilight { background-color : #c97 !important; }
 
 	div.%id%_folder_header { background-color : #a87; text-align : center; padding : 5px; border-bottom : 1px #333 solid; }
 
 	a.%id%_displayed { background-color : #555 !important; color : #fff; }
+
+	th.%id%_row_check { width : 20px; }
 
 	th.%id%_row_from { width : 200px; }
 
@@ -39,8 +41,14 @@
 
 	div#%id%_wait { margin : 10px; font-style : italic; }
 
+	div#%id%_mail_empty { margin : 10px; }
+
+	img#%id%_drag { position : absolute; width : 48px; height : 48px; }
+
+	tr.%id%_selected { background-color : #edc !important; }
+
 	/* Mail window */
-	h2.%id%_mail_subject { background-color : #333; text-align : center; font-weight : bold; border : 1px #ccc solid; padding : 5px; }
+	p.%id%_mail_subject { background-color : #333; text-align : center; border : 1px #ccc solid; padding : 3px; margin-bottom : 10px; }
 
 	div.%id%_mail_body { word-break : all; overflow : auto; height : 300px; text-align : left; background-color : #eee; color : #333; padding : 10px; }
 

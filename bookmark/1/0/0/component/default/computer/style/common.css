@@ -3,7 +3,7 @@
 
 	%self% h3 { font-size : 100%; line-height : 100%; text-align : center; color : #456; }
 
-	form#%id%_selection, div#%id%_entries { word-break : break-all; text-align : left; height : 300px; overflow-y : auto; border : 1px #333 solid; }
+	form#%id%_selection, div#%id%_entries { word-break : break-all; text-align : left; height : 300px; overflow : auto; border : 1px #333 solid; }
 
 	/* Category listings */
 	input.%id%_check { border : 1px #333 solid; background-color : #898; }

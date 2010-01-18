@@ -1,7 +1,7 @@
 
 	a.%id%_active { font-weight : bold; }
 
-	div#%id%_page { overflow-y : auto; height : 100%; }
+	div#%id%_page { overflow : auto; height : 100%; }
 
 	ol#%id%_list a { display : block; }
 

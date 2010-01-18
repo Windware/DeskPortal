@@ -396,7 +396,7 @@
 
 				$supported = $system->is_digit($current['uid']); #If UID is supported or not
 
-				$target = Mail_1_0_0_Folder::name($folder); #Target folder name
+				$target = mb_convert_encoding(Mail_1_0_0_Folder::name($folder), 'UTF7-IMAP', 'UTF-8'); #Target folder name
 				if(!$system->is_text($target)) return false;
 
 				list($link, $sequence) = self::find($list, $user); #Get the message numbers for the mails
@@ -409,11 +409,9 @@
 
 				if(!$copy)
 				{
-					$op = imap_mail_move($link['connection'], implode(',', $sequence), $target); #Move the messages : TODO - Any limit for max messages to move?
-					if(!$op) return Mail_1_0_0_Account::error($link['host']);
-
-					$op = imap_expunge($link['connection']); #Clean up the mails after move
-					if(!$op) return Mail_1_0_0_Account::error($link['host']);
+					#Move the messages : TODO - Any limit for max messages to move?
+					if(!imap_mail_move($link['connection'], implode(',', $sequence), $target)) return Mail_1_0_0_Account::error($link['host']);
+					if(!imap_expunge($link['connection'])) return Mail_1_0_0_Account::error($link['host']); #Clean up the mails after move
 
 					#NOTE : Aquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies by updating the folder of the messages
 					self::remove($list, true); #Remove mails in the source folder (Target folder will be in sync next time updated)
@@ -872,12 +870,9 @@
 
 				#Compress the HTML version - NOTE : In order to open a new window on links under iframe, this is the only way that works across browsers
 				$attributes[':html'] = $body['html'] ? gzencode('<head><base target="_blank" /></head>'.$body['html']) : null;
-				$raw = $attributes[':preview'];
 
 				$attributes[':preview'] = substr($attributes[':preview'], 0, self::$_preview[0]); #Limit the size of the message body TODO - This does not corrupt multi byte characters and the outputting XML?
 				$attributes[':preview'] = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', preg_replace(array("/\r/", "/\n{2,}/"), array('', "\n"), $attributes[':preview'])); #Limit the lines of the message body
-
-				if($row != $attributes[':preview']) $attributes[':preview'] .= '...'; #Note the truncate
 
 				$database->begin(); #NOTE : Only do transaction per mail, as network failure during fetching mails will not rollback for the mails already saved
 				$query['insert']->run($attributes); #Insert the mail in the database
@@ -999,7 +994,6 @@
 					}
 
 					$target = implode(', ', $target); #Concatenate the identifiers
-					$system->log_query();
 
 					#Match on UID for deletion that was not found on the mail server. Otherwise, go through the header hashes for deletion
 					$sql = $supported ? "uid IN ($target)" : "signature NOT IN ($target)";

@@ -5,7 +5,7 @@
 
 		var _cache; //Account list cache
 
-		var _interval = 280000; //Interval is set to below 5 minutes to make POP/IMAP before SMTP work for servers having valid window of 5 minutes
+		var _interval = 300; //Interval to update the folder listing
 
 		this.change = function(account) //Change the displayed account
 		{
@@ -23,7 +23,7 @@
 			if(__active[account] || __account[account].type == 'pop3') return true;
 			var update = $system.app.method($self.folder.get, [account, true]);
 
-			__active[account] = setInterval(update, _interval); //Get folders updated periodically for IMAP
+			__active[account] = setInterval(update, _interval * 1000); //Get folders updated periodically
 			update();
 		}
 

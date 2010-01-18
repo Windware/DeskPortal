@@ -204,19 +204,13 @@
 			if(_mover.type == _type.box) ; //Bring the mover to the top
 			else if(_mover.type == _type.box) $system.window.raise(_mover.object.id, undefined, true); //Bring the mover to the top
 
-			//Make sure text selection doesn't work while dragging
-			if(document.body.onselectstart !== undefined) document.body.onselectstart = function() { return false; } //IE
-			else document.body.onmousedown = function() { return false; } //Non IE
-
+			$self.gui.select(false); //Disable text selection
 			return true; //Required
 		}
 
 		this.stop = function() //Stop any windows from moving
 		{
-			//Make sure text selection works again
-			if(document.body.onselectstart) document.body.onselectstart = function() { return true; } //IE
-			else document.body.onmousedown = function() { return true; } //Non IE
-
+			$self.gui.select(true); //Enable text selection
 			if(!_mover || !$system.node.id(_mover.object.id)) return true; //If nothing is moving, quit
 
 			if(_mover.diff && $system.is.element(_mover.node)) //If moving or resizing took place and the original object still exists

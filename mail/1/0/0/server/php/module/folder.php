@@ -212,7 +212,7 @@
 				$children = $query->all();
 				if(!$query->success) return false;
 
-				$separator = preg_quote($folder['source']['separator']);
+				$separator = preg_quote($folder['source']['separator'], '/');
 				$new = preg_replace("/^.+$separator([^$separator]*)$/", '\1', $folder['source']['name']);
 			}
 			else $new = $folder['source']['name'];
@@ -220,19 +220,45 @@
 			$separator = strlen($folder['target']['separator']) ? $folder['target']['separator'] : $folder['source']['separator'];
 			if(!strlen($separator) || !strlen($new)) return false; #If a separator cannot be found, quit
 
+			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}account WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $folder['source']['account'], ':user' => $user->id)); #Pick the account type
+
+			if(!$query->success) return false;
 			if($target != 0) $new = $folder['target']['name'].$separator.$new; #Full path of the new folder name
-			$database->begin(); #Make it all atomic
+
+			if(Mail_1_0_0_Account::type($query->column()) == 'imap') #For IMAP, rename on the mail server
+			{
+				$link = Mail_1_0_0_Account::connect($folder['source']['account'], '', $user); #Connect to the server
+				if(!$link) return false;
+
+				$from = '{'.$link['host'].'}'.mb_convert_encoding($folder['source']['name'], 'UTF7-IMAP', 'UTF-8');
+				$to = '{'.$link['host'].'}'.mb_convert_encoding($new, 'UTF7-IMAP', 'UTF-8');
+
+				if(!imap_renamemailbox($link['connection'], $from, $to) || $folder['source']['subscribed'] && !imap_subscribe($link['connection'], $to))
+					return Mail_1_0_0_Account::error($link['host']); #Rename on server (Child folders will be automatically renamed to follow its parent folder)
+
+				foreach($children as $row) #Update the subscribed status (Subscription status gets cancelled on move)
+				{
+					if(!$row['subscribed']) continue;
+
+					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $new.$separator, $row['name']);
+					$name = '{'.$link['host'].'}'.mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8');
+
+					#NOTE : Not stopping operation when an error occurs here
+					if(!imap_subscribe($link['connection'], $name)) $log->dev(LOG_ERR, 'Failed to subscribe to a folder : '.imap_last_error(), 'Check the error');
+				}
+			}
+
+			$database->begin(); #Make renaming all atomic
 
 			$query = $database->prepare("UPDATE {$database->prefix}folder SET name = :name WHERE id = :id AND user = :user");
 			$query->run(array(':name' => $new, ':id' => $folder['source']['id'], ':user' => $user->id)); #Update the specified folder
 
-			$update = array();
-
-			if(is_array($children)) #If the source folder had a delimiter defined to look for child folders
+			if(is_array($children)) #If the source folder had a delimiter defined, look for child folders
 			{
 				foreach($children as $row) #Update the child folders in the database
 				{
-					$update[$row['id']] = $name = preg_replace('/^'.preg_quote($tree).'/', $new.$separator, $row['name']);
+					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $new.$separator, $row['name']);
 					$query->run(array(':name' => $name, ':id' => $row['id'], ':user' => $user->id)); #Change the folder name
 
 					if($query->success) continue;
@@ -240,41 +266,6 @@
 					$database->rollback();
 					return false;
 				}
-			}
-
-			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}account WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $folder['source']['account'], ':user' => $user->id)); #Pick the account type
-
-			if(!$query->success) return false;
-
-			if(Mail_1_0_0_Account::type($query->column()) != 'imap') return $database->commit();
-			$link = Mail_1_0_0_Account::connect($folder['source']['account'], '', $user); #Connect to the server
-
-			if(!$link)
-			{
-				$database->rollback();
-				return false;
-			}
-
-			$from = '{'.$link['host'].'}'.mb_convert_encoding($folder['source']['name'], 'UTF7-IMAP', 'UTF-8');
-			$to = '{'.$link['host'].'}'.mb_convert_encoding($new, 'UTF7-IMAP', 'UTF-8');
-
-			#Rename on server (Child folders will be automatically renamed to follow its parent folder)
-			if(!imap_renamemailbox($link['connection'], $from, $to) || $folder['source']['subscribed'] && !imap_subscribe($link['connection'], $to))
-			{
-				$database->rollback();
-				return Mail_1_0_0_Account::error($link['host']);
-			}
-
-			foreach($children as $row) #Update the subscribed status
-			{
-				if(!$row['subscribed']) continue;
-
-				$name = '{'.$link['host'].'}'.mb_convert_encoding($update[$row['id']], 'UTF7-IMAP', 'UTF-8');
-				if(imap_subscribe($link['connection'], $name)) continue;
-
-				$database->rollback();
-				return Mail_1_0_0_Account::error($link['host']);
 			}
 
 			return $database->commit();
@@ -372,21 +363,15 @@
 					if(!$remote || $type != 'imap') continue; #For deleting folders on IMAP server
 					$box = '{'.$link['host'].'}'.mb_convert_encoding($row['name'], 'UTF7-IMAP', 'UTF-8');
 
-					$op = imap_unsubscribe($link['connection'], $box); #Unsubscribe
-					if(!$op) return Mail_1_0_0_Account::error($link['host']);
-
-					$op = imap_deletemailbox($link['connection'], $box); #Delete
-					if(!$op) return Mail_1_0_0_Account::error($link['host']);
+					if(!imap_unsubscribe($link['connection'], $box)) return Mail_1_0_0_Account::error($link['host']); #Unsubscribe
+					if(!imap_deletemailbox($link['connection'], $box)) return Mail_1_0_0_Account::error($link['host']); #Delete
 				}
 
 				if(!$remote || $type != 'imap') continue; #If attempting to delete remote folders on IMAP
 				$box = '{'.$link['host'].'}'.mb_convert_encoding($base['name'], 'UTF7-IMAP', 'UTF-8');
 
-				$op = imap_unsubscribe($link['connection'], $box); #Unsubscribe
-				if(!$op) return Mail_1_0_0_Account::error($link['host']);
-
-				$op = imap_deletemailbox($link['connection'], $box); #Delete
-				if(!$op) return Mail_1_0_0_Account::error($link['host']);
+				if(!imap_unsubscribe($link['connection'], $box)) return Mail_1_0_0_Account::error($link['host']); #Unsubscribe
+				if(!imap_deletemailbox($link['connection'], $box)) return Mail_1_0_0_Account::error($link['host']); #Delete
 			}
 
 			$target = implode(', ', $target);
@@ -436,59 +421,48 @@
 			}
 			else $target = $name;
 
-			$database->begin(); #Make it all atomic
-
-			$query = $database->prepare("UPDATE {$database->prefix}folder SET name = :name WHERE id = :id AND user = :user");
-			$query->run(array(':name' => $target, ':id' => $folder, ':user' => $user->id)); #Update the specified folder
-
-			$update = array();
-
-			foreach($children as $row) #Update the child folders in the database
-			{
-				$name = preg_replace('/^'.preg_quote($tree).'/', $target.$current['separator'], $row['name']);
-				$query->run(array(':name' => $name, ':id' => $row['id'], ':user' => $user->id)); #Change the folder name
-
-				$update[$row['id']] = $name; #Remember the new name
-
-				if(!$query->success)
-				{
-					$database->rollback();
-					return false;
-				}
-			}
-
 			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $current['account'], ':user' => $user->id)); #Pick the account type
 
 			if(!$query->success) return false;
 
-			if(Mail_1_0_0_Account::type($query->column()) != 'imap') return $database->commit(); #Rename on server for IMAP (Child folders will be automatically renamed)
-			$link = Mail_1_0_0_Account::connect($current['account'], '', $user); #Connect to the server
-
-			if(!$link)
+			if(Mail_1_0_0_Account::type($query->column()) == 'imap') #On IMAP rename on the mail server
 			{
+				$link = Mail_1_0_0_Account::connect($current['account'], '', $user); #Connect to the server
+				if(!$link) return false;
+
+				$from = '{'.$link['host'].'}'.mb_convert_encoding($current['name'], 'UTF7-IMAP', 'UTF-8');
+				$to = '{'.$link['host'].'}'.mb_convert_encoding($target, 'UTF7-IMAP', 'UTF-8');
+
+				if(!imap_renamemailbox($link['connection'], $from, $to) || $current['subscribed'] && !imap_subscribe($link['connection'], $to))
+					return Mail_1_0_0_Account::error($link['host']); #Rename and restore the subscribe state if subscribed on server
+
+				foreach($children as $row) #Update the subscribed status
+				{
+					if(!$row['subscribed']) continue;
+
+					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $target.$current['separator'], $row['name']);
+					$name = '{'.$link['host'].'}'.mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8');
+
+					#NOTE : Do not halt the process by this error
+					if(!imap_subscribe($link['connection'], $name)) $log->dev(LOG_ERR, 'Cannot subscribe to a folder on the mail server : '.imap_last_error(), 'Check the error');
+				}
+			}
+
+			$database->begin(); #Make renaming all atomic
+
+			$query = $database->prepare("UPDATE {$database->prefix}folder SET name = :name WHERE id = :id AND user = :user");
+			$query->run(array(':name' => $target, ':id' => $folder, ':user' => $user->id)); #Update the specified folder
+
+			foreach($children as $row) #Update the child folders in the database
+			{
+				$name = preg_replace('/^'.preg_quote($tree, '/').'/', $target.$current['separator'], $row['name']);
+				$query->run(array(':name' => $name, ':id' => $row['id'], ':user' => $user->id)); #Change the folder name
+
+				if($query->success) continue;
+
 				$database->rollback();
 				return false;
-			}
-
-			$from = '{'.$link['host'].'}'.mb_convert_encoding($current['name'], 'UTF7-IMAP', 'UTF-8');
-			$to = '{'.$link['host'].'}'.mb_convert_encoding($target, 'UTF7-IMAP', 'UTF-8');
-
-			if(!imap_renamemailbox($link['connection'], $from, $to) || $current['subscribed'] && !imap_subscribe($link['connection'], $to)) #Rename on server
-			{
-				$database->rollback();
-				return Mail_1_0_0_Account::error($link['host']);
-			}
-
-			foreach($children as $row) #Update the subscribed status
-			{
-				if(!$row['subscribed']) continue;
-
-				$name = '{'.$link['host'].'}'.mb_convert_encoding($update[$row['id']], 'UTF7-IMAP', 'UTF-8');
-				if(imap_subscribe($link['connection'], $name)) continue;
-
-				$database->rollback();
-				return Mail_1_0_0_Account::error($link['host']);
 			}
 
 			return $database->commit();
@@ -556,21 +530,17 @@
 			if(!$query->success) return false;
 			$name = mb_convert_encoding($query->column(), 'UTF7-IMAP', 'UTF-8');
 
-			if(!$name) return false;
-			$database->begin();
-
-			$query = $database->prepare("UPDATE {$database->prefix}folder SET subscribed = :subscribed WHERE id = :id AND user = :user");
-			$query->run(array(':subscribed' => $mode ? 1 : 0, ':id' => $folder, ':user' => $user->id));
-
-			if(!$query->success) return false;
+			if(!strlen($name)) return false;
 
 			$link = Mail_1_0_0_Account::connect($info['id'], '', $user); #Connect to the server
 			$op = $mode ? imap_subscribe($link['connection'], '{'.$link['host']."}$name") : imap_unsubscribe($link['connection'], '{'.$link['host']."}$name");
 
-			if($op) return $database->commit();
+			if(!$op) return Mail_1_0_0_Account::error($link['host']);
 
-			$database->rollback();
-			return Mail_1_0_0_Account::error($link['host']);
+			$query = $database->prepare("UPDATE {$database->prefix}folder SET subscribed = :subscribed WHERE id = :id AND user = :user");
+			$query->run(array(':subscribed' => $mode ? 1 : 0, ':id' => $folder, ':user' => $user->id));
+
+			return $query->success; #NOTE : On failure, next folder sync will fix the inconsistency (Not running transaction during remote access)
 		}
 
 		public static function update($account, System_1_0_0_User $user = null) #Update list of folders
@@ -603,7 +573,7 @@
 
 			foreach($all as $info)
 			{
-				$name = $folders[] = preg_replace('/^{'.preg_quote($link['host']).'}/', '', mb_convert_encoding($info->name, 'UTF-8', 'UTF7-IMAP'));
+				$name = $folders[] = preg_replace('/^{'.preg_quote($link['host'], '/').'}/', '', mb_convert_encoding($info->name, 'UTF-8', 'UTF7-IMAP'));
 
 				$separator[$name] = $info->delimiter; #Keep folder delimiter character
 				$parent[$name] = $info->attributes & LATT_NOINFERIORS == $info->attributes ? 0 : 1; #Find if it can have child folders

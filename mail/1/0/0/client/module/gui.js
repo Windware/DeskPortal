@@ -25,7 +25,7 @@
 				var form = $system.node.id(app + '_form_edit');
 
 				if(name) form.name.value = name; //Load the values in the edit form
-				form.mail.value = address;
+				form.mail_main.value = address;
 			}
 
 			if($system.node.hidden(app))
@@ -35,6 +35,25 @@
 			}
 
 			$system.app.load(app, $system.app.method(open, [address, name])); //Load the address book app
+		}
+
+		this.check = function() //Select or deselect all mails
+		{
+			if(!__selected.cache) return false;
+
+			var state = false; //Wether to check or uncheck all checkboxes
+			var list = [];
+
+			for(var i = 0; i < __selected.cache.list.length; i++) //Go through the checkboxes
+			{
+				var node = $system.node.id($id + '_mail_' + __selected.cache.list[i] + '_check');
+				if(!node) continue;
+
+				if(!node.checked) state = true; //If any of it is unchecked, try to check them all
+				list.push(__selected.cache.list[i]);
+			}
+
+			for(var i = 0; i < list.length; i++) $self.item.select(list[i], state);
 		}
 
 		this.filter = function(section, value) //Filters the list of mails

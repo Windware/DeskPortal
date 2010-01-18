@@ -22,9 +22,10 @@
 	<!-- item.js -->
 	<string name="user/show/error" value="メールの表示に失敗しました" />
 	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />
-
 	<string name="user/item/delete" value="メールの削除に失敗しました" />
-	<string name="user/item/list" value="メールの一覧取得中にエラーが発生しました" />
+
+	<string name="user/item/list/title" value="エラー" />
+	<string name="user/item/list/message" value="メールの一覧取得中にエラーが発生しました" />
 
 	<string name="user/item/mark" value="メールのマークを変更しました" />
 	<string name="user/item/mark/error" value="メールのマークの変更に失敗しました" />
