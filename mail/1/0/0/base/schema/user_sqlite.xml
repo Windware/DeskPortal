@@ -69,9 +69,24 @@
 		<column name="color" param="CHAR(6)" />
 
 		<column name="UNIQUE" param="(user, folder, uid)" />
-		<index name="user, folder, uid" />
+
+		<index name="user, folder, read" />
 		<index name="user, folder, sequence" />
 		<index name="user, folder, signature" />
+		<index name="user, folder, uid" />
+	</table>
+
+	<!-- List of downloaded mails to keep track of unread mails for POP3 -->
+	<table name="loaded">
+		<column name="user" param="INT NOT NULL" />
+		<column name="account" param="INT NOT NULL" />
+		<column name="uid" param="VARCHAR(255)" />
+		<column name="signature" param="CHAR(32)" />
+		<column name="sequence" param="INT" />
+
+		<index name="user, account, sequence" />
+		<index name="user, account, signature" />
+		<index name="user, account, uid" />
 	</table>
 
 	<!-- List of folders -->
@@ -80,6 +95,7 @@
 		<column name="user" param="INT NOT NULL" />
 
 		<column name="account" param="INT NOT NULL" />
+		<column name="recent" param="INT" /> <!-- Number of new mails -->
 
 		<column name="name" param="VARCHAR(255) NOT NULL" />
 		<column name="parent" param="INT" /> <!-- Can create child folders or not -->
@@ -128,6 +144,7 @@
 		<column name="mail" param="INT NOT NULL" />
 
 		<column name="name" param="TEXT NOT NULL" /> <!-- File name -->
+		<column name="size" param="INT" /> <!-- File size bytes -->
 		<column name="type" param="VARCHAR(255)" /> <!-- Mime type -->
 
 		<column name="position" param="VARCHAR(255)" /> <!-- Position of this attachment in the mime structure -->

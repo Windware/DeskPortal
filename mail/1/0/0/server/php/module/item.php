@@ -13,20 +13,88 @@
 		#Any message bodies that are larger will be truncated to the size and lines for previews
 		protected static $_preview = array(500, 5);
 
+		protected static $_type = array('text', 'multipart', 'message', 'application', 'audio', 'image', 'video', 'other'); #Mime categories
+
 		private static $_pop3 = array(); #POP3 mail listing cache
 
-		protected static function _dig($parts, $type, $position = '') #Dig the multi part message and find the main body section
+		private static $_structure; #Mime structure for each mails
+
+		protected static function _dig($parts, $position = '') #Dig the multi part message
 		{
-			if(!is_array($parts) || $type != 'plain' && $type != 'html') return array(null, false);
+			if(!is_array($parts)) return false;
+
 			if($position) $position = "$position.";
+			foreach($parts as $section) self::_dig($section->parts, $position.'1'); #If inner parts exist, check them
 
-			foreach($parts as $index => $section) #If inner parts exist, check them first
-				if($section->parts && $result = self::_dig($section->parts, $type, $position.'1')) return $result;
+			foreach($parts as $index => $section) #Pick the position in the structure
+			{
+				$name = null; #Attachment file names - NOTE : Decoding rule referred to RFC2231
 
-			#Pick the position in the structure
-			foreach($parts as $index => $section) if(strtolower($section->subtype) == $type) return array($section, $position.++$index);
+				if(is_array($section->dparameters)) #If attachment parameters are present
+				{
+					$file = array();
 
-			return array(null, false);
+					foreach($section->dparameters as $param) #Concatenate multi line file names
+						if(preg_match('/^filename(\*(\d+)(\*?))?$/', $param->attribute, $matches)) $file[$matches[2]] = $param->value;
+
+					ksort($file);
+					$file = explode("'", rawurldecode(implode('', $file)), 3); #Separate the character encoding strings
+
+					if(count($file) == 3) $file = mb_convert_encoding($file[2], 'utf-8', mb_detect_encoding($file[2])); #Try to convert (Ignore what is set but detect manually)
+					else $file = $file[0]; #If non set, use the whole string
+
+					foreach(imap_mime_header_decode($file) as $value) $name .= mb_convert_encoding($value->text, 'utf-8', mb_detect_encoding($value->text));
+				}
+
+				$mime = self::$_type[$section->type].'/'.strtolower($section->subtype);
+				switch($mime) { case 'image/jpg' : $mime = 'image/jpeg'; break; } #Fix bad mime type
+
+				$data = self::$_structure[] = array('name' => $name, 'position' => $position.($index + 1), 'size' => $section->bytes, 'structure' => $section, 'type' => $mime);
+			}
+		}
+
+		public static function attachment($id) #Get and send the attachment back
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($id)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT at.name, at.position, at.size, mail.id as mail, mail.folder FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.id = :id AND at.mail = mail.id AND mail.user = :user");
+			$query->run(array(':id' => $id, ':user' => $user->id));
+
+			if(!$query->success) return false;
+			$attachment = $query->row();
+
+			$query = $database->prepare("SELECT account.id FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id");
+			$query->run(array(':id' => $attachment['folder'], ':user' => $user->id));
+
+			if(!$query->success) return false;
+
+			list($link, $sequence) = self::find(array($attachment['mail']));
+			if(!$link || !is_array($sequence)) return false;
+
+			$structure = imap_bodystruct($link['connection'], $sequence[0], $attachment['position']); #Get the attachment information
+			$body = imap_fetchbody($link['connection'], $sequence[0], $attachment['position']);#Get the attachment data
+
+			switch($structure->encoding) #Decode encoded string
+			{
+				case 3 : $body = base64_decode($body); break;
+
+				case 4 : $body = quoted_printable_decode($body); break;
+			}
+
+			header('Content-Type: '.self::$_type[$structure->type].'/'.strtolower($structure->subtype));
+			header("Content-Disposition: attachment; filename={$attachment['name']}");
+
+			header('Content-Length: '.strlen($body));
+			return $body;
 		}
 
 		#NOTE : 'imap_utf8' turns all letters into capital letters : http://bugs.php.net/bug.php?id=44098
@@ -343,11 +411,17 @@
 				foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
 			}
 
+			$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target)");
+			$query['attachment']->run($param);
+
+			if(!$query['attachment']->success) return false;
+			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
+
 			foreach($all as $row)
 			{
 				$inner = '';
 
-				foreach(array('from', 'to', 'cc') as $section) #Construct the mail address lists
+				foreach(array('from', 'to', 'cc', 'attachment') as $section) #Construct the mail address and attachment lists
 					if(is_array($mail[$row['id']][$section])) foreach($mail[$row['id']][$section] as $line) $inner .= $system->xml_node($section, $line);
 
 				$inner .= $system->xml_node('preview', null, $system->xml_data($row['preview']));
@@ -413,8 +487,9 @@
 					if(!imap_mail_move($link['connection'], implode(',', $sequence), $target)) return Mail_1_0_0_Account::error($link['host']);
 					if(!imap_expunge($link['connection'])) return Mail_1_0_0_Account::error($link['host']); #Clean up the mails after move
 
-					#NOTE : Aquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies by updating the folder of the messages
-					self::remove($list, true); #Remove mails in the source folder (Target folder will be in sync next time updated)
+					#NOTE : Aquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies trying to update the folder parameter only
+					self::remove($list, true); #Remove mails in the source folder
+					self::update($folder); #Update the target folder
 				}
 				else
 				{
@@ -641,6 +716,11 @@
 			$content = imap_check($link['connection']);
 			if(!is_object($content)) return Mail_1_0_0_Account::error($link['host']);
 
+			$query = $database->prepare("SELECT uid FROM {$database->prefix}folder as folder, {$database->prefix}mail as mail WHERE folder.user = :user AND folder.account = :account AND folder.id = mail.folder LIMIT 1");
+			$query->run(array(':user' => $user->id, ':account' => $account)); #See if UID is supported
+
+			$supported = !!strlen($query->column()); #If UID can be used to make queries shorter to the mail server : TODO - If the mail server changes its UID capability during use, it will break mail lookup
+
 			$query = $database->prepare("SELECT uid FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
 			$query->run(array(':user' => $user->id, ':folder' => $folder)); #Get list of UID
 
@@ -648,8 +728,6 @@
 
 			$current = array(); #List of currently existing UID
 			foreach($query->all() as $row) if(strlen($row['uid'])) $current[$row['uid']] = true;
-
-			$supported = !!count($current); #If UID can be used to make queries shorter to the mail server : TODO - If the mail server changes its UID capability during use, it will break mail lookup
 
 			#Prepare to check for mail's existence
 			$query = array('check' => $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND signature = :signature"));
@@ -659,6 +737,9 @@
 
 			#Mail info insertion query
 			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, sequence, header, signature, subject, sent, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :sequence, :header, :signature, :subject, :sent, :read, :preview, :plain, :html, :encode)");
+
+			#Attachment info query
+			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, name, size, type, position) VALUES (:mail, :name, :size, :type, :position)");
 
 			if($link['type'] == 'imap') #For IMAP
 			{
@@ -777,17 +858,28 @@
 				if(!is_object($structure)) return Mail_1_0_0_Account::error($link['host']);
 
 				$subtype = strtolower($structure->subtype); #Content's type
-				$body = $data = array(); #Body data
+				$attachment = $body = $data = array(); #Body data
 
 				if($structure->type == 1) #If it is a multi part message
 				{
-					foreach(array('html', 'plain') as $type)
-					{
-						list($data[$type], $position) = self::_dig($structure->parts, $type); #Dig the message and find the body part
-						if(!$data[$type] || $data[$type]->bytes >= self::$_max) continue;
+					self::$_structure = array();
+					self::_dig($structure->parts); #Dig the message and get the mime structure
 
-						$body[$type] = imap_fetchbody($link['connection'], $sequence, $position, FT_PEEK); #Get mail body
-						if($body[$type] === false) return Mail_1_0_0_Account::error($link['host']);
+					foreach(self::$_structure as $info) #Look through all of mime parts
+					{
+						$type = strtolower($info['structure']->subtype);
+
+						if(($type == 'plain' || $type == 'html') && !$body[$type]) #For message body
+						{
+							if($info['size'] >= self::$_max) continue; #Ignore huge body
+
+							$body[$type] = imap_fetchbody($link['connection'], $sequence, $info['position'], FT_PEEK); #Get mail body
+							if($body[$type] === false) return Mail_1_0_0_Account::error($link['host']);
+
+							$data[$type] = $info['structure']; #Keep the structure
+							continue;
+						}
+						elseif($system->is_digit($info['size']) && $info['name']) $attachment[] = $info; #Keep them as attachments
 					}
 				}
 				elseif($structure->type == 0 && ($subtype == 'plain' || $subtype == 'html') && $structure->bytes < self::$_max) #If it's a single part message
@@ -875,13 +967,9 @@
 				$attributes[':preview'] = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', preg_replace(array("/\r/", "/\n{2,}/"), array('', "\n"), $attributes[':preview'])); #Limit the lines of the message body
 
 				$database->begin(); #NOTE : Only do transaction per mail, as network failure during fetching mails will not rollback for the mails already saved
-				$query['insert']->run($attributes); #Insert the mail in the database
 
-				if(!$query['insert']->success)
-				{
-					$database->rollback();
-					return false;
-				}
+				$query['insert']->run($attributes); #Insert the mail in the database
+				if(!$query['insert']->success) return false;
 
 				$id = $database->id(); #Generated ID for the mail in the database
 
@@ -901,6 +989,7 @@
 					}
 				}
 
+				foreach($attachment as $file) $query['attachment']->run(array(':mail' => $id, ':name' => $file['name'], ':position' => $file['position'], ':size' => $file['size'], ':type' => $file['type']));
 				$database->commit();
 			}
 
@@ -932,15 +1021,7 @@
 
 					foreach(self::$_flag as $column => $mark)
 					{
-						if($column == 'deleted') #If flagged for deletion
-						{
-							self::remove($set[1][$column], false, $user); #Remove from the database
-
-							$op = imap_expunge($link['connection']); #Delete the mails permanently flagged for deletion on the mail server
-							if(!$op) return Mail_1_0_0_Account::error($link['host']);
-
-							continue;
-						}
+						if($column == 'deleted') continue; #Leave messages flagged as deleted by other clients
 
 						for($i = 0; $i <= 1; $i++) #For mails both flags set and unset 
 						{

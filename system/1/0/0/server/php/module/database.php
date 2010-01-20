@@ -21,8 +21,8 @@
 					if(!$query->success) return $this->logger(LOG_CRIT, 'Database initialization query failed', 'Check for database initialization code and database configuration');
 				}
 
-				$element = $query = array(); #SQL table field description and queries
 				$extra = ''; #SQL table settings and indexes
+				$element = array(); #Table columns
 
 				foreach($table->column as $column) $element[] = "{$column['name']} {$column['param']}"; #List up columns
 				foreach($table->extra as $setting) $extra .= " {$setting['name']}={$setting['param']}"; #List up table settings
@@ -31,10 +31,10 @@
 				$name = strlen($table['name']) ? $this->prefix.$table['name'] : substr($this->prefix, 0, -1);
 
 				#Create the table : TODO - Do string sanity check from the schema file
-				$query['create'] = $this->prepare("CREATE TABLE IF NOT EXISTS $name (".implode(', ', $element).") $character$extra");
-				$query['create']->run();
+				$query = $this->prepare("CREATE TABLE IF NOT EXISTS $name (".implode(', ', $element).") $character$extra");
+				$query->run();
 
-				if(!$query['create']->success)
+				if(!$query->success)
 				{
 					$problem = "Tables failed to be created. All partial tables of '$this->prefix*' must be deleted manually.";
 					return $this->logger(LOG_CRIT, $problem, 'Check for database configuration and the schema');
@@ -46,10 +46,10 @@
 				{
 					$count++;
 
-					$query['index'] = $this->prepare("CREATE INDEX {$name}_$count ON $name ({$setting['name']})"); #Set indexes
-					$query['index']->run();
+					$query = $this->prepare("CREATE INDEX {$name}_$count ON $name ({$setting['name']})"); #Set indexes
+					$query->run();
 
-					if($query['index']->success) continue;
+					if($query->success) continue;
 
 					$problem = "Table indexes failed to be created. All partial tables of '$this->prefix*' must be deleted manually.";
 					return $this->logger(LOG_CRIT, $problem, 'Check for database configuration and the schema');
@@ -66,13 +66,13 @@
 
 			try #TODO - Better way to detect table's presence in a database compatible way?
 			{
-				$statement = $this->handler->prepare("SELECT name FROM $base LIMIT 1"); #Create prepared statement
+				$statement = $this->handler->prepare("SELECT NULL FROM $base LIMIT 1"); #Create prepared statement
 				$statement->execute(); #Run the query
 
-				return $this->logger(LOG_NOTICE, "The table '$base' already exists", '', true); #If the table exists, report success
+				return true; #If the table exists, report success
 			}
 
-			catch(PDOException $error) { } #If the table does not exist, continue on
+			catch(PDOException $error) { } #If the table does not exist, continue on #FIXME - When other error occurs, it still tries to create new tables
 			$this->logger(LOG_INFO, 'Creating tables');
 
 			if($this->version != 'static') $inner = '/0/0'; #Choose the base version where database schema exists
@@ -164,9 +164,11 @@
 
 			try #Open up a database connection
 			{
-				#NOTE : Avoid persistent connection under locked mode as trasnaction can possibly drag over to the next connection
 				$this->handler = new PDO($method, $name, $pass, array(PDO::ATTR_PERSISTENT => !!$conf['db_persistent']));
+
 				$this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+				$this->handler->setAttribute(PDO::ATTR_TIMEOUT, $conf['db_timeout']);
 			}
 
 			catch(PDOException $error)
@@ -327,7 +329,7 @@
 		}
 
 		#Make a prepared statement (Second parameter is only used from the logging module to avoid looping)
-		public function prepare($query, $level = LOG_EMERG) { return new System_1_0_0_Database_Query($this, $query, $level); }
+		public function prepare($query, $level = LOG_EMERG) { return new System_1_0_0_Database_Query($this, $this->_system, $query, $level); }
 
 		public function schema($schema) #Read database schema file and parse its XML
 		{
@@ -352,15 +354,16 @@
 	{
 		private $database, $level;
 
-		protected $_mode = PDO::FETCH_ASSOC;
+		protected $conf;
 
 		public $error, $handler, $query; #Error string if any, PDO statement object itself and the query string
 
 		public $success = false; #If the query succeeded or not
 
-		public function __construct(&$database, $query, $level)
+		public function __construct(&$database, &$system, $query, $level)
 		{
 			$database->logger(LOG_INFO, "Creating a prepared statement [$query]");
+			$this->conf = $system->app_conf('system', 'static');
 
 			$this->database = $database; #Reference to the database object
 			$this->level = $level; #Store the log level
@@ -383,7 +386,7 @@
 		{
 			if(!$this->success) return array();
 
-			$rows = $this->handler->fetchAll($this->_mode);
+			$rows = $this->handler->fetchAll();
 			return is_array($rows) ? $rows : array();
 		}
 
@@ -395,7 +398,7 @@
 		{
 			if(!$this->success) return array();
 
-		  	$row = $this->handler->fetch($this->_mode);
+		  	$row = $this->handler->fetch();
 			return is_array($row) ? $row : array();
 		}
 
@@ -406,16 +409,24 @@
 			if(!($this->handler instanceof PDOStatement))
 				return $this->database->logger(LOG_ERR, 'Cannot make a query on a non PDOStatement object', 'Do not make a query on a failed query object');
 
-			try
+			for($i = 1; $i <= $this->conf['db_retry']; $i++) #Keep trying until it succeeds or exceeds the retry limit (For cases such as waiting for database lock to be released)
 			{
-				$this->handler->execute($parameter);
-				$this->success = true; #Query succeeded
-			}
+				try
+				{
+					$this->handler->execute($parameter);
+					$this->success = true; #Query succeeded
 
-			catch(PDOException $error)
-			{
-				$this->database->logger(LOG_ERR, "Database query failed for [$this->query] : \"".$error->getMessage().'"', 'Check the error');
-				$this->error = $error; #Keep the error object
+					break;
+				}
+
+				catch(PDOException $error)
+				{
+					if($i == $this->conf['db_retry']) #Only log error on last try
+					{
+						$this->database->logger(LOG_ERR, "Database query failed for [$this->query] : \"".$error->getMessage().'"', 'Check the error');
+						$this->error = $error; #Keep the error object
+					}
+				}
 			}
 		}
 	}

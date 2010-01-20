@@ -29,7 +29,7 @@
 							</file>
 
 							<file name="about_grey.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" />
 							</file>
 
 							<file name="blank.png" license="Public Domain">
@@ -37,27 +37,31 @@
 							</file>
 
 							<file name="history.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" />
 							</file>
 
 							<file name="history_grey.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" />
 							</file>
 
 							<file name="lock.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" />
 							</file>
 
 							<file name="manual.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" />
 							</file>
 
 							<file name="manual_grey.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" />
+							</file>
+
+							<file name="notice.png" license="Free commercial use license">
+								<author name="Webdesigner Depot" />
 							</file>
 
 							<file name="unlock.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" />
 							</file>
 
 							<folder name="wallpaper">

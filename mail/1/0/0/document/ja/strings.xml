@@ -2,6 +2,7 @@
 	<string name="account" value="アカウント" />
 	<string name="folder" value="フォルダー" />
 	<string name="loading" value="読み込み中..." />
+	<string name="recent" value="新着メールがあります" />
 
 	<!-- 特別フォルダー -->
 	<string name="inbox" value="受信箱" />
@@ -30,6 +31,7 @@
 	<string name="date_received" value="受信日" />
 	<string name="date_sent" value="送信日" />
 	<string name="cc" value="Cc" />
+	<string name="attachment" value="添付" />
 
 	<string name="check" value="*" />
 	<string name="subject" value="題名" />

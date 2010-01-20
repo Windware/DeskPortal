@@ -23,6 +23,8 @@
 
 	<!-- メールウインドウ -->
 	<string name="add" value="アドレス帳に追加する" />
+	<string name="attachment" value="この添付ファイルをダウンロードする" />
+
 	<string name="previous" value="前のメールを表示します" />
 	<string name="next" value="次のメールを表示します" />
 </root>

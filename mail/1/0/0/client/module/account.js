@@ -3,6 +3,8 @@
 	{
 		var _class = $id + '.account';
 
+		var _active; //Timer for updating folder list for the currently displayed account
+
 		var _cache; //Account list cache
 
 		var _interval = 300; //Interval to update the folder listing
@@ -10,7 +12,7 @@
 		this.change = function(account) //Change the displayed account
 		{
 			var log = $system.log.init(_class + '.change');
-			if(!$system.is.digit(account)) return false;
+			if(!$system.is.digit(account)) return log.param();
 
 			__selected.account = account;
 			if($system.browser.engine == 'trident') document.body.focus(); //Let focus off the selection to allow mouse wheel use on other parts after selection
@@ -18,12 +20,14 @@
 			if(account == '0') return $self.folder.get(account);
 
 			var list = function(value) { if($system.is.digit(__special.inbox[value])) $self.folder.change(__special.inbox[value]); } //Get mails for the default mail box
-			$self.folder.get(account, !!__active[account], $system.app.method(list, [account])); //List the folders
+			$self.folder.get(account, 0, $system.app.method(list, [account])); //List the folders
 
-			if(__active[account] || __account[account].type == 'pop3') return true;
-			var update = $system.app.method($self.folder.get, [account, true]);
+			if(_active) clearInterval(_active);
+			if(__account[account].type == 'pop3') return true; //Do not try to update folders from the mail server for POP3
 
-			__active[account] = setInterval(update, _interval * 1000); //Get folders updated periodically
+			var update = $system.app.method($self.folder.get, [account, 1]);
+			_active = setInterval(update, _interval * 1000); //Get folders updated periodically
+
 			update();
 		}
 

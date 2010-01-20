@@ -15,6 +15,8 @@
 
 		var _window = $id + '_alert_'; //The name of the alert window
 
+		this.interval = 50; //Number of milliseconds to wait for each 'onmousemove' event to be triggered (Used in 'motion.js' and others)
+
 		this.alert = function(id, title, message, timer, format_title, format_message, file) //Creates an alert box on the user's interface
 		{
 			var log = $system.log.init(_class + '.alert');
@@ -122,6 +124,28 @@
 
 			return false; //Cancel original context menu
 		}*/
+
+		this.notice = function(id, message, action, remove) //Make or remove an alert icon on the application window's toolbar
+		{
+			var log = $system.log.init(_class + '.notice');
+			if(!$system.is.text(id) || !$system.window.list[id] || !$system.is.text(message)) return log.param();
+
+			var node = $system.node.id($system.info.id + '_' + id + '_notice');
+
+			if(remove !== true)
+			{
+				var run = function(node, action)
+				{
+					$system.node.hide(node, true); //Let go of the notice icon
+					if(typeof action == 'function') action(); //Run the associated action
+				}
+
+				node.onclick = $system.app.method(run, [node, action]); //Set a callback function
+				$system.tip.set(node, $system.info.id, 'blank', [message]); //Set a message
+			}
+
+			$system.node.hide(node, !!remove);
+		}
 
 		/*this.remove = function() //Remove the context menu TODO - Not implemented yet
 		{

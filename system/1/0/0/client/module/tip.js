@@ -31,15 +31,21 @@
 		}
 
 		//Returns HTML portion to create a tip on an element ('phrase' is required since this function will be used as a callback of String.replace)
-		this.link = function(id, phrase, match, param)
+		this.link = function(id, phrase, match, param, line)
 		{
-			var tip = ' onmouseover="%top%.%system%.tip.make(\'%id%\', \'%tip%\', %param%, event)" onmouseout="%top%.%system%.tip.clear()"';
-			param = $system.is.array(param) ? "['" + param.join("', '") + "']" : 'null';
+			var tip = ' onmouseover="%top%.%system%.tip.make(\'%id%\', \'%tip%\', %param%, ' + (line === true ? 'true' : 'false') + ', event)" onmouseout="%top%.%system%.tip.clear()"';
+			
+			if($system.is.array(param))
+			{
+				for(var i = 0; i < param.length; i++) param[i] = $system.text.escape(param[i]);
+				param = "['" + param.join("', '") + "']";
+			}
+			else param = 'null';
 
-			return $system.text.template(tip, id).replace(/%tip%/, match).replace(/%param%/, param);
+			return $system.text.template(tip, id).replace(/%tip%/, $system.text.escape(match)).replace(/%param%/, param);
 		}
 
-		this.make = function(id, section, format) //Creates a tip on mouseover after a little delay
+		this.make = function(id, section, format, line) //Creates a tip on mouseover after a little delay
 		{
 			var log = $system.log.init(_class + '.make');
 			var event = $system.event.source(arguments);
@@ -50,7 +56,7 @@
 			if(!$system.is.path($system.app.path(id)) || !$system.is.text(section)) return log.param();
 			if(__tip.timer) clearTimeout(__tip.timer); //If timer is alive, clear it
 
-			var display = function(id, section, format) //Create the actual tip and append it onto HTML body
+			var display = function(id, section, format, line) //Create the actual tip and append it onto HTML body
 			{
 				var log = $system.log.init(_class + '.make.display');
 				var clue = $system.language.strings(id, 'tip.xml'); //Get the tip string template
@@ -60,8 +66,7 @@
 
 	 			if(!__tip.position || !$system.is.digit(__tip.position.x) || !$system.is.digit(__tip.position.y)) return false; //If mouse position isn't tracked, quit
 
-				//Create the tip element and apply properties
-				var tip = document.createElement('div');
+				var tip = document.createElement('div'); //Create the tip element and apply properties
 
 				tip.id = _node + (++_count);
 				tip.className = $id + '_helper';
@@ -69,10 +74,12 @@
 				//Set its position
 				tip.style.left = __tip.position.x + 5 + 'px';
 				tip.style.top = __tip.position.y + 5 + 'px';
-
 				tip.style.zIndex = $system.window.depth + 1; //Raise the tip to the front most
-				tip.innerHTML = $system.text.format(clue[section], format); //Format the tip if values are specified and put the content inside the node
 
+				var text = $system.text.format(clue[section], format);
+				if(line === true) text = text.replace(/\n/g, '<br />\n');
+
+				tip.innerHTML = text; //Format the tip if values are specified and put the content inside the node
 				document.body.appendChild(tip); //Apply to the body
 
 				var opaque = function() { $system.node.opacity(tip, _opacity); }
@@ -85,7 +92,7 @@
 				_displayed.push(_count);
 			}
 
-			__tip.timer = setTimeout($system.app.method(display, [id, section, format]), $global.user.pref.delay * 1000); //Set a timer event to display the tip
+			__tip.timer = setTimeout($system.app.method(display, [id, section, format, line]), $global.user.pref.delay * 1000); //Set a timer event to display the tip
 		}
 
 		this.remove = function(node) //Removes the tip off a node

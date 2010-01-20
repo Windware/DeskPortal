@@ -39,21 +39,24 @@
 
 		this.check = function() //Select or deselect all mails
 		{
-			if(!__selected.cache) return false;
-
+			var form = $system.node.id($id + '_mail_list');
 			var state = false; //Wether to check or uncheck all checkboxes
-			var list = [];
 
-			for(var i = 0; i < __selected.cache.list.length; i++) //Go through the checkboxes
+			for(var i = 0; i < form.elements.length; i++)
 			{
-				var node = $system.node.id($id + '_mail_' + __selected.cache.list[i] + '_check');
-				if(!node) continue;
+				if(form.elements[i].checked) continue;
 
-				if(!node.checked) state = true; //If any of it is unchecked, try to check them all
-				list.push(__selected.cache.list[i]);
+				state = true; //If any of it is unchecked, try to check them all
+				break;
 			}
 
-			for(var i = 0; i < list.length; i++) $self.item.select(list[i], state);
+			for(var i = 0; i < form.elements.length; i++)
+			{
+				var id = form.elements[i].id.replace(RegExp('^' + $id + '_mail_(\\d+)_check$'), '$1');
+				$self.item.select(id, state);
+			}
+
+			return true;
 		}
 
 		this.filter = function(section, value) //Filters the list of mails

@@ -1,7 +1,7 @@
 
 	var __account = []; //List of accounts
 
-	var __active = {}; //Interval timer for updating folder lists
+	var __belong = {}; //Accounts folders belong to
 
 	var __filter = {}; //List filter options
 

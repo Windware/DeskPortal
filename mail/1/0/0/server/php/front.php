@@ -69,6 +69,14 @@
 			print $system->xml_send(Mail_1_0_0_Account::set($_POST['account'], $option));
 		break;
 
+		case 'item._body' : #Download the attachment
+			#Set the attachment header to be sent in case of errors not to let the browser shift into a new page
+			header('Content-Type: text/plain');
+			header('Content-Disposition: attachment');
+
+			print Mail_1_0_0_Item::attachment($_GET['id']); #Print directly from the function
+		break;
+
 		case 'item.get' : #Get list of mails stored in the database
 			if($_GET['update']) $update = Mail_1_0_0_Item::update($_GET['folder']); #Update it from the mail server
 			$data = Mail_1_0_0_Item::get($_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse'], $_GET['marked'], $_GET['unread'], $_GET['search']); #Get list from database

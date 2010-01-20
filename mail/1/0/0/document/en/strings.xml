@@ -2,6 +2,7 @@
 	<string name="account" value="Account" />
 	<string name="folder" value="Folder" />
 	<string name="loading" value="Loading..." />
+	<string name="recent" value="New mail has arrived" />
 
 	<!-- Special folders -->
 	<string name="inbox" value="Inbox" />
@@ -30,6 +31,7 @@
 	<string name="date_received" value="Received" />
 	<string name="date_sent" value="Sent" />
 	<string name="cc" value="Cc" />
+	<string name="attachment" value="Attachment" />
 
 	<string name="check" value="*" />
 	<string name="subject" value="Subject" />

@@ -21,7 +21,7 @@
 
 	tr.%id%_hover { background-color : #c97; }
 
-	div.%id%_pane { border : 1px #333 solid; overflow : auto; height : 300px; background-color : #fafafa; }
+	.%id%_pane { border : 1px #333 solid; overflow : auto; height : 300px; background-color : #fafafa; }
 
 	td#%id%_folder a { display : block; padding : 5px; }
 
@@ -57,3 +57,7 @@
 	tbody.%id%_mail_header th { font-weight : bold; text-align : right; }
 
 	tbody.%id%_mail_header td { padding-left : 10px; }
+
+	a.%id%_mail_attachment { color : #eee !important; }
+
+	a.%id%_mail_attachment:hover, a.%id%_mail_attachment:active { color : #eca !important; }

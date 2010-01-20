@@ -5,11 +5,13 @@
 
 		var _cache = {}; //Listing cache
 
-		var _structure = {}; //Temporary structure parameter for folder assembling
+		var _count = {}; //Number of unreal mails for each folders
 
 		var _previous; //Previously selected folder
 
 		var _space = 10; //Amount of space to put on left for folders below another
+
+		var _structure = {}; //Temporary structure parameter for folder assembling
 
 		this.change = function(folder) //Change the displaying folder
 		{
@@ -73,6 +75,12 @@
 						var id = $system.dom.attribute(nodes[i], 'id');
 						var name = $system.dom.attribute(nodes[i], 'name');
 
+						var recent = $system.dom.attribute(nodes[i], 'recent'); //Number of unread mails
+						if(_count[id] && recent > _count[id]) $system.gui.notice($id, language.recent, null); //Notify the new message presence
+
+						_count[id] = recent;
+						__belong[id] = account; //Remember the belonging account
+
 						var link = document.createElement('a'); //Create link for the folder
 						link.id = $id + '_folder_' + id;
 
@@ -103,11 +111,17 @@
 						}
 
 						var display = document.createElement('strong');
+
 						display.onmousedown = $system.app.method($system.event.cancel, [display]);
-
 						display.appendChild(document.createTextNode(' ' + name));
-						link.appendChild(display); //Put the folder name
 
+						if($system.is.digit(_count[id]) && _count[id] > 0) //If any new messages exist
+						{
+							display.appendChild(document.createTextNode(' (' + _count[id] + ')'));
+							link.appendChild(display); //Put the folder name
+						}
+
+						link.appendChild(display); //Put the folder name
 						var icon = null;
 
 						if(special !== false) //When it's a special folder
@@ -169,12 +183,12 @@
 				return true;
 			}
 
-			if(update !== true)
+			if(!$system.is.digit(update))
 			{
 				if($system.is.object(request)) return list(account, callback, request); //If cached object is given, call it directly
 				if(_cache[account]) return list(account, callback, _cache[account]); //If cached object is given, call it directly
 			}
 
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account, update : update ? 1 : 0, subscribed : 1}, null, $system.app.method(list, [account, callback]));
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account, update : update, subscribed : 1}, null, $system.app.method(list, [account, callback]));
 		}
 	}

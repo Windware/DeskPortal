@@ -23,6 +23,8 @@
 
 	<!-- Mail window -->
 	<string name="add" value="Add to address book" />
+	<string name="attachment" value="Download this attachment file" />
+
 	<string name="previous" value="Show the previous mail" />
 	<string name="next" value="Show the next mail" />
 </root>

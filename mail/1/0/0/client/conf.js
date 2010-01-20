@@ -43,7 +43,7 @@
 			}
 
 			$self.conf.folder(choice.account, run); //Get folder list
-			if(__selected.account == choice.account) $self.folder.get(choice.account, true); //Update the folder listing on the main interface
+			if(__selected.account == choice.account) $self.folder.get(choice.account, 0); //Update the folder listing on the main interface
 		}
 
 		this._1_account = function() { $self.account.get(true); } //Update account listing

@@ -80,28 +80,6 @@
 			return {x : event.clientX + scroll.x, y : event.clientY + scroll.y}; //Add the scroll amount to the position
 		}
 
-		this.notice = function(id, message, action, remove) //Make or remove an alert icon on the application window's toolbar
-		{
-			var log = $system.log.init(_class + '.notice');
-			if(!$system.is.text(id) || !$system.window.list[id] || !$system.is.text(message)) return log.param();
-
-			var node = $system.node.id($system.info.id + '_' + id + '_notice');
-
-			if(remove !== true)
-			{
-				var run = function(node, action)
-				{
-					$system.node.hide(node, true); //Let go of the notice icon
-					if(typeof action == 'function') action(); //Run the associated action
-				}
-
-				node.onclick = $system.app.method(run, [node, action]); //Set a callback function
-				$system.tip.set(node, $system.info.id, 'blank', [message]); //Set a message
-			}
-
-			$system.node.hide(node, !!remove);
-		}
-
 		this.remove = function(element, action, execute, capture) //Remove an event from an object, in cross engine fashion
 		{
 			var log = $system.log.init(_class + '.remove');
@@ -110,12 +88,6 @@
 			//Remove the event from an object
 			if(element.removeEventListener) return element.removeEventListener(action.replace(/^on/i, ''), execute, !!capture);
 			else return element.detachEvent(action, execute);
-		}
-
-		this.run = function(id, message, action) //Make an alert icon on the application window's toolbar
-		{
-			var log = $system.log.init(_class + '.notice');
-			if(!$system.is.text(id) || !$system.window.list[id] || !$system.is.text(message)) return log.param();
 		}
 
 		this.source = function(param) //Get the event object

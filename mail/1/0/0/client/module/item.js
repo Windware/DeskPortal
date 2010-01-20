@@ -15,8 +15,6 @@
 
 		var _lock; //Mail drag mouse move event throttling lock
 
-		var _interval = 50; //Mouse move throttle interval
-
 		var _order = {}; //Mail order for specific mail windows
 
 		var _page = {}; //Selected page for each folders
@@ -61,6 +59,15 @@
 				value[section[i]] = address.join(', ');
 			}
 
+			var attachment = [];
+
+			for(var i = 0; i < __mail[id].attachment.length; i++)
+			{
+				var text = $system.text.template('<a class="%id%_mail_attachment" href="%%"%%>%%</a>', $id);
+				attachment.push($system.text.format(text, [$system.network.form($self.info.root + 'server/php/front.php?task=item._body&id=' + __mail[id].attachment[i].id), $system.tip.link($id, null, 'attachment'), __mail[id].attachment[i].name]));
+			}
+
+			value.attachment = attachment.join(', ');
 			value.body = $system.network.form($self.info.root + 'server/php/front.php?task=item.show&message=' + id);
 
 			var replace = function(phrase, match) { return value[match] || ''; }
@@ -114,7 +121,7 @@
 			if(_lock) return true; //If throttled, do not execute anything
 
 			_lock = true; //Lock for a short while
-			setTimeout(function() { _lock = false; }, _interval); //Give a lock to throttle mouse move event from triggering as often as possible
+			setTimeout(function() { _lock = false; }, $system.gui.interval); //Give a lock to throttle mouse move event from triggering as often as possible
 
 			if(!event) event = window.event; //NOTE : Not using 'event.source' for a possible performance reason
 			if($system.browser.engine != 'khtml' && event.button != $system.browser.click.left) return $self.item.drop();
@@ -154,7 +161,7 @@
 			$system.gui.select(true); //Let text become selectable again
 			$system.node.fade($id + '_drag', true, null, true);
 
-			if(!_drag.mover) $self.item.show(_drag.id[0]); //If not dragging, display the message
+			if(!_drag.mover) return $self.item.show(_drag.id[0]); //If not dragging, display the message
 			var list = $system.node.id($id + '_folder').childNodes; //Folder lists
 
 			for(var i = 0; i < list.length; i++)
@@ -163,7 +170,7 @@
 				if(list[i].nodeType != 1 || list[i].nodeName != 'A' || !$system.node.classes(list[i], $id + '_hilight')) continue;
 
 				var target = list[i].id.replace(RegExp('^' + $id + '_folder_'), '');
-				if(target != __selected.folder) $self.item.move(_drag.id, target); //Move the selected mails if targetting another folder
+				if(target != __selected.folder) $self.item.move(_drag.id, target, $system.app.method($self.item.get, [__selected.folder, 0])); //Move the selected mails if targetting another folder
 
 				break;
 			}
@@ -195,7 +202,7 @@
 					return _update[folder] = true; //If not currently displayed, flag to note that this folder should be updated on next display
 
 				delete _cache[folder][page][order][reverse]; //Remove the cache
-				$self.item.get(folder, true); //Update the displaying list
+				$self.item.get(folder, 1); //Update the displaying list
 			}
 
 			var list = function(folder, page, order, reverse, marked, unread, search, previous, update, request) //List the mails upon receiving the contents
@@ -215,7 +222,7 @@
 					}
 
 					cache = _cache[folder][page][order][reverse][marked][unread][search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
-					if(!$system.is.digit(cache.max)) cache.max = 1;
+					if(!$system.is.digit(cache.max) || !cache.max) cache.max = 1;
 
 					var list = $system.dom.tags(request.xml, 'mail');
 
@@ -246,6 +253,17 @@
 							}
 						}
 
+						var attachment = $system.dom.tags(list[i], 'attachment');
+						__mail[id].attachment = [];
+
+						var field = $system.array.list('id name size type');
+
+						for(var j = 0; j < attachment.length; j++) //Store the attachments info
+						{
+							__mail[id].attachment[j] = {};
+							for(var k = 0; k < field.length; k++) __mail[id].attachment[j][field[k]] = $system.dom.attribute(attachment[j], field[k]);
+						}
+
 						__mail[id].preview = $system.dom.text($system.dom.tags(list[i], 'preview')[0]);
 					}
 				}
@@ -255,6 +273,14 @@
 				if(__selected.unread != unread || __selected.order != order || __selected.reverse != reverse || __selected.search != search) return true;
 
 				_current = cache; //Remember current listing
+
+				if(__selected.page > cache.max) //If the chosen page exceeds the max page (Ex : After moving mails to another folder)
+				{
+					$system.node.id($id + '_show').value = cache.max;
+					__selected.page = cache.max;
+
+					return $self.item.update(); //Show earlier page
+				}
 
 				var zone = $system.node.id($id + '_paging');
 				zone.innerHTML = '';
@@ -334,7 +360,8 @@
 
 					for(var j = 0; j < column.length; j++) //For all the columns
 					{
-						var display, tip;
+						var display = '';
+						var tip = '';
 
 						switch(column[j]) //Pick the parameters to display on the interface
 						{
@@ -345,7 +372,18 @@
 								tip = '';
 							break;
 
-							case 'subject' : display = tip = mail[column[j]] || '(' + language.empty + ')'; break;
+							case 'subject' :
+								if(mail.attachment.length)
+								{
+									var file = []; //List of attachment names and sizes
+									for(var k = 0; k < mail.attachment.length; k++) file.push(mail.attachment[k].name + ' (' + Math.ceil(mail.attachment[k].size / 1000) + 'KB)');
+
+									var values = [$system.image.source($id, 'attachment.png'), $system.info.id, $system.tip.link($system.info.id, null, 'blank', [file.join('\\n')], true)];
+									display = $system.text.format('<img src="%%" style="cursor : help" class="%%_icon"%% /></span> ', values); //Show attachment presence
+								}
+
+								display += tip = mail[column[j]] || '(' + language.empty + ')';
+							break;
 
 							case 'date' : display = tip = $system.date.create(mail.sent).format($global.user.pref.format.monthdate); break;
 
@@ -411,7 +449,7 @@
 				if(!_fresh[folder]) //If never updated
 				{
 					_fresh[folder] = true;
-					return __account[__selected.account].type == 'pop3' && __special.inbox[__selected.account] != folder ? true : $self.item.get(folder, true); //Update it
+					return __account[__selected.account].type == 'pop3' && __special.inbox[__selected.account] != folder ? true : $self.item.get(folder, 1); //Update it
 				}
 
 				if(_update[folder]) //If cache should be updated - TODO : May be better to only delete cache for specific setting
@@ -419,7 +457,7 @@
 					delete _cache[folder]; //Remove the entire cache for the folder
 					delete _update[folder];
 
-					return $self.item.get(folder, __account[__selected.account].type != 'pop3'); //Update it
+					return $self.item.get(folder, 1); //Update it
 				}
 
 				return true;
@@ -436,16 +474,16 @@
 			if(!hash[__selected.reverse][__selected.marked]) hash[__selected.reverse][__selected.marked] = {};
 			if(!hash[__selected.reverse][__selected.marked][__selected.unread]) hash[__selected.reverse][__selected.marked][__selected.unread] = {};
 
-			var items = [folder, __selected.page, __selected.order, __selected.reverse, __selected.marked, __selected.unread, __selected.search, previous, !!update];
+			var items = [folder, __selected.page, __selected.order, __selected.reverse, __selected.marked, __selected.unread, __selected.search, previous, update];
 			var run = $system.app.method(list, items);
 
 			if($system.is.object(request)) return run(request); //If updating, use the passed object
-			if(update !== true && $system.is.object(hash[__selected.reverse][__selected.marked][__selected.unread][__selected.search])) return run(null); //If already cached, use it
+			if(!$system.is.digit(update) && $system.is.object(hash[__selected.reverse][__selected.marked][__selected.unread][__selected.search])) return run(null); //If already cached, use it
 
 			if(__refresh[folder]) clearTimeout(__refresh[folder]);
 			__refresh[folder] = setTimeout($system.app.method(expire, items), _preserve * 60000); //Update local cache after a period
 
-			if(update === true && $system.is.element(table.firstChild) && table.firstChild.childNodes.length == 1) //If no mails are found, warn the user for the wait
+			if(String(update).match(/^1$/) && $system.is.element(table.firstChild) && table.firstChild.childNodes.length == 1) //If no mails are found, warn the user for the wait
 			{
 				var note = document.createElement('div');
 				note.id = $id + '_wait';
@@ -454,7 +492,7 @@
 				table.parentNode.appendChild(note);
 			}
 
-			var param = {task : 'item.get', folder : folder, page : __selected.page, order : __selected.order, reverse : __selected.reverse ? 1 : 0, marked : __selected.marked ? 1 : 0, unread : __selected.unread ? 1 : 0, search : __selected.search, update : update === true ? 1 : 0};
+			var param = {task : 'item.get', folder : folder, page : __selected.page, order : __selected.order, reverse : __selected.reverse ? 1 : 0, marked : __selected.marked ? 1 : 0, unread : __selected.unread ? 1 : 0, search : __selected.search, update : $system.is.digit(update) ? update : 0};
 			return $system.network.send($self.info.root + 'server/php/front.php', param, null, run);
 		}
 
@@ -504,14 +542,17 @@
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.mark'}, {id : id, mode : mode ? 1 : 0}, notify);
 		}
 
-		this.move = function(id, folder) //Move the mails to another folder
+		this.move = function(id, folder, callback) //Move the mails to another folder
 		{
 			var log = $system.log.init(_class + '.move');
 			if(!$system.is.array(id) || !$system.is.digit(folder)) return log.param();
 
-			var notify = function()
+			var notify = function(callback)
 			{
 				_update[folder] = true; //Set the target folder for update on next access
+				$self.folder.get(__belong[folder], 1); //Update the new mail counts
+
+				$system.app.callback(_class + '.move.notify', callback);
 			}
 
 			var group = false; //Whether to send the other selected mails or not
@@ -542,7 +583,7 @@
 				}
 			}
 
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.move'}, {id : id, folder : folder}, notify);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.move'}, {id : id, folder : folder}, $system.app.method(notify, [callback]));
 		}
 
 		this.select = function(id, checked) //Add a mail to the selection
@@ -573,7 +614,7 @@
 			{
 				if($system.dom.status(request.xml) != '0')
 				{
-					$self.item.update(true); //Recover the mail that failed to be trashed
+					$self.item.update(1); //Recover the mail that failed to be trashed
 					return log.user($global.log.error, 'user/item/delete', 'user/generic/again/solution');
 				}
 			}
@@ -589,7 +630,7 @@
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.trash'}, {id : [id]}, update);
 		}
 
-		this.update = function(update) { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder, update) : false; } //Reload the mails from the server
+		this.update = function(mode) { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder, mode) : false; } //Reload the mails from the server
 
 		this.show = function(id) //Display the mail window
 		{

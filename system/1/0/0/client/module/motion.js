@@ -8,8 +8,6 @@
 
 		var _design; //Box background image design URL parameters
 
-		var _interval = 50; //Number of milliseconds to wait for each 'onmousemove' event to be triggered
-
 		var _lock; //Lock to avoid the 'onmousemove' from getting triggered as fast as possible
 
 		var _mover; //An object for keeping the movement parameters
@@ -89,7 +87,7 @@
 			if(_lock) return true; //If throttled, do not execute anything
 
 			_lock = true; //Lock for a short while
-			setTimeout(function() { _lock = false; }, _interval); //Give a lock to throttle mouse move event from triggering as often as possible
+			setTimeout(function() { _lock = false; }, $system.gui.interval); //Give a lock to throttle mouse move event from triggering as often as possible
 
 			if(__tip.timer) //If a tip is given timer for display, track mouse position
 			{

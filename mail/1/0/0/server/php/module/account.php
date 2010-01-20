@@ -55,6 +55,7 @@
 			$connection = imap_open($parameter.mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'), $info['receive_user'], $info['receive_pass']);
 			if(!$connection) return Mail_1_0_0_Account::error($host);
 
+			unset($info['receive_pass'], $info['send_pass']); #Remove sensitive information
 			return self::$_stream[$user->id][$account] = array('connection' => $connection, 'folder' => $folder, 'host' => $host, 'parameter' => $parameter, 'info' => $info, 'type' => $type);
 		}
 

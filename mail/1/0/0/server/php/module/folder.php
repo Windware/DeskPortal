@@ -1,9 +1,7 @@
 <?php
 	class Mail_1_0_0_Folder
 	{
-		private static $_id = array(); #Folder ID
-
-		private static $_subscribed = array(); #Subscribed folders
+		private static $_folder = array(); #Folder parameters
 
 		protected static function _list(&$system, $structure, $subscribed = true) #Create list of XML from multi dimensional array
 		{
@@ -12,9 +10,9 @@
 			foreach($structure as $name => $part) #Concatenate XML entries for each folders
 			{
 				$index++;
-				if($subscribed && !self::$_subscribed[$index]) continue;
+				if($subscribed && !self::$_folder[$index]['subscribed']) continue;
 
-				$info = array('name' => $name, 'id' => self::$_id[$index], 'subscribed' => self::$_subscribed[$index]);
+				$info = array('name' => $name, 'id' => self::$_folder[$index]['id'], 'subscribed' => self::$_folder[$index]['subscribed'], 'recent' => self::$_folder[$index]['recent']);
 				$xml .= $system->xml_node('folder', $info, self::_list($system, $part, $subscribed));
 			}
 
@@ -141,7 +139,7 @@
 
 			$param = array(':user' => $user->id, ':account' => $account);
 
-			$query = $database->prepare("SELECT id, name, separator, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account ORDER BY LOWER(name)");
+			$query = $database->prepare("SELECT id, name, recent, separator, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account ORDER BY LOWER(name)");
 			$query->run($param);
 
 			if(!$query->success) return false;
@@ -151,8 +149,7 @@
 
 			foreach($list as $index => $row) #For all folders
 			{
-				self::$_id[$index] = $row['id']; #Remember folder ID
-				self::$_subscribed[$index] = $row['subscribed']; #Remember folder ID
+				self::$_folder[$index] = $row; #Remember folder parameters
 
 				$name = $row['separator'] ? explode($row['separator'], $row['name']) : array($row['name']); #Separate the folder name
 				$dimension = &$structure;
@@ -559,7 +556,13 @@
 
 			if(!$query->success) return false;
 
-			if(Mail_1_0_0_Account::type($query->column()) != 'imap') return true; #Do not try to sync folders if not IMAP
+			if(Mail_1_0_0_Account::type($query->column()) != 'imap') #Only update the unread message count for non IMAP
+			{
+				#read the unread mail count in mail db
+				#update that to the folder db
+				return true;
+			}
+
 			$link = Mail_1_0_0_Account::connect($account, '', $user); #Connect to the server
 
 			$all = imap_getmailboxes($link['connection'], '{'.$link['host'].'}', '*'); #Get subscribed folder names
@@ -568,10 +571,10 @@
 			$subscribed = imap_getsubscribed($link['connection'], '{'.$link['host'].'}', '*'); #Get subscribed folder names
 			if(!$subscribed) return Mail_1_0_0_Account::error($link['host']);
 
-			$id = $folders = $stored = $separator = $parent = $read = $remove = $target = $used = array();
+			$id = $folders = $stored = $separator = $parent = $recent = $read = $remove = $target = $used = array();
 			foreach($subscribed as $info) $used[] = $info->name; #Get list of subscribed folder names
 
-			foreach($all as $info)
+			foreach($all as $info) #TODO - It does not honor LATT_NOSELECT (Flag meaning of cannot open the mailbox)
 			{
 				$name = $folders[] = preg_replace('/^{'.preg_quote($link['host'], '/').'}/', '', mb_convert_encoding($info->name, 'UTF-8', 'UTF7-IMAP'));
 
@@ -579,6 +582,9 @@
 				$parent[$name] = $info->attributes & LATT_NOINFERIORS == $info->attributes ? 0 : 1; #Find if it can have child folders
 
 				$read[$name] = in_array($info->name, $used) ? 1 : 0;
+
+				$recent[$name] = imap_status($link['connection'], $info->name, SA_UNSEEN); #Check for new message numbers
+				$recent[$name] = $recent[$name]->unseen ? $recent[$name]->unseen : 0;
 			}
 
 			$query = $database->prepare("SELECT id, name, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account");
@@ -587,7 +593,7 @@
 			if(!$query->success) return false;
 			$local = $query->all();
 
-			$query = $database->prepare("UPDATE {$database->prefix}folder SET subscribed = :subscribed WHERE id = :id AND user = :user");
+			$query = $database->prepare("UPDATE {$database->prefix}folder SET recent = :recent, subscribed = :subscribed WHERE id = :id AND user = :user");
 
 			foreach($local as $row) #Keep name and ID relation
 			{
@@ -596,23 +602,21 @@
 
 				$mode = null;
 
-				if($read[$row['name']]) { if(!$row['subscribed']) $mode = 1; } #If not subscribed locally but remotely, flip it
-				elseif($row['subscribed']) $mode = 0; #If subscribed locally but note remotely, flip it
+				if($read[$row['name']]) { if(!$row['subscribed']) $row['subscribed'] = 1; } #If not subscribed locally but remotely, flip it
+				elseif($row['subscribed']) $row['subscribed'] = 0; #If subscribed locally but note remotely, flip it
 
-				if($mode === null) continue;
-
-				$query->run(array(':subscribed' => $mode, ':id' => $row['id'], ':user' => $user->id));
+				$query->run(array(':recent' => $recent[$row['name']], ':subscribed' => $row['subscribed'], ':id' => $row['id'], ':user' => $user->id));
 				if(!$query->success) return false;
 			}
 
 			foreach(array_diff($stored, $folders) as $name) $target[] = $id[$name]; #For folders not existing anymore
 			self::remove($target); #Remove them
 
-			$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, separator, subscribed) VALUES (:user, :account, :name, :parent, :separator, :subscribed)");
+			$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, recent, separator, subscribed) VALUES (:user, :account, :name, :parent, :recent, :separator, :subscribed)");
 
 			foreach(array_diff($folders, $stored) as $name) #For newly added folders, add them
 			{
-				$query->run(array(':user' => $user->id, ':account' => $account, ':name' => $name, ':parent' => $parent[$name], ':separator' => $separator[$name], ':subscribed' => $read[$name]));
+				$query->run(array(':user' => $user->id, ':account' => $account, ':name' => $name, ':parent' => $parent[$name], ':recent' => $recent[$name], ':separator' => $separator[$name], ':subscribed' => $read[$name]));
 				if(!$query->success) return false;
 			}
 
