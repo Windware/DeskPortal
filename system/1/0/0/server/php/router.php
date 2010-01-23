@@ -10,14 +10,7 @@
 	if(!$system->app_public($env['name'])) #If the application is not public
 	{
 		$user = $system->user(); #Get logged in user
-
-		if(!$user->valid) #If not logged in, quit
-		{
-			print $system->xml_send(-1); #Send the status code to indicate system failure
-
-			$solution = 'Login with a subscribed user or add the application as public';
-			return $log->system(LOG_ERR, 'Cannot use non public application', $solution);
-		}
+		if(!$user->valid) return print $system->xml_send(-1); #If not logged in, quit and send the status code to indicate system failure
 
 		if(!$user->subscribed($env['name'])) #Check if the user is subscribed to the application requested
 		{

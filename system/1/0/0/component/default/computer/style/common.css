@@ -24,7 +24,7 @@
 	/* ID specific styles */
 	div#%id%_context { width : 100px; height : 200px; border : 1px #333 solid; position : absolute; } /* Context menu */
 
-	div.%id%_helper { position : absolute; cursor : help; padding : 5px; background-color : #fea; border : 1px #333 solid; } /* The tool tip window */
+	div.%id%_helper { position : absolute; cursor : help; padding : 5px; border : 1px #333 solid; } /* The tool tip window */
 
 	div.%id%_mover_box { position : absolute; cursor : move; } /* A box window movement indicator */
 

@@ -1,6 +1,6 @@
 <form id="%id%_form" style="margin : 10px 0px" onsubmit="%top%.%id%.item.update(); return false">
 	<p style="background-color : #cba; padding : 5px; border : 1px #333 solid">
-		[<img class="%system%_icon" style="cursor : pointer" src="%image:new.png%" onclick="%top%.%id%.item.edit()"%tip:new% />]
+		[<img class="%system%_icon" style="cursor : pointer" src="%image:new.png%" onclick="%top%.%id%.gui.compose()"%tip:new% />]
 
 		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>]
 
@@ -23,7 +23,7 @@
 	<input type="submit" style="display : none" />
 </form>
 
-<div id="%id%_pane_read"><table style="width : 100%"><tbody><tr>
+<table style="width : 100%"><tbody><tr>
 	<td style="width : 20%; vertical-align : top"><div style="background-color : #ddc" class="%id%_pane"%scroll%>
 		<table style="width : 100%" cellpadding="0" cellspacing="0"><tbody><tr><td id="%id%_folder"></td></tr></tbody></table>
 	</div></td>
@@ -31,36 +31,4 @@
 	<td style="width : 80%; vertical-align : top"><form id="%id%_mail_list" class="%id%_pane"%scroll%>
 		<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"></table>
 	</form></td>
-</tr></tbody></table></div>
-
-<div id="%id%_pane_compose" class="%system%_hidden">
-	<form id="%id%_form" onsubmit="return %top%.%id%.item.preview(this)">
-		<table style="width: 100%"><tbody>
-			<tr>
-				<td style="text-align: right; width: 50px">%string:to%</td>
-				<td><input type="text" name="to" style="width: 100%" /></td>
-			</tr>
-			<tr>
-				<td style="vertical-align: top; text-align: right">%string:message%</td>
-				<td><textarea name="body" rows="10" style="width: 100%"></textarea></td>
-			</tr>
-		</table>
-
-		<p style="text-align: center">
-			<input type="submit" class="%system%_flat" style="padding: 5px; width: 300px" value="%string:preview%" />
-		</p>
-	</form>
-
-	<div id="%id%_compose_preview" class="%system%_hidden">
-		<p>%string:to% : <span id="%id%_compose_to"></span></p>
-
-		<p>%string:cc% : <span id="%id%_compose_cc"></span></p>
-
-		<p>%string:message% : <span id="%id%_compose_body"></span></p>
-
-		<p><form>
-			<input value="%string:edit%" type="button" onclick="%top%.%id%.item.edit()" />
-			<input value="%string:send%" type="button" onclick="%top%.%id%.item.send()" />
-		</form></p>
-	</div>
-</div>
+</tr></tbody></table>

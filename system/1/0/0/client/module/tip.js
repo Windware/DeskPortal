@@ -5,13 +5,17 @@
 
 		var _count = 0; //Tip ID counter
 
+		var _background = {color : 'ffeeaa', opacity : 85}; //Tip background color and opacity
+
+		var _design = $system.text.format('%%server/php/front.php?task=tip.make&background=%%&border=333333&edge=1&shadow=1&round=1&place=cm&through=%%', [$system.info.root, _background.color, _background.opacity]);
+
 		var _displayed = []; //List of displayed tips
 
 		var _node = $id + '_tip_'; //Name of the tip node
 
 		var _margin = 5; //Amount of pixel from the event coordinate to put the tip at
 
-		var _opacity = 85; //Level of opacity for the tip
+		this.init = function() { $system.image.set(document.createElement('img'), _design); } //Preload the tip background
 
 		this.clear = function() //Remove an already displayed or pending tip
 		{
@@ -82,8 +86,8 @@
 				tip.innerHTML = text; //Format the tip if values are specified and put the content inside the node
 				document.body.appendChild(tip); //Apply to the body
 
-				var opaque = function() { $system.node.opacity(tip, _opacity); }
-				$system.node.fade(tip.id, false, opaque); //Fade it in
+				$system.node.fade(tip.id, false); //Fade it in
+				$system.image.background(tip, _design); //Set its background color image file
 
 				delete __tip.timer; //Stop tracking the mouse position
 				delete __tip.position;

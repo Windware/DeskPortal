@@ -1,17 +1,21 @@
 <?php
-	class Mail_1_0_0_Item #Supports both POP3/IMAP and servers without UIDL or UID support (TODO - Almost)
-	{
+	class Mail_1_0_0_Item #Supports both POP3/IMAP and servers without UIDL or UID support
+	{ #TODO : Include PEAR packages as local files - Net_POP3, Mail, Mail_mime
+		protected static $_attachment = 50; #Maximum megabytes allowed to be sent as an entire mail
+
 		protected static $_flag = array('deleted' => 'Deleted', 'read' => 'Seen', 'marked' => 'Flagged', 'replied' => 'Answered', 'draft' => 'Draft'); #Table column names and corresponding IMAP flags
 
 		protected static $_limit = 500; #Max number of place holders possible in database queries
 
-		protected static $_max = 200000; #Max bytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger.
+		protected static $_max = 200; #Max kilobytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger.
 
 		protected static $_page = 50; #Default number of mails to display per page
 
 		#Amount of max (bytes, lines) of a message body preview to be sent with the list of mails
 		#Any message bodies that are larger will be truncated to the size and lines for previews
 		protected static $_preview = array(500, 5);
+
+		protected static $_sent = 'Sent'; #Generic folder name for folders containing sent mails
 
 		protected static $_type = array('text', 'multipart', 'message', 'application', 'audio', 'image', 'video', 'other'); #Mime categories
 
@@ -53,12 +57,12 @@
 			}
 		}
 
-		public static function attachment($id) #Get and send the attachment back
+		public static function attachment($id, $mode = 'attachment') #Get and send the attachment back
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_digit($id)) return $log->param();
+			if(!$system->is_digit($id) || $mode != 'attachment' && $mode != 'inline') return $log->param();
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
@@ -90,8 +94,11 @@
 				case 4 : $body = quoted_printable_decode($body); break;
 			}
 
+			#Foe IE, URL encode the file name to avoid file name getting corrupted provided as UTF-8
+			$name = strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? rawurlencode($attachment['name']) : str_replace('"', '\\"', $attachment['name']);
+
 			header('Content-Type: '.self::$_type[$structure->type].'/'.strtolower($structure->subtype));
-			header("Content-Disposition: attachment; filename={$attachment['name']}");
+			header("Content-Disposition: attachment; filename=\"$name\"");
 
 			header('Content-Length: '.strlen($body));
 			return $body;
@@ -159,77 +166,63 @@
 			if(!$query->success) return false;
 			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server
 
-			$content = imap_check($link['connection']);
-			if(!is_object($content)) { print '-A-'; return Mail_1_0_0_Account::error($link['host']); }
-
 			$numbers = array(); #Returning sequence numbers
-			$target = null;
 
-			foreach($collection as $identity) #For all of the specified messages
+			if(strlen($collection[0]['uid'])) #If UID is available
 			{
-				if($identity['uid']) #If the mail has an unique identifier, set the target for that mail
+				if($link['type'] == 'imap')
 				{
-					if($link['type'] == 'imap')
+					$list = imap_search($link['connection'], 'ALL', SE_UID);
+					if(!is_array($list)) return Mail_1_0_0_Account::error($link['host']);
+
+					foreach($list as $index => $id) $uid[$id] = $index + 1; #Get unique ID list
+				}
+				elseif($link['type'] == 'pop3') #List the unique ID and find the message number for POP3
+				{
+					if($system->file_load('Auth/SASL.php') && $system->file_load('Net/POP3.php'))
 					{
-						$sequence = imap_msgno($link['connection'], $identity['uid']); #Get message number from the ID
-						if(!$sequence) continue; #If somehow not found, leave it - TODO : Or go through and search the entire messages for a match?
-					}
-					elseif($link['type'] == 'pop3') #List the unique ID and find the message number for POP3
-					{
-						if((@include_once('Auth/SASL.php')) && (@include_once('Net/POP3.php'))) #TODO - Include them as local files instead of PEAR packages
+						if(!isset(self::$_pop3[$user->id][$account])) #Connect if never connected before
 						{
-							if(!isset(self::$_pop3[$user->id][$account])) #Connect if never connected before
-							{
-								$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
-								$pop3 =& new Net_POP3();
+							$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
+							$pop3 =& new Net_POP3();
 
-								$connect = $pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port']); #Connect
-								if($connect) $login = $pop3->login($link['info']['receive_user'], $link['info']['receive_pass']); #Login
+							$connect = $pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port']); #Connect
+							if($connect) $login = $pop3->login($link['info']['receive_user'], $link['info']['receive_pass']); #Login
 
-								self::$_pop3[$user->id][$account] = $login ? $pop3->getListing() : null; #Get all listing and cache it
-							}
-
-							if(is_array(self::$_pop3[$user->id][$account])) #If list is already fetched
-							{
-								foreach(self::$_pop3[$user->id][$account] as $list)
-								{
-									if($list['uidl'] != $identity['uid']) continue; #Find the matching sequence number from UID
-
-									$sequence = $list['msg_id'];
-									break;
-								}
-							}
+							self::$_pop3[$user->id][$account] = $login ? $pop3->getListing() : null; #Get all listing and cache it
 						}
-					}
 
-					if($system->is_digit($sequence) && $sequence != 0 && $sequence <= $content->Nmsgs) #Really make sure it's the targetting mail - TODO : Necessary for the performance loss?
-					{
-						$signature = imap_fetchheader($link['connection'], $sequence);
-						if(!$signature) { print '-C-'; return Mail_1_0_0_Account::error($link['host']); }
-
-						$signature = md5($signature);
-						if($signature == $identity['signature']) $target = $sequence;
+						if(is_array(self::$_pop3[$user->id][$account])) foreach(self::$_pop3[$user->id][$account] as $list) $uid[$list['uidl']] = $list['msg_id'];
 					}
 				}
 
-				if(!$target) #If no unique identifier is given
+				foreach($collection as $identity) if($system->is_digit($uid[$identity['uid']])) $numbers[] = $uid[$identity['uid']];
+			}
+			else #When UID/UIDL is not available
+			{
+				$content = imap_check($link['connection']);
+				if(!is_object($content)) return Mail_1_0_0_Account::error($link['host']);
+
+				$target = null;
+
+				foreach($collection as $identity) #For all of the specified messages
 				{
 					if($identity['sequence'] && $identity['sequence'] <= $content->Nmsgs) #Reuse the sequence number
 					{
 						$signature = imap_fetchheader($link['connection'], $identity['sequence']); #Try to see if the sequence number still matches
-						if(!$signature) { print '-D-'; return Mail_1_0_0_Account::error($link['host']); }
+						if(!$signature) return Mail_1_0_0_Account::error($link['host']);
 
 						$signature = md5($signature);
-						if($signature == $identity['signature']) $target = $sequence; #Use it if it matches
+						if($signature == $identity['signature']) $target = $identity['sequence']; #Use it if it matches
 					}
 
 					#NOTE : This is a very slow operation only used when UID/UIDL is not supported by the IMAP/POP3 server
-					if(!$target) #Otherwise, go through entire messages and find the matching mail
+					if(!$target) #If not found, go through entire messages and find the matching mail
 					{
 						for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++)
 						{
 							$signature = imap_fetchheader($link['connection'], $sequence); #Signature of a message
-							if(!$signature) { print '-E-'; return Mail_1_0_0_Account::error($link['host']); }
+							if(!$signature) return Mail_1_0_0_Account::error($link['host']);
 
 							$signature = md5($signature);
 							if($signature != $identity['signature']) continue; #Find the message
@@ -240,9 +233,9 @@
 
 						if(!$target) return $log->dev(LOG_WARNING, "Cannot find the mail data on the server for mail ID '$id'", 'Mail may have been deleted from another client. Try to synchronize the mail box.');
 					}
-				}
 
-				$numbers[] = $target; #Stack the sequence numbers
+					$numbers[] = $target; #Stack the sequence numbers
+				}
 			}
 
 			return array($link, $numbers);
@@ -411,11 +404,11 @@
 				foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
 			}
 
-			$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target)");
+			$query['attachment'] = $database->prepare("SELECT id, mail, cid, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target)");
 			$query['attachment']->run($param);
 
 			if(!$query['attachment']->success) return false;
-			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
+			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
 
 			foreach($all as $row)
 			{
@@ -432,6 +425,27 @@
 			}
 
 			return $xml;
+		}
+
+		public static function image($cid) #Get the embedded image data
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_text($cid)) return $log->param();
+			if(strlen($cid) > 255) return false;
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT at.id FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.cid = :cid AND at.mail = mail.id AND mail.user = :user");
+			$query->run(array(':cid' => $cid, ':user' => $user->id));
+
+			if(!$query->success) return false;
+			return self::attachment($query->column(), 'inline');
 		}
 
 		public static function move($list, $folder, $copy = false, System_1_0_0_User $user = null) #Move or copy mails to another folder
@@ -489,7 +503,6 @@
 
 					#NOTE : Aquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies trying to update the folder parameter only
 					self::remove($list, true); #Remove mails in the source folder
-					self::update($folder); #Update the target folder
 				}
 				else
 				{
@@ -610,6 +623,126 @@
 			return $database->commit();
 		}
 
+		#NOTE : Error codes are (0 : success, 1 : system error, 2 : size too big, 3 : SMTP send error, 4 : IMAP store error)
+		public static function send($account, $subject, $body, $to, $cc = null, $bcc = null, $source = null, $attachment = array(), System_1_0_0_User $user = null) #Send a mail
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($account)) return $log->param(1);
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return 1;
+
+			$total = 0; #Total bytes for mail submission
+
+			foreach(func_get_args() as $index => $param) #Check parameter size and validity
+			{
+				if($index == 0) continue;
+
+				if(is_string($param)) $total += strlen($param);
+				elseif($index <= 6) return $log->param(1); #Check parameter type
+			}
+
+			if(is_array($attachment)) foreach($attachment as $file) $total += $file['size']; #Add attachment file sizes
+			else $attachment = array();
+
+			if($total > self::$_attachment * 1000 * 1000) return 2; #Avoid large submission to mail servers
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return 1;
+
+			if(!$system->file_load('Mail.php', false, LOG_ERR) || !$system->file_load('Mail/mime.php', false, LOG_ERR)) return 1; #Load the required PEAR packages
+			$mime = new Mail_mime("\n"); #Create the mail MIME object
+
+			$mime->setTxtBody($body); #Set the message body
+			foreach($attachment as $file) $mime->addAttachment(file_get_contents($file['tmp_name']), $file['type'], $file['name'], false); #Add attachment files if given
+
+			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $account, ':user' => $user->id));
+
+			if(!$query->success) return 1;
+
+			$row = $query->row();
+			$encoded = $toward = array(); #List of encoded addresses and raw mail addresses to send to
+
+			foreach(imap_rfc822_parse_adrlist("{$row['name']} <{$row['address']}>", '') as $parsed)
+			{
+				if($parsed->host == '.SYNTAX-ERROR.') return 3; #Parse the 'from' addresses
+
+				$address = "{$parsed->mailbox}@{$parsed->host}";
+				$encoded['from'][] = strlen($parsed->personal) ? mb_encode_mimeheader($parsed->personal)." <$address>" : $address;
+			}
+
+			foreach(imap_rfc822_parse_adrlist($to, '') as $parsed) #Parse the 'to' addresses
+			{
+				if($parsed->host == '.SYNTAX-ERROR.') return 3; #Return as SMTP error for invalid addresses
+
+				$address = $toward[] = "{$parsed->mailbox}@{$parsed->host}";
+				$encoded['to'][] = strlen($parsed->personal) ? mb_encode_mimeheader($parsed->personal)." <$address>" : $address;
+			}
+
+			$header = array( #Headers to go inside the mail header section
+				'From' => implode(', ', $encoded['from']),
+				'To' => implode(', ', $encoded['to']),
+				'Subject' => mb_encode_mimeheader($subject),
+				'Date' => gmdate('r'),
+				'Message-ID' => time().'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']), #Create a unique message ID
+				'X-Mailer' => str_replace(array('%APP%', '%VERSION%'), array($system->self['name'], str_replace('_', '.', $system->self['version'])), $system->app_conf($system->self['name'], $system->self['version'], 'mailer')),
+				'Return-Path' => $row['address']
+			);
+
+			$mail = array('body' => $mime->get(array('head_charset' => 'utf-8', 'text_charset' => 'utf-8')), 'header' => $mime->headers($header)); #NOTE : Do not call these functions in reverse order (From PEAR manual)
+
+			if($system->is_digit($row['folder_sent']))
+			{
+				$folder = $row['folder_sent'];
+				$name = Mail_1_0_0_Folder::name($folder, $user); #Find the 'sent' folder
+			}
+
+			if(!is_string($name) || !strlen($name)) #If not found
+			{
+				$name = self::$_sent;
+				$folder = Mail_1_0_0_Folder::create($name); #Register a generic folder name
+
+				if(!$folder) return 1;
+
+				$query = $database->prepare("UPDATE {$database->prefix}account SET folder_sent = :folder WHERE id = :id user = :user");
+				$query->run(array(':folder' => $folder, ':id' => $account, ':user' => $user->id));
+
+				if(!$query->success) return 1;
+			}
+
+			$type = Mail_1_0_0_Account::type($row['receive_type']);
+			$open = $type == 'pop3' ? '' : $folder;
+
+			$link = Mail_1_0_0_Account::connect($account, $open, $user); #Connect for both POP3/IMAP to validate through 'POP3/IMAP before SMTP'
+
+			$connection = array( #SMTP connection parameters
+				'host' => ($row['send_secure'] ? 'tls://' : '').$row['send_host'],
+				'port' => $row['send_port'],
+				'auth' => strlen($row['send_user']) || strlen($row['send_pass']),
+				'username' => $row['send_user'],
+				'password' => $row['send_pass'],
+				'localhost' => $row['send_host'],
+				'timeout' => $system->app_conf('system', 'static', 'net_timeout'),
+				'persist' => false
+			);
+
+			$smtp =& Mail::factory('smtp', $connection);
+			if($smtp->send($toward, $mail['header'], $mail['body']) !== true) return 3; #SMTP failure
+
+			if($type == 'pop3') return 0; #Keep the mail on the mail server for IMAP
+
+			$header = '';
+			foreach($mail['header'] as $key => $value) $header .= "$key: $value\r\n";
+
+			if(imap_append($link['connection'], '{'.$link['host']."}$name", "$header\r\n{$mail['body']}")) return 0; #Save on the mail server
+
+			Mail_1_0_0_Account::error($link['host']);
+			return 4; #IMAP failure
+		}
+
 		public static function show($id, System_1_0_0_User $user = null) #Get the body of a message
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -692,6 +825,33 @@
 			return self::move($list, $folder, false, $user); #Move the mails to the folder
 		}
 
+		public static function text($id, System_1_0_0_User $user = null) #Get the plain text version of a mail
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($id)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT plain FROM {$database->prefix}mail WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the mail body
+
+			if(!$query->success) return false;
+
+			$body = $query->column();
+			if($system->compress_header()) $body = gzencode($body); #If gzip compression is allowed, send back compressed
+
+			header('Content-Type: text/html; charset=utf-8');
+			header('Content-Length: '.strlen($body));
+
+			return $body;
+		}
+
 		public static function update($folder, System_1_0_0_User $user = null) #Store any new messages to the local database
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -705,13 +865,17 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT account.id, folder_inbox, receive_type FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
 			$query->run(array(':id' => $folder, ':user' => $user->id));
 
 			if(!$query->success) return false;
-			$account = $query->column();
+			$row = $query->row();
+
+			$account = $row['id'];
+			if(Mail_1_0_0_Account::type($row['receive_type']) == 'pop3' && $folder != $row['folder_inbox']) return true; #Quit if it is POP3 but not INBOX
 
 			$link = Mail_1_0_0_Account::connect($account, $folder, $user); #Connect to the mail server
+			if(!$link) return false;
 
 			$content = imap_check($link['connection']);
 			if(!is_object($content)) return Mail_1_0_0_Account::error($link['host']);
@@ -739,7 +903,7 @@
 			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, sequence, header, signature, subject, sent, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :sequence, :header, :signature, :subject, :sent, :read, :preview, :plain, :html, :encode)");
 
 			#Attachment info query
-			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, name, size, type, position) VALUES (:mail, :name, :size, :type, :position)");
+			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, cid, name, size, type, position) VALUES (:mail, :cid, :name, :size, :type, :position)");
 
 			if($link['type'] == 'imap') #For IMAP
 			{
@@ -753,7 +917,7 @@
 			}
 			elseif($link['type'] == 'pop3') #NOTE : Get the UID with an alternative method, since 'imap_search' cannot get UID on POP3
 			{
-				if((@include_once('Auth/SASL.php')) && (@include_once('Net/POP3.php'))) #TODO - Include them as local files instead of PEAR packages
+				if($system->file_load('Auth/SASL.php') && $system->file_load('Net/POP3.php'))
 				{
 					if(!isset(self::$_pop3[$user->id][$account])) #Connect if never connected before
 					{
@@ -871,7 +1035,7 @@
 
 						if(($type == 'plain' || $type == 'html') && !$body[$type]) #For message body
 						{
-							if($info['size'] >= self::$_max) continue; #Ignore huge body
+							if($info['size'] >= self::$_max * 1000) continue; #Ignore huge body
 
 							$body[$type] = imap_fetchbody($link['connection'], $sequence, $info['position'], FT_PEEK); #Get mail body
 							if($body[$type] === false) return Mail_1_0_0_Account::error($link['host']);
@@ -882,7 +1046,7 @@
 						elseif($system->is_digit($info['size']) && $info['name']) $attachment[] = $info; #Keep them as attachments
 					}
 				}
-				elseif($structure->type == 0 && ($subtype == 'plain' || $subtype == 'html') && $structure->bytes < self::$_max) #If it's a single part message
+				elseif($structure->type == 0 && ($subtype == 'plain' || $subtype == 'html') && $structure->bytes < self::$_max * 1000) #If it's a single part message
 				{
 					$data[$subtype] = $structure; #Specify its structure
 
@@ -989,7 +1153,7 @@
 					}
 				}
 
-				foreach($attachment as $file) $query['attachment']->run(array(':mail' => $id, ':name' => $file['name'], ':position' => $file['position'], ':size' => $file['size'], ':type' => $file['type']));
+				foreach($attachment as $file) $query['attachment']->run(array(':mail' => $id, ':cid' => preg_replace('/^<(.+)>$/', '\1', $file['structure']->id), ':name' => $file['name'], ':position' => $file['position'], ':size' => $file['size'], ':type' => $file['type']));
 				$database->commit();
 			}
 

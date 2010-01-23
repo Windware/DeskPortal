@@ -327,7 +327,7 @@
 				$delete = array(); #List of mails to delete
 				foreach($query['mail']->all() as $mail) $delete[] = $mail['id'];
 
-				if(!Mail_1_0_0_Item::remove($delete)) return false; #Remove the mails in this folder
+				if(!Mail_1_0_0_Item::remove($delete, !$remote)) return false; #Remove the mails in this folder
 
 				$value = $target[] = ':i'.(++$count).'d'; #List the folder ID to delete
 				$param[$value] = $base['id'];
@@ -558,7 +558,7 @@
 
 			if(Mail_1_0_0_Account::type($query->column()) != 'imap') #Only update the unread message count for non IMAP
 			{
-				#read the unread mail count in mail db
+				#TODO - read the unread mail count in mail db
 				#update that to the folder db
 				return true;
 			}
@@ -574,7 +574,7 @@
 			$id = $folders = $stored = $separator = $parent = $recent = $read = $remove = $target = $used = array();
 			foreach($subscribed as $info) $used[] = $info->name; #Get list of subscribed folder names
 
-			foreach($all as $info) #TODO - It does not honor LATT_NOSELECT (Flag meaning of cannot open the mailbox)
+			foreach($all as $info) #TODO - It does not honor LATT_NOSELECT (Not allowing to select the mailbox)
 			{
 				$name = $folders[] = preg_replace('/^{'.preg_quote($link['host'], '/').'}/', '', mb_convert_encoding($info->name, 'UTF-8', 'UTF7-IMAP'));
 

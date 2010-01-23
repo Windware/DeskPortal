@@ -21,17 +21,17 @@
 </tbody></table>
 
 <form style="text-align : center; margin : 10px 0px" class="%id%_mail_action">
-	<input type="button" onclick="%top%.%id%.gui.reply(%value:id%, %value:index%, ['from'])" value="%string:reply%" />
-	<input type="button" onclick="%top%.%id%.gui.reply(%value:id%, %value:index%, ['from', 'cc'])" value="%string:reply_all%" />
-	<input type="button" onclick="%top%.%id%.gui.reply(%value:id%, %value:index%)" value="%string:forward%" />
+	<input type="button" onclick="%top%.%id%.gui.compose(%value:id%, %value:index%, ['from'])" value="%string:reply%" />
+	<input type="button" onclick="%top%.%id%.gui.compose(%value:id%, %value:index%, ['from', 'to', 'cc'])" value="%string:reply_all%" />
+	<input type="button" onclick="%top%.%id%.gui.compose(%value:id%, %value:index%, [])" value="%string:forward%" />
 	<input type="button" onclick="%top%.%id%.item.trash(%value:id%, %value:index%)" value="%string:trash%" style="background-color : #cca" />
 	<input type="button" onclick="%top%.%system%.window.fade('%id%_display_%value:index%', true, null, true)" value="%string:close%" style="background-color : #cca" />
 </form>
 
-<iframe onload="%top%.%system%.node.id('%id%_mail_%value:index%_loading').style.visibility = 'hidden'" style="width : 100%; height : 330px; background-color : #fff; color : #333; border : 1px #333 solid" src="%value:body%"></iframe>
-
 <p class="%id%_mail_subject">
-	<a%tip:previous% onclick="%top%.%id%.item.next(%value:id%, %value:index%, -1)">&lt;&lt; %string:previous%</a>
+	<a%tip:previous% onclick="%top%.%id%.gui.next(%value:id%, %value:index%, -1)">&lt;&lt; %string:previous%</a>
 	<img id="%id%_mail_%value:index%_loading" class="%id%_indicator" style="margin : 0px 10px" src="%image:loading/grey.gif%" />
-	<a%tip:next% onclick="%top%.%id%.item.next(%value:id%, %value:index%, 1)">%string:next% &gt;&gt;</a></p>
+	<a%tip:next% onclick="%top%.%id%.gui.next(%value:id%, %value:index%, 1)">%string:next% &gt;&gt;</a></p>
 </p>
+
+<iframe onload="%top%.%id%.gui.load(%value:id%, %value:index%, this)" style="width : 100%; height : 330px; background-color : #fff; color : #333; border : 1px #333 solid" src="%value:body%"></iframe>

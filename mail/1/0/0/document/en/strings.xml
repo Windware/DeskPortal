@@ -31,6 +31,7 @@
 	<string name="date_received" value="Received" />
 	<string name="date_sent" value="Sent" />
 	<string name="cc" value="Cc" />
+	<string name="bcc" value="Bcc" />
 	<string name="attachment" value="Attachment" />
 
 	<string name="check" value="*" />
@@ -64,4 +65,11 @@
 
 	<string name="previous" value="Previous" />
 	<string name="next" value="Next" />
+
+	<!-- Compose window -->
+	<string name="confirm" value="Send mail?" />
+	<string name="send" value="Send" />
+	<string name="save" value="Save" />
+	<string name="cancel" value="Cancel" />
+	<string name="sign" value="Sign" />
 </root>

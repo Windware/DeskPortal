@@ -10,5 +10,12 @@
 		it is still better to keep the password in an encrypted form than in plain text.
 	-->
 	<conf name="key" value="PLEASE CHANGE ME T0 A VERY LONG RANDOM STRING!" />
-</root>
 
+	<!--
+		The mailer name to be sent as 'X-Mailer' in the mail header when mails are sent
+
+		%APP% will be replaced by the name of this application
+		%VERSION% will be replaced by the version of this application
+	-->
+	<conf name="mailer" value="%brand% %APP% %VERSION%" />
+</root>

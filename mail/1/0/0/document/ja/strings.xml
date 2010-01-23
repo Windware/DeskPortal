@@ -31,6 +31,7 @@
 	<string name="date_received" value="受信日" />
 	<string name="date_sent" value="送信日" />
 	<string name="cc" value="Cc" />
+	<string name="bcc" value="Bcc" />
 	<string name="attachment" value="添付" />
 
 	<string name="check" value="*" />
@@ -63,4 +64,11 @@
 
 	<string name="previous" value="前" />
 	<string name="next" value="次" />
+
+	<!-- 作成ウインドウ -->
+	<string name="confirm" value="メールを送信しますか？" />
+	<string name="send" value="送信" />
+	<string name="save" value="保存" />
+	<string name="cancel" value="キャンセル" />
+	<string name="sign" value="署名" />
 </root>

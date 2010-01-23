@@ -34,12 +34,12 @@
 		this.get = function(cache, callback) //Get list of accounts
 		{
 			var select = $system.node.id($id + '_account');
-			var index = select.value || ''; //Keep the current value
+			var index = select.value || '0'; //Keep the current value
 
 			select.innerHTML = ''; //Clean up the entries
 
 			var language = $system.language.strings($id);
-			var defaults = [{key : '0', value : '-----'}];//, {key : '0', value : language.all}];
+			var defaults = [{key : '0', value : '-----'}];
 
 			for(var i = 0; i < defaults.length; i++) //Create the default options
 			{

@@ -77,9 +77,7 @@
 			var variables = [$system.info.root, $global.user.pref.round == 1 ? 1 : 0, $system.window.shadow, _box / 2];
 
 			_design = $system.text.format(params, variables);
-
-			var image = document.createElement('img');
-			$system.image.set(image, _design); //Preload the box background image
+			$system.image.set(document.createElement('img'), _design); //Preload the box background image
 		}
 
 		this.move = function(event) //Moves the window by mouse dragging (Have as less computation as possible)

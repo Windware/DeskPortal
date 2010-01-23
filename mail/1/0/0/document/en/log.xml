@@ -4,13 +4,13 @@
 
 	<!-- conf.js -->
 	<string name="user/conf/error/title" value="Error occured" />
-	<string name="user/conf/error/message" value="Error occured while saving the configuration" />
+	<string name="user/conf/error/message" value="Error occured while saving the configuration." />
 
 	<string name="user/conf/success/title" value="Success saving" />
-	<string name="user/conf/success/message" value="Configuration saved" />
+	<string name="user/conf/success/message" value="Configuration saved." />
 
 	<string name="user/conf/connect/title" value="Failed authentication" />
-	<string name="user/conf/connect/message" value="Failed to authenticate to the mail server" />
+	<string name="user/conf/connect/message" value="Failed to authenticate to the mail server." />
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="Failed to get list of folders." />
@@ -18,6 +18,21 @@
 	<!-- gui.js -->
 	<string name="user/gui/search" value="Search term must be bigger than %% letters and smaller than %% letters." />
 	<string name="user/gui/search/solution" value="Please specify correct length for search term." />
+
+	<string name="user/gui/send/success" value="Mail sent" />
+	<string name="user/gui/send/success/message" value="The mail has been successfully sent" />
+
+	<string name="user/gui/send/error" value="Error occured" />
+	<string name="user/gui/send/error/message" value="An error occured during sending the mail. Please try again later." />
+
+	<string name="user/gui/send/big" value="Mail size too big" />
+	<string name="user/gui/send/big/message" value="The size of the mail is too big to be sent. Please reduce the mail size." />
+
+	<string name="user/gui/send/imap" value="Failed saving the message" />
+	<string name="user/gui/send/imap/message" value="Failed storing a copy of the message to the mail server. Please try again later." />
+
+	<string name="user/gui/send/smtp" value="Failed sending the message" />
+	<string name="user/gui/send/smtp/message" value="Failed to send the message. Please check the mail addresses and configuration or try again at a later time." />
 
 	<!-- item.js -->
 	<string name="user/show/error" value="Displaying the email failed." />

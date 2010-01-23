@@ -5,17 +5,11 @@
 
 		var _cache = {}; //Message listing cache
 
-		var _current; //Currenst mail listing cache
-
 		var _drag; //The message drag parameter
 
 		var _float = 7; //Amount of pixels to move to trigger message move instead of displaying message when dragging them
 
-		var _fresh = {}; //Flag to indicate if a folder has been updated
-
 		var _lock; //Mail drag mouse move event throttling lock
-
-		var _order = {}; //Mail order for specific mail windows
 
 		var _page = {}; //Selected page for each folders
 
@@ -24,55 +18,6 @@
 		var _scroll = {}; //Scroll amount for each folders
 
 		var _stack = {}; //List of selected mails
-
-		var _update = {}; //Flag to indicate that a folder should be updated from the server
-
-		var _window = 0; //Mail window counter
-
-		var _body = function(id, index) //Create the mail window content
-		{
-			var language = $system.language.strings($id);
-
-			var section = ['from', 'to', 'cc'];
-			var value = {id : id, index : index, sent : $system.date.create(__mail[id].sent).format($global.user.pref.format.full), subject : __mail[id].subject || '(' + language.empty + ')'};
-
-			if(__mail[id].marked == '1') value.marked = ' checked="checked"';
-			else value.unmarked = ' checked="checked"';
-
-			var replace = function(phrase, match) { return variable[match] || ''; }
-
-			for(var i = 0; i < section.length; i++)
-			{
-				var list = __mail[id][section[i]];
-				if(!$system.is.array(list)) continue;
-
-				var address = [];
-
-				for(var j = 0; j < list.length; j++)
-				{
-					var variable = {address : $system.text.escape(list[j].address), show : $system.text.escape(list[j].name ? list[j].name : list[j].address), name : list[j].name ? $system.text.escape(list[j].name) : ''};
-					variable.tip = $system.tip.link($system.info.id, null, 'blank', [$system.text.escape(list[j].address)]);
-
-					address.push($self.info.template.address.replace(/%value:(.+?)%/g, replace));
-				}
-
-				value[section[i]] = address.join(', ');
-			}
-
-			var attachment = [];
-
-			for(var i = 0; i < __mail[id].attachment.length; i++)
-			{
-				var text = $system.text.template('<a class="%id%_mail_attachment" href="%%"%%>%%</a>', $id);
-				attachment.push($system.text.format(text, [$system.network.form($self.info.root + 'server/php/front.php?task=item._body&id=' + __mail[id].attachment[i].id), $system.tip.link($id, null, 'attachment'), __mail[id].attachment[i].name]));
-			}
-
-			value.attachment = attachment.join(', ');
-			value.body = $system.network.form($self.info.root + 'server/php/front.php?task=item.show&message=' + id);
-
-			var replace = function(phrase, match) { return value[match] || ''; }
-			return $self.info.template.mail.replace(/%value:(.+?)%/g, replace);
-		}
 
 		this.clear = function(id, folder) //Remove a mail from folder listing cache
 		{
@@ -161,7 +106,7 @@
 			$system.gui.select(true); //Let text become selectable again
 			$system.node.fade($id + '_drag', true, null, true);
 
-			if(!_drag.mover) return $self.item.show(_drag.id[0]); //If not dragging, display the message
+			if(!_drag.mover) return $self.gui.show(_drag.id[0]); //If not dragging, display the message
 			var list = $system.node.id($id + '_folder').childNodes; //Folder lists
 
 			for(var i = 0; i < list.length; i++)
@@ -199,7 +144,7 @@
 			var expire = function(folder, page, order, reverse) //Expire the cache
 			{
 				if(__selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
-					return _update[folder] = true; //If not currently displayed, flag to note that this folder should be updated on next display
+					return __update[folder] = true; //If not currently displayed, flag to note that this folder should be updated on next display
 
 				delete _cache[folder][page][order][reverse]; //Remove the cache
 				$self.item.get(folder, 1); //Update the displaying list
@@ -272,7 +217,7 @@
 				if(__selected.folder != folder || __selected.page != page || __selected.marked != marked) return true;
 				if(__selected.unread != unread || __selected.order != order || __selected.reverse != reverse || __selected.search != search) return true;
 
-				_current = cache; //Remember current listing
+				__current = cache; //Remember current listing
 
 				if(__selected.page > cache.max) //If the chosen page exceeds the max page (Ex : After moving mails to another folder)
 				{
@@ -446,16 +391,10 @@
 				if(!scroll) table.parentNode.scrollTop = 0; //Move to top of page
 				$system.app.callback(_class + '.get', callback);
 
-				if(!_fresh[folder]) //If never updated
-				{
-					_fresh[folder] = true;
-					return __account[__selected.account].type == 'pop3' && __special.inbox[__selected.account] != folder ? true : $self.item.get(folder, 1); //Update it
-				}
-
-				if(_update[folder]) //If cache should be updated - TODO : May be better to only delete cache for specific setting
+				if(__update[folder]) //If cache should be updated - TODO : May be better to only delete cache for specific setting
 				{
 					delete _cache[folder]; //Remove the entire cache for the folder
-					delete _update[folder];
+					delete __update[folder];
 
 					return $self.item.get(folder, 1); //Update it
 				}
@@ -496,30 +435,6 @@
 			return $system.network.send($self.info.root + 'server/php/front.php', param, null, run);
 		}
 
-		this.next = function(id, index, distance) //Show next or previous mail
-		{
-			var log = $system.log.init(_class + '.next');
-			if(!$system.is.digit(id) || !$system.is.digit(index) || !$system.is.digit(distance, true)) return log.param();
-
-			if(!_order[index]) return false; //If no order information is found, quit
-
-			var node = $system.window.list[$id + '_display_' + index]; //Window object
-			if(!node) return false;
-
-			for(var i = 0; i < _order[index].length; i++)
-			{
-				if(id != _order[index][i]) continue; //Find the current mail ID in the mail list
-
-				var target = i; //Current mail position
-				do { target += distance; } while(target >= 0 && target < _order[index].length && !__mail[_order[index][target]])  //Find the next or previous mail until it finds one
-
-				break;
-			}
-
-			if(!__mail[_order[index][target]]) return true; //If no mail is found, quit
-			return node.body.innerHTML = _body(_order[index][target], index);
-		}
-
 		this.mark = function(id, mode) //Flag a mail as marked or not
 		{
 			var log = $system.log.init(_class + '.mark');
@@ -549,7 +464,7 @@
 
 			var notify = function(callback)
 			{
-				_update[folder] = true; //Set the target folder for update on next access
+				__update[folder] = true; //Set the target folder for update on next access
 				$self.folder.get(__belong[folder], 1); //Update the new mail counts
 
 				$system.app.callback(_class + '.move.notify', callback);
@@ -610,39 +525,30 @@
 			var language = $system.language.strings($id);
 			if(!confirm(language.remove)) return false;
 
-			var update = function(request)
+			var refresh = function(folder, mode) { return __selected.folder == folder ? $self.item.get(folder, mode) : __update[folder] = true; } //Update the folder
+
+			var update = function(account, folder, request)
 			{
 				if($system.dom.status(request.xml) != '0')
 				{
-					$self.item.update(1); //Recover the mail that failed to be trashed
+					refresh(folder, 0); //Recover the mail that failed to be trashed
 					return log.user($global.log.error, 'user/item/delete', 'user/generic/again/solution');
 				}
+
+				refresh(__special.trash[account], 1); //Update the trash
 			}
 
 			$system.node.fade($id + '_display_' + index, true, null, true); //Remove mail window
+			if(!__mail[id]) return false;
 
-			var mail = __mail[id];
-			$self.item.clear(id, mail.folder); //Remove the mail from the folder listing
+			var account = __mail[id].account; //Account the mail belongs to
+			var folder = __mail[id].folder; //Originating folder
 
-			$self.item.update();
+			$self.item.clear(id, folder); //Remove the mail from the folder listing
+			refresh(folder); //Update the origin folder
 
-			if(mail) _update[__special.trash[mail.account]] = true; //Set the trash for update on next access
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.trash'}, {id : [id]}, update);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.trash'}, {id : [id]}, $system.app.method(update, [account, folder]));
 		}
 
 		this.update = function(mode) { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder, mode) : false; } //Reload the mails from the server
-
-		this.show = function(id) //Display the mail window
-		{
-			var log = $system.log.init(_class + '.show');
-
-			if(!$system.is.digit(id)) return log.param();
-			if(!__mail[id]) return log.user($global.log.warning, 'user/show/error', 'user/show/solution');
-
-			$system.node.classes($id + '_mail_row_' + id, $id + '_mail_unread', false); //Remove the unread style
-			__mail[id].read = '1';
-
-			_order[++_window] = _current.list; //Remember the list order for this window
-			return $system.window.create($id + '_display_' + _window, $self.info.title, _body(id, _window), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
-		}
 	}

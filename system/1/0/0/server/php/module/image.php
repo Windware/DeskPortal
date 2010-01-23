@@ -45,6 +45,9 @@
 			if(!$system->is_color($param['background']) || !$system->is_color($param['border'])) return $log->param();
 			if(!$system->is_digit($param['shadow']) || !$system->is_digit($param['shadow'])) return $log->param();
 
+			$through = $system->is_digit($param['through']) ? 100 - $param['through'] : self::$_through; #Set transparency
+			if($through > 100 || $through < 0) return false;
+
 			ksort($param); #Sort the keys
 			$id = 'pane/'.md5(implode('', $param)).'.png'; #Create a unique name from the query string for cache purpose
 
@@ -176,8 +179,8 @@
 			$transparent = imagecolorallocatealpha($image, 0, 0, 0, 127); #Allocate complete transparency color
 
 			#Allocate the given color to the image object
-			$color = imagecolorallocatealpha($image, $color[0], $color[1], $color[2], self::$_through);
-			$line = imagecolorallocatealpha($image, $outline[0], $outline[1], $outline[2], self::$_through);
+			$color = imagecolorallocatealpha($image, $color[0], $color[1], $color[2], $through);
+			$line = imagecolorallocatealpha($image, $outline[0], $outline[1], $outline[2], $through);
 
 			if($param['shadow'])
 			{

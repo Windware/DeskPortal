@@ -57,6 +57,8 @@
 		$system.language.init(); //Initialize the supported language list
 		$system.motion.init(); //Initialize mouse drag function
 
+		$system.tip.init(); //Preload tip background
+
 		//Load common stylesheet and engine specific stylesheet
 		$system.style.add($system.info.id, 'common.css');
 		$system.style.add($system.info.id, $system.browser.engine + '.css');

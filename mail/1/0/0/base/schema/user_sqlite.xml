@@ -52,6 +52,7 @@
 		<column name="mail" param="BLOB" /> <!-- Entire mail content compressed -->
 		<column name="header" param="BLOB" /> <!-- Entire header compressed -->
 		<column name="subject" param="TEXT" />
+		<column name="mid" param="VARCHAR(255)" /> <!-- Message-ID header value -->
 
 		<column name="size" param="INT" />
 		<column name="sent" param="DATETIME" />
@@ -141,7 +142,9 @@
 	<!-- Mail attachments -->
 	<table name="attachment">
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+
 		<column name="mail" param="INT NOT NULL" />
+		<column name="cid" param="VARCHAR(255)" /> <!-- Content ID used for inline objects -->
 
 		<column name="name" param="TEXT NOT NULL" /> <!-- File name -->
 		<column name="size" param="INT" /> <!-- File size bytes -->
@@ -151,6 +154,7 @@
 		<column name="body" param="BLOB" />
 
 		<index name="mail" />
+		<index name="cid" />
 	</table>
 
 	<!-- References to other mails -->

@@ -52,7 +52,7 @@
 
 	div.%id%_mail_body { word-break : all; overflow : auto; height : 300px; text-align : left; background-color : #eee; color : #333; padding : 10px; }
 
-	form.%id%_mail_action input { width : 95px; border : 1px #333 solid; background-color : #dca; }
+	.%id%_mail_action input { width : 110px; border : 1px #333 solid; background-color : #dca; }
 
 	tbody.%id%_mail_header th { font-weight : bold; text-align : right; }
 
@@ -61,3 +61,5 @@
 	a.%id%_mail_attachment { color : #eee !important; }
 
 	a.%id%_mail_attachment:hover, a.%id%_mail_attachment:active { color : #eca !important; }
+
+	.%id%_form_warn { border : 2px #d76 solid; }

@@ -38,15 +38,14 @@
 			else print $system->xml_send($user->save('conf', array('wallpaper' => $_POST['name']), 'system_static'));
 		break;
 
-		case 'motion.init' : case 'window.create' : #Create window background image
-			header('Content-Type: image/png'); #Set the content type as an image
-
+		case 'motion.init' : case 'tip.make' : case 'window.create' : #Create window background image
 			$result = $system->image_background($_GET); #Get the image data
 			if($result === false) return;
 
+			header('Content-Type: image/png'); #Set the content type as an image
 			header('Content-Length: '.strlen($result)); #Send the file size
-			$system->cache_header(); #Send cache headers
 
+			$system->cache_header(); #Send cache headers
 			print $result; #Send the image
 		break;
 

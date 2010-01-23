@@ -19,6 +19,21 @@
 	<string name="user/gui/search" value="検索語は%%文字以上、%%文字以下でなければいけません。" />
 	<string name="user/gui/search/solution" value="正しい文字数を入力してください。" />
 
+	<string name="user/gui/send/success" value="メール送信完了" />
+	<string name="user/gui/send/success/message" value="メールが送信されました" />
+
+	<string name="user/gui/send/error" value="エラーが発生しました" />
+	<string name="user/gui/send/error/message" value="メール送信時にエラーが発生しました。時間をおいて再度お試しください。" />
+
+	<string name="user/gui/send/big" value="メールのサイズが大きすぎます" />
+	<string name="user/gui/send/big/message" value="メールのサイズが制限を超えました。サイズを減らして再度お試しください。" />
+
+	<string name="user/gui/send/imap" value="メールの保存に失敗しました" />
+	<string name="user/gui/send/imap/message" value="メールをサーバーに保存できませんでした。時間をおいて再度お試しください。" />
+
+	<string name="user/gui/send/smtp" value="メールの送信に失敗しました" />
+	<string name="user/gui/send/smtp/message" value="メールを送信できませんでした。メールの送り先アドレス、設定を確認して下さい。または時間をおいて再度お試しください。" />
+
 	<!-- item.js -->
 	<string name="user/show/error" value="メールの表示に失敗しました" />
 	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />

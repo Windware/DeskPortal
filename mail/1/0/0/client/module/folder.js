@@ -7,6 +7,10 @@
 
 		var _count = {}; //Number of unreal mails for each folders
 
+		var _loaded = {}; //Flag to indicate if a folder has been updated
+
+		var _lock; //Lock to wait for mails to finish loading
+
 		var _previous; //Previously selected folder
 
 		var _space = 10; //Amount of space to put on left for folders below another
@@ -16,13 +20,27 @@
 		this.change = function(folder) //Change the displaying folder
 		{
 			var log = $system.log.init(_class + '.change');
-
 			if(!$system.is.digit(folder)) return log.param();
-			if(!$self.item.get(folder)) return false; //Get the folder items for current account
+
+			if(_lock) return false; //Wait till previous loading finishes
+			_lock = true;
 
 			//Change the look of the chosen folder
 			if(_previous) $system.node.classes($id + '_folder_' + _previous, $id + '_displayed', false);
 			$system.node.classes($id + '_folder_' + folder, $id + '_displayed', true);
+
+			var unlock = function(folder)
+			{
+				_lock = false;
+
+				var local = __account[__belong[folder]].type == 'pop3' && __special.inbox[__selected.account] != folder; //Do not update other than INBOX for POP3
+				if(_loaded[folder] || local) return true; //If never updated, update from the server
+
+				_loaded[folder] = _lock = true;
+				return $self.item.get(folder, 1, $system.app.method(unlock, [folder])); //Update it
+			}
+
+			if(!$self.item.get(folder, false, $system.app.method(unlock, [folder]))) return false; //Get the folder items for current account
 
 			_previous = folder;
 			return true;
