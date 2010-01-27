@@ -168,7 +168,6 @@
 
 				$this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				$this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-				$this->handler->setAttribute(PDO::ATTR_TIMEOUT, $conf['db_timeout']);
 			}
 
 			catch(PDOException $error)
@@ -405,28 +404,18 @@
 		public function run($parameter = array()) #Executes the prepared statement
 		{
 			$this->database->log($this->query, $parameter, $this->level); #Log the query
+			if(!($this->handler instanceof PDOStatement)) return $this->database->logger(LOG_ERR, 'Cannot make a query on a non PDOStatement object', 'Do not make a query on a failed query object');
 
-			if(!($this->handler instanceof PDOStatement))
-				return $this->database->logger(LOG_ERR, 'Cannot make a query on a non PDOStatement object', 'Do not make a query on a failed query object');
-
-			for($i = 1; $i <= $this->conf['db_retry']; $i++) #Keep trying until it succeeds or exceeds the retry limit (For cases such as waiting for database lock to be released)
+			try
 			{
-				try
-				{
-					$this->handler->execute($parameter);
-					$this->success = true; #Query succeeded
+				$this->handler->execute($parameter);
+				$this->success = true; #Query succeeded
+			}
 
-					break;
-				}
-
-				catch(PDOException $error)
-				{
-					if($i == $this->conf['db_retry']) #Only log error on last try
-					{
-						$this->database->logger(LOG_ERR, "Database query failed for [$this->query] : \"".$error->getMessage().'"', 'Check the error');
-						$this->error = $error; #Keep the error object
-					}
-				}
+			catch(PDOException $error)
+			{
+				$this->database->logger(LOG_ERR, "Database query failed for [$this->query] : \"".$error->getMessage().'"', 'Check the error');
+				$this->error = $error; #Keep the error object
 			}
 		}
 	}

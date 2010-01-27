@@ -67,6 +67,8 @@
 
 			var list = function(account, callback, request)
 			{
+				$self.gui.indicator(false); //Hide indicator
+
 				_cache[account] = request.xml || request;
 				if(__selected.account != account) return true; //If displaying account got changed, do not display the result
 
@@ -94,17 +96,6 @@
 						var name = $system.dom.attribute(nodes[i], 'name');
 
 						var recent = $system.dom.attribute(nodes[i], 'recent'); //Number of unread mails
-						if(_count[id] && recent > _count[id]) $system.gui.notice($id, language.recent, null); //Notify the new message presence
-
-						_count[id] = recent;
-						__belong[id] = account; //Remember the belonging account
-
-						var link = document.createElement('a'); //Create link for the folder
-						link.id = $id + '_folder_' + id;
-
-						link.onclick = $system.app.method($self.folder.change, [id]);
-						$system.node.hover(link, $id + '_hilight');
-
 						var special = false; //If this folder is special or not
 
 						for(var j = 0; j < title.length; j++)
@@ -116,6 +107,23 @@
 
 							break;
 						}
+
+						if(_count[id] && recent > _count[id])
+						{
+							__update[id] = true; //Make it update on next access
+
+							var message = language.recent.replace('%folder%', name).replace('%account%', __account[account].description);
+							$system.gui.notice($id, message, null); //Notify the new message presence
+						}
+
+						_count[id] = recent;
+						__belong[id] = account; //Remember the belonging account
+
+						var link = document.createElement('a'); //Create link for the folder
+						link.id = $id + '_folder_' + id;
+
+						link.onclick = $system.app.method($self.folder.change, [id]);
+						$system.node.hover(link, $id + '_hilight');
 
 						if(special === false) //Create folder icon for regular folders
 						{
@@ -207,6 +215,7 @@
 				if(_cache[account]) return list(account, callback, _cache[account]); //If cached object is given, call it directly
 			}
 
+			$self.gui.indicator(true); //Show indicator
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account, update : update, subscribed : 1}, null, $system.app.method(list, [account, callback]));
 		}
 	}

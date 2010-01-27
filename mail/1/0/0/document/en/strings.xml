@@ -2,7 +2,7 @@
 	<string name="account" value="Account" />
 	<string name="folder" value="Folder" />
 	<string name="loading" value="Loading..." />
-	<string name="recent" value="New mail has arrived" />
+	<string name="recent" value="New mail has arrived in '%folder%' for '%account%'" />
 
 	<!-- Special folders -->
 	<string name="inbox" value="Inbox" />
@@ -72,4 +72,5 @@
 	<string name="save" value="Save" />
 	<string name="cancel" value="Cancel" />
 	<string name="sign" value="Sign" />
+	<string name="sending" value="Sending..." />
 </root>

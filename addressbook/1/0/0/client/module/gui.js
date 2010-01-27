@@ -95,12 +95,12 @@
 		this.mail = function(address) //Compose mail for the address
 		{
 			var log = $system.log.init(_class + '.mail');
-			if(!$system.is.text(address, false, '@')) return log.param();
+			if(!$system.is.text(address, false, /.@./)) return log.param();
 
-			var app = 'mail_' + $global.user.used.mail; //Launch the mailer and start composing
+			var app = 'mail_1_0_0'; //Launch the mailer and start composing
 
 			if(!$system.app.library(app)) return false;
-			$system.app.load(app, $system.app.method($global.top[app].item.create, [address]));
+			return $system.app.load(app, $system.app.method($global.top[app].gui.create, [null, null, [address]]));
 		}
 
 		this.search = function(phrase) //Searches through the contents displayed

@@ -1,5 +1,7 @@
 <form id="%id%_form" style="margin : 10px 0px" onsubmit="%top%.%id%.item.update(); return false">
 	<p style="background-color : #cba; padding : 5px; border : 1px #333 solid">
+		<img id="%id%_indicator" src="%image:loading/red.gif%" style="visibility : hidden" class="%id%_indicator"></img>
+
 		[<img class="%system%_icon" style="cursor : pointer" src="%image:new.png%" onclick="%top%.%id%.gui.compose()"%tip:new% />]
 
 		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>]
@@ -16,8 +18,6 @@
 		</label>]
 
 		[<span%tip:search% style="cursor : help"><strong>%string:search%</strong> : <input type="text" name="search" style="width : 120px" /></span>]
-
-		<img id="%id%_indicator" src="%image:loading/red.gif%" class="%system%_hidden %id%_indicator"></img>
 	</p>
 
 	<input type="submit" style="display : none" />

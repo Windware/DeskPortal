@@ -13,8 +13,6 @@
 
 		var _submit = {}; //Remember mail send form submission
 
-		var _window = 0; //Mail window counter
-
 		var _body = function(id, index, compose, field) //Create the mail window content
 		{
 			if(!$system.is.digit(id)) id = 0;
@@ -96,12 +94,12 @@
 					}
 					else value.subject = 'Fw : ' + __mail[id].subject; //If forwarding, put the forward prefix
 				}
-				else var account = 1; //FIXME - Pick the default account
+				else var account = __selected.account ? __selected.account : 1; //FIXME - Pick the default account
 
 				for(var i in __account)
 				{
 					var selection = i == account ? ' selected="selected"' : '';
-					value.account += $system.text.format('<option value="%%"%%>%% (%%)</option>', [i, selection, __account[i].name, __account[i].address]);
+					value.account += $system.text.format('<option value="%%"%%>%% : %% (%%)</option>', [i, selection, __account[i].description, __account[i].name, __account[i].address]);
 				}
 			}
 
@@ -189,11 +187,18 @@
 				if(__special.sent[_submit[index]] == __selected.folder) $self.item.update(1); //Update the sent folder
 				else __update[__special.sent[_submit[index]]] = true; //Or mark the sent folder to be updated on next access
 			}
+			else
+			{
+				$system.node.hide($id + '_compose_' + index + '_sending', true); //Hide the send message
+
+				var form = $system.node.id($id + '_compose_' + index + '_form');
+				for(var i = 0; i < form.elements.length; i++) form.elements[i].disabled = false; //Enable the forms again
+			}
 
 			return $system.gui.alert($id, 'user/gui/send/' + mode, 'user/gui/send/' + mode + '/message', timer); //Show the status
 		}
 
-		this.compose = function(id, index, field) //Compose a mail
+		this.compose = function(id, index, field, address) //Compose a mail
 		{
 			if(!$system.is.digit(index)) return $self.gui.show(id, true); //Create the mail window to compose if no window is specified
 			if(!$system.is.digit(id) || !id) return false;
@@ -224,6 +229,28 @@
 			}
 
 			return true;
+		}
+
+		this.create = function(account, subject, to, cc, bcc) //Create a new mail
+		{
+			var index = $self.gui.show(null, true);
+			if(!index) return false;
+
+			var form = $system.node.id($id + '_compose_' + index + '_form');
+
+			if($system.is.digit(account) && account) form.account.value = account;
+			if($system.is.text(subject)) form.subject.value = account; //Set values
+
+			var target = {to : to, cc : cc, bcc : bcc};
+
+			for(var section in target) //Set the address fields
+			{
+				if(!$system.is.array(target[section])) continue;
+				var address = [];
+
+				for(var i = 0; i < target[section].length; i++) address.push(target[section][i]);
+				form[section].value = address.join(', ');
+			}
 		}
 
 		this.file = function(index) //Load a file for attachment
@@ -260,19 +287,25 @@
 			_process += on ? 1 : -1;
 			if(_process < 0) _process = 0;
 
-			return $system.node.hide($system.node.id($id + '_indicator'), !_process);
+			return $system.node.id($id + '_indicator').style.visibility = _process ? '' : 'hidden';
 		}
 
 		this.load = function(id, index, frame) //Load the inline images on HTML messages
 		{
-			$system.node.id($id + '_mail_' + index + '_loading').style.visibility = 'hidden'; //Remove the loading indicator
+			var log = $system.log.init(_class + '.load');
+			if(!$system.is.digit(id) || !$system.is.digit(index) || !$system.is.element(frame, 'iframe')) return log.param();
+
+			var indicator = $system.node.id($id + '_mail_' + index + '_loading');
+			if(!__mail[id] || !$system.is.element(indicator)) return false;
+
+			indicator.style.visibility = 'hidden'; //Remove the loading indicator
 			$self.folder.get(__mail[id].account, 1); //Update the unread counts in the folder list
 
 			var image = frame.contentWindow.document.getElementsByTagName('img');
 
 			for(var i = 0; i < image.length; i++)
 			{
-				var source = $system.network.form($self.info.root + 'server/php/front.php?task=gui.load&cid=$1');
+				var source = $system.network.form($self.info.root + 'server/php/front.php?task=gui.load&id=' + id + '&cid=$1');
 				image[i].src = image[i].src.replace(/^cid:(.+)$/, source); //Set the embedded image target
 			}
 		}
@@ -336,9 +369,14 @@
 			for(var field in warn) return false; //If invalid fields exist, quit
 
 			_submit[index] = form.account.value; //Remember the form has been submitted
-
 			if(!confirm(language.confirm)) return false;
-			return form.submit(); //Submit the form directly inside an 'iframe' to have file uploading work
+
+			$system.node.hide($id + '_compose_' + index + '_sending', false); //Show the send message
+
+			form.submit(); //Submit the form directly inside an 'iframe' to have file uploading work
+			for(var i = 0; i < form.elements.length; i++) form.elements[i].disabled = true; //Disable the form for multiple submission
+
+			return true;
 		}
 
 		this.show = function(id, compose) //Display the mail window
@@ -350,7 +388,7 @@
 				if(!compose) return log.param();
 
 				id = null;
-				_window++;
+				__window++;
 			}
 			else
 			{
@@ -359,10 +397,11 @@
 				$system.node.classes($id + '_mail_row_' + id, $id + '_mail_unread', false); //Remove the unread style
 				__mail[id].read = '1';
 
-				_order[++_window] = __current.list; //Remember the list order for this window
+				_order[++__window] = __current.list; //Remember the list order for this window
 			}
 
-			return $system.window.create($id + '_display_' + _window, $self.info.title + ' [No. ' + id + ']', _body(id, _window, compose), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+			$system.window.create($id + '_display_' + __window, $self.info.title + ' [No. ' + (id || 0) + ']', _body(id, __window, compose), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+			return __window; //Return the window ID
 		}
 
 		this.sort = function(section) //Sort the columns

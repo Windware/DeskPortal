@@ -3,7 +3,7 @@
 
 	var __belong = {}; //Accounts folders belong to
 
-	var __current; //Currenst mail listing cache
+	var __current; //Current mail listing cache
 
 	var __filter = {}; //List filter options
 
@@ -18,3 +18,5 @@
 	var __special = {'inbox' : {}, 'drafts' : {}, 'sent' : {}, 'trash' : {}} //Special folders
 
 	var __update = {}; //Flag to indicate that a folder should be updated from the server
+
+	var __window = 0; //Mail window counter

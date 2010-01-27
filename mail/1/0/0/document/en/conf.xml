@@ -6,6 +6,9 @@
 	<string name="account" value="Account" />
 	<string name="new" value="New" />
 	<string name="basic" value="Basic Settings" />
+	<string name="default" value="Default account" />
+	<string name="yes" value="Yes" />
+	<string name="no" value="No" />
 	<string name="description" value="Description" />
 	<string name="name" value="Name" />
 	<string name="address" value="Address" />
@@ -26,6 +29,7 @@
 
 	<string name="user" value="User" />
 	<string name="pass" value="Password" />
+	<string name="saving" value="Saving..." />
 	<string name="save" value="Save" />
 
 	<string name="folder" value="Folder" />
@@ -47,6 +51,9 @@
 	<string name="create" value="Create" />
 	<string name="top" value="Top" />
 	<string name="parent" value="Parent Folder" />
+
+	<string name="terminate" value="Remove account '%%'?" />
+	<string name="pop3" value="All of the mails stored for this account will be deleted." />
 	<string name="remove" value="This will delete the folder %% and all of its mails. This cannot be undone." />
 
 	<string name="error" value="Error" />

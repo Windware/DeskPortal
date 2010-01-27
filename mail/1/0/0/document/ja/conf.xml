@@ -6,6 +6,9 @@
 	<string name="account" value="アカウント" />
 	<string name="new" value="新規" />
 	<string name="basic" value="基本設定" />
+	<string name="default" value="標準アカウント" />
+	<string name="yes" value="はい" />
+	<string name="no" value="いいえ" />
 	<string name="description" value="説明" />
 	<string name="name" value="名前" />
 	<string name="address" value="メールアドレス" />
@@ -26,6 +29,7 @@
 
 	<string name="user" value="ユーザー" />
 	<string name="pass" value="パスワード" />
+	<string name="saving" value="保存中・・・" />
 	<string name="save" value="保存" />
 
 	<string name="folder" value="フォルダー" />
@@ -47,6 +51,9 @@
 	<string name="create" value="作成" />
 	<string name="top" value="トップ" />
 	<string name="parent" value="親フォルダー" />
+
+	<string name="terminate" value="アカウント'%%'を削除しますか？" />
+	<string name="pop3" value="アカウントに保存されているメールは全て削除されます。" />
 	<string name="remove" value="%%フォルダーとその中のメールを削除します。この操作は取り消せません。" />
 
 	<string name="error" value="エラー" />

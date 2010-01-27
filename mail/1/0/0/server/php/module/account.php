@@ -3,6 +3,12 @@
 	{
 		private static $_stream = array(); #Mail server connection cache
 
+		protected static function _rollback(&$database) #A shortcut for rolling back transaction and returning 'false'
+		{
+			$database->rollback();
+			return false;
+		}
+
 		public static function connect($account, $folder = null, System_1_0_0_User $user = null) #Connect to the mail server of an account
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -85,7 +91,7 @@
 				$param[':id'] = $account;
 			}
 
-			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE$limit user = :user");
+			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE$limit user = :user ORDER BY LOWER(description)");
 			$query->run($param);
 
 			if(!$query->success) return false;
@@ -102,6 +108,99 @@
 			}
 
 			return $list;
+		}
+
+		public static function remove($id, System_1_0_0_User $user = null) #Remove an account
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($id)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$database->begin();
+
+			$query = $database->prepare("DELETE FROM {$database->prefix}account WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $id, ':user' => $user->id)); #Remove the account
+
+			if(!$query->success) return self::_rollback($database);
+
+			$query = $database->prepare("DELETE FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
+			$query->run(array(':user' => $user->id, ':account' => $id)); #Remove the POP3 download history
+
+			if(!$query->success) return self::_rollback($database);
+
+			$query = $database->prepare("SELECT id FROM {$database->prefix}folder WHERE user = :user AND account = :account");
+			$query->run(array(':user' => $user->id, ':account' => $id)); #Find the folders
+
+			if(!$query->success) return self::_rollback($database);
+
+			$folder = array(); #Folder list
+			foreach($query->all() as $row) $folder[] = $row['id'];
+
+			$query = $database->prepare("DELETE FROM {$database->prefix}folder WHERE user = :user AND account = :account");
+			$query->run(array(':user' => $user->id, ':account' => $id)); #Remove the folders
+
+			if(!$query->success) return self::_rollback($database);
+			$mail = array(); #Mail list
+
+			for($i = 0; $i < count($folder); $i += Mail_1_0_0_Item::$_limit)
+			{
+				$param = array(':user' => $user->id);
+				$target = array();
+
+				foreach(array_slice($folder, $i, Mail_1_0_0_Item::$_limit) as $index => $id)
+				{
+					$value = $target[] = ":i{$index}d";
+					$param[$value] = $id;
+				}
+
+				$target = implode(', ', $target);
+
+				$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder IN ($target)");
+				$query->run($param); #Find the mails
+
+				if(!$query->success) return self::_rollback($database);
+				foreach($query->all() as $row) $mail[] = $row['id'];
+
+				$query = $database->prepare("DELETE FROM {$database->prefix}mail WHERE user = :user AND folder IN ($target)");
+				$query->run($param); #Delete the mails
+
+				if(!$query->success) return self::_rollback($database);
+			}
+
+			for($i = 0; $i < count($mail); $i += Mail_1_0_0_Item::$_limit)
+			{
+				$param = $target = array();
+
+				foreach(array_slice($mail, $i, Mail_1_0_0_Item::$_limit) as $index => $id)
+				{
+					$value = $target[] = ":i{$index}d";
+					$param[$value] = $id;
+				}
+
+				$target = implode(', ', $target);
+
+				foreach(explode(' ', 'from to cc attachment reference') as $section)
+				{
+					$query = $database->prepare("DELETE FROM {$database->prefix}$section WHERE mail IN ($target)");
+					$query->run($param); #Delete mail related data
+
+					if(!$query->success) return self::_rollback($database);
+				}
+
+				$query = $database->prepare("DELETE FROM {$database->prefix}reference WHERE reference IN ($target)");
+				$query->run($param); #Delete mail referer
+
+				if(!$query->success) return self::_rollback($database);
+			}
+
+			return $database->commit();
 		}
 
 		public static function set($id, $param, System_1_0_0_User $user = null) #Save the account information
@@ -137,6 +236,12 @@
 
 			$name = implode(', ', $name);
 			$database->begin();
+
+			if($data[':base']) #If a new default account is set
+			{
+				$query = $database->prepare("UPDATE {$database->prefix}account SET base = :base WHERE user = :user");
+				$query->run(array(':base' => 0, ':user' => $user->id)); #Reset the previous default account
+			}
 
 			if($id == 0) #Insert new account data
 			{

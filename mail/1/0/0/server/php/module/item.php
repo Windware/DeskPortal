@@ -1,11 +1,9 @@
 <?php
 	class Mail_1_0_0_Item #Supports both POP3/IMAP and servers without UIDL or UID support
-	{ #TODO : Include PEAR packages as local files - Net_POP3, Mail, Mail_mime
+	{ #TODO : Include PEAR packages as local files - Auth_SASL, Net_POP3, Net_SMTP, Mail, Mail_mime
 		protected static $_attachment = 50; #Maximum megabytes allowed to be sent as an entire mail
 
 		protected static $_flag = array('deleted' => 'Deleted', 'read' => 'Seen', 'marked' => 'Flagged', 'replied' => 'Answered', 'draft' => 'Draft'); #Table column names and corresponding IMAP flags
-
-		protected static $_limit = 500; #Max number of place holders possible in database queries
 
 		protected static $_max = 200; #Max kilobytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger.
 
@@ -23,12 +21,14 @@
 
 		private static $_structure; #Mime structure for each mails
 
+		public static $_limit = 500; #Max number of place holders possible in database queries
+
 		protected static function _dig($parts, $position = '') #Dig the multi part message
 		{
 			if(!is_array($parts)) return false;
 
 			if($position) $position = "$position.";
-			foreach($parts as $section) self::_dig($section->parts, $position.'1'); #If inner parts exist, check them
+			foreach($parts as $index => $section) self::_dig($section->parts, $position.++$index); #If inner parts exist, check them
 
 			foreach($parts as $index => $section) #Pick the position in the structure
 			{
@@ -97,7 +97,10 @@
 			#Foe IE, URL encode the file name to avoid file name getting corrupted provided as UTF-8
 			$name = strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? rawurlencode($attachment['name']) : str_replace('"', '\\"', $attachment['name']);
 
-			header('Content-Type: '.self::$_type[$structure->type].'/'.strtolower($structure->subtype));
+			$mime = self::$_type[$structure->type].'/'.strtolower($structure->subtype);
+			switch($mime) { case 'image/jpg' : $mime = 'image/jpeg'; break; } #Fix bad mime type
+
+			header("Content-Type: $mime");
 			header("Content-Disposition: attachment; filename=\"$name\"");
 
 			header('Content-Length: '.strlen($body));
@@ -146,7 +149,7 @@
 
 			$target = implode(', ', $target);
 
-			$query = $database->prepare("SELECT id, folder, uid, sequence, signature FROM {$database->prefix}mail WHERE id IN ($target) AND user = :user");
+			$query = $database->prepare("SELECT id, folder, uid, signature FROM {$database->prefix}mail WHERE id IN ($target) AND user = :user");
 			$query->run($param);
 
 			if(!$query->success) return false;
@@ -164,7 +167,9 @@
 			$query->run(array(':id' => $folder, ':user' => $user->id));
 
 			if(!$query->success) return false;
+
 			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server
+			if(!$link) return false;
 
 			$numbers = array(); #Returning sequence numbers
 
@@ -203,39 +208,17 @@
 				$content = imap_check($link['connection']);
 				if(!is_object($content)) return Mail_1_0_0_Account::error($link['host']);
 
-				$target = null;
+				$compare = array(); #List of mail signatures on the mail server
 
-				foreach($collection as $identity) #For all of the specified messages
+				for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++) #Go through entire messages
 				{
-					if($identity['sequence'] && $identity['sequence'] <= $content->Nmsgs) #Reuse the sequence number
-					{
-						$signature = imap_fetchheader($link['connection'], $identity['sequence']); #Try to see if the sequence number still matches
-						if(!$signature) return Mail_1_0_0_Account::error($link['host']);
+					$signature = imap_fetchheader($link['connection'], $sequence); #Signature of a message
+					if(!$signature) return Mail_1_0_0_Account::error($link['host']);
 
-						$signature = md5($signature);
-						if($signature == $identity['signature']) $target = $identity['sequence']; #Use it if it matches
-					}
-
-					#NOTE : This is a very slow operation only used when UID/UIDL is not supported by the IMAP/POP3 server
-					if(!$target) #If not found, go through entire messages and find the matching mail
-					{
-						for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++)
-						{
-							$signature = imap_fetchheader($link['connection'], $sequence); #Signature of a message
-							if(!$signature) return Mail_1_0_0_Account::error($link['host']);
-
-							$signature = md5($signature);
-							if($signature != $identity['signature']) continue; #Find the message
-
-							$target = $sequence;
-							break;
-						}
-
-						if(!$target) return $log->dev(LOG_WARNING, "Cannot find the mail data on the server for mail ID '$id'", 'Mail may have been deleted from another client. Try to synchronize the mail box.');
-					}
-
-					$numbers[] = $target; #Stack the sequence numbers
+					$compare[md5($signature)] = $sequence; #Gather mail signatures
 				}
+
+				foreach($collection as $identity) if($compare[$identity['signature']]) $numbers[] = $compare[$identity['signature']]; #Check the signatures in the database
 			}
 
 			return array($link, $numbers);
@@ -257,7 +240,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			if($flag != 'Deleted') #Nothing to flag for 'Deleted' on the database
+			if($flag != 'Deleted') #Nothing to flag for 'Deleted' flag to the database
 			{
 				foreach(self::$_flag as $column => $mark) if($mark == $flag) $set = $column; #Find the column name for the flag
 
@@ -404,7 +387,7 @@
 				foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
 			}
 
-			$query['attachment'] = $database->prepare("SELECT id, mail, cid, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target)");
+			$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
 			$query['attachment']->run($param);
 
 			if(!$query['attachment']->success) return false;
@@ -427,12 +410,12 @@
 			return $xml;
 		}
 
-		public static function image($cid) #Get the embedded image data
+		public static function image($id, $cid) #Get the embedded image data
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_text($cid)) return $log->param();
+			if(!$system->is_digit($id) || !$system->is_text($cid)) return $log->param();
 			if(strlen($cid) > 255) return false;
 
 			if($user === null) $user = $system->user();
@@ -441,8 +424,8 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT at.id FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.cid = :cid AND at.mail = mail.id AND mail.user = :user");
-			$query->run(array(':cid' => $cid, ':user' => $user->id));
+			$query = $database->prepare("SELECT at.id FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.mail = :id AND at.cid = :cid AND at.mail = mail.id AND mail.user = :user");
+			$query->run(array(':id' => $id, ':cid' => $cid, ':user' => $user->id));
 
 			if(!$query->success) return false;
 			return self::attachment($query->column(), 'inline');
@@ -538,7 +521,7 @@
 				}
 				else #On copy
 				{
-					$column = 'user, uid, sequence, signature, subject, mail, size, sent, received, preview, plain, html, encode, marked, read, replied, draft, color';
+					$column = 'user, uid, signature, subject, mid, mail, size, sent, received, preview, plain, html, encode, marked, read, replied, draft, color';
 
 					$query = $database->prepare("INSERT INTO {$database->prefix}mail ($column, folder) SELECT ($column, :folder) FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 					$param = array(':folder' => $folder, ':user' => $user->id);
@@ -703,11 +686,11 @@
 			if(!is_string($name) || !strlen($name)) #If not found
 			{
 				$name = self::$_sent;
-				$folder = Mail_1_0_0_Folder::create($name); #Register a generic folder name
+				$folder = Mail_1_0_0_Folder::create($account, null, $name, $user); #Register a generic folder name
 
 				if(!$folder) return 1;
 
-				$query = $database->prepare("UPDATE {$database->prefix}account SET folder_sent = :folder WHERE id = :id user = :user");
+				$query = $database->prepare("UPDATE {$database->prefix}account SET folder_sent = :folder WHERE id = :id AND user = :user");
 				$query->run(array(':folder' => $folder, ':id' => $account, ':user' => $user->id));
 
 				if(!$query->success) return 1;
@@ -900,7 +883,7 @@
 				$query[$section] = $database->prepare("INSERT INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
 
 			#Mail info insertion query
-			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, sequence, header, signature, subject, sent, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :sequence, :header, :signature, :subject, :sent, :read, :preview, :plain, :html, :encode)");
+			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, header, signature, subject, mid, sent, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :header, :signature, :subject, :mid, :sent, :read, :preview, :plain, :html, :encode)");
 
 			#Attachment info query
 			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, cid, name, size, type, position) VALUES (:mail, :cid, :name, :size, :type, :position)");
@@ -936,7 +919,7 @@
 			}
 
 			$exist = array(); #List of header md5 sum of mails existing in the mail box
-			$field = explode(' ', 'date subject to from unseen'); #List of fields to get
+			$field = explode(' ', 'date message_id subject to from unseen'); #List of fields to get
 
 			for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++) #For all of the messages found in the mail box
 			{
@@ -946,8 +929,8 @@
 					continue; #If already stored, move on
 				}
 
-				$attributes = array(':user' => $user->id, ':folder' => $folder, ':sequence' => $sequence, ':uid' => isset($unique[$sequence]) ? $unique[$sequence] : null); #Mail information parameters
-				foreach(explode(' ', 'encode plain html preview sent subject header') as $empty) $attributes[":$empty"] = null; #NOTE : PHP bug? (Without setting them to null here, random values get inserted)
+				$attributes = array(':user' => $user->id, ':folder' => $folder, ':uid' => isset($unique[$sequence]) ? $unique[$sequence] : null); #Mail information parameters
+				foreach(explode(' ', 'encode mid plain html preview sent subject header') as $empty) $attributes[":$empty"] = null; #NOTE : PHP bug? (Without setting them to null here, random values get inserted)
 
 				$attributes[':header'] = imap_fetchheader($link['connection'], $sequence); #Get the mail header
 				if(!$attributes[':header']) return Mail_1_0_0_Account::error($link['host']);
@@ -975,6 +958,8 @@
 
 							case 'unseen' : $store = ':read'; break;
 
+							case 'message_id' : $store = ':mid'; break;
+
 							default : $store = ":$key"; break;
 						}
 
@@ -985,6 +970,8 @@
 							case 'date' : $attributes[$store] = $system->date_datetime(strtotime($attributes[$store])); break; #Format the time
 
 							case 'subject' : if(!$system->is_text($attributes[$store])) $attributes[$store] = ''; break; #Avoid null values
+
+							case 'message_id' : $attributes[$store] = preg_replace('/^<(.+)>$/', '\1', $attributes[$store]); break; #Strip the brackets
 
 							case 'unseen' : $attributes[$store] = $value == 'U' ? 0 : 1; break; #Unread entries
 						}
@@ -1043,7 +1030,11 @@
 							$data[$type] = $info['structure']; #Keep the structure
 							continue;
 						}
-						elseif($system->is_digit($info['size']) && $info['name']) $attachment[] = $info; #Keep them as attachments
+						elseif($system->is_digit($info['size']) && ($info['name'] || $info['structure']->id))
+						{
+							if(!strlen($info['name'])) $info['name'] = ''; #Give an empty name if only Content-ID is given
+							$attachment[] = $info; #Keep them as attachments
+						}
 					}
 				}
 				elseif($structure->type == 0 && ($subtype == 'plain' || $subtype == 'html') && $structure->bytes < self::$_max * 1000) #If it's a single part message

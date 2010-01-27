@@ -2,7 +2,7 @@
 	<string name="account" value="アカウント" />
 	<string name="folder" value="フォルダー" />
 	<string name="loading" value="読み込み中..." />
-	<string name="recent" value="新着メールがあります" />
+	<string name="recent" value="'%account%'の'%folder%'に新着があります" />
 
 	<!-- 特別フォルダー -->
 	<string name="inbox" value="受信箱" />
@@ -71,4 +71,5 @@
 	<string name="save" value="保存" />
 	<string name="cancel" value="キャンセル" />
 	<string name="sign" value="署名" />
+	<string name="sending" value="送信中・・・" />
 </root>

@@ -223,6 +223,8 @@
 			if(!$query->success) return false;
 			if($target != 0) $new = $folder['target']['name'].$separator.$new; #Full path of the new folder name
 
+			if($folder['source']['name'] == $new) return true; #If target is same, quit
+
 			if(Mail_1_0_0_Account::type($query->column()) == 'imap') #For IMAP, rename on the mail server
 			{
 				$link = Mail_1_0_0_Account::connect($folder['source']['account'], '', $user); #Connect to the server
@@ -385,7 +387,7 @@
 			$log = $system->log(__METHOD__);
 
 			if(!$system->is_digit($folder) || !is_string($name)) return $log->param();
-			if(!strlen($name) || strlen($name) > 255) return false; #TODO - Show better error, the max folder name length is?
+			if(!preg_match('/\S/', $name) || strlen($name) > 255) return false; #TODO - Show better error, the max folder name length is?
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;

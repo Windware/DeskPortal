@@ -2,15 +2,23 @@
 	<!-- USER -->
 	<string name="user/generic/again/solution" value="時間をおいて再度読み込みを行ってください。またアカウントの設定を確認してください。" />
 
+	<!-- account.js -->
+	<string name="user/conf/remove/title" value="アカウント削除" />
+	<string name="user/conf/remove/message" value="アカウントが削除されました" />
+	<string name="user/conf/error/remove" value="アカウント削除時にエラーが発生しました。" />
+
 	<!-- conf.js -->
 	<string name="user/conf/error/title" value="エラーが起きました" />
-	<string name="user/conf/error/message" value="設定の保存に失敗しました" />
+	<string name="user/conf/error/message" value="設定の保存に失敗しました。" />
 
 	<string name="user/conf/success/title" value="保存完了" />
-	<string name="user/conf/success/message" value="設定が保存されました" />
+	<string name="user/conf/success/message" value="設定が保存されました。" />
 
 	<string name="user/conf/connect/title" value="認証失敗" />
-	<string name="user/conf/connect/message" value="アカウントへの認証に失敗しました" />
+	<string name="user/conf/connect/message" value="アカウントへの認証に失敗しました。" />
+
+	<string name="user/conf/signature/title" value="署名が長すぎます" />
+	<string name="user/conf/signature/message" value="署名の長さを500文字以下にしてください。" />
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
@@ -23,16 +31,16 @@
 	<string name="user/gui/send/success/message" value="メールが送信されました" />
 
 	<string name="user/gui/send/error" value="エラーが発生しました" />
-	<string name="user/gui/send/error/message" value="メール送信時にエラーが発生しました。時間をおいて再度お試しください。" />
+	<string name="user/gui/send/error/message" value="メール送信時にエラーが発生しました。時間をおいて再度試してください。" />
 
 	<string name="user/gui/send/big" value="メールのサイズが大きすぎます" />
-	<string name="user/gui/send/big/message" value="メールのサイズが制限を超えました。サイズを減らして再度お試しください。" />
+	<string name="user/gui/send/big/message" value="メールのサイズが制限を超えました。サイズを減らして再度試してください。" />
 
 	<string name="user/gui/send/imap" value="メールの保存に失敗しました" />
-	<string name="user/gui/send/imap/message" value="メールをサーバーに保存できませんでした。時間をおいて再度お試しください。" />
+	<string name="user/gui/send/imap/message" value="メールをサーバーに保存できませんでした。時間をおいて再度試してください。" />
 
 	<string name="user/gui/send/smtp" value="メールの送信に失敗しました" />
-	<string name="user/gui/send/smtp/message" value="メールを送信できませんでした。メールの送り先アドレス、設定を確認して下さい。または時間をおいて再度お試しください。" />
+	<string name="user/gui/send/smtp/message" value="メールを送信できませんでした。メールの送り先アドレス、設定を確認して下さい。または時間をおいて再度試してください。" />
 
 	<!-- item.js -->
 	<string name="user/show/error" value="メールの表示に失敗しました" />

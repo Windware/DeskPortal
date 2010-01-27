@@ -9,6 +9,8 @@
 			print $system->xml_send($data !== false, $data);
 		break;
 
+		case 'account.remove' : print $system->xml_send(Mail_1_0_0_Account::remove($_POST['id'])); break; #Remove an account
+
 		case 'conf.create' : #Create a folder
 			$result = Mail_1_0_0_Folder::create($_POST['account'], $_POST['parent'], $_POST['name']);
 			$data = Mail_1_0_0_Folder::get($_POST['account'], false);
@@ -69,7 +71,7 @@
 			print $system->xml_send(Mail_1_0_0_Account::set($_POST['account'], $option));
 		break;
 
-		case 'gui.load' : print Mail_1_0_0_Item::image($_GET['cid']); break; #Load an embedded image
+		case 'gui.load' : print Mail_1_0_0_Item::image($_GET['id'], $_GET['cid']); break; #Load an embedded image
 
 		case 'gui.show' : #Get message body of a mail and return as is
 			$system->cache_header(); #Cache mail body

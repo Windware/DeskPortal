@@ -37,6 +37,7 @@
 			var run = function()
 			{
 				if(removed === true) return;
+				form.account.value = choice.account;
 
 				form.folder.value = choice.folder;
 				$self.conf.adjust(choice.folder); //Show selected folder
@@ -86,7 +87,7 @@
 
 				switch(form.elements[i].type)
 				{
-					case 'submit' : continue; break;
+					case 'submit' : case 'button' : case 'radio' : continue; break;
 
 					case 'checkbox' : form.elements[i].checked = value == '1'; break;
 
@@ -97,10 +98,13 @@
 			form.account.value = account;
 			$self.conf.type(form.receive_type.value);
 
-			if(account) return;
+			$system.node.hide($id + '_conf_remove', account == 0)
+			if(__account[account]) return form.base[1 - __account[account].base].checked = true; //Check the default account option
 
 			$self.conf.port('receive');
 			$self.conf.port('send');
+
+			return true;
 		}
 
 		this.create = function(form) //Create a new folder
@@ -127,12 +131,13 @@
 			var log = $system.log.init(_class + '.folder');
 			if(!$system.is.digit(account)) return log.param();
 
-			if(account == '0')
+			if(_shown != account)
 			{
-				$system.app.callback(_class + '.folder', callback);
-				return $system.node.fade($id + '_conf_folder_area', true); //Hide the options
+				$system.node.fade($id + '_conf_folder_area', true); //Hide the options
+				$system.node.fade($id + '_conf_folder_list', true); //Hide the folder options
 			}
 
+			if(account == '0') return $system.app.callback(_class + '.folder', callback);
 			$system.node.hide($id + '_conf_folder_loading', false);
 
 			var update = function(request)
@@ -324,7 +329,7 @@
 			var folder = form.source.value;
 			var name = form.rename.value;
 
-			if(!$system.is.digit(folder) || !name.length || !folder) return false;
+			if(!$system.is.digit(folder) || !name.match(/\S/) || !folder) return false;
 			form.rename.value = '';
 
 			var done = function(request) { _default(request.xml); }
@@ -356,9 +361,19 @@
 
 					case 'checkbox' : var value = item.checked ? '1' : '0'; break;
 
+					case 'radio' :
+						if(!item.checked) continue;
+						var value = item.value;
+					break;
+
 					case 'textarea' :
 						var value = item.value;
-						//if(value.length > _max) $system.gui.alert('sig too long');
+
+						if(value.length > _max) //Check on the signature length
+						{
+							$system.gui.alert($id, 'user/conf/signature/title', 'user/conf/signature/message', 5);
+							return false;
+						}
 					break;
 
 					default : var value = item.value; break;
@@ -369,13 +384,15 @@
 
 			var update = function(request)
 			{
+				$system.node.hide($id + '_conf_saving', true);
+
 				switch($system.dom.status(request.xml))
 				{
 					case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message', 3); break;
 
-					case '2' : return $system.gui.alert($id, 'user/conf/connect/title', 'user/conf/connect/message', 3); break;
+					case '2' : return $system.gui.alert($id, 'user/conf/connect/title', 'user/conf/connect/message', 5); break;
 
-					default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 3); break;
+					default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 5); break;
 				}
 
 				$self.conf.change(0); //Empty the fields
@@ -384,7 +401,9 @@
 				$self.account.get(); //Update account listing
 			}
 
+			$system.node.hide($id + '_conf_saving', false);
 			$system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.set'}, option, update);
+
 			return false; //Avoid form submission
 		}
 
@@ -426,6 +445,19 @@
 
 			var done = function(request) { _default(request.xml); }
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.subscribe'}, {folder : folder, mode : mode}, done);
+		}
+
+		this.terminate = function() //Terminates an account
+		{
+			var language = $system.language.strings($id, 'conf.xml');
+			var account = $system.node.id($id + '_conf_form').account.value;
+
+			if(!__account[account]) return false;
+
+			var warning = __account[account].type == 'pop3' ? language.pop3 : '';
+			if(!confirm(language.terminate.replace('%%', __account[account].description) + '\n' + warning)) return false;
+
+			return $self.account.remove(account);
 		}
 
 		this.type = function(type) //Alter values and mail keep option by specified receive type

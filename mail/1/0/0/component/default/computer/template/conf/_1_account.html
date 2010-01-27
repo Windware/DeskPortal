@@ -9,6 +9,14 @@
 		<tr><th colspan="2">%string:basic%</th></tr>
 
 		<tr>
+			<td class="%id%_conf_row">%string:default%</td>
+			<td>
+				<label for="%id%_conf_default_yes"><input id="%id%_conf_default_yes" type="radio" name="base" value="1" /> %string:yes%</label>
+				<label for="%id%_conf_default_no"><input id="%id%_conf_default_no" type="radio" name="base" value="0" checked="checked" /> %string:no%</label>
+			</td>
+		</tr>
+
+		<tr>
 			<td class="%id%_conf_row">* %string:description%</td>
 			<td><input style="width : 200px" type="text" name="description" /></td>
 		</tr>
@@ -102,7 +110,12 @@
 
 		<tr>
 			<td colspan="2" style="text-align : center">
-				<input type="submit" class="%system%_flat" value="%string:save%" />
+				<p id="%id%_conf_saving" class="%system%_hidden">%string:saving%</p>
+
+				<p>
+					<input type="submit" class="%system%_flat" value="%string:save%" />
+					<input type="button" class="%system%_flat %system%_hidden" value="%string:delete%" id="%id%_conf_remove" onclick="%top%.%id%.conf.terminate()" />
+				</p>
 			</td>
 		</tr>
 	</tbody></table>

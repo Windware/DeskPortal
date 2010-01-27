@@ -2,6 +2,11 @@
 	<!-- USER -->
 	<string name="user/generic/again/solution" value="Please try again later and check your account settings." />
 
+	<!-- account.js -->
+	<string name="user/conf/remove/title" value="Account removed" />
+	<string name="user/conf/remove/message" value="The account has been successfully removed." />
+	<string name="user/conf/error/remove" value="Error occured while removing the account." />
+
 	<!-- conf.js -->
 	<string name="user/conf/error/title" value="Error occured" />
 	<string name="user/conf/error/message" value="Error occured while saving the configuration." />
@@ -11,6 +16,9 @@
 
 	<string name="user/conf/connect/title" value="Failed authentication" />
 	<string name="user/conf/connect/message" value="Failed to authenticate to the mail server." />
+
+	<string name="user/conf/signature/title" value="Signature too long" />
+	<string name="user/conf/signature/message" value="Please make the signature below 500 characters." />
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="Failed to get list of folders." />

@@ -59,13 +59,28 @@
 				var accounts = $system.dom.tags(_cache, 'account');
 				var conf = {account : $system.node.id($id + '_conf_form'), folder : $system.node.id($id + '_conf_folder_form_account')}; //Configuration panel forms
 
+				var choice = {};
+
 				for(var area in conf)
 				{
 					if(!conf[area]) continue; //If configuration pane is loaded
+
 					conf[area] = conf[area].account; //Account configuration selection box
+					choice[area] = conf[area].value; //Keep the selected value
 
 					var start = area == 'account' ? '(' + language['new'] + ')' : '-----';
 					conf[area].innerHTML = '<option value="0">' + start + '</option>';
+				}
+
+				var selection = [];
+
+				for(var i = 1; i <= __window; i++) //For all of the composing windows
+				{
+					var form = $system.node.id($id + '_compose_' + i + '_form');
+					if(!$system.is.element(form, 'form')) continue;
+
+					selection[i] = form.account.value; //Keep the selection
+					form.account.innerHTML = '';
 				}
 
 				for(var i = 0; i < accounts.length; i++) //Create the account selection and store the information
@@ -90,7 +105,23 @@
 
 					info.signature = info.signature.replace(/\\n/g, "\n");
 					__account[info.id] = info;
+
+					for(var j = 1; j <= __window; j++) //For all of the composing windows
+					{
+						if(!$system.window.list[$id + '_display_' + j]) continue; //Check for window existance
+
+						var form = $system.node.id($id + '_compose_' + j + '_form');
+						if(!$system.is.element(form, 'form')) continue;
+						
+						var node = option.cloneNode(true);
+						node.appendChild(document.createTextNode(' : ' + info.name + ' (' + info.address + ')'));
+
+						form.account.appendChild(node);
+						if(selection[j] == option.value) node.selected = true;
+					}
 				}
+
+				for(var area in conf) if(conf[area]) conf[area].value = choice[area];
 
 				select.value = index;
 				$system.app.callback(_class + '.get.list', callback);
@@ -100,5 +131,28 @@
 
 			$self.gui.indicator(true); //Show indicator
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'account.get'}, null, list);
+		}
+
+		this.remove = function(id) //Remove an account
+		{
+			var log = $system.log.init(_class + '.remove');
+			if(!$system.is.digit(id)) return log.param();
+
+			var notify = function(request)
+			{
+				switch($system.dom.status(request.xml))
+				{
+					case '0' :
+						$self.account.get(); //Update account lists
+						$self.conf.change(0); //Reset the configuration account
+
+						$system.gui.alert($id, 'user/conf/remove/title', 'user/conf/remove/message', 3);
+					break;
+
+					default : $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/remove', 3); break;
+				}
+			}
+
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'account.remove'}, {id : id}, notify);
 		}
 	}

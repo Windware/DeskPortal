@@ -3,6 +3,8 @@
 	<table name="account">
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 		<column name="user" param="INT NOT NULL" />
+		<column name="base" param="INT" /> <!-- Whether this account is default or not -->
+
 		<column name="description" param="VARCHAR(255) UNIQUE" />
 		<column name="name" param="VARCHAR(255) NOT NULL" />
 		<column name="address" param="VARCHAR(255) NOT NULL" />
@@ -29,25 +31,16 @@
 		<column name="folder_trash" param="INT" />
 
 		<column name="UNIQUE" param="(user, description)" />
-		<index name="user" />
 	</table>
 
-	<!-- Mail lists
-		'uid' is a unique identifier for a message provided by the mail server.
-		'sequence' is a sequence number of a message provided by the mail server, which may change across sessions.
-		'signature' is a md5 sum of the header of a mail to identify the message.
-
-		NOTE : 'sequence' and 'signature' are provided, so that under POP3, since UIDL command is optional,
-		a message can be identified in another way to download the attachments separately.
-	-->
+	<!-- Mail data -->
 	<table name="mail">
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 		<column name="user" param="INT NOT NULL" />
 		<column name="folder" param="INT NOT NULL" />
 
-		<column name="uid" param="VARCHAR(255)" />
-		<column name="sequence" param="INT" />
-		<column name="signature" param="CHAR(32)" />
+		<column name="uid" param="VARCHAR(255)" /> <!-- Unique identifier for a message provided by the mail server -->
+		<column name="signature" param="CHAR(32)" /> <!-- md5 sum of the header of a mail to identify the message when UID/UIDL is unsupported -->
 
 		<column name="mail" param="BLOB" /> <!-- Entire mail content compressed -->
 		<column name="header" param="BLOB" /> <!-- Entire header compressed -->
@@ -72,9 +65,7 @@
 		<column name="UNIQUE" param="(user, folder, uid)" />
 
 		<index name="user, folder, read" />
-		<index name="user, folder, sequence" />
 		<index name="user, folder, signature" />
-		<index name="user, folder, uid" />
 	</table>
 
 	<!-- List of downloaded mails to keep track of unread mails for POP3 -->
@@ -83,9 +74,7 @@
 		<column name="account" param="INT NOT NULL" />
 		<column name="uid" param="VARCHAR(255)" />
 		<column name="signature" param="CHAR(32)" />
-		<column name="sequence" param="INT" />
 
-		<index name="user, account, sequence" />
 		<index name="user, account, signature" />
 		<index name="user, account, uid" />
 	</table>
@@ -106,7 +95,6 @@
 		<column name="updated" param="DATETIME" />
 
 		<column name="UNIQUE" param="(user, account, name)" />
-		<index name="user, account, name" />
 	</table>
 
 	<!-- From addresses -->
@@ -116,7 +104,6 @@
 		<column name="address" param="VARCHAR(255) NOT NULL" />
 
 		<column name="UNIQUE" param="(mail, address)" />
-		<index name="mail" />
 	</table>
 
 	<!-- Cc addresses -->
@@ -126,7 +113,6 @@
 		<column name="address" param="VARCHAR(255) NOT NULL" />
 
 		<column name="UNIQUE" param="(mail, address)" />
-		<index name="mail" />
 	</table>
 
 	<!-- To addresses -->
@@ -136,7 +122,6 @@
 		<column name="address" param="VARCHAR(255) NOT NULL" />
 
 		<column name="UNIQUE" param="(mail, address)" />
-		<index name="mail" />
 	</table>
 
 	<!-- Mail attachments -->
@@ -153,8 +138,7 @@
 		<column name="position" param="VARCHAR(255)" /> <!-- Position of this attachment in the mime structure -->
 		<column name="body" param="BLOB" />
 
-		<index name="mail" />
-		<index name="cid" />
+		<index name="mail, cid" />
 	</table>
 
 	<!-- References to other mails -->
@@ -164,7 +148,6 @@
 		<column name="reference" param="INT NOT NULL" />
 
 		<column name="UNIQUE" param="(mail, reference)" />
-		<index name="mail" />
 		<index name="reference" />
 	</table>
 </root>

@@ -84,9 +84,9 @@
 					_drag.mover.style.top = current.y + 5 + 'px';
 
 					$system.image.set(_drag.mover, $self.info.devroot + 'graphic/drag.png');
-					document.body.appendChild(_drag.mover);
-
 					_drag.mover.style.zIndex = ++$system.window.depth;
+
+					document.body.appendChild(_drag.mover);
 				}
 			}
 			else
@@ -311,8 +311,8 @@
 						switch(column[j]) //Pick the parameters to display on the interface
 						{
 							case 'check' :
-								display = $system.text.format('<input id="%id%_mail_%%_check" type="checkbox" onclick="%top%.%id%.item.select(%%, this.checked)%cancel%" />', [mail.id, mail.id]);
-								display = $system.text.template(display, $id);
+								display = '<input id="%id%_mail_%%_check" type="checkbox" onclick="%top%.%id%.item.select(%%, this.checked)%cancel%" />';
+								display = $system.text.template($system.text.format(display, [mail.id, mail.id]), $id);
 
 								tip = '';
 							break;
@@ -445,6 +445,7 @@
 				if($system.dom.status(request.xml) == '0')
 				{
 					var message = [$global.log.notice, 'user/item/mark'];
+					delete _cache[__mail[id].folder]; //Remove the entire cache for the folder
 
 					__mail[id].marked = mode ? 1 : 0;
 					$system.node.classes($id + '_mail_row_' + id, $id + '_mail_marked', !!mode); //Change the style
