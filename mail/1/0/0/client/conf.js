@@ -17,7 +17,7 @@
 			{
 				case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message', 3); break;
 
-				default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 3); break;
+				default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 3) && false; break;
 			}
 
 			var form = {account : $system.node.id($id + '_conf_folder_form_account').account, folder : $system.node.id($id + '_conf_folder_form_adjust').source};
@@ -36,7 +36,7 @@
 
 			var run = function()
 			{
-				if(removed === true) return;
+				if(removed === true) return true;
 				form.account.value = choice.account;
 
 				form.folder.value = choice.folder;
@@ -45,9 +45,29 @@
 
 			$self.conf.folder(choice.account, run); //Get folder list
 			if(__selected.account == choice.account) $self.folder.get(choice.account, 0); //Update the folder listing on the main interface
+
+			return true;
 		}
 
-		this._1_account = function() { $self.account.get(true); } //Update account listing
+		var _force = function() //Force the account to be default if no other account is set to be default
+		{
+			var form = $system.node.id($id + '_conf_form');
+			form.base[0].disabled = form.base[1].disabled = false; //Enable the 'default' options
+
+			var base = false;
+			for(var id in __account) if(__account[id].base == '1') base = true; //Check if any account is set to be default
+
+			if(base) return;
+
+			form.base[0].checked = true; //If no accounts are set to be default, force the option to be default
+			form.base[0].disabled = form.base[1].disabled = true;
+		}
+
+		this._1_account = function() //Update account listing
+		{
+			$self.account.get(true);
+			_force();
+		}
 
 		this._2_folder = function() { $self.account.get(true); } //Folder tab action
 
@@ -95,11 +115,23 @@
 				}
 			}
 
+			if(__account[account] && __account[account].preference == 'plain') $system.node.id($id + '_conf_prefer_plain').checked = true;
+			else $system.node.id($id + '_conf_prefer_html').checked = true; //Check the read preference value
+
+			form.base[0].disabled = form.base[1].disabled = false; //Enable the 'default' options
+			$system.node.hide($id + '_conf_remove', account == 0);
+
 			form.account.value = account;
 			$self.conf.type(form.receive_type.value);
 
-			$system.node.hide($id + '_conf_remove', account == 0)
-			if(__account[account]) return form.base[1 - __account[account].base].checked = true; //Check the default account option
+			if(account != '0' && __account[account])
+			{
+				if(__account[account].base == '1') form.base[0].disabled = form.base[1].disabled = true; //Disable changing the default account
+				return form.base[1 - __account[account].base].checked = true; //Check the default account option
+			}
+
+			form.base[1].checked = true; //Do not set to be default first
+			_force(); //If there is no default account, force the account as default
 
 			$self.conf.port('receive');
 			$self.conf.port('send');
@@ -269,14 +301,6 @@
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.folder', account : account, update : 1, subscribed : 0}, null, update);
 		}
 
-		this.max = function(area) //Check max signature length
-		{
-			if(area.value.length <= _max) return true;
-
-			area.value = area.value.substr(0, _max);
-			return false;
-		}
-
 		this.move = function() //Move a folder to another folder
 		{
 			var log = $system.log.init(_class + '.move');
@@ -317,8 +341,13 @@
 			if(!$system.is.digit(folder) || !folder) return false;
 			if(!confirm(language.remove.replace('%%', _name[folder]))) return false;
 
-			var done = function(request) { _default(request.xml, true); }
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.remove'}, {folder : [folder]}, done);
+			var done = function(folder, request)
+			{
+				if($system.dom.status(request.xml) == '0') $self.folder.clear(folder); //Clear folder caches
+				_default(request.xml, true);
+			}
+
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.remove'}, {folder : [folder]}, $system.app.method(done, [folder]));
 		}
 
 		this.rename = function() //Rename a folder
@@ -371,7 +400,7 @@
 
 						if(value.length > _max) //Check on the signature length
 						{
-							$system.gui.alert($id, 'user/conf/signature/title', 'user/conf/signature/message', 5);
+							$system.gui.alert($id, 'user/conf/signature/title', 'user/conf/signature/message', 5, null, [value.length]);
 							return false;
 						}
 					break;
@@ -390,7 +419,9 @@
 				{
 					case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message', 3); break;
 
-					case '2' : return $system.gui.alert($id, 'user/conf/connect/title', 'user/conf/connect/message', 5); break;
+					case '2' : return $system.gui.alert($id, 'user/conf/auth', 'user/conf/read', 5); break;
+
+					case '3' : return $system.gui.alert($id, 'user/conf/auth', 'user/conf/send', 5); break;
 
 					default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 5); break;
 				}
@@ -398,7 +429,8 @@
 				$self.conf.change(0); //Empty the fields
 				$system.node.id($id + '_conf_form').account.value = '0';
 
-				$self.account.get(); //Update account listing
+				form.base[1].checked = true; //Do not set to be default first
+				$self.account.get(false, null, _force); //Update account listing
 			}
 
 			$system.node.hide($id + '_conf_saving', false);
@@ -418,15 +450,7 @@
 			var list = $system.array.list('folder_drafts folder_sent folder_trash');
 			for(var i = 0; i < list.length; i++) if(!$system.is.digit(form[list[i]].value)) return log.param();
 
-			var done = function(request)
-			{
-				switch($system.dom.status(request.xml))
-				{
-					case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message', 3); break;
-
-					default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 3); break;
-				}
-			}
+			var done = function(request) { if(_default(request.xml)) $self.account.get(false, request.xml); } //Update the account information
 
 			var value = {account : account, drafts : form.folder_drafts.value, sent : form.folder_sent.value, trash : form.folder_trash.value};
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.special'}, value, done);

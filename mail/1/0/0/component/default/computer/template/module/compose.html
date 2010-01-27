@@ -1,16 +1,22 @@
 <form id="%id%_compose_%value:index%_form" onsubmit="return false" method="post" action="%value:action%" enctype="multipart/form-data" target="%id%_compose_%value:index%_submit">
 	<table style="width : 100%" cellpadding="0" cellspacing="10"><tbody class="%id%_mail_header">
-		<tr><th>%string:account%</th><td><select name="account">%value:account%</select></td></tr>
+		<tr><th>%string:account%</th><td><select name="account" onchange="%top%.%id%.gui.signable(%value:index%)">%value:account%</select></td></tr>
 
 		<tr>
 			<th style="width : 15%">%string:subject%</th>
 			<td><input type="text" name="subject" style="width : 100%" value="%value:subject%" /></td>
 		</tr>
 
-		<tr><th>%string:to%</th><td><input type="text" name="to" style="width : 100%" value="%value:to%" /></td></tr>
+		<tr>
+			<th>
+				<img src="%image:add.png%" id="%id%_compose_%value:index%_extra" onclick="%top%.%id%.gui.extra(%value:index%)" style="cursor : pointer" class="%system%_icon"%tip:cc% />
+				%string:to%
+			</th>
+			<td><input type="text" name="to" style="width : 100%" value="%value:to%" /></td>
+		</tr>
 
-		<tr class="%system%_hidden"><th>%string:cc%</th><td><input type="text" name="cc" style="width : 100%" /></td></tr>
-		<tr class="%system%_hidden"><th>%string:bcc%</th><td><input type="text" name="bcc" style="width : 100%" /></td></tr>
+		<tr id="%id%_compose_%value:index%_cc" class="%system%_hidden"><th>%string:cc%</th><td><input type="text" name="cc" style="width : 100%" value="%value:cc%" /></td></tr>
+		<tr id="%id%_compose_%value:index%_bcc" class="%system%_hidden"><th>%string:bcc%</th><td><input type="text" name="bcc" style="width : 100%" value="%value:bcc%" /></td></tr>
 
 		<tr>
 			<th>%string:attachment%</th>
@@ -21,18 +27,21 @@
 		</tr>
 
 		<tr><td colspan="2" class="%id%_mail_action" style="text-align : center">
-			<input type="button" onclick="%top%.%id%.gui.send(%value:index%, %value:id%)" value="%string:send%" />
-			<input type="button" onclick="%top%.%id%.gui.save(%value:index%, %value:id%)" value="%string:save%" />
+			<input type="button" onclick="%top%.%id%.gui.send(%value:index%)" value="%string:send%"%tip:send% />
+			<input type="button" onclick="%top%.%id%.gui.sign(%value:index%)" name="sign" value="%string:sign%"%tip:sign% />
 
-			<input type="button" onclick="%top%.%id%.gui.sign(%value:index%)" value="%string:sign%" />
-			<input type="button" onclick="%top%.%system%.window.fade('%id%_display_%value:index%', true, null, true)" value="%string:cancel%" style="background-color : #cca" />
+			<input type="button" onclick="%top%.%id%.gui.send(%value:index%, 1)" value="%string:save%"%tip:save% />
+			<input type="button" onclick="%top%.%id%.gui.cancel(%value:index%)" value="%string:cancel%" style="background-color : #cca"%tip:discard% />
 		</td></tr>
 
 		<tr><td colspan="2" style="text-align : center">
-			<p id="%id%_compose_%value:index%_sending" class="%system%_hidden">%string:sending%</p>
-			<textarea name="body" style="width : 100%; height : 300px" onkeyup="%top%.%id%.gui.auto()"></textarea>
+			<textarea name="body" style="width : 100%; height : 300px"></textarea>
+			<p id="%id%_compose_%value:index%_progress" class="%system%_hidden"></p>
 
-			<input type="hidden" name="source" value="%value:id%" />
+			<input type="hidden" name="resume" value="%value:resume%" />
+			<input type="hidden" name="source" value="%value:source%" />
+
+			<input type="hidden" name="draft" value="0" />
 			<iframe onload="%top%.%id%.gui.complete(%value:index%, this)" class="%system%_hidden" name="%id%_compose_%value:index%_submit"></iframe>
 		</td></tr>
 	</table>

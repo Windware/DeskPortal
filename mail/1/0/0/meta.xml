@@ -11,7 +11,13 @@
 	</language>
 
 	<requirement>
-		<item>IMAP and mcrypt PHP modules</item>
+		<item>IMAP PHP module</item>
+		<item>mcrypt PHP module</item>
+		<item>Auth_SASL PHP pear package</item>
+		<item>Net_POP3 PHP pear package</item>
+		<item>Net_SMTP PHP pear package</item>
+		<item>Mail PHP pear package</item>
+		<item>Mail_mime PHP pear package</item>
 	</requirement>
 
 	<license>
@@ -28,9 +34,9 @@
 								<author name="Open Clip Art" contact="http://openclipart.org/media/people/contact/admin" site="http://openclipart.org/" />
 							</file>
 
-							<file name="loading.gif" license="Free use license">
+							<folder name="loading" license="Free use license">
 								<author name="Kath" contact="http://www.kath.fr/" site="http://www.ajaxload.info/" />
-							</file>
+							</folder>
 						</folder>
 					</folder>
 				</folder>

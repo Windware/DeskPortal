@@ -167,6 +167,10 @@
 				}
 			}
 
+			//Set it at top left first to try to avoid scrollbars before the position is determined
+			box.firstChild.style.left = '0px';
+			box.firstChild.style.top = '0px';
+
 			box.firstChild.style.visibility = 'hidden'; //Keep it hidden first
 			document.body.appendChild(box.firstChild); //Append to the document body
 
@@ -199,10 +203,6 @@
 						$system.image.background(cells.item(j), $system.window.list[id].design + _spots[index++]);
 				}
 			}
-
-			//Set it at top left first to try to avoid scrollbars before the position is determined
-			pane.object.style.left = '0px';
-			pane.object.style.top = '0px';
 
 			//Apply HTML element to its reference variable
 			var section = ['bar', 'body', 'box'];

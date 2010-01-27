@@ -108,13 +108,10 @@
 			{
 				#Set the database application as static version of system
 				$params = 'db_system_type db_system_host db_system_port db_system_database db_system_user db_system_pass'; #Pick the configuration keys
-				$sector = 'system'; #Indicate opening the system database
 			}
 			elseif($type == 'user') #If opening an user's database
 			{
 				$params = 'db_user_type db_user_host db_user_port db_user_database db_user_user db_user_pass'; #Pick the configuration keys
-				$sector = 'user'; #Indicate opening the user database
-
 				if($user === null) $user = $system->user(); #If not specified, get the logged in user object
 
 				if(!$user->valid) #If user object cannot be reteived, quit
@@ -144,13 +141,13 @@
 			#Replace the placeholders passed with real values : TODO - Do string sanity check on replacements
 			$database = str_replace(array('%APP%', '%VERSION%'), array($app, $version), $database);
 
-			if($sector == 'user')
+			if($type == 'user')
 			{
-				$database = str_replace('%USER%', $user->name, $database); #Replace user's name for an user database
+				$database = str_replace('%USER%', $user->id, $database); #Replace user's name for an user database
 				if($adapter == 'sqlite' && !is_dir(dirname($database))) mkdir(dirname($database), 0777, true); #Try to create the directory for sqlite
 			}
 
-			$this->prefix = "{$conf['db_prefix']}{$app}_{$version}_"; #Set table prefix
+			$this->prefix = "{$conf["db_{$type}_prefix"]}{$app}_{$version}_"; #Set table prefix
 
 			#Set up the PDO string. Since the format may vary from use to use, it is set placed configuration folder
 			$setting = 'system/static/conf/database/database.php';
@@ -159,15 +156,16 @@
 			require_once($system->global['define']['top'].$setting); #Load database specific connection configuration
 
 			#Get the connection string
-			$method = System_Static_Database::connection($sector, $adapter, $host, $port, $database);
+			$method = System_Static_Database::connection($type, $adapter, $host, $port, $database);
 			$this->logger(LOG_INFO, 'Trying to get a new database connection');
 
 			try #Open up a database connection
 			{
-				$this->handler = new PDO($method, $name, $pass, array(PDO::ATTR_PERSISTENT => !!$conf['db_persistent']));
+				$this->handler = new PDO($method, $name, $pass, array(PDO::ATTR_PERSISTENT => !!$conf["db_{$type}_persistent"]));
 
 				$this->handler->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				$this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+				$this->handler->setAttribute(PDO::ATTR_TIMEOUT, $conf['net_timeout']);
 			}
 
 			catch(PDOException $error)

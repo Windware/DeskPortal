@@ -6,12 +6,19 @@
 	<string name="account" value="アカウント" />
 	<string name="new" value="新規" />
 	<string name="basic" value="基本設定" />
+
 	<string name="default" value="標準アカウント" />
 	<string name="yes" value="はい" />
 	<string name="no" value="いいえ" />
+
 	<string name="description" value="説明" />
 	<string name="name" value="名前" />
 	<string name="address" value="メールアドレス" />
+
+	<string name="prefer" value="優先表示形式" />
+	<string name="plain" value="テキスト" />
+	<string name="html" value="HTML" />
+
 	<string name="signature" value="署名" />
 	<string name="max" value="500文字以内" />
 

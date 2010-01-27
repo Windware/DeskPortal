@@ -262,7 +262,7 @@
 
 			if(count($categories))
 			{
-				$database->begin(); #Start a transaction to make multiple category relation atomic
+				if(!$database->begin()) return false; #Start a transaction to make multiple category relation atomic
 				$query = $database->prepare("INSERT INTO {$database->prefix}relation (user, bookmark, category) VALUES (:user, :bookmark, :category)");
 
 				foreach($categories as $cat) #For all of the provided categories
@@ -278,7 +278,7 @@
 					break; #Quit trying
 				}
 
-				if($success) $database->commit(); #Commit the sequence
+				if($success) $success = $database->commit() || $database->rollback() && false;
 			}
 
 			self::_count($user, $id); #Update the reference counter

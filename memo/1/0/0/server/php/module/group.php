@@ -35,21 +35,17 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$database->begin(); #Make sure these are atomic
+			if(!$database->begin()) return false; #Make sure these are atomic
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}relation WHERE user = :user AND groups = :group");
 			$query->run(array(':user' => $user->id, ':group' => $group));
 
-			if(!$query->success) $database->rollback();
-			else
-			{
-				$query = $database->prepare("DELETE FROM {$database->prefix}groups WHERE id = :group AND user = :user");
-				$query->run(array(':group' => $group, ':user' => $user->id));
+			if(!$query->success) return $database->rollback() && false;
 
-				$query->success ? $database->commit() : $database->rollback();
-			}
+			$query = $database->prepare("DELETE FROM {$database->prefix}groups WHERE id = :group AND user = :user");
+			$query->run(array(':group' => $group, ':user' => $user->id));
 
-			return $query->success;
+			return $query->success && $database->commit() || $database->rollback() && false;
 		}
 
 		public static function set($name, $id = 0, System_1_0_0_User $user = null) #Set a group

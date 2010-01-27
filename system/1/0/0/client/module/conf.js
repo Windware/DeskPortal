@@ -135,7 +135,7 @@
 						{
 							case 'desc' : return info.desc.replace(/\n/g, '<br />\n'); break; //Application description
 
-							case 'contributor' : case 'developer' : //Contributors and developers
+							case 'developer' : //Developers
 								var people = $system.dom.tags(info.meta, match);
 								var list = '';
 

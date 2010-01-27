@@ -8,6 +8,7 @@
 		<column name="description" param="VARCHAR(255) UNIQUE" />
 		<column name="name" param="VARCHAR(255) NOT NULL" />
 		<column name="address" param="VARCHAR(255) NOT NULL" />
+		<column name="preference" param="VARCHAR(12) NOT NULL" /> <!-- Mail display preference either in 'plain' or 'html' -->
 		<column name="signature" param="TEXT" />
 
 		<column name="receive_type" param="VARCHAR(12) NOT NULL" />
@@ -47,7 +48,6 @@
 		<column name="subject" param="TEXT" />
 		<column name="mid" param="VARCHAR(255)" /> <!-- Message-ID header value -->
 
-		<column name="size" param="INT" />
 		<column name="sent" param="DATETIME" />
 		<column name="received" param="DATETIME" />
 
@@ -115,6 +115,15 @@
 		<column name="UNIQUE" param="(mail, address)" />
 	</table>
 
+	<!-- Bcc addresses (Only used on mail drafts) -->
+	<table name="bcc">
+		<column name="mail" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="address" param="VARCHAR(255) NOT NULL" />
+
+		<column name="UNIQUE" param="(mail, address)" />
+	</table>
+
 	<!-- To addresses -->
 	<table name="to">
 		<column name="mail" param="INT NOT NULL" />
@@ -124,7 +133,10 @@
 		<column name="UNIQUE" param="(mail, address)" />
 	</table>
 
-	<!-- Mail attachments -->
+	<!--
+		Mail attachments
+		The files themselves will be stored as individual files.
+	-->
 	<table name="attachment">
 		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
 
@@ -132,12 +144,9 @@
 		<column name="cid" param="VARCHAR(255)" /> <!-- Content ID used for inline objects -->
 
 		<column name="name" param="TEXT NOT NULL" /> <!-- File name -->
-		<column name="size" param="INT" /> <!-- File size bytes -->
 		<column name="type" param="VARCHAR(255)" /> <!-- Mime type -->
 
 		<column name="position" param="VARCHAR(255)" /> <!-- Position of this attachment in the mime structure -->
-		<column name="body" param="BLOB" />
-
 		<index name="mail, cid" />
 	</table>
 

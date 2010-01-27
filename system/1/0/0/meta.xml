@@ -11,7 +11,7 @@
 	</language>
 
 	<requirement>
-		<item>PHP version 5.2 with PDO (with appropriate database drivers), zlib, cURL, OpenSSL modules</item>
+		<item>PHP version 5.2 (probably works for later versions) with PDO (with appropriate database drivers), SimpleXML, mbstring, GD, PCRE, zlib and cURL modules</item>
 	</requirement>
 
 	<license>

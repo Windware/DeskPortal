@@ -5,13 +5,13 @@
 
 		var _cache = {}; //Listing cache
 
-		var _count = {}; //Number of unreal mails for each folders
+		var _count = {}; //Number of unread mails for each folders
 
 		var _loaded = {}; //Flag to indicate if a folder has been updated
 
-		var _lock; //Lock to wait for mails to finish loading
+		var _lock = {}; //Lock to wait for mails to finish loading
 
-		var _previous; //Previously selected folder
+		var _previous = {}; //Previously selected folder
 
 		var _space = 10; //Amount of space to put on left for folders below another
 
@@ -22,34 +22,60 @@
 			var log = $system.log.init(_class + '.change');
 			if(!$system.is.digit(folder)) return log.param();
 
-			if(_lock) return false; //Wait till previous loading finishes
-			_lock = true;
+			var account = __belong[folder];
+
+			if(_lock[account]) return false; //Wait till previous loading finishes
+			_lock[account] = true;
 
 			//Change the look of the chosen folder
-			if(_previous) $system.node.classes($id + '_folder_' + _previous, $id + '_displayed', false);
+			if(_previous[account]) $system.node.classes($id + '_folder_' + _previous[account], $id + '_displayed', false);
 			$system.node.classes($id + '_folder_' + folder, $id + '_displayed', true);
 
 			var unlock = function(folder)
 			{
-				_lock = false;
+				var account = __belong[folder];
+				_lock[account] = false;
 
-				var local = __account[__belong[folder]].type == 'pop3' && __special.inbox[__selected.account] != folder; //Do not update other than INBOX for POP3
+				var local = __account[account].type == 'pop3' && __special.inbox[account] != folder; //Do not update other than INBOX for POP3
 				if(_loaded[folder] || local) return true; //If never updated, update from the server
 
-				_loaded[folder] = _lock = true;
+				_loaded[folder] = _lock[account] = true;
 				return $self.item.get(folder, 1, $system.app.method(unlock, [folder])); //Update it
 			}
 
+			if(!_loaded[folder]) delete __update[folder]; //If never loaded, drop the update flag to avoid duplicate updating
 			if(!$self.item.get(folder, false, $system.app.method(unlock, [folder]))) return false; //Get the folder items for current account
 
-			_previous = folder;
+			_previous[account] = folder;
 			return true;
+		}
+
+		this.clear = function(folder) //Clear caches for a folder
+		{
+			delete __cache[folder];
+			delete __belong[folder];
+
+			for(var id in __mail) if(__mail[id].folder == folder) delete __mail[id];
+
+			if(__refresh[folder]) clearTimeout(__refresh[folder]);
+			delete __refresh[folder];
+
+			for(var section in __special) delete __special[section][folder];
+			delete __update[folder];
 		}
 
 		this.get = function(account, update, callback, request) //List folders for an account
 		{
 			var log = $system.log.init(_class + '.get');
 			if(!$system.is.digit(account)) return log.param();
+
+			if(!__account[account]) //If periodical update arrives with the account vanished
+			{
+				clearInterval(__timer[account]); //Remove the timer
+				delete __timer[account];
+
+				return false;
+			}
 
 			var language = $system.language.strings($id);
 
@@ -203,7 +229,7 @@
 				for(var i = 0; i < group.length; i++) //Create the folder listing starting from the special folders
 					if($system.is.array(group[i])) for(var j = 0; j < group[i].length; j++) area.appendChild(group[i][j]);
 
-				if(_previous) $system.node.classes($id + '_folder_' + _previous, $id + '_displayed', true);
+				if(_previous[account]) $system.node.classes($id + '_folder_' + _previous[account], $id + '_displayed', true);
 				$system.app.callback(_class + '.get.list', callback);
 
 				return true;

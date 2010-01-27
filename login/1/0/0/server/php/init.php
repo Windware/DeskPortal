@@ -66,7 +66,7 @@
 
 				if($count == 0) #If it is the first time logging in
 				{
-					$database->begin(); #Make sure results will not be partial
+					if(!$database->begin()) return self::$_mode['error']; #Make sure results will not be partial
 					$query = $database->prepare("REPLACE INTO {$database->prefix}subscription (user, app) VALUES (:id, :app)");
 
 					foreach($conf['app_subscribed'] as $app) #For all of the initial subscribed applications
@@ -80,18 +80,13 @@
 						}
 
 						$query->run(array(':id' => $user->id, ':app' => $app)); #Update the version information
-
-						if(!$query->success) #On error, rollback and quit
-						{
-							$database->rollback();
-							return self::$_mode['error'];
-						}
+						if(!$query->success) return $database->rollback() && self::$_mode['error'];
 					}
 
-					$database->commit(); #Commit the change
+					if(!$database->commit()) return $database->rollback() && self::$_mode['error']; #Commit the change
 
 					$database = $system->database('user', __METHOD__, null, 'system', 'static'); #Open the user's database
-					$database->begin(); #Start the transaction for the next batch of queries
+					if(!$database->begin()) return self::$_mode['error']; #Start the transaction for the next batch of queries
 
 					$find = $database->prepare("SELECT COUNT(user) FROM {$database->prefix}used WHERE user = :user AND app = :app");
 					$insert = $database->prepare("INSERT INTO {$database->prefix}used (user, app, version, loaded) VALUES (:user, :app, :version, :loaded)");
@@ -99,26 +94,16 @@
 					foreach(array_merge($conf['app_subscribed'], $conf['app_public']) as $app)
 					{
 						$find->run(array(':user' => $user->id, ':app' => $app));
+						if(!$find->success) return $database->rollback() && self::$_mode['error'];
 
-						if(!$find->success)
-						{
-							$database->rollback();
-							break;
-						}
-
-						if($find->column() != 0) continue; #If an entry exists for some reason, leave it alone
-
+						if($find->column() != 0) continue; #If the entry exists for some reason, leave it alone
 						$loaded = in_array($app, $conf['app_initial']) ? 1 : 0; #See if it should be loaded
-						$insert->run(array(':user' => $user->id, ':app' => $app, ':version' => $system->app_version($app), ':loaded' => $loaded));
 
-						if(!$insert->success)
-						{
-							$database->rollback(); #Rollback but not returning error for this operation
-							break;
-						}
+						$insert->run(array(':user' => $user->id, ':app' => $app, ':version' => $system->app_version($app), ':loaded' => $loaded));
+						if(!$insert->success) return $database->rollback() && self::$_mode['error'];
 					}
 
-					$database->commit(); #Commit the previous batch of queries
+					if(!$database->commit()) return $database->rollback() && self::$_mode['error']; #Commit the previous batch of queries
 				}
 
 				$database = $system->database('user', __METHOD__, null, null, null, true); #Try to reopen user's login database

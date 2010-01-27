@@ -151,27 +151,21 @@
 			$database = $system->database('system', __METHOD__);
 			if(!$database->success) return false;
 
-			$database->begin(); #Keep the operation atomic
+			if(!$database->begin()) return false; #Keep the operation atomic
 
 			#Delete the entries of the feed
 			$query = $database->prepare("DELETE FROM {$database->prefix}entry WHERE feed = :id");
 			$query->run(array(':id' => $this->id));
 
-			if(!$query->success) #On error
-			{
-				$database->rollback(); #Rollback the deletion
-				return false;
-			}
+			if(!$query->success) return $database->rollback() && false; #Rollback the deletion
 
-			#Delete the feed
 			$query = $database->prepare("DELETE FROM {$database->prefix}feed WHERE id = :id");
-			$query->run(array(':id' => $this->id));
+			$query->run(array(':id' => $this->id)); #Delete the feed
 
-			if(!$query->success) $database->rollback();
-			else $database->commit();
+			if(!$query->success || !$database->commit()) return $database->rollback() && false;
 
 			$this->id = null; #Invalidate the object
-			return $query->success;
+			return true;
 		}
 
 		public static function sample($language = null, System_1_0_0_User $user = null) #Give sample feeds to an user

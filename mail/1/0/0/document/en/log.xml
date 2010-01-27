@@ -14,11 +14,12 @@
 	<string name="user/conf/success/title" value="Success saving" />
 	<string name="user/conf/success/message" value="Configuration saved." />
 
-	<string name="user/conf/connect/title" value="Failed authentication" />
-	<string name="user/conf/connect/message" value="Failed to authenticate to the mail server." />
+	<string name="user/conf/auth" value="Failed authentication" />
+	<string name="user/conf/read" value="Failed to authenticate to the receiving mail server. Please type in the proper user credential." />
+	<string name="user/conf/send" value="Failed to authenticate to the sending mail server. Please type in the proper user credential." />
 
 	<string name="user/conf/signature/title" value="Signature too long" />
-	<string name="user/conf/signature/message" value="Please make the signature below 500 characters." />
+	<string name="user/conf/signature/message" value="Please make the signature below 500 characters. It is %% characters now." />
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="Failed to get list of folders." />
@@ -37,10 +38,13 @@
 	<string name="user/gui/send/big/message" value="The size of the mail is too big to be sent. Please reduce the mail size." />
 
 	<string name="user/gui/send/imap" value="Failed saving the message" />
-	<string name="user/gui/send/imap/message" value="Failed storing a copy of the message to the mail server. Please try again later." />
+	<string name="user/gui/send/imap/message" value="Failed saving the message. Please try again later." />
 
 	<string name="user/gui/send/smtp" value="Failed sending the message" />
 	<string name="user/gui/send/smtp/message" value="Failed to send the message. Please check the mail addresses and configuration or try again at a later time." />
+
+	<string name="user/gui/send/draft" value="Saved the mail" />
+	<string name="user/gui/send/draft/message" value="Saved the mail in the draft folder." />
 
 	<!-- item.js -->
 	<string name="user/show/error" value="Displaying the email failed." />

@@ -23,8 +23,14 @@
 
 	<!-- Mail window -->
 	<string name="add" value="Add to address book" />
+	<string name="cc" value="Add Cc and Bcc address fields" />
 	<string name="attachment" value="Download this attachment file" />
 
 	<string name="previous" value="Show the previous mail" />
 	<string name="next" value="Show the next mail" />
+
+	<string name="send" value="Send this mail" />
+	<string name="save" value="Save this mail as a draft" />
+	<string name="sign" value="Insert your signature" />
+	<string name="discard" value="Discard this mail" />
 </root>

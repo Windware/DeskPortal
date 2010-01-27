@@ -32,7 +32,6 @@
 	<!-- Info panel -->
 	<string name="desc" value="Description" />
 	<string name="developer" value="Developer" />
-	<string name="contributor" value="Contributor" />
 	<string name="translator" value="Translator" />
 	<string name="web" value="Web site" />
 	<string name="user" value="User" />

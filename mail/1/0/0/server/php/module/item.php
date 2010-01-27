@@ -1,6 +1,6 @@
 <?php
 	class Mail_1_0_0_Item #Supports both POP3/IMAP and servers without UIDL or UID support
-	{ #TODO : Include PEAR packages as local files - Auth_SASL, Net_POP3, Net_SMTP, Mail, Mail_mime
+	{ #TODO : Include PEAR packages as local files to avoid code change and to minimize external dep - Auth_SASL, Net_POP3, Net_SMTP, Mail, Mail_mime
 		protected static $_attachment = 50; #Maximum megabytes allowed to be sent as an entire mail
 
 		protected static $_flag = array('deleted' => 'Deleted', 'read' => 'Seen', 'marked' => 'Flagged', 'replied' => 'Answered', 'draft' => 'Draft'); #Table column names and corresponding IMAP flags
@@ -13,9 +13,9 @@
 		#Any message bodies that are larger will be truncated to the size and lines for previews
 		protected static $_preview = array(500, 5);
 
-		protected static $_sent = 'Sent'; #Generic folder name for folders containing sent mails
+		protected static $_storage = array('drafts' => 'Drafts', 'sent' => 'Sent'); #Generic name for draft and sent special folders
 
-		protected static $_type = array('text', 'multipart', 'message', 'application', 'audio', 'image', 'video', 'other'); #Mime categories
+		protected static $_type = array('text', 'multipart', 'message', 'application', 'audio', 'image', 'video', 'other'); #Mime categories (Order is important)
 
 		private static $_pop3 = array(); #POP3 mail listing cache
 
@@ -70,7 +70,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT at.name, at.position, at.size, mail.id as mail, mail.folder FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.id = :id AND at.mail = mail.id AND mail.user = :user");
+			$query = $database->prepare("SELECT at.name, at.position, mail.id as mail, mail.folder FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.id = :id AND at.mail = mail.id AND mail.user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));
 
 			if(!$query->success) return false;
@@ -178,9 +178,7 @@
 				if($link['type'] == 'imap')
 				{
 					$list = imap_search($link['connection'], 'ALL', SE_UID);
-					if(!is_array($list)) return Mail_1_0_0_Account::error($link['host']);
-
-					foreach($list as $index => $id) $uid[$id] = $index + 1; #Get unique ID list
+					if(is_array($list)) foreach($list as $index => $id) $uid[$id] = $index + 1; #Get unique ID list
 				}
 				elseif($link['type'] == 'pop3') #List the unique ID and find the message number for POP3
 				{
@@ -321,7 +319,7 @@
 
 			switch($order) #Join the extra table for address sorting
 			{
-				case 'from' : case 'to' : case 'cc' :
+				case 'from' : case 'to' : case 'cc' : case 'bcc' :
 					$foreign = " LEFT JOIN {$database->prefix}$order as _$order ON id = _$order.mail";
 					$order = 'address'; #Specify the column name for the address to sort
 				break;
@@ -329,7 +327,7 @@
 
 			if(is_string($search) && strlen($search) > 1)
 			{
-				foreach(array('from', 'to', 'cc') as $target)
+				foreach(array('from', 'to', 'cc', 'bcc') as $target)
 				{
 					if($order != $target) $foreign .= " LEFT JOIN {$database->prefix}$target as _$target ON id = _$target.mail";
 					$limiter .= " OR _$target.name LIKE :search $database->escape OR _$target.address LIKE :search $database->escape";
@@ -361,7 +359,7 @@
 
 			$xml = $system->xml_node('page', array('total' => floor($total / ($amount + 1)) + 1)); #Get the total count
 
-			$query['all'] = $database->prepare("SELECT id, subject, sent, received, preview, marked, read, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
+			$query['all'] = $database->prepare("SELECT id, subject, sent, received, preview, draft, marked, read, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
 			$query['all']->run($param);
 
 			if(!$query['all']->success) return false;
@@ -378,7 +376,7 @@
 			$target = implode(', ', $target);
 			$mail = array();
 
-			foreach(array('from', 'to', 'cc') as $section)
+			foreach(array('from', 'to', 'cc', 'bcc') as $section)
 			{
 				$query['address'] = $database->prepare("SELECT mail, name, address FROM {$database->prefix}$section WHERE mail IN ($target)");
 				$query['address']->run($param);
@@ -387,17 +385,17 @@
 				foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
 			}
 
-			$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
+			$query['attachment'] = $database->prepare("SELECT id, mail, name, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
 			$query['attachment']->run($param);
 
 			if(!$query['attachment']->success) return false;
-			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
+			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'type' => $row['type']);
 
 			foreach($all as $row)
 			{
 				$inner = '';
 
-				foreach(array('from', 'to', 'cc', 'attachment') as $section) #Construct the mail address and attachment lists
+				foreach(array('from', 'to', 'cc', 'bcc', 'attachment') as $section) #Construct the mail address and attachment lists
 					if(is_array($mail[$row['id']][$section])) foreach($mail[$row['id']][$section] as $line) $inner .= $system->xml_node($section, $line);
 
 				$inner .= $system->xml_node('preview', null, $system->xml_data($row['preview']));
@@ -521,7 +519,7 @@
 				}
 				else #On copy
 				{
-					$column = 'user, uid, signature, subject, mid, mail, size, sent, received, preview, plain, html, encode, marked, read, replied, draft, color';
+					$column = 'user, uid, signature, subject, mid, mail, sent, received, preview, plain, html, encode, marked, read, replied, draft, color';
 
 					$query = $database->prepare("INSERT INTO {$database->prefix}mail ($column, folder) SELECT ($column, :folder) FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 					$param = array(':folder' => $folder, ':user' => $user->id);
@@ -556,7 +554,7 @@
 			if(!$database->success) return false;
 
 			if(!$local && !self::flag($list, 'Deleted', true, $user)) return false; #If set to also remove from the mail server, flag and expunge
-			$database->begin(); #Make the deletion atomic
+			if(!$database->begin()) return false; #Make the deletion atomic
 
 			for($i = 0; $i < count($list); $i += self::$_limit) #Split by maximum possible place holder number
 			{
@@ -572,47 +570,36 @@
 
 				$target = implode(', ', $target);
 
-				foreach(explode(' ', 'from to cc attachment reference') as $section) #Remove related data
+				foreach(explode(' ', 'from to cc bcc attachment reference') as $section) #Remove related data
 				{
 					$query = $database->prepare("DELETE FROM {$database->prefix}$section WHERE mail IN ($target)");
 					$query->run($param);
 
-					if($query->success) continue;
-
-					$database->rollback();
-					return false;
+					if(!$query->success) return $database->rollback() && false;
 				}
 
 				$query = $database->prepare("DELETE FROM {$database->prefix}reference WHERE reference IN ($target)");
 				$query->run($param);
 
-				if(!$query->success)
-				{
-					$database->rollback();
-					return false;
-				}
-
+				if(!$query->success) return $database->rollback() && false;
 				$param[':user'] = $user->id;
 
 				$query = $database->prepare("DELETE FROM {$database->prefix}mail WHERE id IN ($target) AND user = :user");
 				$query->run($param); #Delete the mail entry
 
-				if($query->success) continue;
-
-				$database->rollback();
-				return false;
+				if(!$query->success) return $database->rollback() && false;
 			}
 
-			return $database->commit();
+			return $database->commit() || $database->rollback() && false;
 		}
 
 		#NOTE : Error codes are (0 : success, 1 : system error, 2 : size too big, 3 : SMTP send error, 4 : IMAP store error)
-		public static function send($account, $subject, $body, $to, $cc = null, $bcc = null, $source = null, $attachment = array(), System_1_0_0_User $user = null) #Send a mail
+		public static function send($account, $subject, $body, $to, $cc = null, $bcc = null, $source = null, $attachment = array(), $draft = false, $resume = null, System_1_0_0_User $user = null) #Send a mail (Or only save as a draft)
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_digit($account)) return $log->param(1);
+			if(!$system->is_digit($account) || !is_string($subject) || !is_string($body) || !$system->is_text($to)) return $log->param(1);
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return 1;
@@ -647,80 +634,146 @@
 			if(!$query->success) return 1;
 
 			$row = $query->row();
-			$encoded = $toward = array(); #List of encoded addresses and raw mail addresses to send to
+			$encoded = $list = $toward = array(); #List of encoded addresses, list of addresses and raw mail addresses to send to
 
 			foreach(imap_rfc822_parse_adrlist("{$row['name']} <{$row['address']}>", '') as $parsed)
 			{
 				if($parsed->host == '.SYNTAX-ERROR.') return 3; #Parse the 'from' addresses
 
 				$address = "{$parsed->mailbox}@{$parsed->host}";
+				$list['from'][$address] = $parsed->personal;
+
 				$encoded['from'][] = strlen($parsed->personal) ? mb_encode_mimeheader($parsed->personal)." <$address>" : $address;
 			}
 
-			foreach(imap_rfc822_parse_adrlist($to, '') as $parsed) #Parse the 'to' addresses
+			foreach(array('to', 'cc', 'bcc') as $section)
 			{
-				if($parsed->host == '.SYNTAX-ERROR.') return 3; #Return as SMTP error for invalid addresses
+				if(!$system->is_text($$section)) continue;
 
-				$address = $toward[] = "{$parsed->mailbox}@{$parsed->host}";
-				$encoded['to'][] = strlen($parsed->personal) ? mb_encode_mimeheader($parsed->personal)." <$address>" : $address;
+				foreach(imap_rfc822_parse_adrlist($$section, '') as $parsed) #Parse the addresses
+				{
+					if($parsed->host == '.SYNTAX-ERROR.') return 3; #Return as SMTP error for invalid addresses
+
+					$address = $toward[] = "{$parsed->mailbox}@{$parsed->host}"; #List of addresses to send to
+					$list[$section][$address] = $parsed->personal;
+
+					$encoded[$section][] = strlen($parsed->personal) ? mb_encode_mimeheader($parsed->personal)." <$address>" : $address; #List of addresses to write on the header
+				}
 			}
+
+			$conf = $system->app_conf();
+			$mailer = str_replace(array('%APP%', '%VERSION%'), array($system->self['name'], str_replace('_', '.', $system->self['version'])), $conf['mailer']);
 
 			$header = array( #Headers to go inside the mail header section
 				'From' => implode(', ', $encoded['from']),
 				'To' => implode(', ', $encoded['to']),
 				'Subject' => mb_encode_mimeheader($subject),
-				'Date' => gmdate('r'),
-				'Message-ID' => time().'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']), #Create a unique message ID
-				'X-Mailer' => str_replace(array('%APP%', '%VERSION%'), array($system->self['name'], str_replace('_', '.', $system->self['version'])), $system->app_conf($system->self['name'], $system->self['version'], 'mailer')),
+				'Date' => $sent = gmdate('r'),
+				'Message-ID' => $mid = time().'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']), #Create a unique message ID
+				'X-Mailer' => $mailer,
 				'Return-Path' => $row['address']
 			);
 
-			$mail = array('body' => $mime->get(array('head_charset' => 'utf-8', 'text_charset' => 'utf-8')), 'header' => $mime->headers($header)); #NOTE : Do not call these functions in reverse order (From PEAR manual)
+			if(is_array($encoded['cc']) && count($encoded['cc'])) $header['Cc'] = implode(', ', $encoded['cc']); #Add 'Cc' header if it exists
+			if($draft && is_array($encoded['bcc']) && count($encoded['bcc'])) $header['Bcc'] = implode(', ', $encoded['bcc']); #Add 'Bcc' header only when saving as a draft
 
-			if($system->is_digit($row['folder_sent']))
+			#NOTE : Do not call these functions (get / headers) in reverse order (From PEAR manual)
+			$mail = array('body' => $mime->get(array('head_charset' => 'utf-8', 'text_charset' => 'utf-8')), 'header' => $mime->headers($header));
+			$storage = $draft ? 'drafts' : 'sent'; #The special folder to store the mail to
+
+			if($system->is_digit($row["folder_$storage"]))
 			{
-				$folder = $row['folder_sent'];
-				$name = Mail_1_0_0_Folder::name($folder, $user); #Find the 'sent' folder
+				$folder = $row["folder_$storage"];
+				$name = Mail_1_0_0_Folder::name($folder, $user); #Find the storage folder
 			}
 
 			if(!is_string($name) || !strlen($name)) #If not found
 			{
-				$name = self::$_sent;
+				$name = self::$_storage[$storage];
 				$folder = Mail_1_0_0_Folder::create($account, null, $name, $user); #Register a generic folder name
 
 				if(!$folder) return 1;
 
-				$query = $database->prepare("UPDATE {$database->prefix}account SET folder_sent = :folder WHERE id = :id AND user = :user");
+				$query = $database->prepare("UPDATE {$database->prefix}account SET folder_$storage = :folder WHERE id = :id AND user = :user");
 				$query->run(array(':folder' => $folder, ':id' => $account, ':user' => $user->id));
 
 				if(!$query->success) return 1;
 			}
 
 			$type = Mail_1_0_0_Account::type($row['receive_type']);
-			$open = $type == 'pop3' ? '' : $folder;
 
-			$link = Mail_1_0_0_Account::connect($account, $open, $user); #Connect for both POP3/IMAP to validate through 'POP3/IMAP before SMTP'
+			#NOTE : Periodical mail checking is assumed to pass 'POP before SMTP' restriction without connecting here for POP3
+			if($type == 'imap') $link = Mail_1_0_0_Account::connect($account, $folder, $user); #Connect for both POP3/IMAP to validate through 'POP3/IMAP before SMTP'
 
-			$connection = array( #SMTP connection parameters
-				'host' => ($row['send_secure'] ? 'tls://' : '').$row['send_host'],
-				'port' => $row['send_port'],
-				'auth' => strlen($row['send_user']) || strlen($row['send_pass']),
-				'username' => $row['send_user'],
-				'password' => $row['send_pass'],
-				'localhost' => $row['send_host'],
-				'timeout' => $system->app_conf('system', 'static', 'net_timeout'),
-				'persist' => false
-			);
+			if(!$draft) #Do not send on saving the draft
+			{
+				$connection = array( #SMTP connection parameters - NOTE : TLS is automatically initiated if the mail server supports it
+					'host' => ($row['send_secure'] ? 'ssl://' : '').$row['send_host'],
+					'port' => $row['send_port'],
+					'auth' => strlen($row['send_user']) || strlen($row['send_pass']),
+					'username' => $row['send_user'],
+					'password' => $row['send_pass'],
+					'localhost' => $row['send_host'],
+					'timeout' => $system->app_conf('system', 'static', 'net_timeout'),
+					'persist' => false
+				);
 
-			$smtp =& Mail::factory('smtp', $connection);
-			if($smtp->send($toward, $mail['header'], $mail['body']) !== true) return 3; #SMTP failure
+				$smtp =& Mail::factory('smtp', $connection);
+				if($smtp->send($toward, $mail['header'], $mail['body']) !== true) return 3; #SMTP failure
+			}
 
-			if($type == 'pop3') return 0; #Keep the mail on the mail server for IMAP
+			#NOTE : For this version, attachments are not stored locally at all.
+			#For IMAP, the mail will be sent to the server to keep the mail entirely including all attachments and can be reaquired
+			#but for POP3, attachments will be discarded when saving the mail locally.
+			#
+			#In future versions those store attachments locally, they will be stored as files locally named after the ID of the mail
+			#and 'position' parameter can be left unused in the database.
+			#TODO - IMAP may not need to have attachments saved locally at all at the cost of some descrease in download speed or unavailability in case IMAP server is down.
 
-			$header = '';
+			if($system->is_digit($resume)) Mail_1_0_0_Item::remove(array($resume)); #If a draft is being saved from a suspended draft, delete the old one. Not stopping if error occurs here.
+
+			if($type == 'pop3') #For POP3, store the mail locally
+			{
+				if(!$database->begin()) return 1;
+				$section = explode(' ', 'user folder subject mid sent preview plain read draft');
+
+				$column = implode(', ', $section);
+				$variable = ':'.implode(', :', $section);
+
+				try
+				{
+					$query = $database->prepare("INSERT INTO {$database->prefix}mail ($column) VALUES ($variable)");
+					$query->run(array(':user' => $user->id, ':folder' => $folder, ':subject' => $subject, ':mid' => $mid, ':sent' => $sent, ':preview' => $preview, ':plain' => $body, ':read' => 1, ':draft' => $draft ? 1 : 0));
+
+					if(!$query->success) throw new Exception();
+					if(!$system->is_digit($id = $database->id())) throw new Exception();
+
+					foreach(array('from', 'to', 'cc', 'bcc') as $section) #Insert all the addresses in the mail
+					{
+						foreach($list[$section] as $address => $name)
+						{
+							$query = $database->prepare("INSERT INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
+							$query->run(array(':mail' => $id, ':name' => $name, ':address' => $address));
+
+							if(!$query->success) throw new Exception();
+						}
+					}
+
+					if($database->commit()) return 0;
+					throw new Exception();
+				}
+
+				catch(Exception $error)
+				{
+					$database->rollback();
+					return 1;
+				}
+			}
+
+			$header = ''; #Upload the mail to the mail server for IMAP
 			foreach($mail['header'] as $key => $value) $header .= "$key: $value\r\n";
 
-			if(imap_append($link['connection'], '{'.$link['host']."}$name", "$header\r\n{$mail['body']}")) return 0; #Save on the mail server
+			if(imap_append($link['connection'], '{'.$link['host']."}$name", "$header\r\n{$mail['body']}", $draft ? '\\Draft' : '')) return 0; #Store the mail on the mail server
 
 			Mail_1_0_0_Account::error($link['host']);
 			return 4; #IMAP failure
@@ -739,15 +792,23 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
+			$query = $database->prepare("SELECT preference FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
+			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the read preference
+
+			if(!$query->success) return false;
+
+			$preference = $query->column();
+			if(!in_array($preference, array('plain', 'html'))) $preference = 'plain'; #Fallback to plain text
+
 			$query = $database->prepare("SELECT read, plain, html, subject, encode FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the mail body
 
 			if(!$query->success) return false;
-			$row = $query->row();
 
+			$row = $query->row();
 			if(!$row['read']) self::flag(array($id), 'Seen', true, $user); #Mark as seen if not read
 
-			if($body = $row['html']) #If HTML version is available
+			if($preference == 'html' && strlen($body = $row['html'])) #If HTML version is available
 			{
 				header("Content-Type: text/html; charset={$row['encode']}");
 				if(!$system->compress_header()) $body = $system->compress_decode($body); #If it cannot send compressed, uncompress and send
@@ -879,14 +940,14 @@
 			#Prepare to check for mail's existence
 			$query = array('check' => $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND signature = :signature"));
 
-			foreach(array('from', 'to', 'cc') as $section) #Query to insert mail addresses
+			foreach(array('from', 'to', 'cc', 'bcc') as $section) #Query to insert mail addresses
 				$query[$section] = $database->prepare("INSERT INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
 
 			#Mail info insertion query
-			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, header, signature, subject, mid, sent, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :header, :signature, :subject, :mid, :sent, :read, :preview, :plain, :html, :encode)");
+			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, header, signature, subject, mid, sent, draft, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :header, :signature, :subject, :mid, :sent, :draft, :read, :preview, :plain, :html, :encode)");
 
 			#Attachment info query
-			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, cid, name, size, type, position) VALUES (:mail, :cid, :name, :size, :type, :position)");
+			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, cid, name, type, position) VALUES (:mail, :cid, :name, :type, :position)");
 
 			if($link['type'] == 'imap') #For IMAP
 			{
@@ -919,7 +980,7 @@
 			}
 
 			$exist = array(); #List of header md5 sum of mails existing in the mail box
-			$field = explode(' ', 'date message_id subject to from unseen'); #List of fields to get
+			$field = explode(' ', 'date message_id subject to from cc bcc unseen draft'); #List of fields to get
 
 			for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++) #For all of the messages found in the mail box
 			{
@@ -938,7 +999,7 @@
 				$attributes[':signature'] = md5($attributes[':header']); #Make a unique signature of the message
 				$attributes[':header'] = gzencode($attributes[':header']); #Compress the header for storing
 
-				$addresses = array(); #List of 'from', 'to' and 'cc' addresses
+				$addresses = array(); #List of 'from', 'to', 'cc' and 'bcc' addresses
 
 				$header = imap_headerinfo($link['connection'], $sequence);
 				if(!is_object($header)) return Mail_1_0_0_Account::error($link['host']);
@@ -972,6 +1033,8 @@
 							case 'subject' : if(!$system->is_text($attributes[$store])) $attributes[$store] = ''; break; #Avoid null values
 
 							case 'message_id' : $attributes[$store] = preg_replace('/^<(.+)>$/', '\1', $attributes[$store]); break; #Strip the brackets
+
+							case 'draft' : $attributes[$store] = $value == 'X' ? 1 : 0; break; #Draft entries
 
 							case 'unseen' : $attributes[$store] = $value == 'U' ? 0 : 1; break; #Unread entries
 						}
@@ -1094,26 +1157,27 @@
 
 						$attributes[':preview'] = $body[$type];
 					}
-					elseif(!$attributes[':preview']) #If no plain text is available
+					elseif(!preg_match('/\S/', $attributes[':preview'])) #If no plain text is available
 					{
-						if($attributes[':encode']) #If encoding could be detected for HTML version
+						if($attributes[':encode']) #If encoding could be detected for HTML version (Already attempted to detect manually above)
 						{
-							$stripped = trim(strip_tags($body[$type])); #Create a plain text version from HTML version by taking out the HTML tags and surrounding spaces off
-							if($attributes[':encode'] != 'us-ascii' && $attributes[':encode'] != 'utf-8') $stripped = mb_convert_encoding($stripped, 'utf-8', $attributes[':encode']);
+							#Create a plain text version from HTML version by taking out the HTML tags and extra spaces off
+							if($attributes[':encode'] == 'us-ascii' || $attributes[':encode'] == 'utf-8') $attributes[':plain'] = $body['html'];
+							else $attributes[':plain'] = mb_convert_encoding($body['html'], 'utf-8', $attributes[':encode']);
+
+							$attributes[':preview'] = $attributes[':plain'] = preg_replace('/(\s){2,}/', '\1', strip_tags($attributes[':plain']));
 
 							foreach(array(':plain', ':preview') as $section)
 							{
-								$attributes[$section] = $stripped; #Set plain text versions
-
 								$encoding = mb_detect_encoding($attributes[$section]); #Detect again to make sure
 								if($encoding != 'ASCII' && $encoding != 'UTF-8') $attributes[$section] = '(?)'; #If not possible, give up
 							}
 						}
-						else $attributes[':preview'] = '(?)'; #If no encoding was detected, save empty preview to avoid corrupting output XML
+						else $attributes[':preview'] = $attributes[':plain'] = '(?)'; #If no encoding was detected, save empty preview to avoid corrupting output XML
 					}
 				}
 
-				$attributes[':plain'] = $body['plain']; #Keep it uncompressed for search purpose
+				if(!$attributes[':plain']) $attributes[':plain'] = $body['plain']; #Keep it uncompressed for search purpose
 
 				#Compress the HTML version - NOTE : In order to open a new window on links under iframe, this is the only way that works across browsers
 				$attributes[':html'] = $body['html'] ? gzencode('<head><base target="_blank" /></head>'.$body['html']) : null;
@@ -1121,31 +1185,29 @@
 				$attributes[':preview'] = substr($attributes[':preview'], 0, self::$_preview[0]); #Limit the size of the message body TODO - This does not corrupt multi byte characters and the outputting XML?
 				$attributes[':preview'] = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', preg_replace(array("/\r/", "/\n{2,}/"), array('', "\n"), $attributes[':preview'])); #Limit the lines of the message body
 
-				$database->begin(); #NOTE : Only do transaction per mail, as network failure during fetching mails will not rollback for the mails already saved
+				if(!$database->begin()) return false; #NOTE : Only do transaction per mail, as network failure during fetching mails will not rollback for the mails already saved
 
 				$query['insert']->run($attributes); #Insert the mail in the database
-				if(!$query['insert']->success) return false;
+				if(!$query['insert']->success) return $database->rollback() && false;
 
 				$id = $database->id(); #Generated ID for the mail in the database
+				if($id === false) return $database->rollback() && false;
 
-				foreach(array('from', 'to', 'cc') as $section) #Insert the addresses
+				foreach(array('from', 'to', 'cc', 'bcc') as $section) #Insert the addresses
 				{
 					if(!is_array($addresses[$section])) continue;
 
 					foreach($addresses[$section] as $values)
 					{
 						$values[':mail'] = $id;
-
 						$query[$section]->run($values);
-						if($query[$section]->success) continue;
 
-						$database->rollback();
-						return false;
+						if(!$query[$section]->success) return $database->rollback() && false;
 					}
 				}
 
-				foreach($attachment as $file) $query['attachment']->run(array(':mail' => $id, ':cid' => preg_replace('/^<(.+)>$/', '\1', $file['structure']->id), ':name' => $file['name'], ':position' => $file['position'], ':size' => $file['size'], ':type' => $file['type']));
-				$database->commit();
+				foreach($attachment as $file) $query['attachment']->run(array(':mail' => $id, ':cid' => preg_replace('/^<(.+)>$/', '\1', $file['structure']->id), ':name' => $file['name'], ':position' => $file['position'], ':type' => $file['type']));
+				if(!$database->commit()) return $database->rollback() && false;
 			}
 
 			if($supported) #If UID is available
@@ -1246,7 +1308,7 @@
 			}
 
 			$query = $database->prepare("UPDATE {$database->prefix}folder SET updated = :updated WHERE id = :id AND user = :user");
-			$query->run(array(':updated' => date('Y-m-d H:i:s'), ':id' => $folder, ':user' => $user->id));
+			$query->run(array(':updated' => gmdate('Y-m-d H:i:s'), ':id' => $folder, ':user' => $user->id));
 
 			return true; #Report success ignoring the last update query's result
 		}

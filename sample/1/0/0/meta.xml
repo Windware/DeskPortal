@@ -1,7 +1,7 @@
 <!-- This file explains about the application -->
 <root>
 	<!-- Name the developers here. 'site' is optional. -->
-	<developer name="Windware Solution" contact="no_reply@windware-solution.com" site="http://windware-solution.com/" />
+	<developer name="The Developer" contact="dev@example.com" site="http://dev.example.com/" />
 
 	<!-- Information on the application
 		'revision'
@@ -17,8 +17,8 @@
 	<info revision="1" category="system" />
 
 	<!-- Applicable country
-		In case the application only makes sense in specific countries, (ex : postal code lookup of a specific country)
-		note about the name of countries in here in 2 letter abbreviated form. (Do not confuse with language abbreviations.)
+		In case the application only makes sense in specific countries. (ex : postal code lookup of a specific country)
+		Note about the name of countries in here in 2 letter abbreviated form. (Do not confuse with language abbreviations.)
 		Make multiple entries if appropriate. If it has no country limitations, omit this tag.
 		If the application only supports specific languages, do not limit the application by country names but use 'language' tags explained next.
 	-->
@@ -29,15 +29,12 @@
 		Optionally give 'site' attributes for 'translator' tags.
 	-->
 	<language name="en">
-		<translator name="Windware Solution" contact="no_reply@windware-solution.com" />
+		<translator name="The Person" contact="person@example.com" />
 	</language>
 
 	<language name="ja">
-		<translator name="Windware Solution" contact="no_reply@windware-solution.com" />
+		<translator name="The Person" contact="person@example.com" />
 	</language>
-
-	<!-- Name the contributors here. 'site' is optional. -->
-	<contributor name="Windware Solution" contact="no_reply@windware-solution.com" site="http://windware-solution.com/" />
 
 	<!--
 		Place any requirements to run those are not mentioned in the system's 'meta.xml'.
@@ -64,14 +61,14 @@
 	-->
 	<license>
 		<folder name="." license="Windware Reference License">
-			<author name="Windware Solution" contact="no_reply@windware-solution.com" site="http://windware-solution.com" />
+			<author name="Author" contact="author@example.com" site="http://example.com" />
 
 			<folder name="component">
 				<folder name="default">
 					<folder name="computer">
 						<folder name="graphic">
-							<file name="icon.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+							<file name="icon.png" license="Free license">
+								<author name="Icon Author" contact="icon@example.com" site="http://example.com/" />
 							</file>
 						</folder>
 					</folder>

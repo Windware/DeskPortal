@@ -153,7 +153,7 @@
 			$log->dev(LOG_INFO, "Creating a new user '$name'");
 
 			$query = $database->prepare("INSERT INTO {$database->prefix}user (name, pass, joined) VALUES (:name, :pass, :joined)");
-			$query->run(array(':name' => $name, ':pass' => hash($conf['db_hash'], $pass), ':joined' => date('Y-m-d')));
+			$query->run(array(':name' => $name, ':pass' => hash($conf['db_hash'], $pass), ':joined' => gmdate('Y-m-d')));
 
 			if(!$query->success) return false;
 			$id = $database->id(); #Get the created user's ID
@@ -242,7 +242,7 @@
 			switch($section)
 			{
 				case 'conf' : case 'window' : #Update the window information
-					$database->begin();
+					if(!$database->begin()) return false;
 					$query = $database->prepare("REPLACE INTO {$database->prefix}$section (user, app, key, value) VALUES (:user, :app, :key, :value)");
 
 					foreach($data as $key => $value)
@@ -250,14 +250,10 @@
 						if(!$system->is_text($key)) continue;
 
 						$query->run(array(':user' => $this->id, ':app' => $id, ':key' => $key, ':value' => $value));
-						if($query->success) continue;
-
-						$database->rollback();
-						return false;
+						if(!$query->success) return $database->rollback() && false;
 					}
 
-					$database->commit();
-					return true;
+					return $database->commit() || $database->rollback() && false;
 				break;
 
 				case 'used' : #Update the loaded state

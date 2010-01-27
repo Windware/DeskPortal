@@ -72,5 +72,7 @@
 	<string name="save" value="Save" />
 	<string name="cancel" value="Cancel" />
 	<string name="sign" value="Sign" />
+	<string name="discard" value="Quit writing this mail?" />
 	<string name="sending" value="Sending..." />
+	<string name="saving" value="Saving..." />
 </root>

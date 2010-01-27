@@ -3,8 +3,6 @@
 	{
 		var _class = $id + '.item';
 
-		var _cache = {}; //Message listing cache
-
 		var _drag; //The message drag parameter
 
 		var _float = 7; //Amount of pixels to move to trigger message move instead of displaying message when dragging them
@@ -24,7 +22,7 @@
 			var log = $system.log.init(_class + '.clear');
 
 			if(!$system.is.digit(id) || !$system.is.digit(folder)) return log.param();
-			if(!$system.is.object(_cache[folder])) return false;
+			if(!$system.is.object(__cache[folder])) return false;
 
 			var remove = function(cache) //Go through the cache listing
 			{
@@ -38,7 +36,7 @@
 				}
 			}
 
-			return remove(_cache[folder]); //NOTE : Likely to return 'undefined'
+			return remove(__cache[folder]); //NOTE : Likely to return 'undefined'
 		}
 
 		this.click = function(id) //Either start dragging the mail or display the message window
@@ -115,7 +113,9 @@
 				if(list[i].nodeType != 1 || list[i].nodeName != 'A' || !$system.node.classes(list[i], $id + '_hilight')) continue;
 
 				var target = list[i].id.replace(RegExp('^' + $id + '_folder_'), '');
-				if(target != __selected.folder) $self.item.move(_drag.id, target, $system.app.method($self.item.get, [__selected.folder, 0])); //Move the selected mails if targetting another folder
+
+				//Move the selected mails if targetting another folder - NOTE : Doing a remote update in case database failed to be updated (Ex : Database locked errors)
+				if(target != __selected.folder) $self.item.move(_drag.id, target, $system.app.method($self.item.get, [__selected.folder, 1]));
 
 				break;
 			}
@@ -146,17 +146,17 @@
 				if(__selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
 					return __update[folder] = true; //If not currently displayed, flag to note that this folder should be updated on next display
 
-				delete _cache[folder][page][order][reverse]; //Remove the cache
+				delete __cache[folder][page][order][reverse]; //Remove the cache
 				$self.item.get(folder, 1); //Update the displaying list
 			}
 
-			var list = function(folder, page, order, reverse, marked, unread, search, previous, update, request) //List the mails upon receiving the contents
+			var list = function(folder, page, order, reverse, marked, unread, search, previous, update, callback, request) //List the mails upon receiving the contents
 			{
 				$self.gui.indicator(false); //Remove indicator
 				$system.node.hide($id + '_wait', true, true); //Remove the wait message
 
-				var section = $system.array.list('subject to from date'); //List of data to cache
-				var cache = _cache[folder][page][order][reverse][marked][unread][search]; //Page listing cache
+				var section = $system.array.list('subject to from cc bcc date'); //List of data to cache
+				var cache = __cache[folder][page][order][reverse][marked][unread][search]; //Page listing cache
 
 				if($system.is.object(request)) //If a new data is passed, create the cache
 				{
@@ -166,7 +166,7 @@
 						$system.gui.alert($id, 'user/item/list/title', 'user/item/list/message', 3);
 					}
 
-					cache = _cache[folder][page][order][reverse][marked][unread][search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
+					cache = __cache[folder][page][order][reverse][marked][unread][search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
 					if(!$system.is.digit(cache.max) || !cache.max) cache.max = 1;
 
 					var list = $system.dom.tags(request.xml, 'mail');
@@ -188,7 +188,7 @@
 						{
 							switch(section[j])
 							{
-								case 'from' : case 'to' : case 'cc' :
+								case 'from' : case 'to' : case 'cc' : case 'bcc' :
 									var address = $system.dom.tags(list[i], section[j]);
 									__mail[id][section[j]] = [];
 
@@ -214,8 +214,8 @@
 				}
 
 				//If displaying state changed, do not show it
-				if(__selected.folder != folder || __selected.page != page || __selected.marked != marked) return true;
-				if(__selected.unread != unread || __selected.order != order || __selected.reverse != reverse || __selected.search != search) return true;
+				if(__selected.folder != folder || __selected.page != page || __selected.marked != marked) return $system.app.callback(_class + '.get.list', callback);
+				if(__selected.unread != unread || __selected.order != order || __selected.reverse != reverse || __selected.search != search) return $system.app.callback(_class + '.get.list', callback);
 
 				__current = cache; //Remember current listing
 
@@ -224,7 +224,8 @@
 					$system.node.id($id + '_show').value = cache.max;
 					__selected.page = cache.max;
 
-					return $self.item.update(); //Show earlier page
+					$self.item.update(); //Show earlier page
+					return $system.app.callback(_class + '.get.list', callback);
 				}
 
 				var zone = $system.node.id($id + '_paging');
@@ -301,7 +302,9 @@
 
 					if(mail.read != '1') $system.node.classes(row, $id + '_mail_unread', true); //For unread mails
 					if(mail.marked == '1') $system.node.classes(row, $id + '_mail_marked', true); //For marked mails
+
 					if(mail.replied == '1') $system.node.classes(row, $id + '_mail_replied', true); //For replied mails
+					if(mail.draft == '1') $system.node.classes(row, $id + '_mail_draft', true); //For draft mails
 
 					for(var j = 0; j < column.length; j++) //For all the columns
 					{
@@ -332,7 +335,7 @@
 
 							case 'date' : display = tip = $system.date.create(mail.sent).format($global.user.pref.format.monthdate); break;
 
-							case 'from' : case 'to' : case 'cc' : //Create mail addresses and concatenate
+							case 'from' : case 'to' : case 'cc' : case 'bcc' : //Create mail addresses and concatenate
 								display = [];
 								tip = [];
 
@@ -378,6 +381,7 @@
 				while(table.firstChild) table.removeChild(table.firstChild); //Clean up the listing (innerHTML on table breaks khtml)
 				table.appendChild(body);
 
+				for(var i = 0; i < cache.list.length; i++) if(_stack[cache.list[i]]) $self.item.select(cache.list[i], true); //Check selected mails
 				var scroll = _scroll[folder] && _scroll[folder][page]; //Check if the scroll position cache is still valid
 
 				if(scroll) //If the scroll position is declared
@@ -389,31 +393,30 @@
 				}
 
 				if(!scroll) table.parentNode.scrollTop = 0; //Move to top of page
-				$system.app.callback(_class + '.get', callback);
 
 				if(__update[folder]) //If cache should be updated - TODO : May be better to only delete cache for specific setting
 				{
-					delete _cache[folder]; //Remove the entire cache for the folder
+					delete __cache[folder]; //Remove the entire cache for the folder
 					delete __update[folder];
 
-					return $self.item.get(folder, 1); //Update it
+					$self.item.get(folder, 1); //Update it
 				}
 
-				return true;
+				return $system.app.callback(_class + '.get.list', callback);
 			}
 
 			//Create cache storage
-			if(!_cache[folder]) _cache[folder] = {};
-			if(!_cache[folder][__selected.page]) _cache[folder][__selected.page] = {};
-			if(!_cache[folder][__selected.page][__selected.order]) _cache[__selected.folder][__selected.page][__selected.order] = {};
+			if(!__cache[folder]) __cache[folder] = {};
+			if(!__cache[folder][__selected.page]) __cache[folder][__selected.page] = {};
+			if(!__cache[folder][__selected.page][__selected.order]) __cache[__selected.folder][__selected.page][__selected.order] = {};
 
-			var hash = _cache[folder][__selected.page][__selected.order]; //A shortcut
+			var hash = __cache[folder][__selected.page][__selected.order]; //A shortcut
 
 			if(!hash[__selected.reverse]) hash[__selected.reverse] = {};
 			if(!hash[__selected.reverse][__selected.marked]) hash[__selected.reverse][__selected.marked] = {};
 			if(!hash[__selected.reverse][__selected.marked][__selected.unread]) hash[__selected.reverse][__selected.marked][__selected.unread] = {};
 
-			var items = [folder, __selected.page, __selected.order, __selected.reverse, __selected.marked, __selected.unread, __selected.search, previous, update];
+			var items = [folder, __selected.page, __selected.order, __selected.reverse, __selected.marked, __selected.unread, __selected.search, previous, update, callback];
 			var run = $system.app.method(list, items);
 
 			if($system.is.object(request)) return run(request); //If updating, use the passed object
@@ -445,7 +448,7 @@
 				if($system.dom.status(request.xml) == '0')
 				{
 					var message = [$global.log.notice, 'user/item/mark'];
-					delete _cache[__mail[id].folder]; //Remove the entire cache for the folder
+					delete __cache[__mail[id].folder]; //Remove the entire cache for the folder
 
 					__mail[id].marked = mode ? 1 : 0;
 					$system.node.classes($id + '_mail_row_' + id, $id + '_mail_marked', !!mode); //Change the style
@@ -499,7 +502,7 @@
 				}
 			}
 
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.move'}, {id : id, folder : folder}, $system.app.method(notify, [callback]));
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.move'}, {id : $system.array.unique(id), folder : folder}, $system.app.method(notify, [callback]));
 		}
 
 		this.select = function(id, checked) //Add a mail to the selection

@@ -3,6 +3,8 @@
 	{
 		var _class = $id + '.gui';
 
+		var _interval = 3; //Minutes of interval between each auto draft saving
+
 		var _limit = 50; //Maximum search string length
 
 		var _order = {}; //Mail order for specific mail windows
@@ -11,7 +13,11 @@
 
 		var _quote = '> '; //Quote marker to use in reply
 
+		var _state; //Mail send/draft state
+
 		var _submit = {}; //Remember mail send form submission
+
+		var _timer = {}; //Auto draft save timer
 
 		var _body = function(id, index, compose, field) //Create the mail window content
 		{
@@ -19,7 +25,7 @@
 			if(!id && !compose || !$system.is.digit(index)) return false;
 
 			var language = $system.language.strings($id);
-			var section = ['from', 'to', 'cc'];
+			var section = ['from', 'to', 'cc', 'bcc'];
 
 			if(!compose) //For displaying the mail
 			{
@@ -62,7 +68,7 @@
 				value.attachment = attachment.join(', ');
 				value.body = $system.network.form($self.info.root + 'server/php/front.php?task=gui.show&message=' + id);
 			}
-			else //For the composing screen
+			else //For composing the mail
 			{
 				var template = 'compose'; //The HTML template to use
 				var value = {id : id, index : index, action : $system.network.form($self.info.root + 'server/php/front.php?task=gui.send')};
@@ -73,28 +79,37 @@
 
 					if($system.is.array(field) && field.length) //If the reply to address field is specified
 					{
-						value.subject = 'Re : ' + __mail[id].subject.replace(/^\s*re\s*:\s*/i, ''); //Strip previous reply marker
+						var draft = $system.array.find(field, 'bcc'); //If the field includes 'bcc', treat it as draft composing screen
 
-						value.to = [];
-						var section = ['from', 'to', 'cc'];
+						if(!draft) value.subject = 'Re : ' + __mail[id].subject.replace(/^\s*re\s*:\s*/i, ''); //If not resuming a draft, put the reply marker after stripping the previous one
+						else
+						{
+							value.subject = __mail[id].subject; //Use the subject as is for resuming draft
+							value.resume = id; //Indicate this is resuming a previous draft
+						}
+
+						var section = ['from', 'to', 'cc', 'bcc'];
+						for(var i = 0; i < section.length; i++) value[section[i]] = [];
 
 						for(var i = 0; i < field.length; i++) //Grab the mail addresses from the specified fields
 						{
 							if(!$system.array.find(section, field[i]) || !__mail[id][field[i]]) continue;
+
+							var target = !draft ? 'to' : field[i]; //For normal reply, set all of the addresses in the 'to' field
 							var address = __mail[id][field[i]];
 
 							for(var j = 0; j < address.length; j++)
 							{
-								if(address[j].name.length && address[j].name != address[j].address) value.to.push(address[j].name + ' <' + address[j].address + '>');
-								else value.to.push(address[j].address); //Put the user name in front if it exists and is not same as the mail address
+								if(address[j].name.length && address[j].name != address[j].address) value[target].push(address[j].name + ' <' + address[j].address + '>');
+								else value[target].push(address[j].address); //Put the user name in front if it exists and is not same as the mail address
 							}
 						}
 
-						value.to = value.to.join(', ');
+						value[target] = value[target].join(', ');
 					}
 					else value.subject = 'Fw : ' + __mail[id].subject; //If forwarding, put the forward prefix
 				}
-				else var account = __selected.account ? __selected.account : 1; //FIXME - Pick the default account
+				else var account = __selected.account ? __selected.account : __default; //Pick the account to use
 
 				for(var i in __account)
 				{
@@ -105,6 +120,40 @@
 
 			var replace = function(phrase, match) { return value[match] || value[match] == 0 ? value[match] : ''; }
 			return $self.info.template[template].replace(/%value:(.+?)%/g, replace);
+		}
+
+		var _insert = function(id, index, raw) //Load the message body
+		{
+			if(!$system.is.digit(id) || !$system.is.digit(index)) return false;
+			if(!__mail[id] || !$system.node.id($id + '_compose_' + index + '_form')) return false;
+
+			var load = function(id, index, request) //Quote the source mail
+			{
+				var form = $system.node.id($id + '_compose_' + index + '_form');
+
+				var sender = __mail[id].from[0]; //Set the sender name
+				sender = sender.name.length ? sender.name + ' (' + sender.address + ')' : sender.address;
+
+				var language = $system.language.strings($id);
+
+				if(!raw) //When replying, quote the message
+				{
+					var source = _quote + language.from + ' : ' + sender + '\n' + _quote + language.date + ' : ' + __mail[id].sent;
+					form.body.innerHTML = '\n\n' + source + '\n' + _quote + '\n' + _quote + request.text.replace(/\n/g, '\n' + _quote); //Fill the composing field with the mail quoted
+				}
+				else form.body.innerHTML = request.text; //If resuming draft, display as is
+
+				if(_timer[index])
+				{
+					clearInterval(_timer[index]);
+					delete _timer[index];
+				}
+
+				_timer[index] = setInterval($system.app.method($self.gui.save, [index]), _interval * 60 * 1000); //Set auto draft save on
+			}
+
+			//Load the plain text version of the mail
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.compose', id : id}, null, $system.app.method(load, [id, index]));
 		}
 
 		this.add = function(address, name) //Add email address to address book app
@@ -137,8 +186,14 @@
 			$system.app.load(app, $system.app.method(open, [address, name])); //Load the address book app
 		}
 
-		this.auto = function() //Automatically save the draft
+		this.cancel = function(index) //Cancel composing
 		{
+			if(!$system.is.digit(index)) return false;
+
+			var language = $system.language.strings($id);
+			if(!confirm(language.discard)) return false;
+
+			return $system.window.fade($id + '_display_' + index, true, null, true)
 		}
 
 		this.check = function() //Select or deselect all mails
@@ -168,7 +223,7 @@
 			var log = $system.log.init(_class + '.complete');
 
 			if(!$system.is.digit(index) || !frame.contentWindow) return log.param();
-			if(!$system.is.digit(_submit[index])) return false; //Quit if never submitted
+			if(!_submit[index]) return false; //Quit if never submitted
 
 			var state = frame.contentWindow.document.body.innerHTML;
 			if(!$system.is.digit(state)) state = 1;
@@ -179,26 +234,48 @@
 			if(!mode) mode = 'error';
 			var timer;
 
+			var form = $system.node.id($id + '_compose_' + index + '_form');
+			$system.node.hide($id + '_compose_' + index + '_progress', true); //Hide the status message
+
 			if(mode == 'success') //When succeeded
 			{
-				timer = 3; //Clear the message
-				$system.window.fade($id + '_display_' + index, true, null, true); //Remove the composing window
+				if(_state) mode = 'draft'; //Show the draft saved message instead
 
-				if(__special.sent[_submit[index]] == __selected.folder) $self.item.update(1); //Update the sent folder
-				else __update[__special.sent[_submit[index]]] = true; //Or mark the sent folder to be updated on next access
+				if(_state != 2) //If not automatic saving
+				{
+					timer = 3; //Clear the message
+					$system.window.fade($id + '_display_' + index, true, null, true); //Remove the composing window
+				}
+
+				var target = _state ? 'drafts' : 'sent';
+				var special = __special[target][_submit[index].account];
+
+				if(special == __selected.folder) $self.item.update(1); //Update the folder
+				else __update[special] = true; //Or mark the folder to be updated on next access
+
+				if(_submit[index].resume) //If resumed writing a draft
+				{
+					var home = __mail[_submit[index].resume].folder; //The folder the mail belongs to
+
+					if(special != home) //If the draft was placed not in the draft folder
+					{
+						if(home == __selected.folder) $self.item.update(1); //Update the folder
+						else __update[home] = true; //Or mark the folder to be updated on next access
+					}
+				}
 			}
 			else
 			{
-				$system.node.hide($id + '_compose_' + index + '_sending', true); //Hide the send message
+				if(_state && mode == 'error') mode = 'imap'; //Show the draft error message instead
 
-				var form = $system.node.id($id + '_compose_' + index + '_form');
 				for(var i = 0; i < form.elements.length; i++) form.elements[i].disabled = false; //Enable the forms again
+				if(!__account[form.account.value].signature.length) form.sign.disabled = true; //Disable the signing button if no signature exists
 			}
 
-			return $system.gui.alert($id, 'user/gui/send/' + mode, 'user/gui/send/' + mode + '/message', timer); //Show the status
+			return _state == 2 ? true : $system.gui.alert($id, 'user/gui/send/' + mode, 'user/gui/send/' + mode + '/message', timer); //Show the status
 		}
 
-		this.compose = function(id, index, field, address) //Compose a mail
+		this.compose = function(id, index, field) //Compose a mail
 		{
 			if(!$system.is.digit(index)) return $self.gui.show(id, true); //Create the mail window to compose if no window is specified
 			if(!$system.is.digit(id) || !id) return false;
@@ -207,28 +284,9 @@
 			if(!node) return false;
 
 			node.body.innerHTML = _body(id, index, true, field);
+			$self.gui.signable(index);
 
-			if(id) //If a mail is specified, put the quotes in
-			{
-				var insert = function(id, index, request)
-				{
-					var form = $system.node.id($id + '_compose_' + index + '_form');
-					if(!form) return false;
-
-					var sender = __mail[id].from[0]; //Set the sender name
-					sender = sender.name.length ? sender.name + ' (' + sender.address + ')' : sender.address;
-
-					var language = $system.language.strings($id);
-
-					var source = _quote + language.from + ' : ' + sender + '\n' + _quote + language.date + ' : ' + __mail[id].sent;
-					form.body.innerHTML = '\n\n' + source + '\n' + _quote + '\n' + _quote + request.text.replace(/\n/g, '\n' + _quote); //Fill the composing field with the mail quoted
-				}
-
-				//Load the plain text version of the mail
-				$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.compose', id : id}, null, $system.app.method(insert, [id, index]));
-			}
-
-			return true;
+			return id ? _insert(id, index) : true; //Insert the reply text if ID is specified
 		}
 
 		this.create = function(account, subject, to, cc, bcc) //Create a new mail
@@ -253,7 +311,18 @@
 			}
 		}
 
-		this.file = function(index) //Load a file for attachment
+		this.extra = function(index) //Add Cc and Bcc fields
+		{
+			var log = $system.log.init(_class + '.extra');
+			if(!$system.is.digit(index)) return log.param();
+
+			$system.node.hide($id + '_compose_' + index + '_cc', false);
+			$system.node.hide($id + '_compose_' + index + '_bcc', false);
+
+			$system.node.hide($id + '_compose_' + index + '_extra', true);
+		}
+
+		this.file = function(index) //Load a new file field for attachment
 		{
 		}
 
@@ -334,13 +403,27 @@
 			return node.body.innerHTML = _body(_order[index][target], index);
 		}
 
-		this.save = function() //Save the mail as a draft
+		this.save = function(index) //Save the draft periodically
 		{
+			var log = $system.log.init(_class + '.save');
+			if(!$system.is.digit(index)) return log.param();
+
+			if(!$system.node.id($id + '_display_' + index)) //If the window is gone, clear the auto save timer
+			{
+				clearInterval(_timer[index]);
+				delete _timer[index];
+
+				return false;
+			}
+
+			if($system.node.id($id + '_compose_' + index + '_form').account.disabled) return false; //If the form is disabled while being processed, quit
+			return $self.gui.send(index, 2); //Save the draft silently
 		}
 
-		this.send = function(index, id) //Send the mail
+		this.send = function(index, draft) //Send the mail (Or save as a draft)
 		{
 			var language = $system.language.strings($id);
+			if(draft < 1) draft = false;
 
 			var form = $system.node.id($id + '_compose_' + index + '_form');
 			if(!$system.is.element(form, 'form')) return false;
@@ -368,31 +451,43 @@
 			for(var i = 0; i < form.elements.length; i++) $system.node.classes(form.elements[i], $id + '_form_warn', !!warn[form.elements[i].name]);
 			for(var field in warn) return false; //If invalid fields exist, quit
 
-			_submit[index] = form.account.value; //Remember the form has been submitted
-			if(!confirm(language.confirm)) return false;
+			_submit[index] = {account : form.account.value, resume : form.resume.value}; //Remember the form has been submitted and its values
+			if(!draft && !confirm(language.confirm)) return false; //Confirm when sending
 
-			$system.node.hide($id + '_compose_' + index + '_sending', false); //Show the send message
+			var progress = $system.node.id($id + '_compose_' + index + '_progress');
+			progress.innerHTML = language[draft ? 'saving' : 'sending'];
+
+			$system.node.hide($id + '_compose_' + index + '_progress', false); //Show the progress message
+			form.draft.value = draft ? 1 : 0; //Indicate so when saving draft
 
 			form.submit(); //Submit the form directly inside an 'iframe' to have file uploading work
-			for(var i = 0; i < form.elements.length; i++) form.elements[i].disabled = true; //Disable the form for multiple submission
+			if(draft != 2) for(var i = 0; i < form.elements.length; i++) form.elements[i].disabled = true; //Disable the form from getting submitted multiple times
 
+			_state = draft; //Keep the process state
 			return true;
 		}
 
 		this.show = function(id, compose) //Display the mail window
 		{
 			var log = $system.log.init(_class + '.show');
+			var field;
 
 			if(!$system.is.digit(id))
 			{
 				if(!compose) return log.param();
 
 				id = null;
-				__window++;
+				__window++; //Open a new window
 			}
 			else
 			{
 				if(!__mail[id]) return log.user($global.log.warning, 'user/show/error', 'user/show/solution');
+
+				if(__mail[id].draft == '1')
+				{
+					compose = true; //Start with composing mode if it is marked as a draft
+					field = ['from', 'to', 'cc', 'bcc']; //Specify 'bcc' field to indicate it is a draft
+				}
 
 				$system.node.classes($id + '_mail_row_' + id, $id + '_mail_unread', false); //Remove the unread style
 				__mail[id].read = '1';
@@ -400,8 +495,48 @@
 				_order[++__window] = __current.list; //Remember the list order for this window
 			}
 
-			$system.window.create($id + '_display_' + __window, $self.info.title + ' [No. ' + (id || 0) + ']', _body(id, __window, compose), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+			$system.window.create($id + '_display_' + __window, $self.info.title + ' [No. ' + (id || 0) + ']', _body(id, __window, compose, field), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+
+			if(compose)
+			{
+				$self.gui.signable(__window); //Enable or disable signature button
+
+				var form = $system.node.id($id + '_compose_' + __window + '_form');
+				if(form.cc.value.length || form.bcc.value.length) $self.gui.extra(__window); //Show extra cc/bcc field if data exists
+
+				if(id) _insert(id, __window, true); //Load the message body
+			}
+
 			return __window; //Return the window ID
+		}
+
+		this.sign = function(index, id) //Insert a signature at cursor position
+		{
+			var form = $system.node.id($id + '_compose_' + index + '_form');
+			var signature = '\n\n' + __account[form.account.value].signature;
+
+			if(!signature.match(/\S/)) return true;
+			form.body.focus();
+
+			if(document.selection) document.selection.createRange().text = signature; //For IE
+			else if(form.body.selectionStart !== undefined)
+			{
+				var end = form.body.selectionEnd;
+
+				form.body.value = form.body.value.substring(0, form.body.selectionStart) + signature + form.body.value.substring(end, form.body.value.length); //Insert the signature
+				form.body.setSelectionRange(end + signature.length, end + signature.length); //Set the cursor position to the end of the signature
+			}
+		}
+
+		this.signable = function(index) //Enable or disable the signing button
+		{
+			var log = $system.log.init(_class + '.signable');
+
+			if(!$system.is.digit(index)) return log.param();
+			if(!$system.window.list[$id + '_display_' + index]) return false;
+
+			var form = $system.node.id($id + '_compose_' + index + '_form');
+			form.sign.disabled = !__account[form.account.value].signature.length; //Disable the signing button if no signature exists
 		}
 
 		this.sort = function(section) //Sort the columns
@@ -410,7 +545,7 @@
 			if(!$system.is.text(section)) return log.param();
 
 			__order = {item : section, reverse : __order.item == section && !__order.reverse}; //Set order option
-			var header = $system.array.list('from to cc');
+			var header = $system.array.list('from to cc bcc');
 
 			$self.item.update(); //Update the listing
 

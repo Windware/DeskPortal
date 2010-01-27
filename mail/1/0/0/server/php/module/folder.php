@@ -248,26 +248,25 @@
 				}
 			}
 
-			$database->begin(); #Make renaming all atomic
+			if(!$database->begin()) return false; #Make renaming all atomic
 
 			$query = $database->prepare("UPDATE {$database->prefix}folder SET name = :name WHERE id = :id AND user = :user");
 			$query->run(array(':name' => $new, ':id' => $folder['source']['id'], ':user' => $user->id)); #Update the specified folder
+
+			if(!$query->success) return $database->rollback() && false;
 
 			if(is_array($children)) #If the source folder had a delimiter defined, look for child folders
 			{
 				foreach($children as $row) #Update the child folders in the database
 				{
 					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $new.$separator, $row['name']);
+
 					$query->run(array(':name' => $name, ':id' => $row['id'], ':user' => $user->id)); #Change the folder name
-
-					if($query->success) continue;
-
-					$database->rollback();
-					return false;
+					if(!$query->success) return $database->rollback() && false;
 				}
 			}
 
-			return $database->commit();
+			return $database->commit() || $database->rollback() && false;
 		}
 
 		public static function name($id, System_1_0_0_User $user = null) #Get the name of a folder from its ID
@@ -448,23 +447,22 @@
 				}
 			}
 
-			$database->begin(); #Make renaming all atomic
+			if(!$database->begin()) return false; #Make renaming all atomic
 
 			$query = $database->prepare("UPDATE {$database->prefix}folder SET name = :name WHERE id = :id AND user = :user");
 			$query->run(array(':name' => $target, ':id' => $folder, ':user' => $user->id)); #Update the specified folder
 
+			if(!$query->success) return $database->rollback() && false;
+
 			foreach($children as $row) #Update the child folders in the database
 			{
 				$name = preg_replace('/^'.preg_quote($tree, '/').'/', $target.$current['separator'], $row['name']);
+
 				$query->run(array(':name' => $name, ':id' => $row['id'], ':user' => $user->id)); #Change the folder name
-
-				if($query->success) continue;
-
-				$database->rollback();
-				return false;
+				if(!$query->success) return $database->rollback() && false;
 			}
 
-			return $database->commit();
+			return $database->commit() || $database->rollback() && false;
 		}
 
 		public static function special($account, $folder, System_1_0_0_User $user = null) #Set special folders

@@ -14,11 +14,12 @@
 	<string name="user/conf/success/title" value="保存完了" />
 	<string name="user/conf/success/message" value="設定が保存されました。" />
 
-	<string name="user/conf/connect/title" value="認証失敗" />
-	<string name="user/conf/connect/message" value="アカウントへの認証に失敗しました。" />
+	<string name="user/conf/auth" value="認証失敗" />
+	<string name="user/conf/read" value="受信用サーバーへの認証に失敗しました。認証情報を確認してください。" />
+	<string name="user/conf/send" value="送信用サーバーへの認証に失敗しました。認証情報を確認してください。" />
 
 	<string name="user/conf/signature/title" value="署名が長すぎます" />
-	<string name="user/conf/signature/message" value="署名の長さを500文字以下にしてください。" />
+	<string name="user/conf/signature/message" value="署名の長さを500文字以下にしてください。現在は%%文字です。" />
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
@@ -37,10 +38,13 @@
 	<string name="user/gui/send/big/message" value="メールのサイズが制限を超えました。サイズを減らして再度試してください。" />
 
 	<string name="user/gui/send/imap" value="メールの保存に失敗しました" />
-	<string name="user/gui/send/imap/message" value="メールをサーバーに保存できませんでした。時間をおいて再度試してください。" />
+	<string name="user/gui/send/imap/message" value="メールを保存できませんでした。時間をおいて再度試してください。" />
 
 	<string name="user/gui/send/smtp" value="メールの送信に失敗しました" />
 	<string name="user/gui/send/smtp/message" value="メールを送信できませんでした。メールの送り先アドレス、設定を確認して下さい。または時間をおいて再度試してください。" />
+
+	<string name="user/gui/send/draft" value="メールを保存しました" />
+	<string name="user/gui/send/draft/message" value="メールを下書きフォルダーに保存しました" />
 
 	<!-- item.js -->
 	<string name="user/show/error" value="メールの表示に失敗しました" />

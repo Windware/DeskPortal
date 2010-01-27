@@ -32,7 +32,6 @@
 	<!-- 情報パネル -->
 	<string name="desc" value="概要" />
 	<string name="developer" value="開発者" />
-	<string name="contributor" value="貢献者" />
 	<string name="translator" value="翻訳者" />
 	<string name="web" value="ウェブサイト" />
 	<string name="user" value="ユーザー" />

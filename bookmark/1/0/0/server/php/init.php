@@ -27,13 +27,11 @@
 			$result = $system->network_http($target);
 			if($result === false) return false;
 
-			$checked = $system->date_datetime(); #Current time
-
 			#Prepare the update statement
 			$query = $database->prepare("UPDATE {$database->prefix}address SET type = :type, status = :status, checked = :checked WHERE id = :id");
 
 			foreach($result as $content) #Update the address information ignoring any partial errors
-				$query->run(array(':type' => $content['header']['content-type'], ':status' => $content['status'], ':checked' => $checked, ':id' => $id[$content['address']]));
+				$query->run(array(':type' => $content['header']['content-type'], ':status' => $content['status'], ':checked' => $system->date_datetime(), ':id' => $id[$content['address']]));
 		}
 	}
 ?>

@@ -24,7 +24,13 @@
 	<!-- メールウインドウ -->
 	<string name="add" value="アドレス帳に追加する" />
 	<string name="attachment" value="この添付ファイルをダウンロードする" />
+	<string name="cc" value="CcとBccの入力欄を追加します" />
 
 	<string name="previous" value="前のメールを表示します" />
 	<string name="next" value="次のメールを表示します" />
+
+	<string name="send" value="メールを送信します" />
+	<string name="save" value="下書きとして保存します" />
+	<string name="sign" value="署名を挿入します" />
+	<string name="discard" value="メールを破棄します" />
 </root>

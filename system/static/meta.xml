@@ -13,7 +13,7 @@
 	<!-- NOTE : Check other applications' "meta.xml" for additional requirements -->
 	<requirement>
 		<item>A web server with required language supports</item>
-		<item>RDBMS that those languages all support</item>
+		<item>RDBMS those languages all support</item>
 	</requirement>
 
 	<license>

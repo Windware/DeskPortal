@@ -111,7 +111,7 @@
 			if(!$query->success) return false;
 
 			$query = $database->prepare("INSERT INTO {$database->prefix}revision (user, memo, time, content) VALUES (:user, :memo, :time, :content)");
-			$query->run(array(':user' => $user->id, ':memo' => $id, ':time' => date($system->date_datetime()), ':content' => $content));
+			$query->run(array(':user' => $user->id, ':memo' => $id, ':time' => gmdate($system->date_datetime()), ':content' => $content));
 
 			return $query->success;
 		}
@@ -169,7 +169,7 @@
 
 			if(count($groups))
 			{
-				$database->begin(); #Start a transaction to make multiple group relation atomic
+				if(!$database->begin()) return false; #Start a transaction to make multiple group relation atomic
 				$query = $database->prepare("INSERT INTO {$database->prefix}relation (user, memo, groups) VALUES (:user, :memo, :groups)");
 
 				foreach($groups as $relation) #For all of the provided groups
@@ -177,13 +177,10 @@
 					if(!$system->is_digit($relation)) continue;
 
 					$query->run(array(':user' => $user->id, ':memo' => $id, ':groups' => $relation)); #Relate it to the memo
-					if($query->success) continue;
-
-					$database->rollback(); #On failure, rollback
-					return false;
+					if(!$query->success) return $database->rollback() && false; #On failure, rollback
 				}
 
-				$database->commit(); #Commit the sequence
+				if(!$database->commit()) return $database->rollback() && false; #Commit the sequence
 			}
 
 			return true;

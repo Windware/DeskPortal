@@ -355,7 +355,7 @@
 
 			if(!$written && $conf['log_file']) #If supposed to write (To avoid log loop)
 			{
-				$content = "$log {$global['define']['id']} | ".date('r')." | {$_SERVER['REMOTE_ADDR']} |\n"; #Log line
+				$content = "$log {$global['define']['id']} | ".date('r')." | {$_SERVER['REMOTE_ADDR']} |\n"; #Log line (NOTE : Do not use 'gmdate' here)
 				$file = $section == 'periodic' ? $conf['periodic_log'] : $conf['log_file'];
 
 				if(!file_put_contents($file, $content, FILE_APPEND)) #If it cannot write to the log file

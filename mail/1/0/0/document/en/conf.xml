@@ -6,12 +6,19 @@
 	<string name="account" value="Account" />
 	<string name="new" value="New" />
 	<string name="basic" value="Basic Settings" />
+
 	<string name="default" value="Default account" />
 	<string name="yes" value="Yes" />
 	<string name="no" value="No" />
+
 	<string name="description" value="Description" />
 	<string name="name" value="Name" />
 	<string name="address" value="Address" />
+
+	<string name="prefer" value="Preferred read format" />
+	<string name="plain" value="Plain text" />
+	<string name="html" value="HTML" />
+
 	<string name="signature" value="Signature" />
 	<string name="max" value="Up to 500 characters" />
 

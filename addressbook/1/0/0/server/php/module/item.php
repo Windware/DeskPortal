@@ -61,7 +61,6 @@
 			foreach($field as $section) $value[":$section"] = $param[$section];
 
 			if($value[':groups'] == '') $value[':groups'] = 0; #Give '0' for uncategorized group
-
 			$value[':updated'] = $system->date_datetime(); #Set the update time
 
 			if($id == 0) #On new creation

@@ -42,7 +42,7 @@
 			{
 				$id[$row['address']] = (int) $row['id']; #Remember the ID
 
-				$header = strtotime($row['updated']) ? array('If-Modified-Since' => date('r', $row['updated'])) : array();
+				$header = strtotime($row['updated']) ? array('If-Modified-Since' => gmdate('r', $row['updated'])) : array();
 				$request[] = array('address' => $row['address'], 'header' => $header);
 
 				$log->dev(LOG_NOTICE, "Making a remote call to {$row['address']} to get a news RSS");
@@ -167,7 +167,7 @@
 
 					#Turn it into DATETIME format
 					if(!$published) $published = date($system->global['define']['datetime']);
-					else $published = date($system->global['define']['datetime'], strtotime($published));
+					else $published = gmdate($system->global['define']['datetime'], strtotime($published));
 
 					$query['insert']->run(array(':feed' => $index, ':subject' => self::_flatten($headline->title), ':link' => self::_flatten($page), ':date' => $published, ':description' => self::_flatten($headline->{$summary})));
 				}

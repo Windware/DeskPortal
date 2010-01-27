@@ -33,24 +33,20 @@
 			if(!$user->valid) return false;
 
 			$database = $system->database('user', __METHOD__, $user);
-			if(!$database->success) return false;
 
-			$database->begin(); #Keep the category and relation together
+			if(!$database->success) return false;
+			if(!$database->begin()) return false; #Keep the category and relation together
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}category WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));
 
-			if(!$query->success)
-			{
-				$database->rollback();
-				return false;
-			}
+			if(!$query->success) return $database->rollback() && false;
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}relation WHERE user = :user AND category = :category");
 			$query->run(array(':category' => $id, ':user' => $user->id));
 
-			$database->commit();
-			return $query->success;
+			if(!$query->success) return $database->rollback() && false;
+			return $database->commit() || $database->rollback() && false;
 		}
 
 		public static function set($name, $id = 0, System_1_0_0_User $user = null) #Set a category

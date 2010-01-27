@@ -5,7 +5,7 @@
 		{
 			$system->global['param']['periodic'] = true; #Set that it is executed under periodic scheduler
 
-			$time = explode(' ', date('i G j w n')); #Get the minute, hour, day, week and month values
+			$time = explode(' ', date('i G j w n')); #Get the minute, hour, day, week and month values (NOTE : Do not use 'gmdate' here)
 			$log = $system->log(__METHOD__);
 
 			foreach(glob($system->global['define']['top'].'*/*/*/0/base/periodic.xml') as $schedule) #Check schedules on every applications

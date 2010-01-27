@@ -71,5 +71,7 @@
 	<string name="save" value="保存" />
 	<string name="cancel" value="キャンセル" />
 	<string name="sign" value="署名" />
+	<string name="discard" value="メール作成を中止しますか？" />
 	<string name="sending" value="送信中・・・" />
+	<string name="saving" value="保存中..." />
 </root>

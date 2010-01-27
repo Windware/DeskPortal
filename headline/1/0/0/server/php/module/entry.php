@@ -67,7 +67,7 @@
 
 				case 1 : #Weekly span
 					$search .= ' AND date >= :start AND date <= :end';
-					$max = date('t', mktime(0, 0, 0, $param['month'], 1, $param['year'])); #Get max day of the month
+					$max = gmdate('t', gmmktime(0, 0, 0, $param['month'], 1, $param['year'])); #Get max day of the month
 
 					$first = 1 + ($param['week'] - 1) * 7; #Get the starting day of the specified week
 					if($first > $max) $first = $max; #If hitting the next month, set it as the last day
@@ -243,7 +243,7 @@
 					$info['week'] = floor(($date[2] - 1) / 7) + 1;
 
 					$search = ' date >= :start AND date <= :end';
-					$max = date('t', mktime(0, 0, 0, $info['month'], 1, $info['year'])); #Get max day of the month
+					$max = gmdate('t', gmmktime(0, 0, 0, $info['month'], 1, $info['year'])); #Get max day of the month
 
 					$first = ($info['week'] - 1) * 7 + 1; #Get the starting day of the specified week
 					if($first > $max) $first = $max; #If hitting the next month, set it as the last day

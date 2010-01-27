@@ -89,7 +89,7 @@
 		case 'gui.compose' : print Mail_1_0_0_Item::text($_GET['id']); break; #Get the plain text version of a mail
 
 		case 'gui.send' : #Send out a mail (Send the result status as a plain text to be grabbed inside 'iframe')
-			print Mail_1_0_0_Item::send($_POST['account'], $_POST['subject'], $_POST['body'], $_POST['to'], $_POST['cc'], $_POST['bcc'], $_POST['source'], $_FILES);
+			print Mail_1_0_0_Item::send($_POST['account'], $_POST['subject'], $_POST['body'], $_POST['to'], $_POST['cc'], $_POST['bcc'], $_POST['source'], $_FILES, $_POST['draft'], $_POST['resume']);
 		break;
 
 		case 'item.get' : #Get list of mails stored in the database
