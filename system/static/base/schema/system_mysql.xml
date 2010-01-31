@@ -61,7 +61,7 @@
 		<column name="message" param="TEXT" />
 		<column name="solution" param="TEXT" />
 
-		<extra name="ENGINE" param="MYISAM" />
+		<extra name="ENGINE" param="INNODB" />
 	</table>
 
 	<!-- List of group members -->
@@ -98,10 +98,10 @@
 	<table name="user">
 		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
 		<column name="name" param="VARCHAR(30) NOT NULL UNIQUE" />
-		<column name="pass" param="CHAR(64)" />
+		<column name="pass" param="CHAR(64)" /> <!-- Password in SHA256 hash -->
 		<column name="joined" param="DATE" />
-		<column name="logged" param="INT DEFAULT 0" />
-		<column name="invalid" param="INT DEFAULT 0" />
+		<column name="logged" param="INT DEFAULT 0" /> <!-- Number of times the user logged in -->
+		<column name="invalid" param="INT DEFAULT 0" /> <!-- Suspended users -->
 
 		<extra name="ENGINE" param="INNODB" />
 	</table>

@@ -1,16 +1,19 @@
 <form id="%id%_compose_%value:index%_form" onsubmit="return false" method="post" action="%value:action%" enctype="multipart/form-data" target="%id%_compose_%value:index%_submit">
 	<table style="width : 100%" cellpadding="0" cellspacing="10"><tbody class="%id%_mail_header">
-		<tr><th>%string:account%</th><td><select name="account" onchange="%top%.%id%.gui.signable(%value:index%)">%value:account%</select></td></tr>
+		<tr>
+			<th style="width : 25%">%string:account%</th>
+			<td><select name="account" onchange="%top%.%id%.gui.signable(%value:index%)">%value:account%</select></td>
+		</tr>
 
 		<tr>
-			<th style="width : 15%">%string:subject%</th>
+			<th>%string:subject%</th>
 			<td><input type="text" name="subject" style="width : 100%" value="%value:subject%" /></td>
 		</tr>
 
 		<tr>
 			<th>
-				<img src="%image:add.png%" id="%id%_compose_%value:index%_extra" onclick="%top%.%id%.gui.extra(%value:index%)" style="cursor : pointer" class="%system%_icon"%tip:cc% />
 				%string:to%
+				<img src="%image:add.png%" id="%id%_compose_%value:index%_extra" onclick="%top%.%id%.gui.extra(%value:index%)" style="cursor : pointer" class="%system%_button"%tip:cc% />
 			</th>
 			<td><input type="text" name="to" style="width : 100%" value="%value:to%" /></td>
 		</tr>
@@ -19,11 +22,11 @@
 		<tr id="%id%_compose_%value:index%_bcc" class="%system%_hidden"><th>%string:bcc%</th><td><input type="text" name="bcc" style="width : 100%" value="%value:bcc%" /></td></tr>
 
 		<tr>
-			<th>%string:attachment%</th>
-			<td>
-				<img src="%image:add.png%" onclick="%top%.%id%.gui.file()" style="cursor : pointer" class="%system%_icon"%tip:file% />
-				<input type="file" name="attachment_0" />
-			</td>
+			<th style="vertical-align : top">
+				%string:attachment%
+				<img src="%image:add.png%" onclick="%top%.%id%.gui.file(%value:index%)" style="cursor : pointer" class="%system%_button"%tip:file% />
+			</th>
+			<td id="%id%_compose_%value:index%_attach" class="%id%_compose_attachment"></td>
 		</tr>
 
 		<tr><td colspan="2" class="%id%_mail_action" style="text-align : center">

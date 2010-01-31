@@ -21,7 +21,7 @@
 				$system->compress_header(); #Send compressed headers since the cache is stored compressed
 
 				header('Content-Length: '.strlen($result['content'])); #Give its length
-				if(strstr($result['type'], '/')) header('Content-Type: '.preg_replace('/\s/', '', $result['type'])); #Give its mime type
+				if(preg_match('|^[\-\w]+/[\-\w]+$|', $result['type'])) header("Content-Type: {$result['type']}"); #Give its mime type
 
 				if($result['type'] != 'text/html' && $name = basename($result['file']))
 					header("Content-Disposition: inline; filename=$name"); #Pass the same file name for non HTML files
@@ -32,48 +32,46 @@
 
 		case 'item.add' : #Add a new bookmark
 			$result = Bookmark_1_0_0_Item::add($_POST['address']);
-			print $system->xml_send($result !== false);
+			print $system->xml_dump($result !== false);
 		break;
 
 		case 'item.get' : #Get the list of bookmarks
-			$category = is_array($_GET['cat']) ? $_GET['cat'] : array();
-
-			$data = Bookmark_1_0_0_Item::get($category);
-			print $system->xml_send($data !== false, $data, null, true);
+			$data = Bookmark_1_0_0_Item::get(is_array($_GET['cat']) ? $_GET['cat'] : array());
+			print $system->xml_dump($data !== false, 'bookmark', $data, null, true);
 		break;
 
 		case 'item.remove' : #Remove a bookmark
 			$result = Bookmark_1_0_0_Item::remove($_POST['id']);
-			print $system->xml_send($result);
+			print $system->xml_dump($result);
 		break;
 
 		case 'item.set' : #Sets a bookmark's information
 			$result = Bookmark_1_0_0_Item::set($_POST['address'], $_POST['name'], $_POST['cat'], $_POST['id']);
-			print $system->xml_send($result);
+			print $system->xml_dump($result);
 		break;
 
 		case 'item.viewed' : #Increase the view count of a page
 			$result = Bookmark_1_0_0_Item::viewed($_POST['address']);
-			print $system->xml_send($result);
+			print $system->xml_dump($result);
 		break;
 
 		case 'group.get' : #Get the list of categories
 			$data = Bookmark_1_0_0_Group::get();
-			print $system->xml_send($data !== false, $data);
+			print $system->xml_dump($data !== false, 'category', $data);
 		break;
 
 		case 'group.remove' : #Remove a category
 			$result = Bookmark_1_0_0_Group::remove($_POST['group']);
 			$data = Bookmark_1_0_0_Group::get();
 
-			print $system->xml_send($result && $data !== false, $data);
+			print $system->xml_dump($result && $data !== false, 'category', $data);
 		break;
 
 		case 'group.set' : #Create a new category
 			$result = Bookmark_1_0_0_Group::set($_POST['name'], $_POST['id']);
 			$data = Bookmark_1_0_0_Group::get();
 
-			print $system->xml_send($result && $data !== false, $data);
+			print $system->xml_dump($result && $data !== false, 'category', $data);
 		break;
 	}
 ?>

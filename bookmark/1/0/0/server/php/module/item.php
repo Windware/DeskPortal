@@ -119,8 +119,8 @@
 			if(count($filter)) $filter = ' AND rl.category IN ('.implode(',', $filter).')'; #Concatenate the query
 			else $filter = '';
 
-			$statement = "SELECT bm.id, count(rl.bookmark), bm.added, bm.name, bm.viewed FROM {$database->prefix}bookmark as bm LEFT JOIN {$database->prefix}relation as rl
-			ON rl.user = :user$filter AND bm.user = :user AND bm.id = rl.bookmark GROUP BY id$order";
+			$statement = "SELECT bm.id, count(rl.bookmark) as count, bm.added, bm.name, bm.viewed FROM {$database->prefix}bookmark as bm LEFT JOIN
+			{$database->prefix}relation as rl ON rl.user = :user$filter AND bm.user = :user AND bm.id = rl.bookmark GROUP BY id$order";
 
 			$query = $database->prepare($statement);
 			$query->run($values);
@@ -144,7 +144,7 @@
 
 			foreach($results as $row)
 			{
-				if($row['count(rl.bookmark)'] != $count) continue; #If the bookmark is not included in all categories, leave it
+				if($row['count'] != $count) continue; #If the bookmark is not included in all categories, leave it
 
 				$query->run(array(':id' => $row['id']));
 				if(!$query->success) return false; #Return empty upon an error in the middle
@@ -164,11 +164,11 @@
 				$info['cache'] = $cache->column(); #Add the time the cache was acquired
 
 				foreach(explode(' ', 'added name viewed') as $section) $info[$section] = $row[$section];
-				$list[$info['address']] = $system->xml_node('bookmark', $info);
+				$list[$info['address']] = $info;
 			}
 
 			if($_GET['order'] == 1) ksort($list); #Sort by address if specified so
-			return implode('', $list);
+			return $list;
 		}
 
 		public static function remove($id, System_1_0_0_User $user = null) #Remove a bookmark

@@ -18,11 +18,7 @@
 			$query = $database->prepare("SELECT * FROM {$database->prefix}schedule WHERE user = :user AND day LIKE :day");
 			$query->run(array(':user' => $user->id, ':day' => "$year-$month-%"));
 
-			if(!$query->success) return false;
-			$xml = '';
-
-			foreach($query->all() as $row) $xml .= $system->xml_node('schedule', $row, $system->xml_data($row['content']), array('user', 'content'));
-			return $xml;
+			return $query->success ? $query->all() : false;
 		}
 
 		public static function remove($year, $month, $day, System_1_0_0_User $user = null) #Removes a schedule

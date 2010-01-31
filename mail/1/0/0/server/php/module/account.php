@@ -86,16 +86,15 @@
 			$query->run($param);
 
 			if(!$query->success) return false;
+			$list = array();
 
-			$result = $query->all();
-			$list = '';
-
-			foreach($result as $row)
+			foreach($query->all() as $row)
 			{
 				$row['signature'] = str_replace("\n", '\\n', $row['signature']);
 				$row['type'] = self::type($row['receive_type']);
 
-				$list .= $system->xml_node('account', $row, null, explode(' ', 'user receive_pass send_pass'));
+				unset($row['receive_pass'], $row['send_pass']); #Remove user passwords
+				$list[] = $row;
 			}
 
 			return $list;
@@ -286,6 +285,7 @@
 			}
 
 			if(!$database->commit()) return $database->rollback() && false;
+			if($id == 0) Mail_1_0_0_Folder::update($id); #Update the folder listing on a new account
 
 			$query = $database->prepare("SELECT folder_inbox, folder_drafts, folder_sent, folder_trash FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));
@@ -327,29 +327,6 @@
 
 				default : return false; break;
 			}
-		}
-
-		public static function update($account, $folder, $page, $order = 'sent', $reverse = true, System_1_0_0_User $user = null)
-		{
-			$system = new System_1_0_0(__FILE__);
-			$log = $system->log(__METHOD__);
-
-			if(!$system->is_digit($account) || !$system->is_digit($folder) || !$system->is_digit($page) || !$system->is_text($order)) return $log->param();
-
-			if($user === null) $user = $system->user();
-			if(!$user->valid) return false;
-
-			if(Mail_1_0_0_Folder::update($account, $user) === false) return false;
-
-			$storage = Mail_1_0_0_Folder::get($account, $user);
-			if($storage === false) return false;
-
-			if(Mail_1_0_0_Item::update($account, $folder, $user) === false) return false;
-
-			$mail = Mail_1_0_0_Item::get($account, $folder, $page, $order, $reverse, false, null, $user);
-			if($mail === false) return false;
-
-			return $storage.$mail;
 		}
 	}
 ?>

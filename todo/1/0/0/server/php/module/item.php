@@ -44,11 +44,7 @@
 			$query = $database->prepare("SELECT * FROM {$database->prefix}todo WHERE user = :user$filter ORDER BY year, month, day, hour, minute, status, category, title");
 			$query->run(array(':user' => $user->id));
 
-			if(!$query->success) return false;
-			$xml = '';
-
-			foreach($query->all() as $row) $xml .= $system->xml_node('item', $row, $system->xml_data($row['content']), array('content', 'user'));
-			return $xml;
+			return $query->success ? $query->all() : false;
 		}
 
 		public static function remove($id, System_1_0_0_User $user = null) #Remove an entry

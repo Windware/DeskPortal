@@ -39,7 +39,7 @@
 					$file = array();
 
 					foreach($section->dparameters as $param) #Concatenate multi line file names
-						if(preg_match('/^filename(\*(\d+)(\*?))?$/', $param->attribute, $matches)) $file[$matches[2]] = $param->value;
+						if(preg_match('/^filename(\*(\d+)(\*?))?$/i', $param->attribute, $matches)) $file[$matches[2]] = $param->value;
 
 					ksort($file);
 					$file = explode("'", rawurldecode(implode('', $file)), 3); #Separate the character encoding strings
@@ -94,11 +94,13 @@
 				case 4 : $body = quoted_printable_decode($body); break;
 			}
 
-			#Foe IE, URL encode the file name to avoid file name getting corrupted provided as UTF-8
+			#Foe IE, URL encode the file name to avoid file name getting corrupted using UTF-8
 			$name = strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? rawurlencode($attachment['name']) : str_replace('"', '\\"', $attachment['name']);
 
 			$mime = self::$_type[$structure->type].'/'.strtolower($structure->subtype);
 			switch($mime) { case 'image/jpg' : $mime = 'image/jpeg'; break; } #Fix bad mime type
+
+			$system->cache_header(); #Cache attachment data on the client side
 
 			header("Content-Type: $mime");
 			header("Content-Disposition: attachment; filename=\"$name\"");
@@ -385,27 +387,24 @@
 				foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
 			}
 
-			$query['attachment'] = $database->prepare("SELECT id, mail, name, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
+			$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
 			$query['attachment']->run($param);
 
 			if(!$query['attachment']->success) return false;
-			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'type' => $row['type']);
+			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
+
+			$list = array();
 
 			foreach($all as $row)
 			{
-				$inner = '';
-
 				foreach(array('from', 'to', 'cc', 'bcc', 'attachment') as $section) #Construct the mail address and attachment lists
-					if(is_array($mail[$row['id']][$section])) foreach($mail[$row['id']][$section] as $line) $inner .= $system->xml_node($section, $line);
-
-				$inner .= $system->xml_node('preview', null, $system->xml_data($row['preview']));
-				unset($row['preview']);
+					if(is_array($mail[$row['id']][$section])) foreach($mail[$row['id']][$section] as $line) $row[$section][] = $line;
 
 				$row['account'] = $account;
-				$xml .= $system->xml_node('mail', $row, $inner);
+				$list[] = $row;
 			}
 
-			return $xml;
+			return $list;
 		}
 
 		public static function image($id, $cid) #Get the embedded image data
@@ -623,7 +622,7 @@
 			if(!$database->success) return 1;
 
 			if(!$system->file_load('Mail.php', false, LOG_ERR) || !$system->file_load('Mail/mime.php', false, LOG_ERR)) return 1; #Load the required PEAR packages
-			$mime = new Mail_mime("\n"); #Create the mail MIME object
+			$mime = new Mail_mime(); #Create the mail MIME object
 
 			$mime->setTxtBody($body); #Set the message body
 			foreach($attachment as $file) $mime->addAttachment(file_get_contents($file['tmp_name']), $file['type'], $file['name'], false); #Add attachment files if given
@@ -677,7 +676,7 @@
 			if(is_array($encoded['cc']) && count($encoded['cc'])) $header['Cc'] = implode(', ', $encoded['cc']); #Add 'Cc' header if it exists
 			if($draft && is_array($encoded['bcc']) && count($encoded['bcc'])) $header['Bcc'] = implode(', ', $encoded['bcc']); #Add 'Bcc' header only when saving as a draft
 
-			#NOTE : Do not call these functions (get / headers) in reverse order (From PEAR manual)
+			#NOTE : Do not call these functions ('get' and 'headers') in reverse order (From PEAR manual)
 			$mail = array('body' => $mime->get(array('head_charset' => 'utf-8', 'text_charset' => 'utf-8')), 'header' => $mime->headers($header));
 			$storage = $draft ? 'drafts' : 'sent'; #The special folder to store the mail to
 
@@ -730,7 +729,7 @@
 			#and 'position' parameter can be left unused in the database.
 			#TODO - IMAP may not need to have attachments saved locally at all at the cost of some descrease in download speed or unavailability in case IMAP server is down.
 
-			if($system->is_digit($resume)) Mail_1_0_0_Item::remove(array($resume)); #If a draft is being saved from a suspended draft, delete the old one. Not stopping if error occurs here.
+			if($system->is_digit($resume)) $a=Mail_1_0_0_Item::remove(array($resume)); #If a draft is being saved from a suspended draft, delete the old one. Not stopping if error occurs here.
 
 			if($type == 'pop3') #For POP3, store the mail locally
 			{
@@ -770,13 +769,32 @@
 				}
 			}
 
-			$header = ''; #Upload the mail to the mail server for IMAP
+			$header = ''; #Get list of headers to upload to IMAP server
 			foreach($mail['header'] as $key => $value) $header .= "$key: $value\r\n";
 
-			if(imap_append($link['connection'], '{'.$link['host']."}$name", "$header\r\n{$mail['body']}", $draft ? '\\Draft' : '')) return 0; #Store the mail on the mail server
+			if(!imap_append($link['connection'], '{'.$link['host']."}$name", "$header\r\n{$mail['body']}", $draft ? '\\Draft' : '')) #Store the mail on the mail server
+			{
+				Mail_1_0_0_Account::error($link['host']);
+				return 4; #IMAP failure
+			}
 
-			Mail_1_0_0_Account::error($link['host']);
-			return 4; #IMAP failure
+			if($draft) #If saving a draft, send back the ID of the mail to client to know which older draft to delete on next save
+			{
+				if(!self::update($folder, $user)) return 1; #Update the folder where the mail was uploaded
+				$signature = md5("$header\r\n"); #The mail's header hash
+
+				$query = $database->prepare("SELECT id, header, signature FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND draft = :draft ORDER BY id DESC");
+				$query->run(array(':user' => $user->id, ':folder' => $folder, ':draft' => 1)); #Get list of mails to find the draft
+
+				if(!$query->success) return 1;
+
+				#NOTE : Returning a negative number to indicate it is a mail ID and not a status code (Implying success for status)
+				foreach($query->all() as $row) if($signature == $row['signature']) return 0 - $row['id']; #Match on the header hash
+
+				return 1; #If mail cannot be aquired in the database, claim failure even if the mail is supposed to be on the mail server
+			}
+
+			return 0;
 		}
 
 		public static function show($id, System_1_0_0_User $user = null) #Get the body of a message
@@ -947,7 +965,7 @@
 			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, header, signature, subject, mid, sent, draft, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :header, :signature, :subject, :mid, :sent, :draft, :read, :preview, :plain, :html, :encode)");
 
 			#Attachment info query
-			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, cid, name, type, position) VALUES (:mail, :cid, :name, :type, :position)");
+			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, cid, name, size, type, position) VALUES (:mail, :cid, :name, :size,:type, :position)");
 
 			if($link['type'] == 'imap') #For IMAP
 			{
@@ -1206,7 +1224,7 @@
 					}
 				}
 
-				foreach($attachment as $file) $query['attachment']->run(array(':mail' => $id, ':cid' => preg_replace('/^<(.+)>$/', '\1', $file['structure']->id), ':name' => $file['name'], ':position' => $file['position'], ':type' => $file['type']));
+				foreach($attachment as $file) $query['attachment']->run(array(':mail' => $id, ':cid' => preg_replace('/^<(.+)>$/', '\1', $file['structure']->id), ':name' => $file['name'], ':position' => $file['position'], ':size' => $file['size'], ':type' => $file['type']));
 				if(!$database->commit()) return $database->rollback() && false;
 			}
 

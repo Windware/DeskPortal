@@ -1,17 +1,13 @@
 <?php
 	class Bookmark_1_0_0_Cache
 	{
-		#List of HTML attributes separated by space to remove from textual cache
-		protected static $_attributes = 'style [a-z]?link bgcolor color size face background class id on[a-z]+';
+		protected static $_attributes = 'style [a-z]?link bgcolor color size face background class id on[a-z]+'; #List of HTML attributes separated by space to remove from textual cache
 
-		#Max size in bytes to be allowed as a page cache (Without external files and before tag stripping and compressing)
-		protected static $_max = 200000; #200kb
+		protected static $_max = 200; #Max size in KB to be allowed as a page cache (Without external files and before tag stripping and compressing)
 
-		#HTML elements to remove for solo tags (Workaround on PHP 5.2.6 bug that returns empty string on preg_replace)
-		protected static $_solo = 'base img link';
+		protected static $_solo = 'base img link'; #HTML elements to remove for solo tags (Workaround on PHP 5.2.6 bug that returns empty string on preg_replace)
 
-		#List of HTML elements to remove from cache (For surrounding tags)
-		protected static $_surround = 'script style noscript map object embed iframe';
+		protected static $_surround = 'script style noscript map object embed iframe'; #List of HTML elements to remove from cache (For surrounding tags)
 
 		public static function add($id, System_1_0_0_User $user = null) #Create a cache of a bookmark
 		{
@@ -38,7 +34,7 @@
 			if(!$database->success) return 1;
 
 			#Get the actual data from remote server (Pass maximum possible file size to retrieve)
-			$request = $system->network_http(array(array('address' => $address, 'max' => self::$_max)));
+			$request = $system->network_http(array(array('address' => $address, 'max' => self::$_max * 1000)));
 
 			if($request[0]['status'] != 200) return 1; #If the request is not found, quit
 			if($request[0]['exceed']) return 2; #If the response is too big, quit
@@ -87,10 +83,7 @@
 			$query = $database->prepare("SELECT bookmark, file, time, content, type FROM {$database->prefix}cache WHERE user = :user AND bookmark = :bookmark");
 			$query->run(array(':bookmark' => $id, ':user' => $user->id)); #Get the address of the bookmark
 
-			if(!$query->success) return false;
-			$row = $query->row();
-
-			return $row;
+			return $query->success ? $query->row() : false;
 		}
 	}
 ?>

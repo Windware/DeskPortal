@@ -22,8 +22,7 @@
 
 			#Get the memo's revision information
 			$revision = $database->prepare("SELECT time FROM {$database->prefix}revision WHERE user = :user AND memo = :memo ORDER BY time DESC LIMIT 1");
-
-			$xml = '';
+			$list = array();
 
 			foreach($result as $row) #For all of the memo
 			{
@@ -38,29 +37,10 @@
 
 				#Create the list of memo information with the belonging groups concatenated
 				$attributes = array('id' => $row['id'], 'name' => $row['name'], 'groups' => implode($groups, ','), 'last' => $revision->column());
-				$xml .= $system->xml_node('memo', $attributes);
+				$list[] = $attributes;
 			}
 
-			return $xml;
-		}
-
-		public static function show($id, System_1_0_0_User $user = null) #Load a memo content
-		{
-			$system = new System_1_0_0(__FILE__);
-			$log = $system->log(__METHOD__);
-
-			if(!$system->is_digit($_GET['id'])) return $log->param();
-
-			if($user === null) $user = $system->user();
-			if(!$user->valid) return false;
-
-			$database = $system->database('user', __METHOD__, $user);
-			if(!$database->success) return false;
-
-			$query = $database->prepare("SELECT content FROM {$database->prefix}revision WHERE user = :user AND memo = :memo ORDER BY time DESC LIMIT 1");
-			$query->run(array(':user' => $user->id, ':memo' => $_GET['id']));
-
-			return $query->success ? $system->xml_node('content', null, $system->xml_data($query->column())) : false;
+			return $list;
 		}
 
 		public static function remove($id, System_1_0_0_User $user = null) #Remove a memo
@@ -184,6 +164,25 @@
 			}
 
 			return true;
+		}
+
+		public static function show($id, System_1_0_0_User $user = null) #Load a memo content
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($_GET['id'])) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT content FROM {$database->prefix}revision WHERE user = :user AND memo = :memo ORDER BY time DESC LIMIT 1");
+			$query->run(array(':user' => $user->id, ':memo' => $_GET['id']));
+
+			return $query->success ? $query->column() : false;
 		}
 	}
 ?>

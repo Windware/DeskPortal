@@ -17,8 +17,7 @@
 			$start = gmdate('Y-m-01 00:00:00', $target); #Set start of this month
 			$end = gmdate('Y-m-01 00:00:00', strtotime('+1 month', $target)); #Set start of next month
 
-			#Send out current month's news in XML
-			return $feed->xml('date >= :start AND date < :end', array(':start' => $start, ':end' => $end));
+			return $feed->xml('date >= :start AND date < :end', array(':start' => $start, ':end' => $end)); #Send out current month's news in XML
 		}
 	}
 ?>

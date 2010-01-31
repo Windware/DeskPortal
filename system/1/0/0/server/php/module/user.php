@@ -141,9 +141,9 @@
 
 			$conf = $system->app_conf('system', 'static');
 
-			if(!in_array($conf['db_hash'], hash_algos())) #Make sure the server is capable of using the hash algorithm
+			if(!in_array($conf['user_hash'], hash_algos())) #Make sure the server is capable of using the hash algorithm
 			{
-				$solution = 'Check system configuration \'db_hash\' value and if PHP supports the algorithm';
+				$solution = 'Check system configuration \'user_hash\' value and if PHP supports the algorithm';
 				return $log->system(LOG_ERR, 'Hash algorithm is invalid', $solution);
 			}
 
@@ -153,7 +153,7 @@
 			$log->dev(LOG_INFO, "Creating a new user '$name'");
 
 			$query = $database->prepare("INSERT INTO {$database->prefix}user (name, pass, joined) VALUES (:name, :pass, :joined)");
-			$query->run(array(':name' => $name, ':pass' => hash($conf['db_hash'], $pass), ':joined' => gmdate('Y-m-d')));
+			$query->run(array(':name' => $name, ':pass' => hash($conf['user_hash'], $pass), ':joined' => gmdate('Y-m-d')));
 
 			if(!$query->success) return false;
 			$id = $database->id(); #Get the created user's ID

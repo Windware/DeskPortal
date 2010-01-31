@@ -4,10 +4,23 @@
 	switch($_GET['task'])
 	{
 		case 'gui.page' : case 'gui.search' : #Search for phrases
-			$system->cache_header(0); #Do not cache
+			$xml = '';
+			$system->cache_header(30); #Cache for same searches within a short period
 
-			$result = Search_1_0_0_Item::search($_GET['search'], $_GET['area'], $_GET['page']);
-			print $system->xml_send($result !== false, $result);
+			$data = Search_1_0_0_Item::search($_GET['search'], $_GET['area'], $_GET['page']);
+
+			if(is_array($data))
+			{
+				foreach($data as $row)
+				{
+					$list = '';
+
+					if(is_array($row['child'])) foreach($row['child'] as $child) $list .= $system->xml_node($child['name'], $child['attributes']);
+					$xml .= $system->xml_node('app', $row['attributes'], $list);
+				}
+			}
+
+			print $system->xml_send($data !== false, $xml);
 		break;
 	}
 ?>

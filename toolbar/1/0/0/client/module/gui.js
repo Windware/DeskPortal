@@ -131,7 +131,7 @@
 				if(typeof callback == 'function') callback();
 			}
 
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.set', index : index}, null, $system.app.method(set, [callback])); //Get the choices
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.set', index : index}, null, $system.app.method(set, [callback])); //Get the choices
 		}
 
 		this.swap = function(index, feature, method, source, target, quick, deep) //Swap the bar option
@@ -199,5 +199,7 @@
 
 			$system.node.fade(id, false);
 			_previous[index][depth] = id; //Remember the current visible option
+
+			return true;
 		}
 	}

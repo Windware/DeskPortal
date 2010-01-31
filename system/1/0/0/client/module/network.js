@@ -241,8 +241,7 @@
 				container.set({headers : request.getAllResponseHeaders(), status : request.status, text : request.responseText, xml : request.responseXML, state : request.readyState, code : code});
 				if($system.gui.check(container) == -1) return false; //If the session is expired, quit processing
 
-				//If the request was valid, including missing files
-				if(container.valid(true)) return typeof callback == 'function' ? callback(container) : true;
+				if(container.valid(true)) return typeof callback == 'function' ? callback(container) : true; //If the request was valid, including missing files
 				else //If the request failed
 				{
 					if(typeof error == 'function') error(container);

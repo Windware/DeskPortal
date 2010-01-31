@@ -38,7 +38,9 @@
 
 	table.%id%_bar th { font-size : 130%; text-align : left; padding : 5px; } /* Title text of the toolbar */
 
-	table.%id%_bar img, img.%id%_icon { border : none; width : 24px; height : 24px; } /* Toolbar buttons */
+	table.%id%_bar img, img.%id%_icon { border : none; width : 24px; height : 24px; } /* Toolbar buttons and general icons */
+
+	img.%id%_button { border : none; width : 16px; height : 16px; } /* Button images */
 
 
 	/* Info & tools pane */

@@ -72,7 +72,7 @@
 			var language = $system.language.strings($id);
 
 			var list = $self.group.get(); //Get the group in the order passed
-			if(__relation[0]) list = list.concat([{id : 0, name : '(' + language['other'] + ')'}]); //Add uncategorized group if any exists
+			if(__relation[0]) list = list.concat([{id : 0, name : '(' + language.other + ')'}]); //Add uncategorized group if any exists
 
 			for(var i = 0; i < list.length; i++)
 			{
@@ -226,7 +226,7 @@
 
 			$system.node.hide(edit, true); //Hide before the last entry disappears
 
-			$system.node.text(edit, language['loading']); //Set initial loading text
+			$system.node.text(edit, language.loading); //Set initial loading text
 			$system.node.id($id + '_edit').appendChild(edit); //Create the new edit area
 
 			var load = function(id, group, request) //Show the memo content to the screen

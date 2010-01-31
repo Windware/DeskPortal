@@ -15,11 +15,7 @@
 			$query = $database->prepare("SELECT id, name FROM {$database->prefix}groups WHERE user = :user ORDER BY name");
 			$query->run(array(':user' => $user->id));
 
-			if(!$query->success) return false;
-			$xml = '';
-
-			foreach($query->all() as $row) $xml .= $system->xml_node('group', $row);
-			return $xml;
+			return $query->success ? $query->all() : false;
 		}
 
 		public static function remove($group, System_1_0_0_User $user = null) #Removes a group

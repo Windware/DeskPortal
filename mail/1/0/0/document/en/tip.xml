@@ -25,6 +25,8 @@
 	<string name="add" value="Add to address book" />
 	<string name="cc" value="Add Cc and Bcc address fields" />
 	<string name="attachment" value="Download this attachment file" />
+	<string name="file" value="Add an attachment" />
+	<string name="remove" value="Remove this attachment" />
 
 	<string name="previous" value="Show the previous mail" />
 	<string name="next" value="Show the next mail" />

@@ -3,9 +3,10 @@
 	{
 		private static $_folder = array(); #Folder parameters
 
-		protected static function _list(&$system, $structure, $subscribed = true) #Create list of XML from multi dimensional array
+		protected static function _list(&$system, $structure, $subscribed = true, $xml = false) #Create list of XML from multi dimensional array
 		{
 			static $index = -1;
+			$list = !$xml ? array() : '';
 
 			foreach($structure as $name => $part) #Concatenate XML entries for each folders
 			{
@@ -13,10 +14,13 @@
 				if($subscribed && !self::$_folder[$index]['subscribed']) continue;
 
 				$info = array('name' => $name, 'id' => self::$_folder[$index]['id'], 'subscribed' => self::$_folder[$index]['subscribed'], 'recent' => self::$_folder[$index]['recent']);
-				$xml .= $system->xml_node('folder', $info, self::_list($system, $part, $subscribed));
+				$child = self::_list($system, $part, $subscribed, $xml);
+
+				if(!$xml) $list[] = array('attributes' => $info, 'child' => $child);
+				else $list .= $system->xml_node('folder', $info, $child);
 			}
 
-			return $xml;
+			return $list;
 		}
 
 		public static function account($folder, System_1_0_0_User $user = null) #Get account ID from a folder ID
@@ -124,7 +128,7 @@
 			return $database->id(); #Return the created ID
 		}
 
-		public static function get($account, $subscribed = true, System_1_0_0_User $user = null) #Get list of folders for an account
+		public static function get($account, $subscribed = true, $xml = false, System_1_0_0_User $user = null) #Get list of folders for an account
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -161,7 +165,7 @@
 				}
 			}
 
-			return self::_list($system, $structure, $subscribed); #Dump the array into XML
+			return self::_list($system, $structure, $subscribed, $xml); #Dump the array into XML
 		}
 
 		public static function move($id, $target, System_1_0_0_User $user = null) #Move a folder
@@ -574,7 +578,7 @@
 			$id = $folders = $stored = $separator = $parent = $recent = $read = $remove = $target = $used = array();
 			foreach($subscribed as $info) $used[] = $info->name; #Get list of subscribed folder names
 
-			foreach($all as $info) #TODO - It does not honor LATT_NOSELECT (Not allowing to select the mailbox)
+			foreach($all as $info) #TODO - It does not honor LATT_NOSELECT (Those folders not allowing to be selected for viewing)
 			{
 				$name = $folders[] = preg_replace('/^{'.preg_quote($link['host'], '/').'}/', '', mb_convert_encoding($info->name, 'UTF-8', 'UTF7-IMAP'));
 

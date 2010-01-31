@@ -26,7 +26,7 @@
 			if(!$user->valid) return false;
 
 			if(!$system->is_digit($page)) $page = 1; #Default to first page
-			$xml = ''; #Returning XML
+			$all = array(); #Result sets
 
 			foreach($area as $target)
 			{
@@ -54,14 +54,14 @@
 				$search = new $class($phrase, self::$_limit, $page, $user); #Initialize the search class with the given phrase
 				if(!count($search->result)) continue; #If none found, drop it
 
-				$nodes = ''; #Result fragments
+				$nodes = array(); #Result fragments
 				$index = 0; #Quit listing when it exceeds the limit
 
 				foreach($search->result as $section => $list) #Create XML from the result
 				{
 					foreach($list as $result)
 					{
-						$nodes .= $system->xml_node($section, $result);
+						$nodes[] = array('name' => $section, 'attributes' => $result);
 						if(++$index == self::$_limit) break 2;
 					}
 				}
@@ -69,10 +69,10 @@
 				$amount = floor($search->count / self::$_limit);
 				if($search->count % self::$_limit) $amount++;
 
-				$xml .= $system->xml_node('app', array('name' => $target, 'page' => $amount), $nodes); #Wrap with app name node
+				$all[] = array('attributes' => array('name' => $target, 'page' => $amount), 'child' => $nodes); #Wrap with app name node
 			}
 
-			return $xml;
+			return $all;
 		}
 	}
 ?>

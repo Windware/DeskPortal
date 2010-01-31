@@ -67,7 +67,9 @@
 	<string name="next" value="Next" />
 
 	<!-- Compose window -->
-	<string name="confirm" value="Send mail?" />
+	<string name="confirm/send" value="Send mail?" />
+	<string name="confirm/remove" value="Attachments will be removed when saving drafts." />
+
 	<string name="send" value="Send" />
 	<string name="save" value="Save" />
 	<string name="cancel" value="Cancel" />

@@ -289,7 +289,7 @@
 			var load = $system.app.method($system.conf.swap, [id, 'about']);
 			var prepare = $system.app.method(apply, [id]);
 
-			$system.window.create(node, title, $system.info.template.panel.replace(/%app%/g, id), info.color, info.hover, info.window, info.border, true, null, null, 700, 300, true, true, true, load, prepare, true);
+			$system.window.create(node, title, $system.info.template.panel.replace(/%app%/g, id), info.color, info.hover, info.window, info.border, true, null, null, 800, 400, true, true, true, load, prepare, true);
 		}
 
 		this.lock = function(id, quick) //Locks the window from moving : TODO - Change the icon to a pin instead of a lock?

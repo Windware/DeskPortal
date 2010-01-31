@@ -138,10 +138,10 @@
 						$self.account.get(false, null, $system.app.method($self.conf.change, [0])); //Update account lists
 
 						$system.gui.alert($id, 'user/conf/remove/title', 'user/conf/remove/message', 3);
-						if(__selected.account = id) $self.account.change(0); //Reset account choice if the displayed account is removed
+						if(__selected.account == id) $self.account.change(0); //Reset account choice if the displayed account is removed
 
-						delete __account[id];
-						//TODO - Delete all other local caches for this account (__belong, __mail, __refresh, __active, _list, __special, __update)
+						for(var folder in __belong) if(__belong[folder] == id) $self.folder.clear(folder); //Clear all folder related data for this account
+						delete __account[id]; //Remove account information
 					break;
 
 					default : $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/remove', 3); break;

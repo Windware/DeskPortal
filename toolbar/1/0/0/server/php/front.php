@@ -5,26 +5,28 @@
 	switch($_GET['task'])
 	{
 		case 'gui.create' : #Keep the bar
-			print $system->xml_send(Toolbar_1_0_0::set($_POST['index'], true));
-		break;
-
-		case 'gui.save' : #Remember the choice
-			$result = Toolbar_1_0_0::selection($_POST['index'], $_POST['feature'], $_POST['method'], $_POST['source'], $_POST['target']);
-			print $system->xml_send($result !== false, $result);
+			$result = Toolbar_1_0_0::set($_POST['index'], true);
+			print $system->xml_dump($result);
 		break;
 
 		case 'gui.remove' : #Remove the bar
-			print $system->xml_send(Toolbar_1_0_0::set($_POST['index'], false));
+			$result = Toolbar_1_0_0::set($_POST['index'], false);
+			print $system->xml_dump($result);
 		break;
 
-		case 'gui.set' : #Get the choice
+		case 'gui.save' : #Remember the choice
+			$data = Toolbar_1_0_0::selection($_POST['index'], $_POST['feature'], $_POST['method'], $_POST['source'], $_POST['target']);
+			print $system->xml_dump($data !== false, 'select', array($data));
+		break;
+
+		case 'gui.set' : #Set the bar options
 			$data = Toolbar_1_0_0::selection($_GET['index']);
-			print $system->xml_send($data !== false, $data);
+			print $system->xml_dump($data !== false, 'select', array($data));
 		break;
 
 		case 'run' : #Get list of opened bars
 			$data = Toolbar_1_0_0::get();
-			print $system->xml_send($data !== false, $data);
+			print $system->xml_dump($data !== false, 'bar', array(array('index' => implode(',', $data))));
 		break;
 	}
 ?>

@@ -65,3 +65,5 @@
 	a.%id%_mail_attachment:hover, a.%id%_mail_attachment:active { color : #eca !important; }
 
 	.%id%_form_warn { border : 2px #d76 solid; }
+
+	td.%id%_compose_attachment input { margin : 5px; }

@@ -116,6 +116,8 @@
 			$start = ($param['page'] - 1) * self::$_limit + 1;
 			$end = $start + self::$_limit;
 
+			$list = array();
+
 			foreach($entries as $row) #Against all entries those matched in the query
 			{
 				$query['user']->run(array_merge(array(':user' => $user->id, ':entry' => $row['id']), $values)); #Get the entry info
@@ -140,11 +142,10 @@
 				foreach(explode(' ', 'id link date subject') as $entry) $parts[$entry] = preg_replace('/<.+?>/', ' ', $item[$entry]);
 				foreach(explode(' ', 'category rate read') as $entry) $parts[$entry] = $pref[$entry];
 
-				$xml .= $system->xml_node('entry', $parts, $system->xml_data(preg_replace('/<.+?>/', ' ', $item['description'])));
+				$list[] = array('attributes' => $parts, 'data' => preg_replace('/<.+?>/', ' ', $item['description']));
 			}
 
-			$xml .= $system->xml_node('amount', array('value' => floor(($amount - 1) / self::$_limit) + 1));
-			return $xml;
+			return array('amount' => floor(($amount - 1) / self::$_limit) + 1, 'entry' => $list);
 		}
 
 		public static function set($feed, $id, $column, $value, System_1_0_0_User $user = null) #Update an entry's preference
@@ -274,7 +275,7 @@
 			}
 
 			$info['page'] = floor(($index - 1) / self::$_limit) + 1;
-			return $system->xml_node('feed', $info);
+			return $info;
 		}
 	}
 ?>

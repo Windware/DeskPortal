@@ -1,41 +1,36 @@
 <?php
 	$system = new System_1_0_0(__FILE__);
+	$system->cache_header(0); #Do not cache by default
 
 	switch($_GET['task'])
 	{
 		case 'app.conf' : #Save user configuration
-			$system->cache_header(0); #Do not cache
 			$user = $system->user();
 
 			$status = $user->valid ? $user->save('conf', $_POST, $_GET['id']) : -1;
-			print $system->xml_send($status);
+			print $system->xml_dump($status);
 		break;
 
 		case 'conf.apply' : #Apply general configuration tab changes
-			$system->cache_header(0); #Do not cache
 			$user = $system->user();
 
-			if(!$user->valid) print $system->xml_send(-1);
-			else
-			{
-				$result = $user->save('version', array('name' => $_POST['name'], 'version' => $_POST['version']));
-				print $system->xml_send($result !== false, $result);
-			}
+			if(!$user->valid) print $system->xml_dump(-1);
+			else print $system->xml_dump($user->save('version', array('name' => $_POST['name'], 'version' => $_POST['version'])));
 		break;
 
 		case 'conf.swap' : #Get version listing
-			$system->cache_header(0); #Do not cache
-
 			$data = $system->app_available($_GET['app']);
-			print $system->xml_send($data !== false, $data);
+			$xml = '';
+
+			if(is_array($data)) foreach($data as $row) $xml .= $system->xml_node('version', $row);
+			print $system->xml_send($data !== false, $xml);
 		break;
 
 		case 'image.wallpaper' : #Save user wallpaper
-			$system->cache_header(0); #Do not cache
 			$user = $system->user();
 
-			if(!$user->valid) print $system->xml_send(-1);
-			else print $system->xml_send($user->save('conf', array('wallpaper' => $_POST['name']), 'system_static'));
+			if(!$user->valid) print $system->xml_dump(-1);
+			else print $system->xml_dump($user->save('conf', array('wallpaper' => $_POST['name']), 'system_static'));
 		break;
 
 		case 'motion.init' : case 'tip.make' : case 'window.create' : #Create window background image
@@ -65,25 +60,22 @@
 		break;
 
 		case 'tool.create' : case 'tool.fade' : case 'window.save' : #Save app states
-			$system->cache_header(0); #Do not cache
 			$user = $system->user();
 
-			if(!$user->valid) print $system->xml_send(-1);
+			if(!$user->valid) print $system->xml_dump(-1);
 			else
 			{
 				$data = $_POST;
 				unset($data['id']);
 
-				$result = $user->save($_GET['section'], $data, $_POST['id']);
-				print $system->xml_send($result !== false, $result);
+				print $system->xml_dump($user->save($_GET['section'], $data, $_POST['id']));
 			}
 		break;
 
 		case 'user.conf' : #Get user app confs
-			$system->cache_header(0); #Do not cache
 			$user = $system->user();
 
-			if(!$user->valid) print $system->xml_send(-1);
+			if(!$user->valid) print $system->xml_dump(-1);
 			else
 			{
 				$list = is_array($_GET['app']) ? $_GET['app'] : array();
@@ -94,10 +86,9 @@
 		break;
 
 		case 'user.info' : #Get list of apps available
-			$system->cache_header(0); #Do not cache
 			$user = $system->user();
 
-			if(!$user->valid) print $system->xml_send(-1);
+			if(!$user->valid) print $system->xml_dump(-1);
 			else
 			{
 				$result = $user->xml('used', null, $_GET['language']); #Get user pref list
@@ -106,10 +97,8 @@
 		break;
 
 		case 'user.refresh' : #Refresh the user ticket expire time
-			$system->cache_header(0); #Do not cache
-
 			$user = $system->user();
-			print $system->xml_send($user->valid ? $user->refresh() : -1);
+			print $system->xml_dump($user->valid ? $user->refresh() : -1);
 		break;
 	}
 ?>

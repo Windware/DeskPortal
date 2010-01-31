@@ -15,29 +15,11 @@
 			$query->run(array(':user' => $user->id));
 
 			if(!$query->success) return false;
+
 			$list = array();
-
 			foreach($query->all() as $row) $list[] = $row['id'];
-			return $system->xml_node('bar', array('index' => implode(',', $list)));
-		}
 
-		public static function set($index, $mode, System_1_0_0_User $user = null) #Keep the presence of a bar
-		{
-			$system = new System_1_0_0(__FILE__);
-			$log = $system->log(__METHOD__);
-
-			if(!$system->is_digit($index)) return $log->param();
-
-			if($user === null) $user = $system->user();
-			if(!$user->valid) return false;
-
-			$database = $system->database('user', __METHOD__, $user);
-
-			if($mode) $query = $database->prepare("REPLACE INTO {$database->prefix}display (user, id) VALUES (:user, :id)");
-			else $query = $database->prepare("DELETE FROM {$database->prefix}display WHERE user = :user AND id = :id");
-
-			$query->run(array(':user' => $user->id, ':id' => $index));
-			return $query->success;
+			return $list;
 		}
 
 		public static function selection($index, $feature = null, $method = null, $source = null, $target = null, System_1_0_0_User $user = null) #Gets or sets the toolbar selection
@@ -63,8 +45,26 @@
 			$query = $database->prepare("SELECT feature, method, source, target FROM {$database->prefix}selection WHERE user = :user AND bar = :bar");
 			$query->run(array(':user' => $user->id, ':bar' => $index));
 
-			if(!$query->success) return false;
-			return $system->xml_node('select', $query->row());
+			return $query->success ? $query->row() : false;
+		}
+
+		public static function set($index, $mode, System_1_0_0_User $user = null) #Keep the presence of a bar
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($index)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+
+			if($mode) $query = $database->prepare("REPLACE INTO {$database->prefix}display (user, id) VALUES (:user, :id)");
+			else $query = $database->prepare("DELETE FROM {$database->prefix}display WHERE user = :user AND id = :id");
+
+			$query->run(array(':user' => $user->id, ':id' => $index));
+			return $query->success;
 		}
 	}
 ?>

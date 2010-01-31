@@ -66,6 +66,7 @@
 
 		<index name="user, folder, read" />
 		<index name="user, folder, signature" />
+		<index name="user, folder, draft" />
 	</table>
 
 	<!-- List of downloaded mails to keep track of unread mails for POP3 -->
@@ -143,6 +144,7 @@
 		<column name="mail" param="INT NOT NULL" />
 		<column name="cid" param="VARCHAR(255)" /> <!-- Content ID used for inline objects -->
 
+		<column name="size" param="INT" /> <!-- File size -->
 		<column name="name" param="TEXT NOT NULL" /> <!-- File name -->
 		<column name="type" param="VARCHAR(255)" /> <!-- Mime type -->
 

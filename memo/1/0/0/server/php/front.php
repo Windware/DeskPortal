@@ -8,48 +8,48 @@
 			$result = Memo_1_0_0_Group::set($_POST['name'], $_POST['id']);
 			$data = Memo_1_0_0_Group::get();
 
-			print $system->xml_send($result && $data !== false, $data);
+			print $system->xml_dump($result && $data !== false, 'group', $data);
 		break;
 
 		case 'group.get' : #Get groups
 			$data = Memo_1_0_0_Group::get();
-			print $system->xml_send($data !== false, $data);
+			print $system->xml_dump($data !== false, 'group', $data);
 		break;
 
 		case 'group.remove' : #Remove a group
 			$result = Memo_1_0_0_Group::remove($_POST['group']);
 			$data = Memo_1_0_0_Group::get();
 
-			print $system->xml_send($result && $data !== false, $data);
+			print $system->xml_dump($result && $data !== false, 'group', $data);
 		break;
 
 		case 'item.get' : #Get list of memo
 			$data = Memo_1_0_0_Item::get();
-			print $system->xml_send($data !== false, $data);
+			print $system->xml_dump($data !== false, 'memo', $data);
 		break;
 
 		case 'item.remove' : #Remove a memo
 			$result = Memo_1_0_0_Item::remove($_POST['id']);
 			$data = Memo_1_0_0_Item::get();
 
-			print $system->xml_send($result && $data !== false, $data);
+			print $system->xml_dump($result !== false && $data !== false, 'memo', $data);
 		break;
 
 		case 'item.save' : #Save a memo
 			$result = Memo_1_0_0_Item::save($_POST['id'], $_POST['content']);
-			print $system->xml_send($result);
+			print $system->xml_dump($result);
 		break;
 
 		case 'item.set' : #Set a memo information
 			$result = Memo_1_0_0_Item::set($_POST['name'], $_POST['groups'], $_POST['id'] ? $_POST['id'] : 0);
 			$data = Memo_1_0_0_Item::get();
 
-			print $system->xml_send($result && $data !== false, $data);
+			print $system->xml_dump($result !== false && $data !== false, 'memo', $data);
 		break;
 
 		case 'item.show' : #Get a memo's content
 			$data = Memo_1_0_0_Item::show($_GET['id']);
-			print $system->xml_send($data !== false, $data, null, true);
+			print $system->xml_send($data !== false, $system->xml_node('content', null, $system->xml_data($data)), null, true);
 		break;
 	}
 ?>

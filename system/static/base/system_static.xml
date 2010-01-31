@@ -69,12 +69,6 @@
 	-->
 	<conf name="db_persistent" value="1" />
 
-	<!-- Database Hash Algorithm
-		Set an algorithm to be used to hash user passwords for local user database.
-		Must be supported by all the server side languages used. (ex : sha256)
-	-->
-	<conf name="db_hash" value="sha256" />
-
 	<!-- Authentication Method
 		User authentication method. Please look inside 'server/auth/METHOD.EXT' file system static directory for specific configurations.
 		The function inside each authentication file should have a 'System_Static_Auth' class with 'verify' method returning
@@ -97,6 +91,12 @@
 		Has no meaning when 'system_auth' is set to "local" since it refers to the same database for both user list and authentication.
 	-->
 	<conf name="user_create" value="1" />
+
+	<!-- Database Hash Algorithm
+		Set an algorithm to be used to hash user passwords for local user database authentication.
+		Must be supported by all the server side languages used. (ex : sha256)
+	-->
+	<conf name="user_hash" value="sha256" />
 
 	<!-- Caching
 		Caching flag for the system. Only turn off for debugging purpose.

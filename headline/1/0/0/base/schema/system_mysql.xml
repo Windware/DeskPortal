@@ -3,6 +3,8 @@
 	<table name="cache">
 		<column name="id" param="CHAR(32) PRIMARY KEY NOT NULL" />
 		<column name="content" param="MEDIUMBLOB" />
+
+		<extra name="ENGINE" param="INNODB" />
 	</table>
 
 	<!-- List of entries (NOTE : Avoiding 'UNIQUE' on 'link' for the index to go beyond max length. Not using 'VARCHAR' over 255 characters for compatibility reasons.) -->
@@ -22,6 +24,8 @@
 		<index name="feed, link(50)" />
 		<index name="feed, date" />
 		<index name="date" />
+
+		<extra name="ENGINE" param="INNODB" />
 	</table>
 
 	<!-- RSS list (NOTE : Not using 'UNIQUE' on 'address' like above.) -->
@@ -35,6 +39,8 @@
 
 		<index name="address(50), updated" />
 		<index name="updated" />
+
+		<extra name="ENGINE" param="INNODB" />
 	</table>
 
 	<!-- Number of users using a feed -->
@@ -43,5 +49,6 @@
 		<column name="user" param="INT NOT NULL" />
 
 		<column name="UNIQUE" param="(feed, user)" />
+		<extra name="ENGINE" param="INNODB" />
 	</table>
 </root>

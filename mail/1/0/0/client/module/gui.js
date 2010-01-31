@@ -3,6 +3,8 @@
 	{
 		var _class = $id + '.gui';
 
+		var _attachment = 0; //Attachment file input form counter
+
 		var _interval = 3; //Minutes of interval between each auto draft saving
 
 		var _limit = 50; //Maximum search string length
@@ -183,7 +185,7 @@
 				$system.window.raise(app);
 			}
 
-			$system.app.load(app, $system.app.method(open, [address, name])); //Load the address book app
+			return $system.app.load(app, $system.app.method(open, [address, name])); //Load the address book app
 		}
 
 		this.cancel = function(index) //Cancel composing
@@ -223,9 +225,17 @@
 			var log = $system.log.init(_class + '.complete');
 
 			if(!$system.is.digit(index) || !frame.contentWindow) return log.param();
-			if(!_submit[index]) return false; //Quit if never submitted
+			if(!frame.contentWindow.document.body || !_submit[index]) return false; //Quit if never submitted
 
+			var form = $system.node.id($id + '_compose_' + index + '_form');
 			var state = frame.contentWindow.document.body.innerHTML;
+
+			if($system.is.digit(state, true) && state < 0) //If a negative number is returned indicating the mail ID that got created
+			{
+				form.resume.value = Math.abs(state); //Note about the ID of the mail on the server
+				state = 0; //Imply sucess
+			}
+
 			if(!$system.is.digit(state)) state = 1;
 
 			var mode = $system.array.list('success error big smtp imap');
@@ -234,7 +244,6 @@
 			if(!mode) mode = 'error';
 			var timer;
 
-			var form = $system.node.id($id + '_compose_' + index + '_form');
 			$system.node.hide($id + '_compose_' + index + '_progress', true); //Hide the status message
 
 			if(mode == 'success') //When succeeded
@@ -253,7 +262,7 @@
 				if(special == __selected.folder) $self.item.update(1); //Update the folder
 				else __update[special] = true; //Or mark the folder to be updated on next access
 
-				if(_submit[index].resume) //If resumed writing a draft
+				if(_submit[index].resume && __mail[_submit[index].resume]) //If resumed writing a draft
 				{
 					var home = __mail[_submit[index].resume].folder; //The folder the mail belongs to
 
@@ -322,8 +331,35 @@
 			$system.node.hide($id + '_compose_' + index + '_extra', true);
 		}
 
-		this.file = function(index) //Load a new file field for attachment
+		this.file = function(index) //Load a new file field for attachment - TODO : Apply custom look (http://www.quirksmode.org/dom/inputfile.html)
 		{
+			var log = $system.log.init(_class + '.file');
+			if(!$system.is.digit(index)) return log.param();
+
+			var zone = $system.node.id($id + '_compose_' + index + '_attach'); //Where attachment input forms get added
+			if(!$system.is.element(zone)) return false;
+
+			var line = document.createElement('div');
+			line.id = $id + '_compose_' + index + '_upload_' + (++_attachment);
+
+			var loader = document.createElement('input'); //Create the file input form element
+
+			loader.type = 'file';
+			loader.name = 'attachment_' + _attachment;
+
+			line.appendChild(loader);
+			var cancel = document.createElement('img'); //Create the button to remove the attachment
+
+			cancel.onclick = $system.app.method($system.node.hide, [$id + '_compose_' + index + '_upload_' + _attachment, true, null, true]); //Remove the attachment line
+			cancel.style.cursor = 'pointer';
+
+			$system.tip.set(cancel, $id, 'remove');
+			$system.image.set(cancel, $self.info.devroot + 'graphic/remove.png');
+
+			line.appendChild(cancel);
+			zone.appendChild(line);
+
+			return true;
 		}
 
 		this.filter = function(section, value) //Filters the list of mails
@@ -365,7 +401,7 @@
 			if(!$system.is.digit(id) || !$system.is.digit(index) || !$system.is.element(frame, 'iframe')) return log.param();
 
 			var indicator = $system.node.id($id + '_mail_' + index + '_loading');
-			if(!__mail[id] || !$system.is.element(indicator)) return false;
+			if(!__mail[id] || !$system.is.element(indicator) || !frame.contentWindow) return false;
 
 			indicator.style.visibility = 'hidden'; //Remove the loading indicator
 			$self.folder.get(__mail[id].account, 1); //Update the unread counts in the folder list
@@ -422,9 +458,6 @@
 
 		this.send = function(index, draft) //Send the mail (Or save as a draft)
 		{
-			var language = $system.language.strings($id);
-			if(draft < 1) draft = false;
-
 			var form = $system.node.id($id + '_compose_' + index + '_form');
 			if(!$system.is.element(form, 'form')) return false;
 
@@ -447,12 +480,23 @@
 			}
 
 			if(!exist) warn.to = true; //If no address is specified, warn on the 'to' field
+			var attached = false; //Whether file form exists or not
 
-			for(var i = 0; i < form.elements.length; i++) $system.node.classes(form.elements[i], $id + '_form_warn', !!warn[form.elements[i].name]);
+			for(var i = 0; i < form.elements.length; i++)
+			{
+				$system.node.classes(form.elements[i], $id + '_form_warn', !!warn[form.elements[i].name]);
+				if(form.elements[i].type == 'file') attached = true; //Remember that attachments exist
+			}
+
 			for(var field in warn) return false; //If invalid fields exist, quit
 
+			var language = $system.language.strings($id);
+			if(draft < 1) draft = false;
+
 			_submit[index] = {account : form.account.value, resume : form.resume.value}; //Remember the form has been submitted and its values
-			if(!draft && !confirm(language.confirm)) return false; //Confirm when sending
+
+			if(!draft) { if(!confirm(language['confirm/send'])) return false; } //Confirm when sending
+			else if(draft != 2 && attached && !confirm(language['confirm/remove'])) return false; //Confirm the removal of attachments when saving as draft
 
 			var progress = $system.node.id($id + '_compose_' + index + '_progress');
 			progress.innerHTML = language[draft ? 'saving' : 'sending'];
@@ -460,7 +504,10 @@
 			$system.node.hide($id + '_compose_' + index + '_progress', false); //Show the progress message
 			form.draft.value = draft ? 1 : 0; //Indicate so when saving draft
 
+			if(draft) for(var i = 0; i < form.elements.length; i++) if(form.elements[i].type == 'file') form.elements[i].disabled = true; //Avoid attachments from being sent when saving drafts
 			form.submit(); //Submit the form directly inside an 'iframe' to have file uploading work
+
+			if(draft) for(var i = 0; i < form.elements.length; i++) if(form.elements[i].type == 'file') form.elements[i].disabled = false;
 			if(draft != 2) for(var i = 0; i < form.elements.length; i++) form.elements[i].disabled = true; //Disable the form from getting submitted multiple times
 
 			_state = draft; //Keep the process state
@@ -505,6 +552,7 @@
 				if(form.cc.value.length || form.bcc.value.length) $self.gui.extra(__window); //Show extra cc/bcc field if data exists
 
 				if(id) _insert(id, __window, true); //Load the message body
+				else _timer[__window] = setInterval($system.app.method($self.gui.save, [__window]), _interval * 60 * 1000); //Set auto draft save on
 			}
 
 			return __window; //Return the window ID
@@ -513,9 +561,11 @@
 		this.sign = function(index, id) //Insert a signature at cursor position
 		{
 			var form = $system.node.id($id + '_compose_' + index + '_form');
-			var signature = '\n\n' + __account[form.account.value].signature;
+			if(!__account[form.account.value]) return false;
 
+			var signature = '\n\n' + __account[form.account.value].signature;
 			if(!signature.match(/\S/)) return true;
+
 			form.body.focus();
 
 			if(document.selection) document.selection.createRange().text = signature; //For IE
@@ -530,12 +580,13 @@
 
 		this.signable = function(index) //Enable or disable the signing button
 		{
-			var log = $system.log.init(_class + '.signable');
-
-			if(!$system.is.digit(index)) return log.param();
-			if(!$system.window.list[$id + '_display_' + index]) return false;
-
 			var form = $system.node.id($id + '_compose_' + index + '_form');
+			if(!__account[form.account.value]) return false;
+
+			var log = $system.log.init(_class + '.signable');
+			if(!$system.is.digit(index)) return log.param();
+
+			if(!$system.window.list[$id + '_display_' + index]) return false;
 			form.sign.disabled = !__account[form.account.value].signature.length; //Disable the signing button if no signature exists
 		}
 

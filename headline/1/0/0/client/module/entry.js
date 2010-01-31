@@ -184,9 +184,7 @@
 				$system.app.callback(_class + '.get.list', callback);
 			}
 
-			for(var section in __feed[id]) if(section != 'description') options[section] = __feed[id][section]; //Set the date span
-
-			//Get the list of entries for the feed
+			for(var section in __feed[id]) if(section != 'description' && section != 'address') options[section] = __feed[id][section] || __feed[id][section] == 0 || '';
 			return $system.network.send($self.info.root + 'server/php/front.php', options, null, $system.app.method(list, [id, page, callback]));
 		}
 
@@ -212,7 +210,7 @@
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'entry.mark'}, {id : id, mode : _mark[id]});
 		}
 
-		this.show = function(id) //Show specific entry in the list
+		this.show = function(id) //Show a specific entry by ID
 		{
 			var log = $system.log.init(_class + '.show');
 			if(!$system.is.digit(id)) return log.param();

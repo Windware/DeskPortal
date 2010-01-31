@@ -54,6 +54,7 @@
 	<string name="forward" value="転送" />
 	<string name="copy" value="コピー" />
 	<string name="move" value="移動" />
+	<string name="delete" value="削除" />
 	<string name="mark" value="マーク" />
 	<string name="close" value="閉じる" />
 	<string name="on" value="有" />
@@ -66,7 +67,9 @@
 	<string name="next" value="次" />
 
 	<!-- 作成ウインドウ -->
-	<string name="confirm" value="メールを送信しますか？" />
+	<string name="confirm/send" value="メールを送信しますか？" />
+	<string name="confirm/remove" value="下書きとして保存する場合は添付ファイルはメールから削除されます。" />
+
 	<string name="send" value="送信" />
 	<string name="save" value="保存" />
 	<string name="cancel" value="キャンセル" />

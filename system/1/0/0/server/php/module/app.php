@@ -1,7 +1,7 @@
 <?php
 	class System_1_0_0_App
 	{
-		public static function available($system, $name) #Return list of available versions for this app in XML
+		public static function available(&$system, $name) #Return list of available versions for this app in XML
 		{
 			foreach(glob("$name/*/*/*/") as $revision) #Get all version numbers
 				if(preg_match('|^.+?/(\d+)/(\d+)/\d+/$|', $revision, $matches)) $version[$matches[1]][$matches[2]]++; #Add amount of revisions
@@ -15,15 +15,14 @@
 					$list['minor'] = $number;
 					$list['revisions'] = $revisions;
 
-					$available .= $system->xml_node('version', $list);
+					$available[] = $list;
 				}
 			}
 
 			return $available;
 		}
 
-		#Gets or sets application configuration
-		public static function conf(&$system, $name = null, $version = null, $key = null, $value = null)
+		public static function conf(&$system, $name = null, $version = null, $key = null, $value = null) #Gets or sets application configuration
 		{
 			if($name === null && $version === null) #If not defined, use its own information
 			{

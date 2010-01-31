@@ -1,7 +1,7 @@
 <?php
-	class Launcher_1_0_0
+	class Launcher_1_0_0_Item
 	{
-		public static function apps($language, System_1_0_0_User $user = null)
+		public static function get($language, System_1_0_0_User $user = null)
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -78,20 +78,20 @@
 				$icon[$id] = $system->file_readable($graphic) ? $graphic : ''; #Note the icon's theme
 			}
 
-			$xml = ''; #XML list of applications
+			$apps = array();
 
 			foreach($list as $category => $entry) #Build up the list of apps
 			{
 				$show = $localized[$category] ? $localized[$category] : $category;
-				$body = '';
+				$each = array();
 
-				foreach($entry as $launcher) $body .= $system->xml_node('entry', array('name' => $launcher, 'icon' => $icon[$launcher]));
+				foreach($entry as $launcher) $each[] = array('name' => $launcher, 'icon' => $icon[$launcher]);
 
 				$state = $system->database_key('user', "opened_$category", null, $user);
-				$xml .= $system->xml_node('category', array('name' => $category, 'display' => $show, 'expand' => $state), $body);
+				$apps[] = array('attributes' => array('name' => $category, 'display' => $show, 'expand' => $state), 'entry' => $each);
 			}
 
-			return $xml;
+			return $apps;
 		}
 
 		public static function expand($category, $state, System_1_0_0_User $user = null) #Set opened category

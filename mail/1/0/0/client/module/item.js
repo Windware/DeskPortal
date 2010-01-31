@@ -526,9 +526,6 @@
 			var log = $system.log.init(_class + '.remove');
 			if(!$system.is.digit(id) || !$system.is.digit(index)) return log.param();
 
-			var language = $system.language.strings($id);
-			if(!confirm(language.remove)) return false;
-
 			var refresh = function(folder, mode) { return __selected.folder == folder ? $self.item.get(folder, mode) : __update[folder] = true; } //Update the folder
 
 			var update = function(account, folder, request)

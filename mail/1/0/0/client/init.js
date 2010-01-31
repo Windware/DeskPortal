@@ -1,9 +1,7 @@
 
 	var __account = []; //List of accounts
 
-	var __active; //Timer for updating folder list for the currently displayed account
-
-	var __belong = {}; //Accounts folders belong to
+	var __belong = {}; //Accounts that folders belong to
 
 	var __cache = {}; //Message listing cache
 
@@ -17,7 +15,7 @@
 
 	var __order = {item : 'sent', reverse : true}; //Current sort order method
 
-	var __refresh = {}; //Periodic folder update timer
+	var __refresh = {}; //Timer to invalidate caches for folders
 
 	var __selected = {}; //Currently displayed account, folder and page
 
@@ -25,6 +23,6 @@
 
 	var __timer = {}; //Auto folder update timer
 
-	var __update = {}; //Flag to indicate that a folder should be updated from the server
+	var __update = {}; //Flag to indicate that mail listing should be updated from the server on a folder
 
 	var __window = 0; //Mail window counter

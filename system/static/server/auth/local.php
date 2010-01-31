@@ -11,10 +11,9 @@
 			$conf = $system->app_conf('system', 'static');
 			$name = strtolower($name);
 
-			#If used password hashing algorithm is not implemented in PHP, quit
-			if(!in_array($conf['db_hash'], hash_algos()))
+			if(!in_array($conf['user_hash'], hash_algos())) #If used password hashing algorithm is not implemented, quit
 			{
-				$problem = 'Specified password hashing algorithm (\'db_hash\' configuration value) is not implemented in PHP';
+				$problem = 'Specified password hashing algorithm (\'user_hash\' configuration value) is not implemented in PHP';
 				return $log->system($problem, 'Use an algorithm implemented in PHP or enable such algorithm in PHP');
 			}
 
@@ -23,7 +22,7 @@
 
 			#Look for the user with the given user name and password
 			$query = $database->prepare("SELECT id FROM {$database->prefix}user WHERE name = :name AND pass = :pass AND invalid = :invalid");
-			$query->run(array(':name' => $name, ':pass' => hash($conf['db_hash'], $pass), ':invalid' => 0)); #Run the query
+			$query->run(array(':name' => $name, ':pass' => hash($conf['user_hash'], $pass), ':invalid' => 0)); #Run the query
 
 			if($query->success) $id = $query->column(); #Get the user information
 

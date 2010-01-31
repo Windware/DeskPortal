@@ -15,10 +15,7 @@
 			$query = $database->prepare("SELECT id, name FROM {$database->prefix}category WHERE user = :user ORDER BY name");
 			$query->run(array(':user' => $user->id));
 
-			$xml = '';
-			foreach($query->all() as $row) $xml .= $system->xml_node('category', $row);
-
-			return $query->success ? $xml : false;
+			return $query->success ? $query->all() : false;
 		}
 
 		public static function remove($category, System_1_0_0_User $user = null) #Removes a category

@@ -6,35 +6,38 @@
 	{
 		case 'account.get' : #Get list of accounts
 			$data = Mail_1_0_0_Account::get();
-			print $system->xml_send($data !== false, $data);
+			print $system->xml_dump($data !== false, 'account', $data, array('user'));
 		break;
 
-		case 'account.remove' : print $system->xml_send(Mail_1_0_0_Account::remove($_POST['id'])); break; #Remove an account
+		case 'account.remove' : #Remove an account
+			$result = Mail_1_0_0_Account::remove($_POST['id']);
+			print $system->xml_dump($result);
+		break;
 
 		case 'conf.create' : #Create a folder
 			$result = Mail_1_0_0_Folder::create($_POST['account'], $_POST['parent'], $_POST['name']);
-			$data = Mail_1_0_0_Folder::get($_POST['account'], false);
+			$data = Mail_1_0_0_Folder::get($_POST['account'], false, true);
 
 			print $system->xml_send($result !== false && $data !== false, $data);
 		break;
 
 		case 'conf.folder' : case 'folder.get' : #Get list of folders for an account
 			$result = $_GET['update'] ? Mail_1_0_0_Folder::update($_GET['account']) : true;
-			$data = Mail_1_0_0_Folder::get($_GET['account'], $_GET['subscribed']);
+			$data = Mail_1_0_0_Folder::get($_GET['account'], $_GET['subscribed'], true);
 
 			print $system->xml_send($result !== false && $data !== false, $data);
 		break;
 
 		case 'conf.move' : #Move a folder
 			$result = Mail_1_0_0_Folder::move($_POST['folder'], $_POST['target']);
-			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false);
+			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false, true);
 
 			print $system->xml_send($result !== false && $data !== false, $data);
 		break;
 
 		case 'conf.rename' : #Rename a folder
 			$result = Mail_1_0_0_Folder::rename($_POST['folder'], $_POST['name']);
-			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false);
+			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false, true);
 
 			print $system->xml_send($result !== false && $data !== false, $data);
 		break;
@@ -43,8 +46,16 @@
 			$account = Mail_1_0_0_Folder::account($_POST['folder'][0]);
 			$result = Mail_1_0_0_Folder::remove($_POST['folder'], true);
 
-			$data = Mail_1_0_0_Folder::get($account, false);
+			$data = Mail_1_0_0_Folder::get($account, false, true);
 			print $system->xml_send($result !== false && $data !== false, $data);
+		break;
+
+		case 'conf.set' : #Save account information
+			$option = $_POST;
+			unset($option['account']);
+
+			$result = Mail_1_0_0_Account::set($_POST['account'], $option);
+			print $system->xml_dump($result);
 		break;
 
 		case 'conf.special' : #Set special folders
@@ -54,24 +65,20 @@
 			$result = Mail_1_0_0_Folder::special($_POST['account'], $folder);
 			$data = Mail_1_0_0_Account::get($_POST['account']);
 
-			print $system->xml_send($result !== false && $data !== false, $data);
+			print $system->xml_dump($result !== false && $data !== false, 'account', $data, array('user'));
 		break;
 
 		case 'conf.subscribe' : #(Un)subscribe a folder
 			$result = Mail_1_0_0_Folder::subscribe($_POST['folder'], $_POST['mode']);
-			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false);
+			$data = Mail_1_0_0_Folder::get(Mail_1_0_0_Folder::account($_POST['folder']), false, true);
 
 			print $system->xml_send($result !== false && $data !== false, $data);
 		break;
 
-		case 'conf.set' : #Save account information
-			$option = $_POST;
-			unset($option['account']);
-
-			print $system->xml_send(Mail_1_0_0_Account::set($_POST['account'], $option));
+		case 'gui.load' : #Load an embedded image
+			$system->cache_header(); #Cache attachment data on the client side
+			print Mail_1_0_0_Item::image($_GET['id'], $_GET['cid']);
 		break;
-
-		case 'gui.load' : print Mail_1_0_0_Item::image($_GET['id'], $_GET['cid']); break; #Load an embedded image
 
 		case 'gui.show' : #Get message body of a mail and return as is
 			$system->cache_header(); #Cache mail body
@@ -80,29 +87,63 @@
 
 		case 'gui._body' : #Download the attachment
 			#NOTE : Set an attachment header in all cases not to let errors make browser shift into a new page
+			#Not sending caching header under errors in case of occasions like mail server unavailability for that moment
+			#Be warned that if an error is generated and printed, the attachment will be a text file displaying the errors
 			header('Content-Type: text/plain');
 			header('Content-Disposition: attachment');
 
 			print Mail_1_0_0_Item::attachment($_GET['id']); #Get the attachment file from the mail server
 		break;
 
-		case 'gui.compose' : print Mail_1_0_0_Item::text($_GET['id']); break; #Get the plain text version of a mail
+		case 'gui.compose' : #Get the plain text version of a mail
+			$system->cache_header(); #Cache mail body
+			print Mail_1_0_0_Item::text($_GET['id']);
+		break;
 
 		case 'gui.send' : #Send out a mail (Send the result status as a plain text to be grabbed inside 'iframe')
 			print Mail_1_0_0_Item::send($_POST['account'], $_POST['subject'], $_POST['body'], $_POST['to'], $_POST['cc'], $_POST['bcc'], $_POST['source'], $_FILES, $_POST['draft'], $_POST['resume']);
 		break;
 
 		case 'item.get' : #Get list of mails stored in the database
-			if($_GET['update']) $update = Mail_1_0_0_Item::update($_GET['folder']); #Update it from the mail server
+			$update = $_GET['update'] ? Mail_1_0_0_Item::update($_GET['folder']) : true; #Update it from the mail server
 			$data = Mail_1_0_0_Item::get($_GET['folder'], $_GET['page'], $_GET['order'], $_GET['reverse'], $_GET['marked'], $_GET['unread'], $_GET['search']); #Get list from database
 
-			print $system->xml_send($update !== false && $data !== false, $data, null, true);
+			$xml = '';
+
+			if(is_array($data))
+			{
+				foreach($data as $row) #Construct the mail XML
+				{
+					$body = '';
+					$attributes = array();
+
+					foreach($row as $key => $data)
+					{
+						if(is_array($data)) foreach($data as $address) $body .= $system->xml_node($key, $address);
+						elseif($key == 'preview') $body .= $system->xml_node($key, null, $system->xml_data($data));
+						else $attributes[$key] = $data;
+					}
+
+					$xml .= $system->xml_node('mail', $attributes, $body);
+				}
+			}
+
+			print $system->xml_send($update !== false && $data !== false, $xml, null, true);
 		break;
 
-		case 'item.mark' : print $system->xml_send(Mail_1_0_0_Item::flag($_POST['id'], 'Flagged', !!$_POST['mode'])); break; #Mark mails
+		case 'item.mark' : #Mark mails
+			$result = Mail_1_0_0_Item::flag($_POST['id'], 'Flagged', !!$_POST['mode']);
+			print $system->xml_dump($result);
+		break;
 
-		case 'item.move' : print $system->xml_send(Mail_1_0_0_Item::move($_POST['id'], $_POST['folder'])); break; #Move mails
+		case 'item.move' : #Move mails
+			$result = Mail_1_0_0_Item::move($_POST['id'], $_POST['folder']);
+			print $system->xml_dump($result);
+		break;
 
-		case 'item.trash' : print $system->xml_send(Mail_1_0_0_Item::special($_POST['id'], 'trash', $_POST['account'])); break; #Move mails to trash
+		case 'item.trash' : #Trash mails
+			$result = Mail_1_0_0_Item::special($_POST['id'], 'trash', $_POST['account']);
+			print $system->xml_dump($result);
+		break;
 	}
 ?>

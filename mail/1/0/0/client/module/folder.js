@@ -36,6 +36,8 @@
 				var account = __belong[folder];
 				_lock[account] = false;
 
+				if(!__account[account]) return false;
+
 				var local = __account[account].type == 'pop3' && __special.inbox[account] != folder; //Do not update other than INBOX for POP3
 				if(_loaded[folder] || local) return true; //If never updated, update from the server
 
@@ -52,32 +54,26 @@
 
 		this.clear = function(folder) //Clear caches for a folder
 		{
-			delete __cache[folder];
-			delete __belong[folder];
+			delete __cache[folder]; //Delete message list cache
+			delete __belong[folder]; //Delete which account this folder belongs to
 
-			for(var id in __mail) if(__mail[id].folder == folder) delete __mail[id];
+			for(var id in __mail) if(__mail[id].folder == folder) delete __mail[id]; //Remove all mail data in this folder
+			delete __update[folder]; //Remove the flags to indicate that a folder should be updated on next access
 
 			if(__refresh[folder]) clearTimeout(__refresh[folder]);
-			delete __refresh[folder];
+			delete __refresh[folder]; //Remove the timer trying to invalidate caches
 
-			for(var section in __special) delete __special[section][folder];
-			delete __update[folder];
+			if(__timer[folder]) clearInterval(__timer[folder]);
+			delete __timer[folder]; //Remove the periodic folder listing timer
+
+			var section = $system.array.list('inbox drafts sent trash'); //Invalidate the special folder ID if set to this folder
+			for(var i = 0; i < section.length; i++) for(var account in __special[section]) if(__special[section][account] == folder) __special[section][account] == null;
 		}
 
 		this.get = function(account, update, callback, request) //List folders for an account
 		{
 			var log = $system.log.init(_class + '.get');
 			if(!$system.is.digit(account)) return log.param();
-
-			if(!__account[account]) //If periodical update arrives with the account vanished
-			{
-				clearInterval(__timer[account]); //Remove the timer
-				delete __timer[account];
-
-				return false;
-			}
-
-			var language = $system.language.strings($id);
 
 			if(account == '0') //On empty selection, clean up the area
 			{
@@ -90,6 +86,16 @@
 				$system.app.callback(_class + '.get', callback);
 				return true;
 			}
+
+			if(!__account[account]) //If periodical update arrives with the account vanished
+			{
+				clearInterval(__timer[account]); //Remove the timer
+				delete __timer[account];
+
+				return false;
+			}
+
+			var language = $system.language.strings($id);
 
 			var list = function(account, callback, request)
 			{
@@ -134,12 +140,15 @@
 							break;
 						}
 
-						if(_count[id] && recent > _count[id])
+						if(__account[account] && _count[id] && recent > _count[id]) //If new mail count is bigger than before
 						{
 							__update[id] = true; //Make it update on next access
 
-							var message = language.recent.replace('%folder%', name).replace('%account%', __account[account].description);
-							$system.gui.notice($id, message, null); //Notify the new message presence
+							if(id != __special.drafts[account] && id != __special.sent[account] && id != __special.trash[account]) //If not under drafts, sent and trash folder
+							{
+								var message = language.recent.replace('%folder%', name).replace('%account%', __account[account].description);
+								$system.gui.notice($id, message, null); //Notify the new message presence
+							}
 						}
 
 						_count[id] = recent;

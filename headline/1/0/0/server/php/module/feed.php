@@ -122,6 +122,8 @@
 			$query = $database->prepare("SELECT date FROM {$database->prefix}entry WHERE feed = :feed ORDER BY date DESC LIMIT 1");
 			$section = explode(' ', 'id address site description');
 
+			$list = array();
+
 			foreach($feeds as $row) #Create feed XML
 			{
 				$param = array();
@@ -133,10 +135,10 @@
 				$param['newest'] = $query->column();
 				$param['period'] = $period[$row['id']];
 
-				$xml .= $system->xml_node('feed', $param);
+				$list[] = $param;
 			}
 
-			return $xml;
+			return $list;
 		}
 
 		public function remove() #Delete the feed and its associated entries

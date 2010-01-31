@@ -17,10 +17,7 @@
 			$query = $database->prepare("SELECT * FROM {$database->prefix}address WHERE user = :user AND groups = :group ORDER BY name");
 			$query->run(array(':user' => $user->id, ':group' => $group));
 
-			if(!$query->success) return false;
-
-			foreach($query->all() as $row) $xml .= $system->xml_node('address', $row, null, array('user'));
-			return $xml;
+			return $query->success ? $query->all() : false;
 		}
 
 		public static function remove($id, System_1_0_0_User $user = null) #Remove an entry

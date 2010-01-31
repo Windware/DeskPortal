@@ -3,12 +3,10 @@
 	{
 		public static function build(&$system, $data, $exclude = array()) #Create a XML component from an array
 		{
-			$log = $system->log(__METHOD__);
-			$xml = ''; #Initialize the XML string to return
+			$xml = '';
+			if(!is_array($data) || !is_array($exclude)) return $xml;
 
-			if(!is_array($data) || !is_array($exclude)) return $log->param($xml);
-
-			#Iterate over the array and create the XML component by exluding keys from the exclusion list
+			#Iterate over the array and create the XML component by excluding keys from the exclusion list
 			foreach($data as $key => $value) if(!in_array($key, $exclude)) $xml .= "<$key>$value</$key>\n";
 
 			return $xml; #Return the built XML
@@ -16,19 +14,23 @@
 
 		public static function data(&$system, $string) #Create a safely packed CDATA section from a string
 		{
-			$log = $system->log(__METHOD__);
-			if(!is_string($string)) return $string = ''; #Use an empty string when given something wrong
+			if(!is_string($string)) return '';
+			return '<![CDATA['.str_replace(array(']]&', ']]>'), array(']]&amp;', ']]&gt;'), $string).']]>'; #Replace the parts that overlap with CDATA declaration
+		}
 
-			#Replace the parts that overlap with CDATA declaration
-			return '<![CDATA['.str_replace(array(']]&', ']]>'), array(']]&amp;', ']]&gt;'), $string).']]>';
+		public static function dump(&$system, $status, $name = null, $list = array(), $exclude = array(), $compress = false) #Create lines of XML from an array ready for output
+		{
+			$xml = '';
+
+			if($system->is_text($name) && is_array($list)) foreach($list as $row) $xml .= $system->xml_node($name, $row, null, $exclude);
+			return $system->xml_send(!!$status, $xml, null, !!$compress);
 		}
 
 		public static function header(&$system, $declare = true) #Return the XML header and send xml content type header
 		{
-			$log = $system->log(__METHOD__);
-
 			if($declare) #If set to delare the HTTP header
 			{
+				$log = $system->log(__METHOD__);
 				$log->dev(LOG_INFO, 'Declaring the output as XML');
 
 				if(!headers_sent()) header('Content-Type: text/xml; charset=utf-8'); #Send the HTTP content type header
@@ -41,9 +43,7 @@
 
 		public static function fill(&$system, $template, $values) #Insert values into XML template string with the passed array
 		{
-			$log = $system->log(__METHOD__);
-			if(!is_string($template) || !is_array($values)) return $log->param($template);
-
+			if(!is_string($template) || !is_array($values)) return $template;
 			return preg_replace('/%(\w+?)%/e', '$values["$1"]', $template); #Replace the signs with given values
 		}
 
@@ -51,18 +51,16 @@
 		public static function format(&$system, $content, $declare = false)
 		{
 			static $_template; #Keep the XML template in memory instead of loading it everytime accessed
-			$log = $system->log(__METHOD__);
 
-			if(!is_string($content)) return $log->param('');
+			if(!is_string($content)) return '';
 			return $system->xml_header($declare)."<root>\n$content\n</root>\n"; #Fill in the string in the template
 		}
 
 		public static function node(&$system, $name, $params, $child = null, $exclude = null) #Create a XML node from a hash
 		{
-			$log = $system->log(__METHOD__);
 			if($exclude === null) $exclude = array();
 
-			if(!$system->is_text($name) || !is_array($exclude)) return $log->param('');
+			if(!$system->is_text($name) || !is_array($exclude)) return '';
 			if(!is_array($params)) $params = array();
 
 			$name = htmlspecialchars($name);
@@ -72,7 +70,7 @@
 			{
 				if(in_array($key, $exclude)) continue; #Leave the excluded items
 
-				#Turn newlines into a character instead
+				#Turn newline into a character instead
 				$key = str_replace("\n", '\\n', $key);
 				$value = str_replace("\n", '\\n', $value);
 
@@ -87,23 +85,23 @@
 
 		public static function output(&$system, $body, $compressed = false) #Add XML header to the crafted XML component and compress it if possible
 		{
-			$log = $system->log(__METHOD__);
-
 			$output = $system->xml_format($body, true); #Create the XML component
 			if($compressed) $output = $system->compress_output($output); #Compress if specified
 
 			if($output === false) return ''; #On error, return an empty string
 
 			if(!headers_sent()) header('Content-Length: '.strlen($output)); #Send the content length header if possible
-			else $log->dev(LOG_WARNING, 'Cannot send content length header', 'Do not send content before sending headers');
+			else
+			{
+				$log = $system->log(__METHOD__);
+				$log->dev(LOG_WARNING, 'Cannot send content length header', 'Do not send content before sending headers');
+			}
 
 			return $output; #Return the formatted XML
 		}
 
 		public static function send(&$system, $status = false, $result = null, $key = null, $compressed = false) #Outputs the status XML line along with the given XML
 		{
-			$log = $system->log(__METHOD__);
-
 			if($status === true) $status = 0;
 			elseif($status === false) $status = 1;
 
@@ -112,10 +110,7 @@
 		}
 
 		public static function status(&$system, $value, $key = null) #Create a simple status XML entries
-		{
-			$log = $system->log(__METHOD__);
-			#TODO - Escape the strings for XML or forbid bad characters
-
+		{ #TODO - Escape the strings for XML or forbid bad characters
 			$key = $system->is_text($key) ? " key=\"$key\"" : ''; #Add the key entry if specified
 			return "\t<status$key value=\"$value\" />\n"; #Return the crafted XML piece
 		}

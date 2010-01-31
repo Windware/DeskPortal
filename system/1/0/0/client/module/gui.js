@@ -29,7 +29,7 @@
 				return log.dev($global.log.error, 'dev/language', 'dev/language/solution', [id, title, message]);
 
 			if(!_alerts[title + message]) _alerts[title + message] = _window + (++_index); //The alert window ID
-			else if($system.node.id(_alerts[title + message])) return true; //Do not make a duplicate warning
+			else if($system.node.id(_alerts[title + message])) return $system.window.raise(_alerts[title + message]); //Do not make a duplicate warning
 
 			var pane = _alerts[title + message];
 
