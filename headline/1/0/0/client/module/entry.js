@@ -105,12 +105,12 @@
 					var star = _mark[headline] == 5 ? 'star' : 'grey'; //Set the star image by mark
 
 					replacer.push($system.image.source($id, star + '.png')); //Mark image
-					replacer.push($system.dom.attribute(entries[i], 'subject')); //Subject
+					replacer.push($system.text.escape($system.dom.attribute(entries[i], 'subject')));
 
 					line.onmousedown = $system.app.method($system.event.cancel, [line]); //Prevent the window from getting dragged on mouse down event
 					line.onclick = $system.app.method($self.gui.view, [headline, $system.dom.attribute(entries[i], 'link'), line]);
 
-					if($system.dom.attribute(entries[i], 'read') == '1') $system.node.classes(line, $id + '_read', true); //Set the read status
+					if($system.dom.attribute(entries[i], 'seen') == '1') $system.node.classes(line, $id + '_read', true); //Set the read status
 
 					//Set new mark
 					if(!__feed[id].since || $system.date.create(time).timestamp() <= __feed[id].since) replacer.push('');

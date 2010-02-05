@@ -23,6 +23,10 @@
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="Failed to get list of folders." />
+	<string name="user/folder/get" value="New messages arrived for '%%' in '%%'." />
+
+	<string name="user/folder/empty/title" value="Failed to empty trash" />
+	<string name="user/folder/empty/message" value="An error occured trying to empty trash. Please try again later." />
 
 	<!-- gui.js -->
 	<string name="user/gui/search" value="Search term must be bigger than %% letters and smaller than %% letters." />
@@ -46,6 +50,9 @@
 	<string name="user/gui/send/draft" value="Saved the mail" />
 	<string name="user/gui/send/draft/message" value="Saved the mail in the draft folder." />
 
+	<string name="user/gui/send/field" value="Bad input" />
+	<string name="user/gui/send/field/message" value="Please fix the fields marked" />
+
 	<!-- item.js -->
 	<string name="user/show/error" value="Displaying the email failed." />
 	<string name="user/show/solution" value="Please reload the page and try again." />
@@ -56,6 +63,9 @@
 
 	<string name="user/item/mark" value="Changed marked state of a mail." />
 	<string name="user/item/mark/error" value="Failed to change marked state of a mail." />
+
+	<string name="user/item/show" value="Error finding the mail" />
+	<string name="user/item/show/error" value="Mail cannot be found" />
 
 	<!-- DEVELOPER -->
 	<!-- gui.js -->

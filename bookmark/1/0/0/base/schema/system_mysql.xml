@@ -3,9 +3,9 @@
 	<table name="address">
 		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
 		<column name="address" param="TEXT NOT NULL" />
-		<column name="title" param="TEXT" />
-		<column name="type" param="VARCHAR(128)" />
-		<column name="status" param="INT" />
+		<column name="title" param="TEXT" /> <!-- Title if the resource is HTML -->
+		<column name="type" param="VARCHAR(128)" /> <!-- Content type of the resource -->
+		<column name="status" param="INT" /> <!-- HTTP status code -->
 		<column name="checked" param="DATETIME" />
 		<column name="updated" param="DATETIME" />
 

@@ -4,7 +4,9 @@
 		var request = $system.network.item($self.info.root + 'resource/supported.json'); //Get the supported app list
 		if(!request.valid()) throw 'Cannot load the supported application list';
 
-		eval('var supported = ' + request.text + ';'); //Load the list of supported apps to search from
+		try { eval('var supported = ' + request.text + ';'); } //Load the list of supported apps to search from
+		catch(error) { throw 'Failed reading supported app list file : resource/supported.json'; }
+
 		if(!$system.is.object(supported)) throw 'Error loading the supported app list';
 
 		for(var app in supported)
@@ -26,6 +28,9 @@
 			$system.node.id($id + '_target').innerHTML += $system.text.format(option, values);
 		}
 
-		if(typeof callback == 'function') callback();
+		$system.node.id($id).style.visibility = ''; //Force turn the window visible earlier to have focus on it
+		$system.node.id($id + '_form').search.focus(); //Focus on the search field
+
+		$system.app.callback($id + '.run', callback);
 		if(!option) throw 'Could not find any supported app';
 	}

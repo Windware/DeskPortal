@@ -28,7 +28,7 @@
 			appearance.innerHTML = ''; //Remove the previous entries
 
 			//Some color list. Each pair is the difference against the 'red' value for 'green' and 'blue'
-			var variant = [[0, 0], [17, 34], [51, 17], [-17, -34], [-17, -85], [-51, -51]];
+			var variant = [[0, 0], [17, 34], [31, -3], [-17, -34], [-17, -85], [-51, -51]];
 
 			//Set the color namings
 			var naming = $system.array.list('grey blue green brown yellow red');
@@ -38,15 +38,15 @@
 			{
 				var index = 1;
 
-				for(var j = 220; j > 70; j -= 50) //Have them in different bright level
+				for(var j = 220; j > 70; j -= 50) //Have them in different brightness level
 				{
-					var color = [j, j + variant[i][0], j + variant[i][1]]; //Get its RGB value
-					color = $system.text.format('rgb(%%, %%, %%)', color)
+					var color = [j.toString(16), (j + variant[i][0]).toString(16), (j + variant[i][1]).toString(16)]; //Get its RGB value in hex
+					for(var k = 0; k < color.length; k++) if(color[k].length == 1) color[k] = '0' + color[k]; //Pad 0
 
 					var option = document.createElement('option'); //Create the color option
-					option.value = color;
+					option.value = color.join('');
 
-					option.style.backgroundColor = color; //Set the color code
+					option.style.backgroundColor = '#' + color.join(''); //Set the color code
 					$system.node.text(option, language[naming[i]] + index++); //Describe the color
 
 					appearance.appendChild(option);
@@ -75,7 +75,7 @@
 			var log = $system.log.init(_class + '.preview');
 
 			var preview = $system.node.id($id + '_pick_preview'); //Color preview area
-			preview.style.backgroundColor = $system.node.id($id + '_pick_color').value; //Set a preview
+			preview.style.backgroundColor = '#' + $system.node.id($id + '_pick_color').value; //Set a preview
 		}
 
 		this.refresh = function(xml) //Refresh category list for all occurances

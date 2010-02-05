@@ -112,6 +112,8 @@
 				$period[$row['feed']] = $row['period']; #Get the period setting for a feed
 			}
 
+			if(!count($grep)) return array();
+
 			$query = $database->prepare("SELECT * FROM {$database->prefix}feed WHERE id IN (".implode(',', $grep).') ORDER BY description');
 			$query->run($parameter); #Get the list of subscribed feeds' information
 

@@ -50,7 +50,8 @@
 				$value[":id{$index}_index"] = $id;
 			}
 
-			$base = "FROM {$database->prefix}entry WHERE feed IN (".implode(',', $param).") AND (subject LIKE :phrase $database->escape OR section LIKE :phrase $database->escape OR description LIKE :phrase $database->escape)";
+			if(!count($param)) return true;
+			$base = "FROM {$database->prefix}entry WHERE feed IN (".implode(',', $param).") AND (subject LIKE :phrase $database->escape OR section LIKE :phrase $database->escape)";
 
 			$query = $database->prepare("SELECT COUNT(id) $base"); #Count the results
 			$query->run($value);
@@ -64,9 +65,7 @@
 			$query->run($value);
 
 			if(!$query->success) return $this->_quit();
-
-			foreach($query->all() as $row)
-				$this->result['item'][] = array('id' => $row['id'], 'date' => preg_replace('/ .+/', '', $row['date']), 'text' => $row['subject']);
+			foreach($query->all() as $row) $this->result['item'][] = array('id' => $row['id'], 'date' => preg_replace('/ .+/', '', $row['date']), 'text' => $row['subject']);
 		}
 	}
 ?>

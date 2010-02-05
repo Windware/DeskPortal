@@ -52,10 +52,10 @@
 
 			if($param['unread'] == '1' && $limiter) #Filter by unread status
 			{
-				#If filtering with other values, simply pick the entries those are not flagged 'read',
-				#otherwise drop everything those are flagged as 'read'
-				$limiter .= ' AND read != :read';
-				$values[':read'] = 1;
+				#If filtering with other values, simply pick the entries those are not flagged 'seen',
+				#otherwise drop everything those are flagged as 'seen'
+				$limiter .= ' AND seen != :seen';
+				$values[':seen'] = 1;
 			}
 
 			switch((int) $param['period']) #According to the display span settings
@@ -110,7 +110,7 @@
 			if(!$database->success) return false;
 
 			#Get the user's preference on the entry
-			$query['user'] = $database->prepare("SELECT entry, category, rate, read FROM {$database->prefix}entry WHERE user = :user AND entry = :entry$limiter");
+			$query['user'] = $database->prepare("SELECT entry, category, rate, seen FROM {$database->prefix}entry WHERE user = :user AND entry = :entry$limiter");
 
 			#Position of entries to return back
 			$start = ($param['page'] - 1) * self::$_limit + 1;
@@ -125,9 +125,9 @@
 
 				$pref = $query['user']->row(); #Get the single result row of user's preference
 
-				#If looking for every unread entries, drop anything with 'read' flag on
-				if($param['unread'] == 1 && !count($values)) { if($pref['read'] == 1) continue; }
-				#Otherwise, pick the entry with filter properties set and 'read' flag as off
+				#If looking for every unread entries, drop anything with 'seen' flag on
+				if($param['unread'] == 1 && !count($values)) { if($pref['seen'] == 1) continue; }
+				#Otherwise, pick the entry with filter properties set and 'seen' flag as off
 				elseif($limiter && !$pref) continue;
 
 				if($param['category'] == '0' && $pref['category']) continue;
@@ -140,7 +140,7 @@
 				$item = $query['detail']->row(); #Entry information
 
 				foreach(explode(' ', 'id link date subject') as $entry) $parts[$entry] = preg_replace('/<.+?>/', ' ', $item[$entry]);
-				foreach(explode(' ', 'category rate read') as $entry) $parts[$entry] = $pref[$entry];
+				foreach(explode(' ', 'category rate seen') as $entry) $parts[$entry] = $pref[$entry];
 
 				$list[] = array('attributes' => $parts, 'data' => preg_replace('/<.+?>/', ' ', $item['description']));
 			}

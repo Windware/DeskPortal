@@ -76,6 +76,10 @@
 
 					for(var j = 0; j < sections.length; j++) __schedules[day][sections[j]] = $system.dom.attribute(list[i], sections[j]);
 					__schedules[day].content = $system.dom.text(list[i]);
+
+					//Extract the time
+					__schedules[day].start = __schedules[day].start.replace(/^\d+-\d+-\d+ (\d+:\d+):\d+$/, '$1');
+					__schedules[day].end = __schedules[day].end.replace(/^\d+-\d+-\d+ (\d+:\d+):\d+$/, '$1');
 				}
 
 				var field = $system.node.id($id + '_display'); //Area where the calendar goes to
@@ -149,7 +153,7 @@
 							{
 								var division = __schedules[id].category;
 
-								if(division > 0 && category[division]) cell.style.backgroundColor = category[division].color;
+								if(division > 0 && category[division]) cell.style.backgroundColor = '#' + category[division].color;
 								$system.node.classes(cell, $id + '_registered', true);
 							}
 						}

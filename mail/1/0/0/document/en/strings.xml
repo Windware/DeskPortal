@@ -45,6 +45,7 @@
 	<string name="yes" value="Yes" />
 	<string name="no" value="No" />
 
+	<string name="purge" value="Empty trash? This action cannot be undone." />
 	<string name="wait" value="Downloading list of mails. This may take a while." />
 	<string name="none" value="Empty" />
 

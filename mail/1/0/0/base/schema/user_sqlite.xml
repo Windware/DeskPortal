@@ -10,6 +10,7 @@
 		<column name="address" param="VARCHAR(255) NOT NULL" />
 		<column name="preference" param="VARCHAR(12) NOT NULL" /> <!-- Mail display preference either in 'plain' or 'html' -->
 		<column name="signature" param="TEXT" />
+		<column name="supported" param="INT" /> <!-- Whether UID/UIDL is supported -->
 
 		<column name="receive_type" param="VARCHAR(12) NOT NULL" />
 		<column name="receive_host" param="VARCHAR(255) NOT NULL" />
@@ -57,16 +58,18 @@
 		<column name="encode" param="VARCHAR(32)" /> <!-- Character encoding type for HTML version -->
 
 		<column name="marked" param="INT" /> <!-- Corresponds to IMAP flag 'Flagged' -->
-		<column name="read" param="INT" /> <!-- Corresponds to IMAP flag 'Seen' -->
+		<column name="seen" param="INT" /> <!-- Corresponds to IMAP flag 'Seen' -->
 		<column name="replied" param="INT" /> <!-- Corresponds to IMAP flag 'Answered' -->
 		<column name="draft" param="INT" /> <!-- Corresponds to IMAP flag 'Draft' -->
 		<column name="color" param="CHAR(6)" />
 
 		<column name="UNIQUE" param="(user, folder, uid)" />
 
-		<index name="user, folder, read" />
+		<index name="user, folder, seen" />
 		<index name="user, folder, signature" />
 		<index name="user, folder, draft" />
+		<index name="user, folder, sent" />
+		<index name="user, sent" />
 	</table>
 
 	<!-- List of downloaded mails to keep track of unread mails for POP3 -->
@@ -90,8 +93,9 @@
 
 		<column name="name" param="VARCHAR(255) NOT NULL" />
 		<column name="parent" param="INT" /> <!-- Can create child folders or not -->
+		<column name="count" param="INT" /> <!-- Number of unread mails as a reference -->
 
-		<column name="separator" param="VARCHAR(4)" /> <!-- Folder name separater -->
+		<column name="connector" param="VARCHAR(4)" /> <!-- Folder name separater -->
 		<column name="subscribed" param="INT" />
 		<column name="updated" param="DATETIME" />
 

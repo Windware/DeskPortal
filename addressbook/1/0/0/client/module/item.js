@@ -76,7 +76,7 @@
 
 			if(group === undefined)
 			{
-				if(!$system.is.digit(_selection.id)) return $self.gui.header(); //If nothing is chosen, just reload the header
+				if(!$system.is.digit(_selection.id)) return $self.gui.header(); //If nothing is chosen, reload the header
 				group = _selection.id; //If not set, use the current selection
 			}
 
@@ -241,25 +241,26 @@
 		this.set = function(id, form) //Sets an entry information
 		{
 			var log = $system.log.init(_class + '.set');
-
 			if(!$system.is.element(form, 'form') || !$system.is.digit(id)) return log.param();
-			if(form.name.value == '') return log.user($global.log.error, 'user/save/fail', 'user/save/fail/solution'); //Check on user name existence
+
+			var quit = function(type) { return $system.gui.alert($id, type, type + '/solution', 3) && false; }
+			if(form.name.value == '') return quit('user/save/fail');
 
 			var value = form.birth_year.value; //Check on birthday values
-			if(value && !$system.is.digit(value) || String(value).length > 4) return log.user($global.log.error, 'user/birth', 'user/birth/solution');
+			if(value && !$system.is.digit(value) || String(value).length > 4) return quit('user/birth');
 
 			var value = form.birth_month.value;
-			if(value && (!$system.is.digit(value) || value < 1 || value > 12)) return log.user($global.log.error, 'user/birth', 'user/birth/solution');
+			if(value && (!$system.is.digit(value) || value < 1 || value > 12)) return quit('user/birth');
 
 			var value = form.birth_day.value;
-			if(value && (!$system.is.digit(value) || value < 1 || value > 31)) return log.user($global.log.error, 'user/birth', 'user/birth/solution');
+			if(value && (!$system.is.digit(value) || value < 1 || value > 31)) return quit('user/birth');
 
 			var section = ['mail_main', 'mail_mobile', 'mail_alt'];
 
 			for(var i = 0; i < section.length; i++)
 			{
 				var value = form[section[i]].value; //Check on mail value
-				if(value && !value.match(/.@./)) return log.user($global.log.error, 'user/mail', 'user/mail/solution');
+				if(value && !value.match(/.@./)) return quit('user/mail');
 			}
 
 			var params = {id : id}; //The parameters to send

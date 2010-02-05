@@ -338,7 +338,7 @@
 			var form = $system.node.id($id + '_conf_folder_form_adjust');
 			var folder = form.source.value;
 
-			if(!$system.is.digit(folder) || !folder) return false;
+			if(!$system.is.digit(folder) || !folder || !_name[folder]) return false;
 			if(!confirm(language.remove.replace('%%', _name[folder]))) return false;
 
 			var done = function(folder, request)
@@ -368,8 +368,13 @@
 		this.set = function(form) //Apply account configuration changes
 		{
 			var log = $system.log.init(_class + '.set');
+			if(!$system.is.element(form, 'form')) return log.param();
 
-			var required = $system.array.list('description name address receive_host receive_port send_host send_port');
+			var type = form.receive_type.value;
+
+			if(type == 'imap' || type == 'pop3') var required = $system.array.list('description name address receive_host receive_port send_host send_port');
+			else var required = $system.array.list('description name address'); //List of option values required for special types (Hotmail, Gmail)
+
 			var option = {}; //List of option values to send
 
 			for(var i = 0; i < required.length; i++) //Check for required fields

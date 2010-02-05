@@ -43,7 +43,12 @@
 			var form = __node(year, month, day, 'form');
 			if(!$system.is.element(form, 'form')) return log.param();
 
-			if(!form.title.value) return false;
+			if(!form.title.value) return $system.gui.alert($id, 'user/title', 'user/title/solution', 3);
+
+			if(!form.start_hour.value != !form.start_minute.value || !form.end_hour.value != !form.end_minute.value)
+				return $system.gui.alert($id, 'user/date', 'user/date/solution', 3); //Avoid having only part of a time set
+
+			var date = $system.date.create([year, month, day]);
 
 			if(discard !== true)
 			{
@@ -72,28 +77,26 @@
 				var cell = $system.node.id([$id, 'date', __index(year, month, day)].join('_')); //Date cell
 				if(cell) $system.node.classes(cell, $id + '_registered', true); //Set it as a schedule registered day
 			}
+			else var cell = null;
 
 			$system.node.hide(form, true); //Hide the input forms
 			$system.node.fade(__node(year, month, day, 'display').id, false); //Show the read only content area
 
-			if(discard === true || initial === true) return false; //Avoid form submission
+			if(discard === true || initial === true) return true; //If cancelling or loading for first time, do not save
 
 			//If not discarding and not the initial loading sequence, save the information
-			var notify = function(request) //Notify the user
+			var notify = function(cell, date, request) //Notify the user
 			{
-				var date = $system.date.create([year, month, day]);
-
 				log.user($global.log.notice, $system.dom.status(request.xml) == '0' ? 'user/save' : 'user/save/fail', '', [date.format($global.user.pref.format.date)]);
 				__schedules[__index(year, month, day)] = post; //Update the internal schedule data (Adds redundant 'day' inside 'post' but ignoring)
 
 				if(!cell) return; //If the month has swapped for the cell to have disappeared, quit
 
-				cell.style.backgroundColor = __cats.indexed[form.category.value] ? __cats.indexed[form.category.value].color : '';
+				cell.style.backgroundColor = __cats.indexed[form.category.value] ? '#' + __cats.indexed[form.category.value].color : '';
 				__summary(year, month, day, cell); //Re-apply the summary
 			}
 
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'item.set'}, post, notify);
-			return false; //Avoid form submission
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.set'}, post, $system.app.method(notify, [cell, date]));
 		}
 
 		this.show = function(year, month, day) //Show the schedule pane
@@ -135,15 +138,13 @@
 					var section = $system.array.list('title category content'); //Set the form field values
 					for(var i = 0; i < section.length; i++) form[section[i]].value = schedule[section[i]];
 
-					//HACK : IE refuses to set the form category value but sets time selections below fine
+					//NOTE : IE refuses to set the form category value but sets time selections below fine
 					if($system.browser.engine == 'trident')
 					{
 						var fix = function() //Repeat the same process under a timer
 						{
 							form.category.value = schedule.category;
-
-							if(form.category.value != '0') //Display the category name if set
-								$system.node.text(__node(year, month, day, 'category'), form.category.options[form.category.selectedIndex].text);
+							if(form.category.value != '0') $system.node.text(__node(year, month, day, 'category'), form.category.options[form.category.selectedIndex].text); //Display the category name if set
 						}
 
 						setTimeout(fix, 0);
@@ -153,10 +154,10 @@
 
 					for(var i = 0; i < section.length; i++)
 					{
-						if(!$system.is.digit(schedule[section[i]])) continue;
+						if(!schedule[section[i]].match(/^\d+:\d+$/)) continue;
 						var time = schedule[section[i]].split(':'); //Split the hour and the minute
 
-						form[section[i] + '_hour'].value = Number(time[0]); //Set hour
+						form[section[i] + '_hour'].value = Number(time[0]); //Set hour (Remove 0 pad)
 						form[section[i] + '_minute'].value = time[1]; //Set minute
 					}
 

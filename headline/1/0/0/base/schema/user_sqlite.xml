@@ -13,7 +13,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="entry" param="INT NOT NULL" />
 		<column name="category" param="INT DEFAULT 0" />
-		<column name="read" param="INT DEFAULT 0" />
+		<column name="seen" param="INT DEFAULT 0" />
 		<column name="rate" param="INT DEFAULT 0" />
 		<column name="trash" param="INT DEFAULT 0" />
 

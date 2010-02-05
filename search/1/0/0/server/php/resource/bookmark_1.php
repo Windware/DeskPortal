@@ -45,6 +45,8 @@
 			$database = $system->database('system', __METHOD__, null, strtolower($name[5]), $name[6]);
 			if(!$database->success) return false;
 
+			if(!count($param)) return true;
+
 			$query = $database->prepare("SELECT id, address, title FROM {$database->prefix}address WHERE id IN (".implode(',', $param).')');
 			$query->run($value); #Look for bookmark address and title
 

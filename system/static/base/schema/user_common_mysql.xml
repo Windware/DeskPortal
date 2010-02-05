@@ -1,0 +1,11 @@
+<root>
+	<!-- Key/value store for each application on user database -->
+	<table>
+		<column name="user" param="INT" />
+		<column name="name" param="varchar(255)" />
+		<column name="value" param="text" />
+
+		<column name="UNIQUE" param="(user, name)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+</root>

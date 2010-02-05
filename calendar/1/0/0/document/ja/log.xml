@@ -6,6 +6,12 @@
 	<string name="user/remove" value="%%のスケジュールを削除しました。" />
 	<string name="user/display" value="%%のスケジュールを読み込みました。" />
 
+	<string name="user/title" value="タイトルが空です" />
+	<string name="user/title/solution" value="タイトルを入力してください" />
+
+	<string name="user/date" value="時刻が無効です" />
+	<string name="user/date/solution" value="正しい時刻を入力してください" />
+
 	<!-- group.js -->
 	<string name="user/category/add" value="カテゴリー'%%'を追加しました。" />
 	<string name="user/category/remove" value="カテゴリー'%%'を削除しました。" />

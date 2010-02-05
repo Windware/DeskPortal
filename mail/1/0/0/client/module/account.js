@@ -5,20 +5,25 @@
 
 		var _list; //Account list cache
 
-		var _interval = 4.5; //Interval in minutes to update the folder listing (NOTE : Make it below 5 minutes for 'POP before SMTP' to work in most cases)
-
-		this.change = function(account) //Change the displayed account
+		this.change = function(account, folder, callback) //Change the displayed account
 		{
 			var log = $system.log.init(_class + '.change');
 			if(!$system.is.digit(account)) return log.param();
 
-			__selected.account = account;
+			$system.node.id($id + '_account').value = __selected.account = account;
 			if($system.browser.engine == 'trident') document.body.focus(); //Let focus off the selection to allow mouse wheel use on other parts after selection
 
-			if(account == '0') return $self.folder.get(account);
+			if(account == '0') return $self.folder.get(account, undefined, callback);
 
-			var list = function(account) { if($system.is.digit(__special.inbox[account])) $self.folder.change(__special.inbox[account]); } //Get mails for the default mail box
-			$self.folder.get(account, 0, $system.app.method(list, [account])); //List the folders
+			var list = function(account, folder, callback) //Get mails for the default mail box
+			{
+				folder = $system.is.digit(folder) ? folder : __special.inbox[account];
+
+				if($system.is.digit(folder)) $self.folder.change(folder, callback);
+				else $system.app.callback(log.origin, callback);
+			}
+
+			return $self.folder.get(account, 0, $system.app.method(list, [account, folder, callback])); //List the folders
 		}
 
 		this.get = function(cache, list, callback) //Get list of accounts
@@ -142,6 +147,8 @@
 
 						for(var folder in __belong) if(__belong[folder] == id) $self.folder.clear(folder); //Clear all folder related data for this account
 						delete __account[id]; //Remove account information
+
+						$self.conf.folder(0);
 					break;
 
 					default : $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/remove', 3); break;
@@ -149,18 +156,5 @@
 			}
 
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'account.remove'}, {id : id}, $system.app.method(notify, [id]));
-		}
-
-		this.timer = function() //Update folder periodically
-		{
-			for(var id in __account)
-			{
-				if(__account[id].type == 'pop3' || __timer[id]) continue; //Do not try to update folders from the mail server for POP3
-
-				var update = $system.app.method($self.folder.get, [id, 1]);
-				__timer[id] = setInterval(update, _interval * 60 * 1000); //Get folders updated periodically
-
-				update(); //Run it immediately
-			}
 		}
 	}

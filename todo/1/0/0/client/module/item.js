@@ -35,10 +35,8 @@
 			}
 
 			//Register a new entry
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'item.add'}, {name : title, category : form.category.value}, load);
 			$system.window.fade($id + '_new', true, null, true); //Let go of the window completely
-
-			return false; //Invalidate the form from changing the page
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.add'}, {name : title, category : form.category.value}, load);
 		}
 
 		this.get = function() //Get the list of todos
@@ -244,7 +242,10 @@
 			{
 				if(form[_times[i]].value == '') end = true; //If a value is unspecified, only track the upper selections
 				else if(end && form[_times[i]].value != '') //If any other values are set with empty selection in between
+				{
+					$system.gui.alert($id, 'user/time', 'user/time/solution', 3);
 					return log.user($global.log.warning, 'user/time', 'user/time/solution');
+				}
 			}
 
 			var param = {}; //Parameters to send
@@ -260,8 +261,7 @@
 				$system.window.fade($id + '_info_' + value, true, null, true);
 			}
 
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'item.set'}, param, $system.app.method(update, [form.id.value]));
-			return false;
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.set'}, param, $system.app.method(update, [form.id.value]));
 		}
 
 		this.show = function(id) //Open the information window
@@ -272,9 +272,7 @@
 			if(!_todo.indexed[id]) //If the item information is not found
 			{
 				var all = 1; //Filter option index for displaying all items
-
-				if(__display == all) //If all items are listed yet the information is not found, quit
-					return log.dev($global.log.warning, 'dev/load', 'dev/load/solution', [id]);
+				if(__display == all) return log.dev($global.log.warning, 'dev/load', 'dev/load/solution', [id]); //If all items are listed yet the information is not found, quit
 
 				$system.node.id($id + '_filtering').value = all; //Switch the filter option
 				$self.gui.filter(all); //Refresh the list

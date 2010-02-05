@@ -1,0 +1,44 @@
+<root>
+	<!-- Memo and group relation -->
+	<table name="relation">
+		<column name="user" param="INT NOT NULL" />
+		<column name="memo" param="INT NOT NULL" />
+		<column name="groups" param="INT NOT NULL" />
+		<column name="UNIQUE" param="(user, memo, groups)" />
+
+		<index name="groups" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Groups to categorize -->
+	<table name="groups">
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="UNIQUE" param="(user, name)" />
+
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Memo entry -->
+	<table name="memo">
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="UNIQUE" param="(user, name)" />
+
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Content revision -->
+	<table name="revision">
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
+		<column name="memo" param="INT NOT NULL" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="time" param="DATETIME" />
+		<column name="content" param="TEXT" />
+
+		<index name="user, memo, time" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+</root>

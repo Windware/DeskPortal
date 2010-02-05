@@ -28,8 +28,8 @@
 			return false; #Drop the connection if the size exceeds
 		}
 
-		public static function http(&$system, $request) #Make multiple remote HTTP requests in parallel
-		{ #TODO - HTTP authorization is not implemented as of now
+		public static function http(&$system, $request) #Make multiple remote HTTP requests in parallel (TODO - HTTP authentication is not implemented as of now)
+		{
 			$log = $system->log(__METHOD__);
 			if(!is_array($request)) return $log->param();
 
@@ -46,10 +46,10 @@
 			CURLOPT_HEADER => true, #Include HTTP headers in the response too
 			CURLOPT_CONNECTTIMEOUT => $conf['net_timeout'], #Set the network timeout
 			CURLOPT_DNS_CACHE_TIMEOUT => self::$_cache, #Set the valid duration of DNS caches
-			URLOPT_SSL_VERIFYPEER => false, #Do not mind the SSL certificate's validity
+			CURLOPT_SSL_VERIFYPEER => false, #Do not mind the SSL certificate's validity
 			CURLOPT_MAXREDIRS => self::$_redirection, #Amount of max redirects allowed
-			CURLOPT_ENCODING => '', #Allow content compression on transfer
-			CURLOPT_USERAGENT => $conf['net_agent']); #The user agent string to send
+			CURLOPT_ENCODING => '', #Allow content compression on transfer (Empty string will support 'identity', 'deflate' and 'gzip')
+			CURLOPT_USERAGENT => str_replace('%VERSION%', str_replace('_', '.', $system->system['version']), $conf['net_agent'])); #The user agent string to send
 
 			foreach($request as $info) #For all of the page requests
 			{

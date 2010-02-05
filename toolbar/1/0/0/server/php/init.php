@@ -60,11 +60,25 @@
 
 			$database = $system->database('user', __METHOD__, $user);
 
-			if($mode) $query = $database->prepare("REPLACE INTO {$database->prefix}display (user, id) VALUES (:user, :id)");
-			else $query = $database->prepare("DELETE FROM {$database->prefix}display WHERE user = :user AND id = :id");
+			if($mode)
+			{
+				$query = $database->prepare("REPLACE INTO {$database->prefix}display (user, id) VALUES (:user, :id)");
+				$query->run(array(':user' => $user->id, ':id' => $index));
 
+				return $query->success;
+			}
+
+			if(!$database->begin()) return false;
+
+			$query = $database->prepare("DELETE FROM {$database->prefix}selection WHERE user = :user AND bar = :bar");
+			$query->run(array(':user' => $user->id, ':bar' => $index));
+
+			if(!$query->success) return $database->rollback() && false;
+
+			$query = $database->prepare("DELETE FROM {$database->prefix}display WHERE user = :user AND id = :id");
 			$query->run(array(':user' => $user->id, ':id' => $index));
-			return $query->success;
+
+			return $query->success && $database->commit() || $database->rollback() && false;
 		}
 	}
 ?>

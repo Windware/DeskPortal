@@ -3,5 +3,5 @@
 	border = '333333';
 	hover = 'ffffff';
 
-	width = 600;
+	width = 800;
 	height = 200;

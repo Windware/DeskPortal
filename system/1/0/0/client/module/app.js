@@ -19,7 +19,8 @@
 
 		this.callback = function(source, callback) //Run a callback function safely
 		{
-			if(!$system.is.text(source) || typeof callback != 'function') return false;
+			if(!$system.is.text(source)) return false;
+			if(typeof callback != 'function') return true;
 
 			try { return callback(); }
 

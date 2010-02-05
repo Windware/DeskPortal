@@ -46,8 +46,8 @@
 
 					if($database->success)
 					{
-						$query = $database->prepare("SELECT value FROM {$database->prefix}conf WHERE user = :user AND app = :app AND key = :key");
-						$query->run(array(':user' => $user->id, ':app' => 'system_static', ':key' => 'language'));
+						$query = $database->prepare("SELECT value FROM {$database->prefix}conf WHERE user = :user AND app = :app AND name = :name");
+						$query->run(array(':user' => $user->id, ':app' => 'system_static', ':name' => 'language'));
 
 						if($query->success && $system->is_language($choice = $query->column())) array_push($order, $choice);
 					}

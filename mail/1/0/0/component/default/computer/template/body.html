@@ -6,7 +6,10 @@
 
 		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>]
 
-		[<span%tip:page% style="cursor : help"><strong>%string:page%</strong> : <span id="%id%_paging"><select id="%id%_show"><option value="1">1</option></select></span></span>]
+		[<span%tip:page% style="cursor : help">
+			<strong>%string:page%</strong> :
+			<select id="%id%_show" onchange="%top%.%id%.gui.flip(this.value)"><option value="1">1</option></select>
+		</span>]
 
 		[<strong>%string:filter%</strong> :
 		<label for="%id%_marked"%tip:marked%>

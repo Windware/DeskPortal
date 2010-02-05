@@ -16,8 +16,8 @@
 			if(!$user->valid) return false;
 
 			$name = explode('_', __CLASS__);
-			$database = $system->database('user', __METHOD__, $user, strtolower($name[5]), $name[6]);
 
+			$database = $system->database('user', __METHOD__, $user, strtolower($name[5]), $name[6]);
 			if(!$database->success) return false;
 
 			$sql = array(); #List of queries to make
@@ -50,8 +50,8 @@
 
 			foreach(array_keys($list) as $index => $id)
 			{
-				$param[] = ":id{$index}_index";
-				$value[":id{$index}_index"] = $id;
+				$param[] = ":i{$index}d";
+				$value[":i{$index}d"] = $id;
 			}
 
 			$paging = Search_1_0_0_Item::limit($limit, $page); #Result limit

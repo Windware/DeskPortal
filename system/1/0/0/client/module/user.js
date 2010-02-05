@@ -63,7 +63,7 @@
 					var value = $system.dom.attribute(list[j], 'value');
 					if($system.is.digit(value)) value = Number(value); //Use a real number instead
 
-					node[id][$system.dom.attribute(list[j], 'key')] = value; //Set the application preference value
+					node[id][$system.dom.attribute(list[j], 'name')] = value; //Set the application preference value
 				}
 			}
 		}

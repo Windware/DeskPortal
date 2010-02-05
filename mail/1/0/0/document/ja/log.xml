@@ -23,6 +23,10 @@
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
+	<string name="user/folder/get" value="'%%'の'%%'に新着があります。" />
+
+	<string name="user/folder/empty/title" value="メール削除エラー" />
+	<string name="user/folder/empty/message" value="ごみ箱を空にする際にエラーが発生しました。時間をおいて再度試してください。" />
 
 	<!-- gui.js -->
 	<string name="user/gui/search" value="検索語は%%文字以上、%%文字以下でなければいけません。" />
@@ -46,6 +50,9 @@
 	<string name="user/gui/send/draft" value="メールを保存しました" />
 	<string name="user/gui/send/draft/message" value="メールを下書きフォルダーに保存しました" />
 
+	<string name="user/gui/send/field" value="無効な入力があります" />
+	<string name="user/gui/send/field/message" value="無効な値を修正してください" />
+
 	<!-- item.js -->
 	<string name="user/show/error" value="メールの表示に失敗しました" />
 	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />
@@ -56,4 +63,7 @@
 
 	<string name="user/item/mark" value="メールのマークを変更しました" />
 	<string name="user/item/mark/error" value="メールのマークの変更に失敗しました" />
+
+	<string name="user/item/show" value="メール検索失敗" />
+	<string name="user/item/show/error" value="メールが見つかりませんでした" />
 </root>

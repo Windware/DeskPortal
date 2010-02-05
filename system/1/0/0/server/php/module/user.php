@@ -46,7 +46,7 @@
 				if($conf['system_demo']) #For demo mode
 				{
 					$query = $database->prepare("SELECT id, invalid, name FROM {$database->prefix}user WHERE name = :name");
-					$parameters = array(':name' => $_COOKIE['name']);
+					$parameters = array(':name' => $_COOKIE['name']); #Only check the user name to allow multiple client accesses
 				}
 				else
 				{
@@ -218,7 +218,7 @@
 			if(!$this->valid) return -1; #If the user is invalid, quit
 
 			foreach($this->conf('conf', array('system_static')) as $conf) #Set a very long expire date when auto logout is turned off
-				if($conf['key'] == 'logout' && $system->is_digit($conf['value'])) $period = $conf['value'] == 0 ? 365 * 24 * 60 : $conf['value'];
+				if($conf['name'] == 'logout' && $system->is_digit($conf['value'])) $period = $conf['value'] == 0 ? 365 * 24 * 60 : $conf['value'];
 
 			if(!$period) $period = self::$_last; #If never set, use the default auto logout value
 			$period = time() + $period * 60; #Turn into expiration time
@@ -231,7 +231,7 @@
 			$system = $this->_system;
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_text($section) || !is_array($data) || $id !== null && !$system->is_id($id)) return $log->param();
+			if(!$system->is_text($section) || !is_array($data) || $id !== null && !$system->is_text($id)) return $log->param();
 			if(!$this->valid || !count($data)) return false;
 
 			$database = $system->database('user', __METHOD__, $this, 'system', 'static'); #Load the database
@@ -243,13 +243,13 @@
 			{
 				case 'conf' : case 'window' : #Update the window information
 					if(!$database->begin()) return false;
-					$query = $database->prepare("REPLACE INTO {$database->prefix}$section (user, app, key, value) VALUES (:user, :app, :key, :value)");
+					$query = $database->prepare("REPLACE INTO {$database->prefix}$section (user, app, name, value) VALUES (:user, :app, :name, :value)");
 
 					foreach($data as $key => $value)
 					{
 						if(!$system->is_text($key)) continue;
 
-						$query->run(array(':user' => $this->id, ':app' => $id, ':key' => $key, ':value' => $value));
+						$query->run(array(':user' => $this->id, ':app' => $id, ':name' => $key, ':value' => $value));
 						if(!$query->success) return $database->rollback() && false;
 					}
 

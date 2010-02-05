@@ -44,7 +44,7 @@
 
 				if(app[1] != major) continue; //If the reported version differs from the currently chosen version, drop
 
-				var list = result[i].childNodes //Get the hit result information
+				var list = result[i].childNodes; //Get the hit result information
 				var id = app[0] + '_' + used; //The application ID to load
 
 				if(update) var pack = $system.node.id($id + '_section_' + name); //On partial updating
@@ -72,12 +72,19 @@
 					}
 
 					var text = $system.text.escape($system.dom.attribute(list[j], 'text')); //The reference text
-					var date = $system.date.create($system.dom.attribute(list[j], 'date'));
 
-					if(date.valid) text += $system.text.format(' <span class="%%_%%">(%%)</span>', [$id, 'date', date.format($global.user.pref.format.date)]);
+					var date = $system.date.create($system.dom.attribute(list[j], 'date'));
+					if(date.valid) text += $system.text.format(' <a class="%%_%%">(%%)</a>', [$id, 'date', date.format($global.user.pref.format.date)]);
 
 					var bullet = document.createElement('li');
 					var link = document.createElement('a');
+
+					switch(name) //App specific display
+					{
+						case 'mail_1' : //Put the sender address in the link's tip
+							$system.tip.set(link, $system.info.id, 'blank', [language.from + ' : ' + (extras.user ? extras.user + ' (' + extras.from + ')' : extras.from)]);
+						break;
+					}
 
 					link.innerHTML = text;
 					link.onclick = $system.app.method($self.display.load, [app[0], major, list[j].nodeName, extras]);

@@ -147,7 +147,7 @@
 				if($adapter == 'sqlite' && !is_dir(dirname($database))) mkdir(dirname($database), 0777, true); #Try to create the directory for sqlite
 			}
 
-			$this->prefix = "{$conf["db_{$type}_prefix"]}{$app}_{$version}_"; #Set table prefix
+			$this->prefix = "{$conf["db_{$type}_prefix"]}{$type}_{$app}_{$version}_"; #Set table prefix
 
 			#Set up the PDO string. Since the format may vary from use to use, it is set placed configuration folder
 			$setting = 'system/static/conf/database/database.php';

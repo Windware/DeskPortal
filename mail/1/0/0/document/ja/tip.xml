@@ -15,6 +15,7 @@
 	<string name="unread" value="チェックすると未読のメールのみを表示するようになります" />
 	<string name="search" value="メールの題名、送信者・受信者のアドレスまたは名前から検索できます" />
 	<string name="page" value="現在のフォルダーの表示しているページを変更します" />
+	<string name="empty" value="クリックするとごみ箱を空にします" />
 
 	<string name="sort/check" value="クリックするとメール一覧を選択・解除します" />
 	<string name="sort/subject" value="クリックすると題名順に並び替えられます" />

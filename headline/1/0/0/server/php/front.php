@@ -80,7 +80,7 @@
 		break;
 
 		case 'gui.view' : #Mark the entry as read
-			$result = Headline_1_0_0_Entry::set(false, $_POST['id'], 'read', $_POST['mode']);
+			$result = Headline_1_0_0_Entry::set(false, $_POST['id'], 'seen', $_POST['mode']);
 			print $system->xml_dump($result);
 		break;
 	}

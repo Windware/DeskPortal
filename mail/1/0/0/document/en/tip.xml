@@ -15,6 +15,7 @@
 	<string name="unread" value="Select this option to display only unread mails" />
 	<string name="search" value="Enter a phrase to search from subject, sender/recipient address or name" />
 	<string name="page" value="Change the displaying page for the currently selected folder" />
+	<string name="empty" value="Click here to empty trash" />
 
 	<string name="sort/check" value="Click here to select or unselect all mails in the list" />
 	<string name="sort/subject" value="Click here to sort by subject" />

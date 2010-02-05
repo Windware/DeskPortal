@@ -10,15 +10,13 @@
 		$system.event.add(document.body, 'onclick', $system.tip.clear);
 		$system.event.add(document.body, 'onclick', $system.user.active);
 
-		//TODO - For next version
-		/*$system.event.add(document.body, 'onmousedown', $system.gui.clean); //Let go of the contextual menu
+		/*$system.event.add(document.body, 'onmousedown', $system.gui.clean); //Let go of the contextual menu : TODO - For next version
 
-		//Register right click events for custom menu and disable original menu (Opera 9/10 is impossible to do so)
-		//TODO - Possibly using $system.add.event is better (if menu can be suppressed)
+		//Register right click events for custom menu and disable original menu (Opera 9/10 is impossible to do so) : TODO - Possibly using $system.add.event is better (if menu can be suppressed)
 		if($system.browser.engine != 'presto') document.body.oncontextmenu = $system.app.method($system.gui.menu, [undefined]);
 		else //For opera, use 'shift + click' instead
 		{
-			//These will capture every keystroke...
+			//TODO : These will capture every keystroke
 			document.body.onkeydown = $system.app.method($system.gui.menu, [true]); //Remember about key press
 			document.body.onkeyup = $system.app.method($system.gui.menu, [false]); //Forget about key press
 

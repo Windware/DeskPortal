@@ -68,7 +68,7 @@
 			$values[':title'] = $title;
 			$values[':content'] = $content;
 
-			$columns = $keys = $update = ''; #Additional data to insert into the table
+			$columns = $keys = $update = null; #Additional data to insert into the table
 
 			if($system->is_digit($category))
 			{
@@ -79,11 +79,8 @@
 				$values[':category'] = $category;
 			}
 
-			if(!preg_match('/^\d{1,2}:\d{1,2}$/', $start)) $start = '';
-			if(!preg_match('/^\d{1,2}:\d{1,2}$/', $end)) $end = '';
-
-			$values[':start'] = $start;
-			$values[':end'] = $end;
+			$values[':start'] = preg_match('/^\d{1,2}:\d{1,2}$/', $start) ? "$day $start:00" : null;
+			$values[':end'] = preg_match('/^\d{1,2}:\d{1,2}$/', $end) ? "$day $end:00" : null;
 
 			if($query->column()) #If the record already exists, update the fields
 			{

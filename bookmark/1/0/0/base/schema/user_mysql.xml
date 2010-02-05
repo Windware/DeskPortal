@@ -1,0 +1,47 @@
+<root>
+	<!-- Bookmarks -->
+	<table name="bookmark">
+		<column name="user" param="INT NOT NULL" />
+		<column name="id" param="INT NOT NULL" />
+		<column name="added" param="DATETIME" />
+		<column name="viewed" param="INT DEFAULT 0" />
+		<column name="name" param="VARCHAR(255)" />
+		<column name="rate" param="INT" />
+
+		<column name="UNIQUE" param="(user, id)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Categories -->
+	<table name="category">
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
+		<column name="user" param="INT NOT NULL" />
+		<column name="name" param="VARCHAR(255)" />
+
+		<column name="UNIQUE" param="(user, name)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Bookmarks and categories relation -->
+	<table name="relation">
+		<column name="user" param="INT NOT NULL" />
+		<column name="bookmark" param="INT NOT NULL" />
+		<column name="category" param="INT NOT NULL" />
+
+		<column name="UNIQUE" param="(user, bookmark, category)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Page cache for a bookmark -->
+	<table name="cache">
+		<column name="user" param="INT NOT NULL" />
+		<column name="bookmark" param="INT NOT NULL" />
+		<column name="file" param="VARCHAR(255)" />
+		<column name="time" param="DATETIME NOT NULL" />
+		<column name="type" param="VARCHAR(255)" />
+		<column name="content" param="BLOB" />
+
+		<column name="UNIQUE" param="(user, bookmark, file)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+</root>

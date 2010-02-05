@@ -9,15 +9,15 @@
 			return attribute && typeof attribute.nodeValue == 'string' ? attribute.nodeValue : ''; //Return the value
 		}
 
-		this.status = function(xml, key) //Return the status string returned from server
+		this.status = function(xml, key) //Return the status string returned from server (NOTE : Returning 'null' instead of 'false', since "false == '0'" is 'true')
 		{
-			if(!$system.is.object(xml)) return false;
+			if(!$system.is.object(xml)) return null;
 			var states = $system.dom.tags(xml, 'status'); //Check the value on the specified key
 
 			if(key === undefined) return $system.dom.attribute(states[0], 'value');
-			for(var i = 0; i < states.length; i++) if($system.dom.attribute(states[i], 'key') == key) return $system.dom.attribute(states[i], 'value');
+			for(var i = 0; i < states.length; i++) if($system.dom.attribute(states[i], 'name') == key) return $system.dom.attribute(states[i], 'value');
 
-			return false;
+			return null;
 		}
 
 		this.tags = function(dom, tag) //Returns list of nodes by name

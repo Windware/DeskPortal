@@ -3,11 +3,11 @@
 	{
 		protected static $_attributes = 'style [a-z]?link bgcolor color size face background class id on[a-z]+'; #List of HTML attributes separated by space to remove from textual cache
 
-		protected static $_max = 200; #Max size in KB to be allowed as a page cache (Without external files and before tag stripping and compressing)
-
 		protected static $_solo = 'base img link'; #HTML elements to remove for solo tags (Workaround on PHP 5.2.6 bug that returns empty string on preg_replace)
 
-		protected static $_surround = 'script style noscript map object embed iframe'; #List of HTML elements to remove from cache (For surrounding tags)
+		protected static $_surround = 'script style noscript map object embed iframe option select source video'; #List of HTML elements to remove from cache (For surrounding tags)
+
+		public static $_max = 200; #Max size in KB to be allowed as a page cache (Without external files and before tag stripping and compressing)
 
 		public static function add($id, System_1_0_0_User $user = null) #Create a cache of a bookmark
 		{

@@ -23,7 +23,7 @@
 			$xml = '';
 
 			if($system->is_text($name) && is_array($list)) foreach($list as $row) $xml .= $system->xml_node($name, $row, null, $exclude);
-			return $system->xml_send(!!$status, $xml, null, !!$compress);
+			return $system->xml_send($status, $xml, null, !!$compress);
 		}
 
 		public static function header(&$system, $declare = true) #Return the XML header and send xml content type header
@@ -111,7 +111,7 @@
 
 		public static function status(&$system, $value, $key = null) #Create a simple status XML entries
 		{ #TODO - Escape the strings for XML or forbid bad characters
-			$key = $system->is_text($key) ? " key=\"$key\"" : ''; #Add the key entry if specified
+			$key = $system->is_text($key) ? " name=\"$key\"" : ''; #Add the key entry if specified
 			return "\t<status$key value=\"$value\" />\n"; #Return the crafted XML piece
 		}
 	}

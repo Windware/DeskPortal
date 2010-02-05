@@ -1,6 +1,6 @@
 
 	window = '88aa88';
-	hover = '777777';
+	hover = '556677';
 
 	center = true;
 	up = true;

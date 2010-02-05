@@ -34,7 +34,8 @@
 
 		this.escape = function(text) //Escapes the HTML sensitive characters
 		{
-			return $system.text.replace(text, $system.array.list('& " \' < >'), $system.array.list('&amp; &quot; &#039; &lt; &gt;'));
+			text = text.replace(/&(?!(#?\w+;))/g, '&amp;'); //Do not over escape the entities
+			return $system.text.replace(text, $system.array.list('" \' < >'), $system.array.list('&quot; &#039; &lt; &gt;'));
 		}
 
 		this.format = function(template, target, escape) //Returns a string from a preformatted string by associating variables to it

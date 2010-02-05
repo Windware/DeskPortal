@@ -51,7 +51,7 @@
 					continue;
 				}
 
-				$search = new $class($phrase, self::$_limit, $page, $user); #Initialize the search class with the given phrase
+				$search = new $class($phrase, self::$_limit, $page, $user); #Initialize the search class with the given phrase (TODO - Cache the result for 5 minutes)
 				if(!count($search->result)) continue; #If none found, drop it
 
 				$nodes = array(); #Result fragments

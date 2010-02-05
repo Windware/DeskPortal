@@ -55,7 +55,12 @@
 			$value = array(':user' => $user->id);
 
 			$field = explode(' ', 'name sex age birth_year birth_month birth_day mail_main mail_mobile mail_alt phone mobile web address note groups updated');
-			foreach($field as $section) $value[":$section"] = $param[$section];
+
+			foreach($field as $section)
+			{
+				if(!strlen($param[$section])) $param[$section] = null; #Make sure the data field will be 'null' for empty parameters
+				$value[":$section"] = $param[$section];
+			}
 
 			if($value[':groups'] == '') $value[':groups'] = 0; #Give '0' for uncategorized group
 			$value[':updated'] = $system->date_datetime(); #Set the update time

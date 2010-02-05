@@ -47,36 +47,48 @@
 			$database = $system->database('system', __METHOD__);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT id FROM {$database->prefix}address WHERE address = :address");
-
+			$query = $database->prepare("SELECT id, title FROM {$database->prefix}address WHERE address = :address");
 			$query->run(array(':address' => $address));
-			if(!$query->success) return false;
 
-			if(!$system->is_digit($id = $query->column())) #If not registered in the system address list
+			if(!$query->success) return false;
+			$row = $query->row();
+
+			if(!count($row)) #If not registered in the system address list
 			{
-				$query = $database->prepare("INSERT INTO {$database->prefix}address (address) VALUES (:address)");
-				$query->run(array(':address' => $address)); #Add it
+				#Get the type of the resource with a 'HEAD" request first
+				$request = $system->network_http(array(array('address' => $address, 'method' => 'HEAD', 'max' => Bookmark_1_0_0_Cache::$_max * 1000)));
+
+				if(preg_match('|^text/html\b|', $request[0]['header']['content-type'])) #If HTML, get the title of the page
+				{
+					$request = $system->network_http(array(array('address' => $address, 'max' => Bookmark_1_0_0_Cache::$_max * 1000)));
+
+					preg_match('|<\s*title[^>]*>([^<]+)<\s*/\s*title\s*>|i', $request[0]['body'], $match); #Find out the title of the page
+					$title = trim($match[1]);
+				}
+
+				$query = $database->prepare("INSERT INTO {$database->prefix}address (address, title) VALUES (:address, :title)");
+				$query->run(array(':address' => $address, ':title' => $title)); #Add it
 
 				if(!$query->success) return false;
-				$id = $database->id(); #Get the inserted ID for the address field
+				$row = array('id' => $database->id(), 'title' => $title); #Get the inserted ID for the address field
 			}
 
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
 			$query = $database->prepare("SELECT COUNT(id) FROM {$database->prefix}bookmark WHERE user = :user AND id = :id");
-			$query->run(array(':user' => $user->id, ':id' => $id));
+			$query->run(array(':user' => $user->id, ':id' => $row['id']));
 
 			if(!$query->success) return false;
 
 			if(!$query->column()) #If not registered in the user's bookmark list, add it
 			{
-				$query = $database->prepare("INSERT INTO {$database->prefix}bookmark (user, id, added) VALUES (:user, :id, :added)");
-				$query->run(array(':user' => $user->id, ':id' => $id, ':added' => $system->date_datetime()));
+				$query = $database->prepare("INSERT INTO {$database->prefix}bookmark (user, id, added, name) VALUES (:user, :id, :added, :name)");
+				$query->run(array(':user' => $user->id, ':id' => $row['id'], ':added' => $system->date_datetime(), ':name' => $row['title']));
 			}
 
-			self::_count($user, $id); #Update the reference counter
-			return $query->success ? $id : false;
+			self::_count($user, $row['id']); #Update the reference counter
+			return $query->success ? $row['id'] : false;
 		}
 
 		public static function get($cat = array(), System_1_0_0_User $user = null) #List bookmarks
@@ -163,7 +175,7 @@
 
 				$info['cache'] = $cache->column(); #Add the time the cache was acquired
 
-				foreach(explode(' ', 'added name viewed') as $section) $info[$section] = $row[$section];
+				foreach(array('added', 'name', 'viewed') as $section) $info[$section] = $row[$section];
 				$list[$info['address']] = $info;
 			}
 

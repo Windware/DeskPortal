@@ -3,27 +3,26 @@
 	{ #TODO : Include PEAR packages as local files to avoid code change and to minimize external dep - Auth_SASL, Net_POP3, Net_SMTP, Mail, Mail_mime
 		protected static $_attachment = 50; #Maximum megabytes allowed to be sent as an entire mail
 
-		protected static $_flag = array('deleted' => 'Deleted', 'read' => 'Seen', 'marked' => 'Flagged', 'replied' => 'Answered', 'draft' => 'Draft'); #Table column names and corresponding IMAP flags
+		protected static $_flag = array('deleted' => 'Deleted', 'seen' => 'Seen', 'marked' => 'Flagged', 'replied' => 'Answered', 'draft' => 'Draft'); #Table column names and corresponding IMAP flags
 
 		protected static $_max = 200; #Max kilobytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger.
 
 		protected static $_page = 50; #Default number of mails to display per page
 
-		#Amount of max (bytes, lines) of a message body preview to be sent with the list of mails
-		#Any message bodies that are larger will be truncated to the size and lines for previews
+		#Amount of max (bytes, lines) of a message body preview to be sent with the list of mails. Any message bodies that are larger will be truncated to the size and lines for previews
 		protected static $_preview = array(500, 5);
 
 		protected static $_storage = array('drafts' => 'Drafts', 'sent' => 'Sent'); #Generic name for draft and sent special folders
 
 		protected static $_type = array('text', 'multipart', 'message', 'application', 'audio', 'image', 'video', 'other'); #Mime categories (Order is important)
 
-		private static $_pop3 = array(); #POP3 mail listing cache
+		private static $_connection = array(); #POP3 connection cache for manual connection instead of using 'imap_' functions
 
 		private static $_structure; #Mime structure for each mails
 
 		public static $_limit = 500; #Max number of place holders possible in database queries
 
-		protected static function _dig($parts, $position = '') #Dig the multi part message
+		protected static function _dig($parts, $position = '') #Dig through the multi part message
 		{
 			if(!is_array($parts)) return false;
 
@@ -32,7 +31,7 @@
 
 			foreach($parts as $index => $section) #Pick the position in the structure
 			{
-				$name = null; #Attachment file names - NOTE : Decoding rule referred to RFC2231
+				$name = null; #Attachment file names - NOTE : Decoding rule from RFC2231
 
 				if(is_array($section->dparameters)) #If attachment parameters are present
 				{
@@ -57,7 +56,24 @@
 			}
 		}
 
-		public static function attachment($id, $mode = 'attachment') #Get and send the attachment back
+		public static function _pop3(&$system, $host, $port, $secure, $name, $pass, $user) #Connect to a POP3 server
+		{
+			if(isset(self::$_connection[$user->id]["$host:$port"])) return self::$_connection["$host:$port"];
+
+			self::$_connection[$user->id]["$host:$port"] = false;
+			if(!$system->file_load('Auth/SASL.php') || !$system->file_load('Net/POP3.php')) return false;
+
+			$secure = $secure ? 'ssl://' : ''; #Specify SSL connection if configured so
+			self::$_connection[$user->id]["$host:$port"] =& new Net_POP3();
+
+			$connect = self::$_connection[$user->id]["$host:$port"]->connect($secure.$host, $port); #Connect
+			if($connect !== true) return false;
+
+			$connect = self::$_connection[$user->id]["$host:$port"]->login($name, $pass); #Login
+			return $connect === true ? self::$_connection[$user->id]["$host:$port"] : false;
+		}
+
+		public static function attachment($id, $mode = 'attachment', System_1_0_0_User $user = null) #Get and send the attachment back
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -81,7 +97,7 @@
 
 			if(!$query->success) return false;
 
-			list($link, $sequence) = self::find(array($attachment['mail']));
+			list($link, $sequence) = self::find(array($attachment['mail']), $user);
 			if(!$link || !is_array($sequence)) return false;
 
 			$structure = imap_bodystruct($link['connection'], $sequence[0], $attachment['position']); #Get the attachment information
@@ -149,6 +165,7 @@
 				$param[$value] = $id;
 			}
 
+			if(!count($target)) return false;
 			$target = implode(', ', $target);
 
 			$query = $database->prepare("SELECT id, folder, uid, signature FROM {$database->prefix}mail WHERE id IN ($target) AND user = :user");
@@ -170,12 +187,12 @@
 
 			if(!$query->success) return false;
 
-			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server
+			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server (TODO - Avoid connecting here for POP3)
 			if(!$link) return false;
 
 			$numbers = array(); #Returning sequence numbers
 
-			if(strlen($collection[0]['uid'])) #If UID is available
+			if($link['info']['supported']) #If UID is available
 			{
 				if($link['type'] == 'imap')
 				{
@@ -184,21 +201,13 @@
 				}
 				elseif($link['type'] == 'pop3') #List the unique ID and find the message number for POP3
 				{
-					if($system->file_load('Auth/SASL.php') && $system->file_load('Net/POP3.php'))
-					{
-						if(!isset(self::$_pop3[$user->id][$account])) #Connect if never connected before
-						{
-							$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
-							$pop3 =& new Net_POP3();
+					$connection = Mail_1_0_0_Account::_special($link['info']);
 
-							$connect = $pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port']); #Connect
-							if($connect) $login = $pop3->login($link['info']['receive_user'], $link['info']['receive_pass']); #Login
+					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $connection['receiver']['pass'], $user);
+					if(!$pop3) return false;
 
-							self::$_pop3[$user->id][$account] = $login ? $pop3->getListing() : null; #Get all listing and cache it
-						}
-
-						if(is_array(self::$_pop3[$user->id][$account])) foreach(self::$_pop3[$user->id][$account] as $list) $uid[$list['uidl']] = $list['msg_id'];
-					}
+					if(!is_array($listing = $pop3->getListing())) return false; #Get all listing
+					foreach($listing as $list) $uid[$list['uidl']] = $list['msg_id'];
 				}
 
 				foreach($collection as $identity) if($system->is_digit($uid[$identity['uid']])) $numbers[] = $uid[$identity['uid']];
@@ -253,10 +262,11 @@
 					{
 						if(!$system->is_digit($index)) continue;
 
-						$value = $target[] = ":i{$index}d";
+						$value = $target[] = ":i{$index}d"; #NOTE : Having the place holder as ':id[DIGIT]' confuses in cases like ':id1' and ':id10'
 						$param[$value] = $id;
 					}
 
+					if(!count($target)) continue;
 					$target = implode(', ', $target);
 
 					$query = $database->prepare("UPDATE {$database->prefix}mail SET $set = :mode WHERE id IN ($target) AND user = :user");
@@ -292,6 +302,44 @@
 			return true;
 		}
 
+		public static function folder($id, System_1_0_0_User $user = null) #Get folder and account the mail belongs to (TODO - Allow specifying the sort order)
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($id)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT account.id as account, mail.folder FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account
+			WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
+
+			$query->run(array(':id' => $id, ':user' => $user->id));
+			if(!$query->success) return false;
+
+			$relation = $query->row();
+
+			$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder ORDER BY sent DESC");
+			$query->run(array(':user' => $user->id, ':folder' => $relation['folder'])); #Get entire list of ID to find on which page the mail belongs to
+
+			if(!$query->success) return false;
+
+			foreach($query->all() as $index => $row)
+			{
+				if($row['id'] != $id) continue;
+
+				$position = $index;
+				break;
+			}
+
+			$relation['page'] = floor($position / self::$_page) + 1; #Find on which page the mail belongs to
+			return $relation;
+		}
+
 		public static function get($folder, $page, $order = 'sent', $reverse = true, $marked = false, $unread = false, $search = '', $amount = null, System_1_0_0_User $user = null) #Get list of mails
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -315,8 +363,8 @@
 
 			if($unread)
 			{
-				$filter .= ' AND read = :read';
-				$param[':read'] = 0;
+				$filter .= ' AND seen = :seen';
+				$param[':seen'] = 0;
 			}
 
 			switch($order) #Join the extra table for address sorting
@@ -339,7 +387,7 @@
 				$param[':search'] = '%'.$system->database_escape($search).'%';
 			}
 
-			$order = "LOWER($order)"; #NOTE : Using 'LOWER' for case insensitive sorting to be compatible across database, possibly FIXME for performance
+			$order = "LOWER($order)"; #NOTE : Using 'LOWER' for case insensitive sorting to be compatible across database engines, possibly FIXME for performance
 			if(!$system->is_digit($amount)) $amount = self::$_page; #Set to default amount of mails per page
 
 			$reverse = $reverse ? ' DESC' : '';
@@ -359,15 +407,13 @@
 			$total = $query['count']->column();
 			if(!$total) $total = 0;
 
-			$xml = $system->xml_node('page', array('total' => floor($total / ($amount + 1)) + 1)); #Get the total count
-
-			$query['all'] = $database->prepare("SELECT id, subject, sent, received, preview, draft, marked, read, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
+			$query['all'] = $database->prepare("SELECT id, subject, sent, received, preview, draft, marked, seen, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
 			$query['all']->run($param);
 
 			if(!$query['all']->success) return false;
 
 			$all = $query['all']->all();
-			$target = $param = array();
+			$mail = $target = $param = array();
 
 			foreach($all as $index => $row)
 			{
@@ -375,23 +421,25 @@
 				$param[$value] = $row['id'];
 			}
 
-			$target = implode(', ', $target);
-			$mail = array();
-
-			foreach(array('from', 'to', 'cc', 'bcc') as $section)
+			if(count($target))
 			{
-				$query['address'] = $database->prepare("SELECT mail, name, address FROM {$database->prefix}$section WHERE mail IN ($target)");
-				$query['address']->run($param);
+				$target = implode(', ', $target);
 
-				if(!$query['address']->success) return false;
-				foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
+				foreach(array('from', 'to', 'cc', 'bcc') as $section)
+				{
+					$query['address'] = $database->prepare("SELECT mail, name, address FROM {$database->prefix}$section WHERE mail IN ($target)");
+					$query['address']->run($param);
+
+					if(!$query['address']->success) return false;
+					foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
+				}
+
+				$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
+				$query['attachment']->run($param);
+
+				if(!$query['attachment']->success) return false;
+				foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
 			}
-
-			$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
-			$query['attachment']->run($param);
-
-			if(!$query['attachment']->success) return false;
-			foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
 
 			$list = array();
 
@@ -404,7 +452,7 @@
 				$list[] = $row;
 			}
 
-			return $list;
+			return array('list' => $list, 'page' => floor($total / ($amount + 1)) + 1);
 		}
 
 		public static function image($id, $cid) #Get the embedded image data
@@ -425,7 +473,7 @@
 			$query->run(array(':id' => $id, ':cid' => $cid, ':user' => $user->id));
 
 			if(!$query->success) return false;
-			return self::attachment($query->column(), 'inline');
+			return self::attachment($query->column(), 'inline', $user);
 		}
 
 		public static function move($list, $folder, $copy = false, System_1_0_0_User $user = null) #Move or copy mails to another folder
@@ -462,9 +510,7 @@
 				$current = $query->row(); #Current folder ID
 				if($current['id'] == $folder) return true; #If the target is the same folder, quit
 
-				$supported = $system->is_digit($current['uid']); #If UID is supported or not
-
-				$target = mb_convert_encoding(Mail_1_0_0_Folder::name($folder), 'UTF7-IMAP', 'UTF-8'); #Target folder name
+				$target = mb_convert_encoding(Mail_1_0_0_Folder::name($folder, $user), 'UTF7-IMAP', 'UTF-8'); #Target folder name
 				if(!$system->is_text($target)) return false;
 
 				list($link, $sequence) = self::find($list, $user); #Get the message numbers for the mails
@@ -482,7 +528,7 @@
 					if(!imap_expunge($link['connection'])) return Mail_1_0_0_Account::error($link['host']); #Clean up the mails after move
 
 					#NOTE : Aquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies trying to update the folder parameter only
-					self::remove($list, true); #Remove mails in the source folder
+					self::remove($list, true, $user); #Remove mails in the source folder
 				}
 				else
 				{
@@ -508,6 +554,7 @@
 							$param[$value] = $id;
 						}
 
+						if(!count($target)) continue;
 						$target = implode(', ', $target);
 
 						$query = $database->prepare("UPDATE {$database->prefix}mail SET folder = :folder WHERE id IN ($target) AND user = :user");
@@ -518,7 +565,7 @@
 				}
 				else #On copy
 				{
-					$column = 'user, uid, signature, subject, mid, mail, sent, received, preview, plain, html, encode, marked, read, replied, draft, color';
+					$column = 'user, uid, signature, subject, mid, mail, sent, received, preview, plain, html, encode, marked, seen, replied, draft, color';
 
 					$query = $database->prepare("INSERT INTO {$database->prefix}mail ($column, folder) SELECT ($column, :folder) FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 					$param = array(':folder' => $folder, ':user' => $user->id);
@@ -567,6 +614,7 @@
 					$param[$value] = $id;
 				}
 
+				if(!count($target)) continue;
 				$target = implode(', ', $target);
 
 				foreach(explode(' ', 'from to cc bcc attachment reference') as $section) #Remove related data
@@ -668,7 +716,7 @@
 				'To' => implode(', ', $encoded['to']),
 				'Subject' => mb_encode_mimeheader($subject),
 				'Date' => $sent = gmdate('r'),
-				'Message-ID' => $mid = time().'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']), #Create a unique message ID
+				'Message-ID' => $mid = microtime(true).'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']), #Create a unique message ID
 				'X-Mailer' => $mailer,
 				'Return-Path' => $row['address']
 			);
@@ -702,17 +750,19 @@
 			$type = Mail_1_0_0_Account::type($row['receive_type']);
 
 			#NOTE : Periodical mail checking is assumed to pass 'POP before SMTP' restriction without connecting here for POP3
-			if($type == 'imap') $link = Mail_1_0_0_Account::connect($account, $folder, $user); #Connect for both POP3/IMAP to validate through 'POP3/IMAP before SMTP'
+			if($type == 'imap') $link = Mail_1_0_0_Account::connect($account, $folder, $user);
 
-			if(!$draft) #Do not send on saving the draft
+			if(!$draft) #When sending
 			{
+				$info = Mail_1_0_0_Account::_special($row);
+
 				$connection = array( #SMTP connection parameters - NOTE : TLS is automatically initiated if the mail server supports it
-					'host' => ($row['send_secure'] ? 'ssl://' : '').$row['send_host'],
-					'port' => $row['send_port'],
-					'auth' => strlen($row['send_user']) || strlen($row['send_pass']),
-					'username' => $row['send_user'],
-					'password' => $row['send_pass'],
-					'localhost' => $row['send_host'],
+					'host' => ($info['sender']['secure'] ? 'ssl://' : '').$info['sender']['host'],
+					'port' => $info['sender']['port'],
+					'auth' => strlen($info['sender']['user']) || strlen($info['sender']['pass']),
+					'username' => $info['sender']['user'],
+					'password' => $info['sender']['pass'],
+					'localhost' => $info['sender']['host'],
 					'timeout' => $system->app_conf('system', 'static', 'net_timeout'),
 					'persist' => false
 				);
@@ -727,14 +777,14 @@
 			#
 			#In future versions those store attachments locally, they will be stored as files locally named after the ID of the mail
 			#and 'position' parameter can be left unused in the database.
-			#TODO - IMAP may not need to have attachments saved locally at all at the cost of some descrease in download speed or unavailability in case IMAP server is down.
+			#TODO - IMAP may not need to have attachments saved locally at all at the cost of some download speed or unavailability in case IMAP server is down.
 
-			if($system->is_digit($resume)) $a=Mail_1_0_0_Item::remove(array($resume)); #If a draft is being saved from a suspended draft, delete the old one. Not stopping if error occurs here.
+			if($system->is_digit($resume)) Mail_1_0_0_Item::remove(array($resume), false, $user); #If a draft is being saved from a suspended draft, delete the old one. Not stopping if error occurs here.
 
 			if($type == 'pop3') #For POP3, store the mail locally
 			{
 				if(!$database->begin()) return 1;
-				$section = explode(' ', 'user folder subject mid sent preview plain read draft');
+				$section = explode(' ', 'user folder subject mid sent preview plain seen draft');
 
 				$column = implode(', ', $section);
 				$variable = ':'.implode(', :', $section);
@@ -742,10 +792,9 @@
 				try
 				{
 					$query = $database->prepare("INSERT INTO {$database->prefix}mail ($column) VALUES ($variable)");
-					$query->run(array(':user' => $user->id, ':folder' => $folder, ':subject' => $subject, ':mid' => $mid, ':sent' => $sent, ':preview' => $preview, ':plain' => $body, ':read' => 1, ':draft' => $draft ? 1 : 0));
+					$query->run(array(':user' => $user->id, ':folder' => $folder, ':subject' => $subject, ':mid' => $mid, ':sent' => $sent, ':preview' => $preview, ':plain' => $body, ':seen' => 1, ':draft' => $draft ? 1 : 0));
 
-					if(!$query->success) throw new Exception();
-					if(!$system->is_digit($id = $database->id())) throw new Exception();
+					if(!$query->success || !$system->is_digit($id = $database->id())) throw new Exception();
 
 					foreach(array('from', 'to', 'cc', 'bcc') as $section) #Insert all the addresses in the mail
 					{
@@ -810,21 +859,31 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT preference FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the read preference
+			$query = $database->prepare("SELECT folder.id, recent, preference FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
+			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the display preference
 
 			if(!$query->success) return false;
+			$row = $query->row();
 
-			$preference = $query->column();
+			list($preference, $folder, $recent) = array($row['preference'], $row['id'], $row['recent']);
 			if(!in_array($preference, array('plain', 'html'))) $preference = 'plain'; #Fallback to plain text
 
-			$query = $database->prepare("SELECT read, plain, html, subject, encode FROM {$database->prefix}mail WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT seen, plain, html, subject, encode FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the mail body
 
 			if(!$query->success) return false;
-
 			$row = $query->row();
-			if(!$row['read']) self::flag(array($id), 'Seen', true, $user); #Mark as seen if not read
+
+			if(!$row['seen']) #Mark as seen if not read (Not minding errors)
+			{
+				self::flag(array($id), 'Seen', true, $user);
+
+				$query = $database->prepare("UPDATE {$database->prefix}folder SET recent = :recent WHERE id = :id AND user = :user");
+				$query->run(array(':recent' => $recent - 1, ':id' => $folder, ':user' => $user->id)); #Update the amount of unread mails
+
+				$query = $database->prepare("SELECT recent FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+				$query->run(array(':id' => $folder, ':user' => $user->id)); #Update the amount of unread mails
+			}
 
 			if($preference == 'html' && strlen($body = $row['html'])) #If HTML version is available
 			{
@@ -834,7 +893,7 @@
 				header('Content-Length: '.strlen($body));
 				return $body;
 			}
-			else #Send out the plain text version : NOTE - Not making cache since a long expire header will be sent and cache hit ratio will not be high enough to inflate user database
+			else #Send out the plain text version : NOTE - Not making cache files since a long expire header will be sent and cache hit ratio will not be high enough to inflate user database
 			{
 				header('Content-Type: text/html; charset=utf-8');
 
@@ -903,15 +962,7 @@
 			$query = $database->prepare("SELECT plain FROM {$database->prefix}mail WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the mail body
 
-			if(!$query->success) return false;
-
-			$body = $query->column();
-			if($system->compress_header()) $body = gzencode($body); #If gzip compression is allowed, send back compressed
-
-			header('Content-Type: text/html; charset=utf-8');
-			header('Content-Length: '.strlen($body));
-
-			return $body;
+			return $query->success ? $query->column() : false;
 		}
 
 		public static function update($folder, System_1_0_0_User $user = null) #Store any new messages to the local database
@@ -927,7 +978,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT account.id, folder_inbox, receive_type FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
+			$query = $database->prepare("SELECT account.id, folder_inbox, receive_host, receive_port, receive_type FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
 			$query->run(array(':id' => $folder, ':user' => $user->id));
 
 			if(!$query->success) return false;
@@ -942,59 +993,59 @@
 			$content = imap_check($link['connection']);
 			if(!is_object($content)) return Mail_1_0_0_Account::error($link['host']);
 
-			$query = $database->prepare("SELECT uid FROM {$database->prefix}folder as folder, {$database->prefix}mail as mail WHERE folder.user = :user AND folder.account = :account AND folder.id = mail.folder LIMIT 1");
-			$query->run(array(':user' => $user->id, ':account' => $account)); #See if UID is supported
-
-			$supported = !!strlen($query->column()); #If UID can be used to make queries shorter to the mail server : TODO - If the mail server changes its UID capability during use, it will break mail lookup
-
-			$query = $database->prepare("SELECT uid FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
-			$query->run(array(':user' => $user->id, ':folder' => $folder)); #Get list of UID
-
-			if(!$query->success) return false;
-
-			$current = array(); #List of currently existing UID
-			foreach($query->all() as $row) if(strlen($row['uid'])) $current[$row['uid']] = true;
-
-			#Prepare to check for mail's existence
-			$query = array('check' => $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND signature = :signature"));
+			#Mail info insertion query
+			$query = array('insert' => $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, header, signature, subject, mid, sent, draft, seen, preview, plain, html, encode) VALUES (:user, :folder, :uid, :header, :signature, :subject, :mid, :sent, :draft, :seen, :preview, :plain, :html, :encode)"));
 
 			foreach(array('from', 'to', 'cc', 'bcc') as $section) #Query to insert mail addresses
 				$query[$section] = $database->prepare("INSERT INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
 
-			#Mail info insertion query
-			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}mail (user, folder, uid, header, signature, subject, mid, sent, draft, read, preview, plain, html, encode) VALUES (:user, :folder, :uid, :header, :signature, :subject, :mid, :sent, :draft, :read, :preview, :plain, :html, :encode)");
-
 			#Attachment info query
 			$query['attachment'] = $database->prepare("INSERT INTO {$database->prefix}attachment (mail, cid, name, size, type, position) VALUES (:mail, :cid, :name, :size,:type, :position)");
 
+			$current = array(); #List of currently existing UID or signatures
+			$part = $link['info']['supported'] ? 'uid' : 'signature'; #The mail identity to match to find existing mails
+
 			if($link['type'] == 'imap') #For IMAP
 			{
-				#TODO - What does it return when UID is not supported? It may confuse the script that the server supports UID if a list is returned
-				$unique = imap_search($link['connection'], 'ALL', SE_UID); #Get the UID list from the mail server
+				if($link['info']['supported'])
+				{
+					$unique = imap_search($link['connection'], 'ALL', SE_UID); #Get all the list from the mail server
+					array_unshift($unique, null); #Make sure the sequence number starts from 1
+				}
+				else
+				{
+					foreach(self::$_flag as $column => $mark) #Prepare for later manipulation when no UID is available
+						if($column != 'deleted') $query[$column] = $database->prepare("UPDATE {$database->prefix}mail SET $column = :$column WHERE user = :user AND folder = :folder AND signature = :signature");
+				}
 
-				if(!is_array($unique) || !count($unique)) foreach(self::$_flag as $column => $mark) if($column != 'deleted') #Prepare for later manipulation when no UID is available
-					$query[$column] = $database->prepare("UPDATE {$database->prefix}mail SET $column = :$column WHERE user = :user AND folder = :folder AND signature = :signature");
+				$query['exist'] = $database->prepare("SELECT $part FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
+				$query['exist']->run(array(':user' => $user->id, ':folder' => $folder)); #Get list of existing mails' identifiers
 
-				if(is_array($unique)) array_unshift($unique, null); #Make sure the sequence number starts from 1
+				if(!$query['exist']->success) return false;
+				foreach($query['exist']->all() as $row) if(strlen($row[$part])) $current[$row[$part]] = true;
 			}
 			elseif($link['type'] == 'pop3') #NOTE : Get the UID with an alternative method, since 'imap_search' cannot get UID on POP3
 			{
-				if($system->file_load('Auth/SASL.php') && $system->file_load('Net/POP3.php'))
+				#Remember downloaded mails for POP3
+				$query['loaded'] = $database->prepare("REPLACE INTO {$database->prefix}loaded (user, account, uid, signature) VALUES (:user, :account, :uid, :signature)");
+
+				if($link['info']['supported'])
 				{
-					if(!isset(self::$_pop3[$user->id][$account])) #Connect if never connected before
-					{
-						$secure = $link['info']['receive_secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
-						$pop3 =& new Net_POP3();
-
-						$connect = $pop3->connect($secure.$link['info']['receive_host'], $link['info']['receive_port']); #Connect
-						if($connect) $login = $pop3->login($link['info']['receive_user'], $link['info']['receive_pass']); #Login
-
-						self::$_pop3[$user->id][$account] = $login ? $pop3->getListing() : null; #Get all listing and cache it
-					}
-
 					$unique = array(); #Store the unique ID for each message
-					if(is_array(self::$_pop3[$user->id][$account])) foreach(self::$_pop3[$user->id][$account] as $list) $unique[$list['msg_id']] = $list['uidl'];
+					$connection = Mail_1_0_0_Account::_special($link['info']);
+
+					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $connection['receiver']['pass'], $user);
+					if(!$pop3) return false;
+
+					if(!is_array($listing = $pop3->getListing())) return false; #Get all listing
+					foreach($listing as $list) $unique[$list['msg_id']] = $list['uidl'];
 				}
+
+				$query['exist'] = $database->prepare("SELECT $part FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
+				$query['exist']->run(array(':user' => $user->id, ':account' => $account)); #Get list of mail identifiers
+
+				if(!$query['exist']->success) return false;
+				foreach($query['exist']->all() as $row) $current[$row[$part]] = true;
 			}
 
 			$exist = array(); #List of header md5 sum of mails existing in the mail box
@@ -1002,7 +1053,7 @@
 
 			for($sequence = 1; $sequence <= $content->Nmsgs; $sequence++) #For all of the messages found in the mail box
 			{
-				if($current[$unique[$sequence]]) #If the given UID is already stored in the database
+				if($link['info']['supported'] && $current[$unique[$sequence]]) #If the given UID is already stored in the database
 				{
 					unset($current[$unique[$sequence]]); #Filter out existing mails to find the list of non existing mails on the server
 					continue; #If already stored, move on
@@ -1035,7 +1086,7 @@
 						{
 							case 'date' : $store = ':sent'; break;
 
-							case 'unseen' : $store = ':read'; break;
+							case 'unseen' : $store = ':seen'; break;
 
 							case 'message_id' : $store = ':mid'; break;
 
@@ -1054,7 +1105,7 @@
 
 							case 'draft' : $attributes[$store] = $value == 'X' ? 1 : 0; break; #Draft entries
 
-							case 'unseen' : $attributes[$store] = $value == 'U' ? 0 : 1; break; #Unread entries
+							case 'unseen' : $attributes[$store] = $link['type'] == 'pop3' || $value == 'U' ? 0 : 1; break; #Unread entries (Make it unread for all mails under POP3)
 						}
 					}
 					else #Array parameters are list of addresses
@@ -1070,17 +1121,17 @@
 					}
 				}
 
-				if(!$supported) #If no UID support
+				if(!$link['info']['supported']) #If no UID support
 				{
 					$exist[] = $attributes[':signature']; #Keep remembering the header signatures
 
-					$query['check']->run(array(':user' => $user->id, ':folder' => $folder, ':signature' => $attributes[':signature']));
-					if(!$query['check']->success) return false; #Quit the entire function if it fails
-
-					if($query['check']->column()) #Check mail existance by header signature
+					if($current[$attributes[':signature']]) #Check mail existance by header signature
 					{
-						foreach(self::$_flag as $column => $mark) if($query[$column]) #Flag the states
-							$query[$column]->run(array(":$column" => $attributes[':'.strtolower($mark)] ? 0 : 1, ':user' => $user->id, ':folder' => $folder, ':signature' => $attributes[':signature']));
+						if($link['type'] == 'imap')
+						{
+							foreach(self::$_flag as $column => $mark) if($query[$column]) #Flag the states
+								$query[$column]->run(array(":$column" => $attributes[':'.strtolower($mark)] ? 0 : 1, ':user' => $user->id, ':folder' => $folder, ':signature' => $attributes[':signature']));
+						}
 
 						continue; #Check for the next message (TODO - This avoids having duplicate messages in the mailbox, even possibly with different body)
 					}
@@ -1142,7 +1193,8 @@
 						if($type == 'plain') $body[$type] = mb_convert_encoding($body[$type], 'utf-8', $encoding); #Convert to UTF8 if it isn't
 						else #Keep the encoding as is for HTML version
 						{
-							switch($encoding) #Determine the character set - TODO : Code is language biased and possibly inaccurate for '-win' variants
+							#List of detectable character sets : http://www.php.net/manual/en/function.mb-detect-order.php
+							switch($encoding) #Determine the character set (TODO : Are '-win' variants valid to be treated same?)
 							{
 								case 'ASCII' : $attributes[':encode'] = 'us-ascii'; break;
 
@@ -1211,6 +1263,12 @@
 				$id = $database->id(); #Generated ID for the mail in the database
 				if($id === false) return $database->rollback() && false;
 
+				if($link['type'] == 'pop3') #For POP3
+				{
+					$query['loaded']->run(array(':user' => $user->id, ':account' => $account, ':uid' => $attributes[':uid'], ':signature' => $attributes[':signature'])); #Remember the downloaded mail
+					if(!$query['loaded']->success) return $database->rollback() && false;
+				}
+
 				foreach(array('from', 'to', 'cc', 'bcc') as $section) #Insert the addresses
 				{
 					if(!is_array($addresses[$section])) continue;
@@ -1228,9 +1286,9 @@
 				if(!$database->commit()) return $database->rollback() && false;
 			}
 
-			if($supported) #If UID is available
+			if($link['type'] == 'imap') #On IMAP, do a batch update of mail flags and deletion
 			{
-				if($link['type'] == 'imap') #On IMAP, do a batch update of mail flags
+				if($link['info']['supported']) #If UID is available
 				{
 					$state = $set = array();
 
@@ -1240,12 +1298,13 @@
 						if(is_array($list)) foreach($list as $id) $state[$column][$id] = true; #Create lookup hash
 					}
 
-					$query['flag'] = $database->prepare("SELECT id, uid, marked, read, replied FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
+					$query['flag'] = $database->prepare("SELECT id, uid, marked, seen, replied FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
 					$query['flag']->run(array(':user' => $user->id, ':folder' => $folder)); #Select all messages in the folder
 
 					if(!$query['flag']->success) return false;
+					$a=$query['flag']->all();
 
-					foreach($query['flag']->all() as $row)
+					foreach($a as $row)
 					{
 						foreach(self::$_flag as $column => $mark) #Prepare the difference for update
 						{
@@ -1271,6 +1330,7 @@
 									$param[$value] = $id;
 								}
 
+								if(!count($target)) continue;
 								$target = implode(', ', $target);
 
 								$update = $database->prepare("UPDATE {$database->prefix}mail SET $column = :$column WHERE user = :user AND folder = :folder AND id IN ($target)");
@@ -1280,48 +1340,88 @@
 							}
 						}
 					}
+
+					foreach($current as $key => $value) if(strlen($key)) $exist[] = $key; #List of UID not existing on the server anymore
 				}
-
-				foreach($current as $key => $value) if(strlen($key)) $exist[] = $key; #List of UID not existing on the server anymore
-			}
-			elseif(!count($exist)) #If no mail is on the server for this folder
-			{
-				$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
-				$query->run(array(':user' => $user->id, ':folder' => $folder)); #Pick all mails in the folder
-
-				if(!$query->success) return false;
-				$target = array();
-
-				foreach($query->all() as $row) $target[] = $row['id'];
-				self::remove($target, true, $user); #Remove all the mails in this folder
-			}
-
-			if(count($exist)) #If mails should be deleted
-			{
-				for($i = 0; $i < count($exist); $i += self::$_limit) #Split by maximum possible place holder number
+				elseif(!count($exist)) #If no mail is on the server for this folder
 				{
-					$target = array();
-					$param = array(':user' => $user->id, ':folder' => $folder);
-
-					foreach(array_slice($exist, $i, self::$_limit) as $index => $id)
-					{
-						$value = $target[] = ":i{$index}d";
-						$param[$value] = $exist[$index];
-					}
-
-					$target = implode(', ', $target); #Concatenate the identifiers
-
-					#Match on UID for deletion that was not found on the mail server. Otherwise, go through the header hashes for deletion
-					$sql = $supported ? "uid IN ($target)" : "signature NOT IN ($target)";
-
-					$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND $sql");
-					$query->run($param); #Pick non existing mails
+					$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
+					$query->run(array(':user' => $user->id, ':folder' => $folder)); #Pick all mails in the folder
 
 					if(!$query->success) return false;
 					$target = array();
 
 					foreach($query->all() as $row) $target[] = $row['id'];
-					self::remove($target, true, $user); #Remove the mails
+					self::remove($target, true, $user); #Remove all the mails in this folder
+				}
+
+				if(count($exist)) #If mails should be deleted
+				{
+					for($i = 0; $i < count($exist); $i += self::$_limit) #Split by maximum possible place holder number
+					{
+						$target = array();
+						$param = array(':user' => $user->id, ':folder' => $folder);
+
+						foreach(array_slice($exist, $i, self::$_limit) as $index => $id)
+						{
+							$value = $target[] = ":i{$index}d";
+							$param[$value] = $id;
+						}
+
+						if(!count($target)) continue;
+						$target = implode(', ', $target); #Concatenate the identifiers
+
+						#Match on UID for deletion that was not found on the mail server. Otherwise, go through the header hashes for deletion
+						$sql = $link['info']['supported'] ? "uid IN ($target)" : "signature NOT IN ($target)";
+
+						$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND $sql");
+						$query->run($param); #Pick non existing mails
+
+						if(!$query->success) return false;
+						$target = array();
+
+						foreach($query->all() as $row) $target[] = $row['id'];
+						self::remove($target, true, $user); #Remove the mails
+					}
+				}
+			}
+			else #For POP3, remove list of downloaded mails those do not exist on the mail server anymore to avoid increasing the data indefinitely
+			{
+				if($link['info']['supported'])
+				{
+					$part = 'uid';
+					$active = $unique;
+				}
+				else
+				{
+					$part = 'signature';
+					$active = $exist;
+				}
+
+				if(!count($active)) #If no mail is on the server
+				{
+					$query = $database->prepare("DELETE FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
+					$query->run(array(':user' => $user->id, ':account' => $account)); #Delete unused list of downloaded mails (NOTE : Ignoring error here)
+				}
+				else
+				{
+					for($i = 0; $i < count($active); $i += self::$_limit) #Split by maximum possible place holder number
+					{
+						$target = array();
+						$param = array(':user' => $user->id, ':account' => $account);
+
+						foreach(array_slice($active, $i, self::$_limit) as $index => $id)
+						{
+							$value = $target[] = ":i{$index}d";
+							$param[$value] = $id;
+						}
+
+						if(!count($target)) continue;
+						$target = implode(', ', $target);
+
+						$query = $database->prepare("DELETE FROM {$database->prefix}loaded WHERE user = :user AND account = :account AND $part NOT IN ($target)");
+						$query->run($param); #Delete unused list of downloaded mails (NOTE : Ignoring error here)
+					}
 				}
 			}
 

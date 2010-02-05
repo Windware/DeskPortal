@@ -11,4 +11,7 @@
 	<string name="alert/length" value="Search letter must be more than 2 letters" />
 	<string name="alert/none" value="No results were found" />
 	<string name="alert/select" value="No application selected for searching" />
+
+	<!-- App specific -->
+	<string name="from" value="From" />
 </root>

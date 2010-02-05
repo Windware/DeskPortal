@@ -1,6 +1,6 @@
 <h2 style="padding : 5px; text-align : center">%value:day%</h2>
 
-<form id="%id%_day_%value:id%_form" onsubmit="return %top%.%id%.item.set(%value:param%)">
+<form id="%id%_day_%value:id%_form" onsubmit="%top%.%id%.item.set(%value:param%); return false">
 	<table cellpadding="5" cellspacing="0" style="width : 100%" class="%id%_editor %id%_inputs"><tbody>
 		<tr style="height : 10px">
 			<th style="width : 30%">%string:title%</th>

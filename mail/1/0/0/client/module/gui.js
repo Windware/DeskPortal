@@ -32,7 +32,7 @@
 			if(!compose) //For displaying the mail
 			{
 				var template = 'mail'; //The HTML template to use
-				var value = {id : id, index : index, account : __mail[id].account, sent : $system.date.create(__mail[id].sent).format($global.user.pref.format.full), subject : __mail[id].subject || '(' + language.empty + ')'};
+				var value = {id : id, index : index, account : __mail[id].account, sent : $system.date.create(__mail[id].sent).format($global.user.pref.format.full), subject : __mail[id].subject || '(' + language.empty + ')', reload : __mail[id].seen == '1' ? 0 : 1};
 
 				if(__mail[id].marked == '1') value.marked = ' checked="checked"';
 				else value.unmarked = ' checked="checked"';
@@ -260,7 +260,9 @@
 				var special = __special[target][_submit[index].account];
 
 				if(special == __selected.folder) $self.item.update(1); //Update the folder
-				else __update[special] = true; //Or mark the folder to be updated on next access
+				else __update[special] = 1; //Or mark the folder to be updated on next access
+
+				$self.folder.get(_submit[index].account, __account[_submit[index].account].type == 'imap' ? 1 : 2); //Update new mail count
 
 				if(_submit[index].resume && __mail[_submit[index].resume]) //If resumed writing a draft
 				{
@@ -269,7 +271,7 @@
 					if(special != home) //If the draft was placed not in the draft folder
 					{
 						if(home == __selected.folder) $self.item.update(1); //Update the folder
-						else __update[home] = true; //Or mark the folder to be updated on next access
+						else __update[home] = 1; //Or mark the folder to be updated on next access
 					}
 				}
 			}
@@ -379,6 +381,17 @@
 			return false; //Avoid form submission
 		}
 
+		this.flip = function(page) //Change page
+		{
+			var log = $system.log.init(_class + '.flip');
+
+			if(!$system.is.digit(__selected.folder)) return false;
+			if(!$system.is.digit(page)) return log.param();
+
+			__selected.page = page;
+			return $self.item.get(__selected.folder);
+		}
+
 		this.format = function(node) //Turn links and mail addresses clickable
 		{
 			var log = $system.log.init(_class + '.format');
@@ -395,7 +408,7 @@
 			return $system.node.id($id + '_indicator').style.visibility = _process ? '' : 'hidden';
 		}
 
-		this.load = function(id, index, frame) //Load the inline images on HTML messages
+		this.load = function(id, index, reload, frame) //Loaded when the mail body loads in the mail window
 		{
 			var log = $system.log.init(_class + '.load');
 			if(!$system.is.digit(id) || !$system.is.digit(index) || !$system.is.element(frame, 'iframe')) return log.param();
@@ -404,7 +417,7 @@
 			if(!__mail[id] || !$system.is.element(indicator) || !frame.contentWindow) return false;
 
 			indicator.style.visibility = 'hidden'; //Remove the loading indicator
-			$self.folder.get(__mail[id].account, 1); //Update the unread counts in the folder list
+			if(reload) $self.folder.get(__mail[id].account, __account[_submit[index].account].type == 'imap' ? 1 : 2); //Update the unread counts in the folder list if it was not yet read
 
 			var image = frame.contentWindow.document.getElementsByTagName('img');
 
@@ -488,7 +501,11 @@
 				if(form.elements[i].type == 'file') attached = true; //Remember that attachments exist
 			}
 
-			for(var field in warn) return false; //If invalid fields exist, quit
+			for(var field in warn)
+			{
+				$system.gui.alert($id, 'user/gui/send/field', 'user/gui/send/field/message');
+				return false; //If invalid fields exist, quit
+			}
 
 			var language = $system.language.strings($id);
 			if(draft < 1) draft = false;
@@ -537,12 +554,11 @@
 				}
 
 				$system.node.classes($id + '_mail_row_' + id, $id + '_mail_unread', false); //Remove the unread style
-				__mail[id].read = '1';
-
 				_order[++__window] = __current.list; //Remember the list order for this window
 			}
 
 			$system.window.create($id + '_display_' + __window, $self.info.title + ' [No. ' + (id || 0) + ']', _body(id, __window, compose, field), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
+			if($system.is.digit(id)) __mail[id].seen = '1'; //Mark it as read (Wait till '_body' processes using the 'seen' value)
 
 			if(compose)
 			{

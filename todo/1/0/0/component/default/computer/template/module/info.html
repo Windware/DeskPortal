@@ -1,5 +1,5 @@
 <!-- Without the form being 'inline', the textarea cell gets corrupted on Firefox 3.5 and Opera 9 -->
-<form onsubmit="return %top%.%id%.item.set(this)" class="%system%_full" style="display : inline">
+<form onsubmit="%top%.%id%.item.set(this); return false" class="%system%_full" style="display : inline">
 	<table cellpadding="5" cellspacing="0" class="%system%_full %id%_info"><tbody class="%system%_full">
 		<tr>
 			<th colspan="2" style="border : none; text-align : center"><h2>%string:edit%</h2></th>

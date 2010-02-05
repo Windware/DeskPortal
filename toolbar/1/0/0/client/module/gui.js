@@ -14,10 +14,10 @@
 			var log = $system.log.init(_class + '.create');
 			log.user($global.log.info, 'user/create');
 
-			if(!$system.is.digit(index)) index = ++__number; //The window ID
+			if(!$system.is.digit(index)) do { index = ++__number; } while($system.node.id($id + '_window_' + index)); //Check available window ID
 
-			$system.window.create($id + '_window_' + index, $self.info.title, $self.info.template.bar.replace(/INDEX/g, index), $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, $self.info.left, $self.info.top, $self.info.width, $self.info.height, $self.info.center, $self.info.up, undefined, undefined, $system.app.method($self.gui.set, [index]));
 			$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.create'}, {index : index}); //Save the presence
+			return $system.window.create($id + '_window_' + index, $self.info.title, $self.info.template.bar.replace(/INDEX/g, index), $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, $self.info.left, $self.info.top, $self.info.width, $self.info.height, $self.info.center, $self.info.up, undefined, undefined, $system.app.method($self.gui.set, [index]));
 		}
 
 		this.process = function(index) //Execute the operation (By using individual feature script)
@@ -66,6 +66,8 @@
 		this.remove = function(index) //Remove a bar
 		{
 			var log = $system.log.init(_class + '.remove');
+			if(!$system.is.digit(index)) return log.param();
+
 			log.user($global.log.info, 'user/remove');
 
 			$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.remove'}, {index : index}); //Remove the bar entry

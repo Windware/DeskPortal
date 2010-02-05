@@ -5,7 +5,7 @@
 
 		var _difference = 0; //The adjustment of time between client and the server for more accurate time calculation
 
-		var _timestamp = function(date) { return Math.floor(date.getTime() / 1000); } //Get the 'second' level timestamp
+		var _timestamp = function(date) { return date instanceof Date ? Math.floor(date.getTime() / 1000) : null; } //Get the timestamp
 
 		var _date = function(date) //Object to initialize for date manipulation
 		{
@@ -134,11 +134,11 @@
 				if($system.is.digit(source[0])) //At least year is required
 				{
 					//Give default values
-					if(!$system.is.digit(source[1])) source[1] = 1; //Month
-					if(!$system.is.digit(source[2])) source[2] = 1; //Day
-					if(!$system.is.digit(source[3])) source[3] = 0; //Hour
-					if(!$system.is.digit(source[4])) source[4] = 0; //Minute
-					if(!$system.is.digit(source[5])) source[5] = 0; //Second
+					if(source[1] === undefined) source[1] = 1; //Month
+					if(source[2] === undefined) source[2] = 1; //Day
+					if(source[3] === undefined) source[3] = 0; //Hour
+					if(source[4] === undefined) source[4] = 0; //Minute
+					if(source[5] === undefined) source[5] = 0; //Second
 
 					var date = new Date(source[0], source[1] - 1, source[2], source[3], source[4], source[5]);
 

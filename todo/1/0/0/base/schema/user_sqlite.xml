@@ -28,13 +28,12 @@
 		<column name="status" param="INT NOT NULL DEFAULT 0" />
 		<column name="content" param="TEXT" />
 		<column name="registered" param="DATETIME NOT NULL" />
-		<column name="year" param="INT" />
-		<column name="month" param="INT" />
-		<column name="day" param="INT" />
-		<column name="hour" param="INT" />
-		<column name="minute" param="INT" />
+		<column name="year" param="INT DEFAULT NULL" />
+		<column name="month" param="INT DEFAULT NULL" />
+		<column name="day" param="INT DEFAULT NULL" />
+		<column name="hour" param="INT DEFAULT NULL" />
+		<column name="minute" param="INT DEFAULT NULL" />
 
-		<column name="UNIQUE" param="(user, title, category)" />
 		<index name="user, registered" />
 		<index name="user, status" />
 	</table>

@@ -81,7 +81,12 @@
 			if(!$user->valid) return false;
 
 			$slots = array(); #Query update parameters
-			foreach(explode(' ', 'title content category status year month day hour minute') as $part) $slots[] = "$part = :$part";
+
+			foreach(explode(' ', 'title content category status year month day hour minute') as $part)
+			{
+				$slots[] = "$part = :$part";
+				if(!strlen($$part)) $$part = null; #Make sure empty parameters are set 'null' in the database
+			}
 
 			$database = $system->database('user', __METHOD__, $user);
 

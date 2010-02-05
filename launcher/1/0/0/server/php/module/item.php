@@ -49,7 +49,7 @@
 			foreach($query->all() as $row) $versions[$row['app']] = $row['version'];
 
 			$conf = array(); #User configurations
-			foreach($user->conf('conf') as $row) if($system->is_id($row['app'])) $conf[$row['app']][$row['key']] = $row['value'];
+			foreach($user->conf('conf') as $row) if($system->is_id($row['app'])) $conf[$row['app']][$row['name']] = $row['value'];
 
 			foreach($subscribed as $name)
 			{

@@ -38,7 +38,7 @@
 			var body = $system.text.format($system.info.template.alert, target);
 
 			//Create the alert window - TODO Do not define color in script : maybe put the info in style.js
-			$system.window.create(pane, language[title], body, '333333', '777777', 'ddcc55', '555555', false, undefined, undefined, 200, undefined, true, false, undefined, undefined, undefined, true);
+			$system.window.create(pane, language[title], body, '333333', '777777', 'ddcc55', '555555', false, undefined, undefined, 400, undefined, true, false, undefined, undefined, undefined, true);
 
 			if($system.is.digit(timer) && timer > 0) //Fade the alert away
 				setTimeout($system.app.method($system.window.fade, [pane, true, null, true]), timer * 1000);

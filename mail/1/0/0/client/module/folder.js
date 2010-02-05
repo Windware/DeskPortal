@@ -5,8 +5,6 @@
 
 		var _cache = {}; //Listing cache
 
-		var _count = {}; //Number of unread mails for each folders
-
 		var _loaded = {}; //Flag to indicate if a folder has been updated
 
 		var _lock = {}; //Lock to wait for mails to finish loading
@@ -17,7 +15,7 @@
 
 		var _structure = {}; //Temporary structure parameter for folder assembling
 
-		this.change = function(folder) //Change the displaying folder
+		this.change = function(folder, callback) //Change the displaying folder
 		{
 			var log = $system.log.init(_class + '.change');
 			if(!$system.is.digit(folder)) return log.param();
@@ -31,25 +29,26 @@
 			if(_previous[account]) $system.node.classes($id + '_folder_' + _previous[account], $id + '_displayed', false);
 			$system.node.classes($id + '_folder_' + folder, $id + '_displayed', true);
 
-			var unlock = function(folder)
+			var unlock = function(folder, callback)
 			{
 				var account = __belong[folder];
-				_lock[account] = false;
 
-				if(!__account[account]) return false;
+				_lock[account] = false; //Release update lock
+				if(!__account[account]) return $system.app.callback(log.origin, callback);
 
-				var local = __account[account].type == 'pop3' && __special.inbox[account] != folder; //Do not update other than INBOX for POP3
-				if(_loaded[folder] || local) return true; //If never updated, update from the server
+				if(_loaded[folder]) return $system.app.callback(log.origin, callback); //If updated from the mail server once, do not do it anymore (Periodical interval timer will update from mail server)
+				_loaded[folder] = true;
 
-				_loaded[folder] = _lock[account] = true;
-				return $self.item.get(folder, 1, $system.app.method(unlock, [folder])); //Update it
+				if(__account[account].type == 'pop3' && __special.inbox[account] != folder) return true; //Do not update anything from mail server if it is not INBOX for POP3
+
+				_lock[account] = true;
+				return $self.item.get(folder, 1, $system.app.method(unlock, [folder, callback])); //Update it
 			}
 
 			if(!_loaded[folder]) delete __update[folder]; //If never loaded, drop the update flag to avoid duplicate updating
-			if(!$self.item.get(folder, false, $system.app.method(unlock, [folder]))) return false; //Get the folder items for current account
-
 			_previous[account] = folder;
-			return true;
+
+			return $self.item.get(folder, false, $system.app.method(unlock, [folder, callback])); //Get the folder items for current account
 		}
 
 		this.clear = function(folder) //Clear caches for a folder
@@ -70,6 +69,35 @@
 			for(var i = 0; i < section.length; i++) for(var account in __special[section]) if(__special[section][account] == folder) __special[section][account] == null;
 		}
 
+		this.empty = function(account) //Empty trash folder
+		{
+			var log = $system.log.init(_class + '.empty');
+			if(!$system.is.digit(account)) return log.param();
+
+			var event = $system.event.source(arguments);
+			event.cancelBubble = true;
+
+			var language = $system.language.strings($id);
+			if(!confirm(language.purge)) return false;
+
+			var clean = function(account, trash, request)
+			{
+				$self.gui.indicator(false); //Hide indicator
+
+				if($system.dom.status(request.xml) != '0') return $system.gui.alert($id, 'user/folder/empty/title', 'user/folder/empty/message', 3);
+				$self.folder.clear(trash); //Clear mail data for the folder
+
+				if(__selected.account == account)
+				{
+					$self.folder.get(account, __account[account].type == 'imap' ? 1 : 2);
+					if(__selected.folder == trash) $self.item.get(trash); //Update the listing to be empty
+				}
+			}
+
+			$self.gui.indicator(true); //Show indicator
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.empty'}, {account : account}, $system.app.method(clean, [account, __special.trash[account]]));
+		}
+
 		this.get = function(account, update, callback, request) //List folders for an account
 		{
 			var log = $system.log.init(_class + '.get');
@@ -80,10 +108,14 @@
 				$system.node.id($id + '_folder').innerHTML = '';
 				$system.node.hide($id + '_mail_empty', true, true); //Remove the empty notification
 
+				$system.node.id($id + '_show').innerHTML = ''; //Clear up the page list
+
 				var table = $system.node.id($id + '_read_zone');
 				while(table.firstChild) table.removeChild(table.firstChild);
 
-				$system.app.callback(_class + '.get', callback);
+				$system.app.callback(log.origin, callback);
+				__selected = {};
+
 				return true;
 			}
 
@@ -97,21 +129,10 @@
 
 			var language = $system.language.strings($id);
 
-			var list = function(account, callback, request)
+			var list = function(account, update, callback, request)
 			{
 				$self.gui.indicator(false); //Hide indicator
-
 				_cache[account] = request.xml || request;
-				if(__selected.account != account) return true; //If displaying account got changed, do not display the result
-
-				var area = $system.node.id($id + '_folder');
-				area.innerHTML = '';
-
-				var header = document.createElement('div');
-				header.className = $id + '_folder_header';
-
-				header.innerHTML = '<strong>' + language.folder + '</strong>';
-				area.appendChild(header);
 
 				var construct = function(tree, depth) //Create the directory structure tree
 				{
@@ -128,6 +149,8 @@
 						var name = $system.dom.attribute(nodes[i], 'name');
 
 						var recent = $system.dom.attribute(nodes[i], 'recent'); //Number of unread mails
+						var count = $system.dom.attribute(nodes[i], 'count'); //Number of loaded mails
+
 						var special = false; //If this folder is special or not
 
 						for(var j = 0; j < title.length; j++)
@@ -140,18 +163,19 @@
 							break;
 						}
 
-						if(__account[account] && _count[id] && recent > _count[id]) //If new mail count is bigger than before
+						if(update == 1 && __account[account] && recent > count) //If new mail count is bigger than before
 						{
-							__update[id] = true; //Make it update on next access
+							__update[id] = 1; //Make it update on next access
 
 							if(id != __special.drafts[account] && id != __special.sent[account] && id != __special.trash[account]) //If not under drafts, sent and trash folder
 							{
 								var message = language.recent.replace('%folder%', name).replace('%account%', __account[account].description);
 								$system.gui.notice($id, message, null); //Notify the new message presence
+
+								log.user($global.log.notice, 'user/folder/get', '', [__account[account].description, name]);
 							}
 						}
 
-						_count[id] = recent;
 						__belong[id] = account; //Remember the belonging account
 
 						var link = document.createElement('a'); //Create link for the folder
@@ -176,21 +200,20 @@
 						display.onmousedown = $system.app.method($system.event.cancel, [display]);
 						display.appendChild(document.createTextNode(' ' + name));
 
-						if($system.is.digit(_count[id]) && _count[id] > 0) //If any new messages exist
+						if($system.is.digit(recent) && recent > 0) //If any new messages exist
 						{
-							display.appendChild(document.createTextNode(' (' + _count[id] + ')'));
+							display.appendChild(document.createTextNode(' (' + recent + ')'));
 							link.appendChild(display); //Put the folder name
 						}
 
 						link.appendChild(display); //Put the folder name
-						var icon = null;
 
 						if(special !== false) //When it's a special folder
 						{
 							var spacer = document.createTextNode(' ');
 							link.insertBefore(spacer, link.firstChild);
 
-							icon = document.createElement('img'); //Create an icon
+							var icon = document.createElement('img'); //Create an icon
 							icon.className = $id + '_indicator';
 
 							$system.image.set(icon, $self.info.devroot + 'graphic/' + special.name + '.png');
@@ -201,6 +224,24 @@
 
 							_structure.depth = depth; //Remember the current depth
 							if(depth == 0) _structure.index = index;
+
+							if(special.name == 'trash')
+							{
+								var spacer = document.createTextNode(' ');
+								link.appendChild(spacer);
+
+								var icon = document.createElement('img'); //Create an icon
+
+								icon.className = $id + '_indicator';
+								icon.style.cursor = 'pointer';
+
+								$system.tip.set(icon, $id, 'empty');
+								icon.onclick = $system.app.method($self.folder.empty, [account]); //To empty trash
+
+								$system.image.set(icon, $self.info.devroot + 'graphic/empty.png');
+								link.appendChild(icon); //Put empty trash icon
+							}
+
 						}
 						else //If not special
 						{
@@ -235,6 +276,17 @@
 				if(!request.xml || !request.xml.childNodes || !construct(request.xml.childNodes[section], 0)) //Create folder listing
 					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/solution');
 
+				if(__selected.account != account) return true; //If displaying account got changed, do not display the result
+
+				var area = $system.node.id($id + '_folder');
+				area.innerHTML = '';
+
+				var header = document.createElement('div');
+				header.className = $id + '_folder_header';
+
+				header.innerHTML = '<strong>' + language.folder + '</strong>';
+				area.appendChild(header);
+
 				for(var i = 0; i < group.length; i++) //Create the folder listing starting from the special folders
 					if($system.is.array(group[i])) for(var j = 0; j < group[i].length; j++) area.appendChild(group[i][j]);
 
@@ -246,11 +298,11 @@
 
 			if(!$system.is.digit(update))
 			{
-				if($system.is.object(request)) return list(account, callback, request); //If cached object is given, call it directly
-				if(_cache[account]) return list(account, callback, _cache[account]); //If cached object is given, call it directly
+				if($system.is.object(request)) return list(account, update, callback, request); //If cached object is given, call it directly
+				if(_cache[account]) return list(account, update, callback, _cache[account]); //If cached object is given, call it directly
 			}
 
 			$self.gui.indicator(true); //Show indicator
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account, update : update, subscribed : 1}, null, $system.app.method(list, [account, callback]));
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'folder.get', account : account, update : update, subscribed : 1}, null, $system.app.method(list, [account, update, callback]));
 		}
 	}

@@ -1,0 +1,45 @@
+<root>
+	<!-- Displayed bar ID -->
+	<table name="display">
+		<column name="user" param="INT NOT NULL" />
+		<column name="id" param="INT NOT NULL" />
+
+		<column name="UNIQUE" param="(user, id)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Search history -->
+	<table name="history">
+		<column name="user" param="INT NOT NULL" />
+		<column name="feature" param="VARCHAR(255) NOT NULL" />
+		<column name="value" param="VARCHAR(255) NOT NULL" />
+
+		<column name="UNIQUE" param="(user, feature)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Conversion result -->
+	<table name="result">
+		<column name="user" param="INT NOT NULL" />
+		<column name="method" param="VARCHAR(255) NOT NULL" />
+		<column name="source" param="VARCHAR(255) NOT NULL" />
+		<column name="target" param="VARCHAR(255) NOT NULL" />
+		<column name="value" param="VARCHAR(255) NOT NULL" />
+
+		<column name="UNIQUE" param="(user, method, source, target)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+
+	<!-- Function selection -->
+	<table name="selection">
+		<column name="user" param="INT NOT NULL" />
+		<column name="bar" param="INT NOT NULL" />
+		<column name="feature" param="VARCHAR(255) NOT NULL" />
+		<column name="method" param="VARCHAR(255) NOT NULL" />
+		<column name="source" param="VARCHAR(255) NOT NULL" />
+		<column name="target" param="VARCHAR(255) NOT NULL" />
+
+		<column name="UNIQUE" param="(user, bar)" />
+		<extra name="ENGINE" param="INNODB" />
+	</table>
+</root>

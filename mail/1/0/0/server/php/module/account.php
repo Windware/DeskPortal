@@ -3,6 +3,31 @@
 	{
 		private static $_stream = array(); #Mail server connection cache
 
+		public static function _special($param) #Get special account type parameters
+		{
+			switch($param['receive_type'])
+			{
+				case 'hotmail' :
+					$receiver = array('host' => 'pop3.live.com', 'secure' => 1, 'port' => 995, 'user' => $param['address'], 'pass' => $param['receive_pass']);
+					$sender = array('host' => 'smtp.live.com', 'secure' => 0, 'port' => 25, 'user' => $param['address'], 'pass' => $param['receive_pass']);
+				break;
+
+				case 'gmail' :
+					$receiver = array('host' => 'imap.gmail.com', 'secure' => 1, 'port' => 993, 'user' => $param['address'], 'pass' => $param['receive_pass']);
+					$sender = array('host' => 'smtp.gmail.com', 'secure' => 1, 'port' => 465, 'user' => $param['address'], 'pass' => $param['receive_pass']);
+				break;
+
+				case 'imap' : case 'pop3' :
+					$receiver = array('host' => $param['receive_host'], 'secure' => $param['receive_secure'], 'port' => $param['receive_port'], 'user' => $param['receive_user'], 'pass' => $param['receive_pass']);
+					$sender = array('host' => $param['send_host'], 'secure' => $param['send_secure'], 'port' => $param['send_port'], 'user' => $param['send_user'], 'pass' => $param['send_pass']);
+				break;
+
+				default : return array(); break;
+			}
+
+			return array('receiver' => $receiver, 'sender' => $sender);
+		}
+
 		public static function connect($account, $folder = null, System_1_0_0_User $user = null) #Connect to the mail server of an account
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -16,7 +41,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$name = $system->is_digit($folder) ? Mail_1_0_0_Folder::name($folder) : ''; #Convert it into textual name
+			$name = $system->is_digit($folder) ? Mail_1_0_0_Folder::name($folder, $user) : ''; #Convert it into textual name
 
 			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $account, ':user' => $user->id));
@@ -24,6 +49,20 @@
 			if(!$query->success) return false;
 
 			$info = $query->row();
+			$format = self::_special($info); #Get parameters for special account types
+
+			$info['receive_host'] = $format['receiver']['host'];
+			$info['receive_port'] = $format['receiver']['port'];
+			$info['receive_secure'] = $format['receiver']['secure'];
+			$info['receive_user'] = $format['receiver']['user'];
+			$info['receive_pass'] = $format['receiver']['pass'];
+
+			$info['send_host'] = $format['sender']['host'];
+			$info['send_port'] = $format['sender']['port'];
+			$info['send_secure'] = $format['sender']['secure'];
+			$info['send_user'] = $format['sender']['user'];
+			$info['send_pass'] = $format['sender']['pass'];
+
 			$type = self::type($info['receive_type']);
 
 			#Create connection parameters
@@ -52,7 +91,6 @@
 			$connection = imap_open($parameter.mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8'), $info['receive_user'], $info['receive_pass']);
 			if(!$connection) return Mail_1_0_0_Account::error($host);
 
-			unset($info['receive_pass'], $info['send_pass']); #Remove sensitive information
 			return self::$_stream[$user->id][$account] = array('connection' => $connection, 'folder' => $folder, 'host' => $host, 'parameter' => $parameter, 'info' => $info, 'type' => $type);
 		}
 
@@ -150,6 +188,7 @@
 					$param[$value] = $id;
 				}
 
+				if(!count($target)) continue;
 				$target = implode(', ', $target);
 
 				$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder IN ($target)");
@@ -174,6 +213,7 @@
 					$param[$value] = $id;
 				}
 
+				if(!count($target)) continue;
 				$target = implode(', ', $target);
 
 				foreach(explode(' ', 'from to cc attachment reference') as $section)
@@ -209,23 +249,70 @@
 			foreach(array(IMAP_OPENTIMEOUT, IMAP_READTIMEOUT, IMAP_WRITETIMEOUT, IMAP_CLOSETIMEOUT) as $section)
 				if(!imap_timeout($section, $system->app_conf('system', 'static', 'net_timeout'))) return false; #Set the timeout value
 
-			#Connect to read mail server and check for availability
-			$host = "{$param['receive_host']}:{$param['receive_port']}";
-			$secure = $param['receive_secure'] ? '/ssl' : '';
+			if($id != 0 && (!strlen($param['receive_pass']) || !strlen($param['send_pass']))) #If password fields are left blank
+			{
+				$query = $database->prepare("SELECT receive_pass, send_pass FROM {$database->prefix}account WHERE id != :id AND user = :user");
+				$query->run(array(':id' => $id, ':user' => $user->id)); #Recover passwords from database
 
-			$parameter = "{{$host}/".self::type($param['receive_type'])."/novalidate-cert$secure}";
+				if(!$query->success) return false;
+				$password = $query->row();
 
-			$connection = imap_open($parameter, $param['receive_user'], $param['receive_pass']);
-			if(!$connection) return 2;
+				if(!strlen($param['receive_pass'])) $param['receive_pass'] = $password['receive_pass'];
+				if(!strlen($param['send_pass'])) $param['send_pass'] = $password['send_pass'];
+			}
 
-			imap_close($connection);
+			$info = self::_special($param); #Get parameters for special account types
+			$type = self::type($param['receive_type']);
+
+			if($type == 'imap') #For IMAP, connect directly and check for capability of UID
+			{
+				$secure = $info['receiver']['secure'] ? '/ssl' : '';
+				$connection = imap_open("{{$info['receiver']['host']}:{$info['receiver']['port']}/$type/novalidate-cert$secure}", $info['receiver']['user'], $info['receiver']['pass']);
+
+				if(!$connection) return 2; #Check for authentication (TODO : Could manually authenticate below just to avoid yet another connection)
+				imap_close($connection);
+
+				$timeout = $system->app_conf('system', 'static', 'net_timeout');
+				ini_set('default_socket_timeout', $timeout);
+
+				$secure = $info['receiver']['secure'] ? 'ssl://' : '';
+
+				$connection = fsockopen($secure.$info['receiver']['host'], $info['receiver']['port']); #Open a raw connection to retrieve the mail server capability
+				if(!$connection) return 2;
+
+				stream_set_timeout($connection, $timeout);
+				if(fgets($connection) === false) return 2; #Receive the salute
+
+				if(!fwrite($connection, "1 CAPABILITY\r\n")) return 2; #Send for request
+				$response = fgets($connection); #Capability response
+
+				fclose($connection);
+				if(!strlen($response)) return 2;
+
+				$param['supported'] = !!preg_match('/ imap4/i', $response) ? '1' : '0'; #If IMAP version 4, then it supports UID (NOTE : Keep as string to pass 'sis_string' test)
+
+			}
+			elseif($type == 'pop3') #NOTE : For POP3, check for UIDL capability as well as authentication
+			{
+				if(!$system->file_load('Auth/SASL.php') || !$system->file_load('Net/POP3.php')) return false;
+
+				$secure = $info['receiver']['secure'] ? 'ssl://' : ''; #Specify SSL connection if configured so
+				$pop3 =& new Net_POP3();
+
+				$connect = $pop3->connect($secure.$info['receiver']['host'], $info['receiver']['port']); #Connect
+				if($connect === true) $connect = $pop3->login($info['receiver']['user'], $info['receiver']['pass']); #Login
+
+				if($connect !== true) return 2;
+				$param['supported'] = $pop3->_cmdUidl() !== false ? '1' : '0'; #See if UIDL command succeeded (NOTE : Keep as string to pass 'is_string' test)
+			}
+
 			if(!$system->file_load('Net/SMTP.php')) return false; #Load the PEAR package for SMTP connection
 
-			$secure = $param['send_secure'] ? 'ssl://' : '';
-			$smtp = new Net_SMTP($secure.$param['send_host'], $param['send_port'], $param['send_host']);
+			$secure = $info['sender']['secure'] ? 'ssl://' : '';
+			$smtp = new Net_SMTP($secure.$info['sender']['host'], $info['sender']['port'], $info['sender']['host']);
 
 			$connect = $smtp->connect(); #Connect and check for send server availability
-			if($connect === true && strlen($param['send_user']) || strlen($param['send_pass'])) $connect = $smtp->auth($param['send_user'], $param['send_pass']);
+			if($connect === true && strlen($info['sender']['user']) || strlen($info['sender']['pass'])) $connect = $smtp->auth($info['sender']['user'], $info['sender']['pass']);
 
 			$smtp->disconnect();
 			if($connect !== true) return 3; #Connect and check for availability on send mail server
@@ -285,33 +372,73 @@
 			}
 
 			if(!$database->commit()) return $database->rollback() && false;
-			if($id == 0) Mail_1_0_0_Folder::update($id); #Update the folder listing on a new account
+			Mail_1_0_0_Folder::update($id, $user); #Update the folder listing on an account
 
 			$query = $database->prepare("SELECT folder_inbox, folder_drafts, folder_sent, folder_trash FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));
 
 			if(!$query->success) return false;
-
 			$account = $query->row();
-			$query = array('select' => $database->prepare("SELECT id FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :name"));
 
-			foreach(explode(' ', 'inbox drafts sent trash') as $name) #Look for special folders - TODO - Look for special folders that got created by several other clients (ex : Deleted Messages, Sent Messages)
+			$query = array('select' => $database->prepare("SELECT id FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :name AND subscribed = :subscribed"));
+			$query['subscribe'] = $database->prepare("UPDATE {$database->prefix}folder SET subscribed = :subscribed WHERE id = :id AND user = :user");
+
+			foreach(explode(' ', 'inbox drafts sent trash') as $name) #Look for special folders
 			{
 				if($system->is_digit($account["folder_$name"])) continue; #Ignore if already set
+				$candidate = array(); #List of folders to check for existing as special folders
 
-				$query['select']->run(array(':user' => $user->id, ':account' => $id, ':name' => $name)); #Look for special named folders
-				if(!$query['select']->success) return false;
-
-				if(!$system->is_digit($folder = $query['select']->column()))
+				switch($name) #Make a guess for any existing special mail boxes
 				{
-					$folder = Mail_1_0_0_Folder::create($id, null, $name == 'inbox' ? 'INBOX' : ucfirst($name), $user); #Create one if missing
-					if(!$folder) continue;
+					case 'inbox' : $candidate = array('INBOX'); break; #Use a global inbox name
+
+					case 'drafts' :
+						switch($param['receive_type']) { case 'gmail' : $candidate = array('[Gmail]/Drafts'); break; }
+					break;
+
+					case 'sent' :
+						switch($param['receive_type'])
+						{
+							case 'gmail' : $candidate = array('[Gmail]/Sent Mail'); break;
+
+							default : $candidate = array('Sent Messages'); break; #Apple Mail style
+						}
+					break;
+
+					case 'trash' :
+						switch($param['receive_type'])
+						{
+							case 'gmail' : $candidate = array('[Gmail]/Trash'); break;
+
+							default : $candidate = array('Deleted Messages'); break; #Apple Mail style
+						}
+					break;
+				}
+
+				$candidate[] = ucfirst($name); #Use a generic name
+				$folder = null;
+
+				foreach($candidate as $store)
+				{
+					$query['select']->run(array(':user' => $user->id, ':account' => $id, ':name' => $store, ':subscribed' => 1)); #Look for special named folders
+					if(!$query['select']->success) return false;
+
+					if($folder = $query['select']->column()) break;
+				}
+
+				if(!$folder) #If the folder does not exist
+				{
+					$folder = Mail_1_0_0_Folder::create($id, null, $store, $user); #Create a generic name folder
+					if(!$folder) continue; #Ignore setting this special folder if it cannot be created
 				}
 
 				$query['update'] = $database->prepare("UPDATE {$database->prefix}account SET folder_$name = :folder WHERE id = :id AND user = :user");
 				$query['update']->run(array(':folder' => $folder, ':id' => $id, ':user' => $user->id)); #Remember the special folder ID
 
 				if(!$query['update']->success) return false;
+
+				$query['subscribe']->run(array(':subscribed' => 1, ':id' => $folder, ':user' => $user->id)); #Make sure the folder is subscribed
+				if(!$query['subscribe']->success) return false;
 			}
 
 			return true;

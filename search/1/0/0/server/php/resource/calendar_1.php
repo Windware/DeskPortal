@@ -48,6 +48,8 @@
 				$value[":id{$index}_index"] = $id;
 			}
 
+			if(!count($param)) return true;
+
 			$query = $database->prepare("SELECT day, title FROM {$database->prefix}schedule WHERE id IN (".implode(',', $param).") AND user = :user ORDER BY day DESC ".Search_1_0_0_Item::limit($limit, $page));
 			$query->run($value);
 

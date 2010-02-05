@@ -3,10 +3,10 @@
 	<table name="conf">
 		<column name="user" param="INT NOT NULL" />
 		<column name="app" param="VARCHAR(64) NOT NULL" />
-		<column name="key" param="VARCHAR(128) NOT NULL" />
+		<column name="name" param="VARCHAR(128) NOT NULL" />
 		<column name="value" param="VARCHAR(255)" />
 
-		<column name="UNIQUE" param="(user, app, key)" />
+		<column name="UNIQUE" param="(user, app, name)" />
 	</table>
 
 	<!-- User logs -->
@@ -44,9 +44,9 @@
 	<table name="window">
 		<column name="user" param="INT NOT NULL" />
 		<column name="app" param="VARCHAR(128) NOT NULL" />
-		<column name="key" param="VARCHAR(128) NOT NULL" />
+		<column name="name" param="VARCHAR(128) NOT NULL" />
 		<column name="value" param="VARCHAR(255)" />
 
-		<column name="UNIQUE" param="(user, app, key)" />
+		<column name="UNIQUE" param="(user, app, name)" />
 	</table>
 </root>

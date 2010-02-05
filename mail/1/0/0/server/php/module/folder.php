@@ -3,6 +3,8 @@
 	{
 		private static $_folder = array(); #Folder parameters
 
+		protected static $_separator = '/'; #Generic folder separator for POP3 accounts
+
 		protected static function _list(&$system, $structure, $subscribed = true, $xml = false) #Create list of XML from multi dimensional array
 		{
 			static $index = -1;
@@ -13,7 +15,7 @@
 				$index++;
 				if($subscribed && !self::$_folder[$index]['subscribed']) continue;
 
-				$info = array('name' => $name, 'id' => self::$_folder[$index]['id'], 'subscribed' => self::$_folder[$index]['subscribed'], 'recent' => self::$_folder[$index]['recent']);
+				$info = array('name' => $name, 'id' => self::$_folder[$index]['id'], 'count' => self::$_folder[$index]['count'], 'subscribed' => self::$_folder[$index]['subscribed'], 'recent' => self::$_folder[$index]['recent']);
 				$child = self::_list($system, $part, $subscribed, $xml);
 
 				if(!$xml) $list[] = array('attributes' => $info, 'child' => $child);
@@ -64,10 +66,9 @@
 			if(!$query->success) return false;
 			$type = Mail_1_0_0_Account::type($query->column());
 
-			#TODO - Possibly check if the folder name has a separator character inside and return error?
-			if($parent) #If a parent folder is specified
+			if($parent) #If a parent folder is specified : TODO - Possibly check if the folder name has a separator character inside and return error?
 			{
-				$query = $database->prepare("SELECT name, parent, separator FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+				$query = $database->prepare("SELECT name, parent, connector FROM {$database->prefix}folder WHERE id = :id AND user = :user");
 				$query->run(array(':id' => $parent, ':user' => $user->id));
 
 				if(!$query->success) return false;
@@ -75,16 +76,16 @@
 
 				if(!$parent['parent']) return false; #If it cannot have any child folders, quit
 
-				if($type == 'pop3') $parent['separator'] = '/'; #For POP3, use a generic separator value
-				elseif(!strlen($parent['separator'])) #If no separator is found for the parent folder
+				if($type == 'pop3') $parent['connector'] = self::$_separator; #For POP3, use a generic separator value
+				elseif(!strlen($parent['connector'])) #If no separator is found for the parent folder
 				{
-					$query = $database->prepare("SELECT separator FROM {$database->prefix}folder WHERE user = :user AND account = :account AND separator IS NOT NULL LIMIT 1");
+					$query = $database->prepare("SELECT connector FROM {$database->prefix}folder WHERE user = :user AND account = :account AND connector IS NOT NULL LIMIT 1");
 					$query->run(array(':user' => $user->id, ':account' => $account));
 
 					if(!$query->success) return false;
-					$parent['separator'] = $query->column(); #Find the separator used for the account
+					$parent['connector'] = $query->column(); #Find the separator used for the account
 
-					if(!strlen($parent['separator'])) return false; #Give up
+					if(!strlen($parent['connector'])) return false; #Give up
 				}
 			}
 			else $parent = array(); #Make it empty
@@ -97,11 +98,11 @@
 				$exist = imap_getmailboxes($link['connection'], '{'.$link['host'].'}', '*'); #Existing mail boxes
 				if(!is_array($exist)) return Mail_1_0_0_Account::error($link['host']);
 
-				$target = '{'.$link['host'].'}'.mb_convert_encoding($parent['name'].$parent['separator'].$name, 'UTF7-IMAP', 'UTF-8'); #Target name to create
+				$target = '{'.$link['host'].'}'.mb_convert_encoding($parent['name'].$parent['connector'].$name, 'UTF7-IMAP', 'UTF-8'); #Target name to create
 
 				foreach($exist as $box)
 				{
-					$separator = $box->delimiter; #Keep a folder delimiter
+					$connector = $box->delimiter; #Keep a folder delimiter
 					if(strtolower($box->name) == strtolower($target)) $built = true; #Check if already existing
 				}
 
@@ -121,8 +122,8 @@
 			if(!$query->success) return false;
 			if($id = $query->column()) return $id; #Return ID if already created
 
-			$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, separator, subscribed) VALUES (:user, :account, :name, :parent, :separator, :subscribed)");
-			$query->run(array(':user' => $user->id, ':account' => $account, ':name' => $name, ':parent' => 1, ':separator' => $separator, ':subscribed' => 1));
+			$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, connector, subscribed) VALUES (:user, :account, :name, :parent, :connector, :subscribed)");
+			$query->run(array(':user' => $user->id, ':account' => $account, ':name' => $parent['name'].$parent['connector'].$name, ':parent' => 1, ':connector' => $connector, ':subscribed' => 1));
 
 			if(!$query->success) return false;
 			return $database->id(); #Return the created ID
@@ -143,19 +144,24 @@
 
 			$param = array(':user' => $user->id, ':account' => $account);
 
-			$query = $database->prepare("SELECT id, name, recent, separator, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account ORDER BY LOWER(name)");
+			$query = $database->prepare("SELECT id, name, count, recent, connector, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account ORDER BY LOWER(name)");
 			$query->run($param);
 
 			if(!$query->success) return false;
 			$list = $query->all();
 
-			$structure = array(); #Folder structure
+			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}account WHERE id = :id AND user = :user");
+			$query->run(array(':id' => $account, ':user' => $user->id));
+
+			if(!$query->success) return false;
+			$type = Mail_1_0_0_Account::type($query->column());
 
 			foreach($list as $index => $row) #For all folders
 			{
 				self::$_folder[$index] = $row; #Remember folder parameters
+				$connector = $type == 'pop3' ? self::$_separator : $row['connector']; #Use a generic separator for POP3
 
-				$name = $row['separator'] ? explode($row['separator'], $row['name']) : array($row['name']); #Separate the folder name
+				$name = $connector ? explode($connector, $row['name']) : array($row['name']); #Separate the folder name
 				$dimension = &$structure;
 
 				foreach($name as $part) #Drop the names into multi dimensional array
@@ -165,7 +171,7 @@
 				}
 			}
 
-			return self::_list($system, $structure, $subscribed, $xml); #Dump the array into XML
+			return self::_list($system, $structure, $subscribed, $xml); #Return an array or XML
 		}
 
 		public static function move($id, $target, System_1_0_0_User $user = null) #Move a folder
@@ -184,7 +190,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT account, id, name, separator, subscribed FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT account, id, name, connector, subscribed FROM {$database->prefix}folder WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));
 
 			if(!$query->success) return false;
@@ -203,29 +209,29 @@
 				if($folder['source']['account'] != $folder['target']['account']) return false; #Do not allow cross account move for this version
 			}
 
-			if(strlen($folder['source']['separator'])) #If the source folder has a delimiter defined
+			if(strlen($folder['source']['connector'])) #If the source folder has a delimiter defined
 			{
-				$tree = $folder['source']['name'].$folder['source']['separator']; #Matching folder tree for child folders
+				$tree = $folder['source']['name'].$folder['source']['connector']; #Matching folder tree for child folders
 
-				$query = $database->prepare("SELECT id, name, separator, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :tree $database->escape");
+				$query = $database->prepare("SELECT id, name, connector, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :tree $database->escape");
 				$query->run(array(':user' => $user->id, ':account' => $folder['source']['account'], ':tree' => $system->database_escape($tree).'%')); #Find child folders
 
 				$children = $query->all();
 				if(!$query->success) return false;
 
-				$separator = preg_quote($folder['source']['separator'], '/');
-				$new = preg_replace("/^.+$separator([^$separator]*)$/", '\1', $folder['source']['name']);
+				$connector = preg_quote($folder['source']['connector'], '/');
+				$new = preg_replace("/^.+$connector([^$connector]*)$/", '\1', $folder['source']['name']);
 			}
 			else $new = $folder['source']['name'];
 
-			$separator = strlen($folder['target']['separator']) ? $folder['target']['separator'] : $folder['source']['separator'];
-			if(!strlen($separator) || !strlen($new)) return false; #If a separator cannot be found, quit
+			$connector = strlen($folder['target']['connector']) ? $folder['target']['connector'] : $folder['source']['connector'];
+			if(!strlen($connector) || !strlen($new)) return false; #If a separator cannot be found, quit
 
 			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $folder['source']['account'], ':user' => $user->id)); #Pick the account type
 
 			if(!$query->success) return false;
-			if($target != 0) $new = $folder['target']['name'].$separator.$new; #Full path of the new folder name
+			if($target != 0) $new = $folder['target']['name'].$connector.$new; #Full path of the new folder name
 
 			if($folder['source']['name'] == $new) return true; #If target is same, quit
 
@@ -244,7 +250,7 @@
 				{
 					if(!$row['subscribed']) continue;
 
-					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $new.$separator, $row['name']);
+					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $new.$connector, $row['name']);
 					$name = '{'.$link['host'].'}'.mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8');
 
 					#NOTE : Not stopping operation when an error occurs here
@@ -263,7 +269,7 @@
 			{
 				foreach($children as $row) #Update the child folders in the database
 				{
-					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $new.$separator, $row['name']);
+					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $new.$connector, $row['name']);
 
 					$query->run(array(':name' => $name, ':id' => $row['id'], ':user' => $user->id)); #Change the folder name
 					if(!$query->success) return $database->rollback() && false;
@@ -292,6 +298,38 @@
 			return $query->success ? $query->column() : false;
 		}
 
+		public static function purge($account, System_1_0_0_User $user = null) #Empty trash of an account's
+		{
+			$system = new System_1_0_0(__FILE__);
+			$log = $system->log(__METHOD__);
+
+			if(!$system->is_digit($account)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			$query = $database->prepare("SELECT folder_trash FROM {$database->prefix}account WHERE id = :account AND user = :user");
+			$query->run(array(':account' => $account, ':user' => $user->id)); #Get trash folder
+
+			if(!$query->success) return false;
+			$trash = $query->column();
+
+			Mail_1_0_0_Item::update($trash); #Update the trash folder first
+
+			$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :trash");
+			$query->run(array(':user' => $user->id, ':trash' => $trash)); #Select all of the mails in the trash folder
+
+			if(!$query->success) return false;
+
+			$list = array();
+			foreach($query->all() as $row) $list[] = $row['id'];
+
+			return Mail_1_0_0_Item::remove($list, false, $user); #Remove all the mails
+		}
+
 		public static function remove($folder, $remote = false, System_1_0_0_User $user = null) #Delete folders
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -309,7 +347,7 @@
 			$target = array(); #List of folders to delete
 			$query = array();
 
-			$query['base'] = $database->prepare("SELECT id, account, name, separator FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query['base'] = $database->prepare("SELECT id, account, name, connector FROM {$database->prefix}folder WHERE id = :id AND user = :user");
 			$query['child'] = $database->prepare("SELECT id, name FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :name $database->escape");
 
 			$query['mail'] = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
@@ -332,12 +370,12 @@
 				$delete = array(); #List of mails to delete
 				foreach($query['mail']->all() as $mail) $delete[] = $mail['id'];
 
-				if(!Mail_1_0_0_Item::remove($delete, !$remote)) return false; #Remove the mails in this folder
+				if(!Mail_1_0_0_Item::remove($delete, !$remote, $user)) return false; #Remove the mails in this folder
 
 				$value = $target[] = ':i'.(++$count).'d'; #List the folder ID to delete
 				$param[$value] = $base['id'];
 
-				$query['child']->run(array(':user' => $user->id, ':account' => $base['account'], ':name' => $system->database_escape($base['name'].$base['separator']).'%')); #Find the child folders
+				$query['child']->run(array(':user' => $user->id, ':account' => $base['account'], ':name' => $system->database_escape($base['name'].$base['connector']).'%')); #Find the child folders
 				if(!$query['child']->success) return false;
 
 				if($remote) #If attempting to delete remote folders
@@ -357,7 +395,7 @@
 					$delete = array(); #List of mails to delete
 					foreach($query['mail']->all() as $mail) $delete[] = $mail['id'];
 
-					if(!Mail_1_0_0_Item::remove($delete)) return false; #Remove the mails in this folder
+					if(!Mail_1_0_0_Item::remove($delete, false, $user)) return false; #Remove the mails in this folder
 
 					$value = $target[] = ':i'.(++$count).'d'; #List the folder ID to delete
 					$param[$value] = $row['id'];
@@ -376,6 +414,7 @@
 				if(!imap_deletemailbox($link['connection'], $box)) return Mail_1_0_0_Account::error($link['host']); #Delete
 			}
 
+			if(!count($target)) return true;
 			$target = implode(', ', $target);
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}folder WHERE id IN ($target) AND user = :user");
@@ -398,7 +437,7 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT account, id, name, separator, subscribed FROM {$database->prefix}folder WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT account, id, name, connector, subscribed FROM {$database->prefix}folder WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $folder, ':user' => $user->id)); #Find the folder info
 
 			if(!$query->success) return false;
@@ -406,20 +445,20 @@
 			$current = $query->row();
 			if($current['name'] == $name) return true; #If nothing to rename, quit
 
-			$tree = $current['name'].$current['separator']; #Matching folder tree for child folders
+			$tree = $current['name'].$current['connector']; #Matching folder tree for child folders
 
-			$query = $database->prepare("SELECT id, name, separator, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :tree $database->escape");
+			$query = $database->prepare("SELECT id, name, connector, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :tree $database->escape");
 			$query->run(array(':user' => $user->id, ':account' => $current['account'], ':tree' => $system->database_escape($tree).'%')); #Find child folders
 
 			$children = $query->all();
 			if(!$query->success) return false;
 
-			if(strlen($current['separator'])) #If it has a folder delimiter
+			if(strlen($current['connector'])) #If it has a folder delimiter
 			{
-				$partial = array_slice(explode($current['separator'], $current['name']), 0, -1);
+				$partial = array_slice(explode($current['connector'], $current['name']), 0, -1);
 				array_push($partial, $name);
 
-				$target = implode($current['separator'], $partial); #New full folder path
+				$target = implode($current['connector'], $partial); #New full folder path
 			}
 			else $target = $name;
 
@@ -443,7 +482,7 @@
 				{
 					if(!$row['subscribed']) continue;
 
-					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $target.$current['separator'], $row['name']);
+					$name = preg_replace('/^'.preg_quote($tree, '/').'/', $target.$current['connector'], $row['name']);
 					$name = '{'.$link['host'].'}'.mb_convert_encoding($name, 'UTF7-IMAP', 'UTF-8');
 
 					#NOTE : Do not halt the process by this error
@@ -460,7 +499,7 @@
 
 			foreach($children as $row) #Update the child folders in the database
 			{
-				$name = preg_replace('/^'.preg_quote($tree, '/').'/', $target.$current['separator'], $row['name']);
+				$name = preg_replace('/^'.preg_quote($tree, '/').'/', $target.$current['connector'], $row['name']);
 
 				$query->run(array(':name' => $name, ':id' => $row['id'], ':user' => $user->id)); #Change the folder name
 				if(!$query->success) return $database->rollback() && false;
@@ -544,7 +583,7 @@
 			return $query->success; #NOTE : On failure, next folder sync will fix the inconsistency (Not running transaction during remote access)
 		}
 
-		public static function update($account, System_1_0_0_User $user = null) #Update list of folders
+		public static function update($account, $suppress = false, System_1_0_0_User $user = null) #Update list of folders ($suppress will not consult remote POP3 server for unread counts)
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -555,15 +594,56 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}account WHERE id = :id AND user = :user");
+			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $account, ':user' => $user->id));
 
+			$info = $query->row();
 			if(!$query->success) return false;
 
-			if(Mail_1_0_0_Account::type($query->column()) != 'imap') #Only update the unread message count for non IMAP
+			$query = $database->prepare("SELECT id, name, recent, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account");
+			$query->run(array(':user' => $user->id, ':account' => $account));
+
+			if(!$query->success) return false;
+			$local = $query->all();
+
+			if(Mail_1_0_0_Account::type($info['receive_type']) != 'imap') #If POP3, look through the list of mails to find unread mail counts
 			{
-				#TODO - read the unread mail count in mail db
-				#update that to the folder db
+				if(!$info['supported']) return true; #Do not try to count for new mails without UIDL support as every mail must be downloaded
+
+				if(!$suppress) #If not suppressed, consult the POP3 server for amount of new mails
+				{
+					$connection = Mail_1_0_0_Account::_special($info); #Get account connection parameters
+					$pop3 = Mail_1_0_0_Item::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $connection['receiver']['pass'], $user);
+
+					$list = $pop3->getListing(); #Get list of mails
+
+					$query = $database->prepare("SELECT uid FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
+					$query->run(array(':user' => $user->id, ':account' => $account));
+
+					if(!$query->success) return false;
+					$exist = $remote = array();
+
+					foreach($query->all() as $row) $exist[] = $row['uid']; #List of downloaded mails
+					foreach($list as $row) $remote[] = $row['uidl']; #List of mails on the remote mail server
+
+					$new = count(array_diff($remote, $exist)); #Amount of new mails yet to be downloaded
+				}
+
+				$query = array('count' => $database->prepare("SELECT count(id) FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND seen != :seen"));
+				$query['update'] = $database->prepare("UPDATE {$database->prefix}folder SET count = :count, recent = :recent WHERE id = :id AND user = :user");
+
+				foreach($local as $row)
+				{
+					$query['count']->run(array(':user' => $user->id, ':folder' => $row['id'], ':seen' => 1));
+					if(!$query['count']->success) return false;
+
+					$recent = $query['count']->column();
+					if(strtolower($row['name']) == 'inbox') $recent += $new; #Add the new mail count for inbox
+
+					$query['update']->run(array(':count' => $row['recent'], ':recent' => $recent, ':id' => $row['id'], ':user' => $user->id));
+					if(!$query['update']->success) return false;
+				}
+
 				return true;
 			}
 
@@ -575,14 +655,14 @@
 			$subscribed = imap_getsubscribed($link['connection'], '{'.$link['host'].'}', '*'); #Get subscribed folder names
 			if(!$subscribed) return Mail_1_0_0_Account::error($link['host']);
 
-			$id = $folders = $stored = $separator = $parent = $recent = $read = $remove = $target = $used = array();
+			$id = $folders = $stored = $connector = $parent = $recent = $read = $remove = $target = $used = array();
 			foreach($subscribed as $info) $used[] = $info->name; #Get list of subscribed folder names
 
 			foreach($all as $info) #TODO - It does not honor LATT_NOSELECT (Those folders not allowing to be selected for viewing)
 			{
 				$name = $folders[] = preg_replace('/^{'.preg_quote($link['host'], '/').'}/', '', mb_convert_encoding($info->name, 'UTF-8', 'UTF7-IMAP'));
 
-				$separator[$name] = $info->delimiter; #Keep folder delimiter character
+				$connector[$name] = $info->delimiter; #Keep folder delimiter character
 				$parent[$name] = $info->attributes & LATT_NOINFERIORS == $info->attributes ? 0 : 1; #Find if it can have child folders
 
 				$read[$name] = in_array($info->name, $used) ? 1 : 0;
@@ -591,13 +671,8 @@
 				$recent[$name] = $recent[$name]->unseen ? $recent[$name]->unseen : 0;
 			}
 
-			$query = $database->prepare("SELECT id, name, subscribed FROM {$database->prefix}folder WHERE user = :user AND account = :account");
-			$query->run(array(':user' => $user->id, ':account' => $account));
-
 			if(!$query->success) return false;
-			$local = $query->all();
-
-			$query = $database->prepare("UPDATE {$database->prefix}folder SET recent = :recent, subscribed = :subscribed WHERE id = :id AND user = :user");
+			$query = $database->prepare("UPDATE {$database->prefix}folder SET count = :count, recent = :recent, subscribed = :subscribed WHERE id = :id AND user = :user");
 
 			foreach($local as $row) #Keep name and ID relation
 			{
@@ -609,18 +684,18 @@
 				if($read[$row['name']]) { if(!$row['subscribed']) $row['subscribed'] = 1; } #If not subscribed locally but remotely, flip it
 				elseif($row['subscribed']) $row['subscribed'] = 0; #If subscribed locally but note remotely, flip it
 
-				$query->run(array(':recent' => $recent[$row['name']], ':subscribed' => $row['subscribed'], ':id' => $row['id'], ':user' => $user->id));
+				$query->run(array(':count' => $row['recent'], ':recent' => $recent[$row['name']], ':subscribed' => $row['subscribed'], ':id' => $row['id'], ':user' => $user->id));
 				if(!$query->success) return false;
 			}
 
 			foreach(array_diff($stored, $folders) as $name) $target[] = $id[$name]; #For folders not existing anymore
-			self::remove($target); #Remove them
+			self::remove($target, false, $user); #Remove them
 
-			$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, recent, separator, subscribed) VALUES (:user, :account, :name, :parent, :recent, :separator, :subscribed)");
+			$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, recent, connector, subscribed) VALUES (:user, :account, :name, :parent, :recent, :connector, :subscribed)");
 
 			foreach(array_diff($folders, $stored) as $name) #For newly added folders, add them
 			{
-				$query->run(array(':user' => $user->id, ':account' => $account, ':name' => $name, ':parent' => $parent[$name], ':recent' => $recent[$name], ':separator' => $separator[$name], ':subscribed' => $read[$name]));
+				$query->run(array(':user' => $user->id, ':account' => $account, ':name' => $name, ':parent' => $parent[$name], ':recent' => $recent[$name], ':connector' => $connector[$name], ':subscribed' => $read[$name]));
 				if(!$query->success) return false;
 			}
 
