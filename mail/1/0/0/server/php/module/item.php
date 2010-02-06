@@ -375,16 +375,21 @@
 				break;
 			}
 
-			if(is_string($search) && strlen($search) > 1)
+			if(is_string($search) && strlen($search))
 			{
-				foreach(array('from', 'to', 'cc', 'bcc') as $target)
+				foreach(preg_split('/[　\s]/', $search) as $index => $term) #NOTE - Also splitting 'Japanese full width space' in UTF8 
 				{
-					if($order != $target) $foreign .= " LEFT JOIN {$database->prefix}$target as _$target ON id = _$target.mail";
-					$limiter .= " OR _$target.name LIKE :search $database->escape OR _$target.address LIKE :search $database->escape";
+					if(strlen($term) <= 1) continue; #Avoid short terms
+					if(++$used == 5) break;
+
+					$limiter = ''; #Address search filtering
+					foreach(array('from', 'to', 'cc', 'bcc') as $target) $limiter .= " OR _$target.name LIKE :s{$index}id $database->escape OR _$target.address LIKE :s{$index}id $database->escape";
+
+					$filter .= " AND (subject LIKE :s{$index}id $database->escape$limiter OR plain LIKE :s{$index}id $database->escape)";
+					$param[":s{$index}id"] = '%'.$system->database_escape($term).'%';
 				}
 
-				$filter .= " AND (subject LIKE :search $database->escape$limiter)";
-				$param[':search'] = '%'.$system->database_escape($search).'%';
+				if($limiter) foreach(array('from', 'to', 'cc', 'bcc') as $target) if($order != $target) $foreign .= " LEFT JOIN {$database->prefix}$target as _$target ON id = _$target.mail";
 			}
 
 			$order = "LOWER($order)"; #NOTE : Using 'LOWER' for case insensitive sorting to be compatible across database engines, possibly FIXME for performance
@@ -780,6 +785,7 @@
 			#TODO - IMAP may not need to have attachments saved locally at all at the cost of some download speed or unavailability in case IMAP server is down.
 
 			if($system->is_digit($resume)) Mail_1_0_0_Item::remove(array($resume), false, $user); #If a draft is being saved from a suspended draft, delete the old one. Not stopping if error occurs here.
+			if(!$draft && $row['receive_type'] == 'gmail') return 0; #Quit here for gmail as gmail automatically puts mails in the sent folder
 
 			if($type == 'pop3') #For POP3, store the mail locally
 			{

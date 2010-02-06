@@ -573,7 +573,7 @@
 			var log = $system.log.init(_class + '.remove');
 			if(!$system.is.digit(id) || !$system.is.digit(index)) return log.param();
 
-			var refresh = function(folder, mode) { return __selected.folder == folder ? $self.item.get(folder, mode) : __update[folder] = 0; } //Update the folder
+			var refresh = function(folder, mode) { return __selected.folder == folder ? $self.item.get(folder, mode) : __update[folder] = mode; } //Update the folder
 
 			var update = function(account, folder, request)
 			{
@@ -583,7 +583,7 @@
 					return log.user($global.log.error, 'user/item/delete', 'user/generic/again/solution');
 				}
 
-				refresh(__special.trash[account], 0); //Update the trash
+				return refresh(__special.trash[account], 1); //Update the trash
 			}
 
 			$system.node.fade($id + '_display_' + index, true, null, true); //Remove mail window

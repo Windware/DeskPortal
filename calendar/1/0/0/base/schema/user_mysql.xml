@@ -38,7 +38,6 @@
 
 		<index name="user, day" />
 		<index name="user, category" />
-		<index name="day" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 

@@ -417,7 +417,7 @@
 			if(!__mail[id] || !$system.is.element(indicator) || !frame.contentWindow) return false;
 
 			indicator.style.visibility = 'hidden'; //Remove the loading indicator
-			if(reload) $self.folder.get(__mail[id].account, __account[_submit[index].account].type == 'imap' ? 1 : 2); //Update the unread counts in the folder list if it was not yet read
+			if(reload) $self.folder.get(__mail[id].account, __account[__mail[id].account].type == 'imap' ? 1 : 2); //Update the unread counts in the folder list if it was not yet read
 
 			var image = frame.contentWindow.document.getElementsByTagName('img');
 

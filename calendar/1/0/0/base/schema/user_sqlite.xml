@@ -36,7 +36,6 @@
 
 		<index name="user, day" />
 		<index name="user, category" />
-		<index name="day" />
 	</table>
 
 	<!-- Types -->

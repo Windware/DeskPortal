@@ -66,6 +66,8 @@
 					$title = trim($match[1]);
 				}
 
+				if(!strlen($title)) $title = $address; #If no title is set, set it to its address
+
 				$query = $database->prepare("INSERT INTO {$database->prefix}address (address, title) VALUES (:address, :title)");
 				$query->run(array(':address' => $address, ':title' => $title)); #Add it
 
@@ -124,15 +126,15 @@
 
 			foreach($cat as $index => $category) #Create a list of categories to be appended on the query
 			{
-				$filter[] = ":category{$index}_index";
-				$values[":category{$index}_index"] = $category;
+				$filter[] = ":i{$index}d";
+				$values[":i{$index}d"] = $category;
 			}
 
 			if(count($filter)) $filter = ' AND rl.category IN ('.implode(',', $filter).')'; #Concatenate the query
 			else $filter = '';
 
 			$statement = "SELECT bm.id, count(rl.bookmark) as count, bm.added, bm.name, bm.viewed FROM {$database->prefix}bookmark as bm LEFT JOIN
-			{$database->prefix}relation as rl ON rl.user = :user$filter AND bm.user = :user AND bm.id = rl.bookmark GROUP BY id$order";
+			{$database->prefix}relation as rl ON bm.id = rl.bookmark WHERE bm.user = :user$filter GROUP BY id$order";
 
 			$query = $database->prepare($statement);
 			$query->run($values);
@@ -216,7 +218,7 @@
 			$log = $system->log(__METHOD__);
 
 			if(!is_array($categories)) $categories = array();
-			if(!$system->is_digit($id) || !$system->is_address($address) || !is_string($name) || !is_array($categories)) return $log->param();
+			if(!$system->is_digit($id) || !$system->is_address($address) || !$system->is_text($name) || !is_array($categories)) return $log->param();
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;

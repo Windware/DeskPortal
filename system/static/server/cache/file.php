@@ -20,7 +20,7 @@
 			}
 
 			#Construct the path to the cache file according to the application name and its version
-			$item = $_settings['cache_path'].str_replace('_', '/', $id)."/$key";
+			$item = $_settings['cache_path'].'/'.str_replace('_', '/', $id)."/$key";
 
 			if($compressed) $item .= '.gz'; #If compressed file is requested, look for the compressed file
 			return $system->file_read($item, LOG_NOTICE); #Send the file content
@@ -45,7 +45,7 @@
 			}
 
 			#Construct the path to the cache file according to the application name and its version
-			$item = $_settings['cache_path'].str_replace('_', '/', $id)."/$key";
+			$item = $_settings['cache_path'].'/'.str_replace('_', '/', $id)."/$key";
 			$log->dev(LOG_INFO, "Storing a file cache for '$key'");
 
 			if(!$system->file_store($item, $data)) #Write the raw version of the cache

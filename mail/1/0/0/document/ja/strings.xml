@@ -2,7 +2,7 @@
 	<string name="account" value="アカウント" />
 	<string name="folder" value="フォルダー" />
 	<string name="loading" value="読み込み中..." />
-	<string name="recent" value="'%account%'の'%folder%'に新着があります" />
+	<string name="recent" value="%account%の%folder%に新着があります" />
 
 	<!-- 特別フォルダー -->
 	<string name="inbox" value="受信箱" />

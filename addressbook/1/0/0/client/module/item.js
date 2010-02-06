@@ -106,9 +106,15 @@
 				}
 
 				var table = $system.node.id($id + '_entries');
-
 				var language = $system.language.strings($id);
-				if(__search.length) var phrase = RegExp(__search, 'i'); //Set search phrase
+
+				var find = [];
+
+				if(__search.length) //If searching
+				{
+					var phrase = __search.split(/[　\s]/); //NOTE : Also splitting 'Japanese full width space' in UTF8
+					for(var i = 0; i < phrase.length; i++) if(phrase[i].match(/\S/)) find.push(RegExp(phrase[i], 'i')); //Set the search phrases
+				}
 
 				var skip = $system.array.list('id groups birth_month birth_day updated note'); //Attributes to skip as an individual line
 
@@ -120,14 +126,14 @@
 					var info = ''; //Tip info string
 					var nodes = list[i].attributes;
 
-					if(phrase) var hit = false; //Search result flag
+					var hit = {}; //Search result flag
 
 					for(var j = 0; j < nodes.length; j++) //Load up the attributes
 					{
 						var name = nodes[j].nodeName;
 						var param = _address[id][name] = $system.dom.attribute(list[i], name);
 
-						if(phrase && !hit && param.match(phrase)) hit = true; //Search for matches if a phrase is set
+						if(find.length) for(var k = 0; k < find.length; k++) if(!hit[k] && param.match(find[k])) hit[k] = true; //Search for matches if a phrase is set
 						if($system.array.find(skip, name)) continue;
 
 						if(name == 'birth_year')
@@ -149,7 +155,13 @@
 						if(param.length) info += language[name] + ' : ' + param + '\n'; //Create the tip info
 					}
 
-					if(phrase && !hit) continue; //If search misses, ignore the entry
+					if(find.length)
+					{
+						var ignore = false;
+						for(var j = 0; j < find.length; j++) if(!hit[j]) ignore = true; //If search misses, ignore the entry
+
+						if(ignore) continue;
+					}
 
 					var row = document.createElement('tr'); //Create a row
 					$system.node.hover(row, $id + '_active'); //Make hover color change IE compatible
@@ -205,7 +217,7 @@
 					if(request !== undefined) //Notify only when actually retrieved remotely
 					{
 						var name = list.indexed[group] && list.indexed[group].name || language.uncategorized;
-						log.user($global.log.info, phrase ? 'user/search' : 'user/list', '', [name]);
+						log.user($global.log.info, find.length ? 'user/search' : 'user/list', '', [name]);
 					}
 
 					if(typeof callback == 'function') callback();

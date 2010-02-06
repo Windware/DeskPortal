@@ -7,4 +7,4 @@
 	bar = true;
 	up = true;
 
-	width = 850;
+	width = 880;

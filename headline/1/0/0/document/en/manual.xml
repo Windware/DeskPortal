@@ -35,6 +35,6 @@
 	<string name="_7_filter" value="Filter" />
 	<string name="7/filter" value="To ease finding the articles, it has the ability to filter the articles to display." />
 	<string name="7/item" value="At the top of the main window, by clicking on the 'Marked' option, it will only display the articles marked by clicking on the stars next to the articles and are turned into yellow stars and by clicking on the 'Unread' option, it will only display articles those are not read." />
-	<string name="7/other" value="If the articles have categories assigned, by selecting the category in the filters option, it will only display the articles categorized as the selection and if you type in a word inside 'Search' option and press the 'Enter' key, it will only display the articles containing the words typed. These settings are effective throughout all of the feeds and not per feed." />
+	<string name="7/other" value="If the articles have categories assigned, by selecting the category in the filters option, it will only display the articles categorized as the selection and if you type in a word inside 'Search' option and press the 'Enter' key, it will only display the articles containing the words typed but only 5 or less words having more than 1 character can be used for each search. These settings are effective throughout all of the feeds and not per feed." />
 	<string name="7/search" value="If you would like to search from the entire feeds and articles, please use the 'Search' application." />
 </root>

@@ -10,70 +10,53 @@
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_text($phrase)) return $log->param();
-
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
 
 			$name = explode('_', __CLASS__);
-
 			$database = $system->database('user', __METHOD__, $user, strtolower($name[5]), $name[6]);
+
 			if(!$database->success) return false;
+			$param = array(':user' => $user->id);
 
-			$sql = array(); #List of queries to make
-
-			#Look for matches in group names
-			$sql[] = "SELECT rel.memo as id FROM {$database->prefix}groups as grp, {$database->prefix}relation as rel WHERE grp.user = :user AND grp.name LIKE :phrase $database->escape AND rel.user = :user AND grp.id = rel.groups";
-
-			#Look for matches in memo names
-			$sql[] = "SELECT id FROM {$database->prefix}memo WHERE user = :user AND name LIKE :phrase $database->escape";
-
-			#Look for matches in memo contents
-			$sql[] = "SELECT memo as id FROM {$database->prefix}revision WHERE user = :user AND content LIKE :phrase $database->escape";
-
-			$list = array(); #List of item ID that matched
-
-			foreach($sql as $run) #Retrieve the item ID by looking for matches
+			foreach($phrase as $index => $term)
 			{
-				$query = $database->prepare($run);
-				$query->run(array(':user' => $user->id, ':phrase' => '%'.$system->database_escape($phrase).'%'));
-
-				if(!$query->success) return false;
-				foreach($query->all() as $row) $list[$row['id']] = true; #Keep the item ID found
+				$search .= " AND (memo.name LIKE :s{$index}id $database->escape OR rev.content LIKE :s{$index}id $database->escape)";
+				$param[":s{$index}id"] = '%'.$system->database_escape($term).'%';
 			}
 
-			$this->count = count($list);
-			if(!$this->count) return false;
+			$query = $database->prepare("SELECT memo.id, memo.name FROM {$database->prefix}memo as memo LEFT JOIN {$database->prefix}revision as rev ON memo.id = rev.memo
+			WHERE memo.user = :user$search GROUP BY memo.id ORDER BY rev.time DESC");
 
-			$param = array(); #Query parameters
-			$value = array(':user' => $user->id);
-
-			foreach(array_keys($list) as $index => $id)
-			{
-				$param[] = ":i{$index}d";
-				$value[":i{$index}d"] = $id;
-			}
-
-			$paging = Search_1_0_0_Item::limit($limit, $page); #Result limit
-
-			$query = $database->prepare("SELECT id, name FROM {$database->prefix}memo WHERE id IN (".implode(',', $param).") AND user = :user $paging");
-			$query->run($value);
-
+			$query->run($param);
 			if(!$query->success) return false;
-			$query = $database->prepare("SELECT groups FROM {$database->prefix}relation WHERE user = :user AND memo = :memo ORDER BY groups LIMIT 1");
 
-			foreach($query->all() as $row)
+			$this->count = count($all = $query->all());
+			if(!$this->count) return true;
+
+			$all = array_slice($all, ($page - 1) * $limit, $limit); #Slice out the required list
+
+			$target = array();
+			$param = array(':user' => $user->id);
+
+			foreach($all as $index => $row)
 			{
-				#Pick a single group as a reference
-				$query->run(array(':user' => $user->id, ':memo' => $row['id']));
+				$value = $target[] = ":i{$index}d";
+				$param[$value] = $row['id'];
+			}
+
+			if(count($target))
+			{
+				$target = implode(', ', $target);
+
+				$query = $database->prepare("SELECT memo, groups FROM {$database->prefix}relation WHERE memo IN ($target) AND user = :user GROUP BY memo ORDER BY groups");
+				$query->run($param);
 
 				if(!$query->success) return false;
-
-				$group = $query->column();
-				if(!$group) $group = 0;
-
-				$this->result['item'][] = array('id' => $row['id'], 'group' => $group, 'text' => $row['name']);
+				foreach($query->all() as $row) $relation[$row['memo']] = $row['groups'];
 			}
+
+			foreach($all as $row) $this->result['item'][] = array('id' => $row['id'], 'group' => $relation[$row['id']] ? $relation[$row['id']] : 0, 'text' => $row['name']);
 		}
 	}
 ?>

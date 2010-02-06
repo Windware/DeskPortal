@@ -3,13 +3,7 @@
 	{
 		protected static $_limit = 20; #Results per page
 
-		public static function limit($limit, $page) #Return SQL LIMIT clause with the given amount
-		{
-			$system = new System_1_0_0(__FILE__);
-
-			if(!$system->is_digit($limit) || !$system->is_digit($page)) return '';
-			return 'LIMIT '.(($page - 1) * $limit).", $limit";
-		}
+		protected static $_max = 5; #Max amount of search words allowed
 
 		public static function search($phrase, $area, $page, System_1_0_0_User $user = null) #Search for the phrase
 		{ #TODO - Count the amount matched, send result in that order
@@ -17,13 +11,17 @@
 			$log = $system->log(__METHOD__);
 
 			if(!$system->is_text($phrase) || !is_array($area)) return $log->param();
-			if(strlen($phrase) < 2) return $log->user(LOG_NOTICE, 'Search phrase must be 2 or more letters', 'Increase the search phrase length');
 
-			#Get the list of supported apps from the shared file
-			$supported = json_decode(file_get_contents("{$system->self['root']}resource/supported.json"), true);
+			$look = array();
+			foreach(preg_split('/[　\s]/', $phrase) as $term) if(strlen($term) > 1) $look[] = $term; #FIXME - Client side counts it as characters, but this counts as bytes
+
+			if(!count($look)) return array();
+			$look = array_slice($look, 0, self::$_max);
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
+
+			$supported = json_decode(file_get_contents("{$system->self['root']}resource/supported.json"), true); #Get the list of supported apps
 
 			if(!$system->is_digit($page)) $page = 1; #Default to first page
 			$all = array(); #Result sets
@@ -51,7 +49,7 @@
 					continue;
 				}
 
-				$search = new $class($phrase, self::$_limit, $page, $user); #Initialize the search class with the given phrase (TODO - Cache the result for 5 minutes)
+				$search = new $class($look, self::$_limit, $page, $user); #Initialize the search class with the given phrase (TODO - Cache the result for 5 minutes)
 				if(!count($search->result)) continue; #If none found, drop it
 
 				$nodes = array(); #Result fragments

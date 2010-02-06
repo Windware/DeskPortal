@@ -5,14 +5,6 @@
 
 		public $result = array();
 
-		protected function _quit() #Quit function on error
-		{
-			$this->count = 0;
-			$this->result = array();
-
-			return false;
-		}
-
 		public function __construct($phrase, $limit, $page, System_1_0_0_User $user = null)
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -22,50 +14,47 @@
 			if(!$user->valid) return false;
 
 			$name = explode('_', __CLASS__);
-			$database = $system->database('user', __METHOD__, $user, strtolower($name[5]), $name[6]);
 
+			$database = $system->database('user', __METHOD__, $user, strtolower($name[5]), $name[6]);
 			if(!$database->success) return false;
 
-			#Search for all subscribed feeds
 			$query = $database->prepare("SELECT feed FROM {$database->prefix}subscribed WHERE user = :user");
-			$query->run(array(':user' => $user->id));
+			$query->run(array(':user' => $user->id)); #Search for all subscribed feeds
 
 			if(!$query->success) return false;
 
 			$sub = array(); #List of subscription
 			foreach($query->all() as $row) $sub[] = $row['feed'];
 
-			if(!count($sub)) return false;
-			#NOTE : Not searching for categories as the interface provides it and could clutter the result
+			if(!count($sub)) return true;
+			#NOTE : Not searching for categories as the interface provides it and can clutter the result
 
 			$database = $system->database('system', __METHOD__, null, strtolower($name[5]), $name[6]);
 			if(!$database->success) return false;
 
-			$param = array();
-			$value = array(':phrase' => '%'.$system->database_escape($phrase).'%');
+			$param = $target = array();
 
 			foreach($sub as $index => $id)
 			{
-				$param[] = ":id{$index}_index";
-				$value[":id{$index}_index"] = $id;
+				$value = $target[] = ":i{$index}d";
+				$param[$value] = $id;
 			}
 
-			if(!count($param)) return true;
-			$base = "FROM {$database->prefix}entry WHERE feed IN (".implode(',', $param).") AND (subject LIKE :phrase $database->escape OR section LIKE :phrase $database->escape)";
+			$target = implode(',', $target);
 
-			$query = $database->prepare("SELECT COUNT(id) $base"); #Count the results
-			$query->run($value);
+			foreach($phrase as $index => $term)
+			{
+				$search .= " AND (subject LIKE :s{$index}id $database->escape OR section LIKE :s{$index}id $database->escape)";
+				$param[":s{$index}id"] = '%'.$system->database_escape($term).'%';
+			}
 
-			if(!$query->success) return $this->_quit();
+			$query = $database->prepare("SELECT id, date, subject FROM {$database->prefix}entry WHERE feed IN ($target)$search ORDER BY date DESC");
+			$query->run($param);
 
-			$this->count = $query->column();
-			$paging = Search_1_0_0_Item::limit($limit, $page); #Result limit
+			if(!$query->success) return false;
 
-			$query = $database->prepare("SELECT id, date, subject $base ORDER BY date DESC $paging"); #Look for entries with given phrase inside
-			$query->run($value);
-
-			if(!$query->success) return $this->_quit();
-			foreach($query->all() as $row) $this->result['item'][] = array('id' => $row['id'], 'date' => preg_replace('/ .+/', '', $row['date']), 'text' => $row['subject']);
+			$this->count = count($all = $query->all());
+			foreach(array_slice($all, ($page - 1) * $limit, $limit) as $row) $this->result['item'][] = array('id' => $row['id'], 'date' => preg_replace('/ .+/', '', $row['date']), 'text' => $row['subject']);
 		}
 	}
 ?>

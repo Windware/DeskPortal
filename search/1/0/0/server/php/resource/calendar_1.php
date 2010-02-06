@@ -17,44 +17,21 @@
 			$database = $system->database('user', __METHOD__, $user, strtolower($name[5]), $name[6]);
 
 			if(!$database->success) return false;
-			$sql = array(); #List of queries to make
+			$param = array(':user' => $user->id);
 
-			#Look for matches in category names
-			$sql[] = "SELECT sc.id as id FROM {$database->prefix}category as cat, {$database->prefix}schedule as sc WHERE cat.user = :user AND cat.name LIKE :phrase $database->escape AND sc.user = :user AND cat.id = sc.category";
-
-			#Look for matches in schedule title and content
-			$sql[] = "SELECT id FROM {$database->prefix}schedule WHERE user = :user AND title LIKE :phrase $database->escape OR content LIKE :phrase $database->escape";
-
-			$list = array(); #List of item ID that matched
-
-			foreach($sql as $run) #Retrieve the item ID by looking for matches
+			foreach($phrase as $index => $term)
 			{
-				$query = $database->prepare($run);
-				$query->run(array(':user' => $user->id, ':phrase' => '%'.$system->database_escape($phrase).'%'));
-
-				if(!$query->success) return false;
-				foreach($query->all() as $row) $list[$row['id']] = true; #Keep the item ID found
+				$search .= " AND (sc.title LIKE :s{$index}id $database->escape OR cat.name LIKE :s{$index}id $database->escape OR sc.content LIKE :s{$index}id $database->escape)";
+				$param[":s{$index}id"] = '%'.$system->database_escape($term).'%';
 			}
 
-			$this->count = count($list);
-			if(!$this->count) return false;
-
-			$param = array(); #Query parameters
-			$value = array(':user' => $user->id);
-
-			foreach(array_keys($list) as $index => $id) #FIXME - Query length could become huge
-			{
-				$param[] = ":id{$index}_index";
-				$value[":id{$index}_index"] = $id;
-			}
-
-			if(!count($param)) return true;
-
-			$query = $database->prepare("SELECT day, title FROM {$database->prefix}schedule WHERE id IN (".implode(',', $param).") AND user = :user ORDER BY day DESC ".Search_1_0_0_Item::limit($limit, $page));
-			$query->run($value);
+			$query = $database->prepare("SELECT sc.day, sc.title FROM {$database->prefix}schedule as sc LEFT JOIN {$database->prefix}category as cat ON sc.category = cat.id WHERE sc.user = :user$search ORDER BY day DESC");
+			$query->run($param);
 
 			if(!$query->success) return false;
-			foreach($query->all() as $row) $this->result['item'][] = array('id' => $row['day'], 'text' => $row['title']);
+
+			$this->count = count($all = $query->all());
+			foreach(array_slice($all, ($page - 1) * $limit, $limit) as $row) $this->result['item'][] = array('id' => $row['day'], 'text' => $row['title']);
 		}
 	}
 ?>

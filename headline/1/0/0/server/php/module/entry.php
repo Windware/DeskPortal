@@ -44,12 +44,6 @@
 				$values[':rate'] = 5;
 			}
 
-			if(strlen($param['search'])) #Filter by search words
-			{
-				$search = " AND (subject LIKE :search $database->escape OR description LIKE :search $database->escape)";
-				$base[':search'] = '%'.$system->database_escape($param['search']).'%';
-			}
-
 			if($param['unread'] == '1' && $limiter) #Filter by unread status
 			{
 				#If filtering with other values, simply pick the entries those are not flagged 'seen',
@@ -93,6 +87,18 @@
 					$search .= ' AND date LIKE :date';
 					$base[':date'] = preg_replace('/ .+/', '', $query->column()).' %'; #Get the most recent day on the feed
 				break;
+			}
+
+			if(strlen($param['search'])) #Filter by search words
+			{
+				foreach(preg_split('/[　\s]/', $param['search']) as $index => $term) #Match on all given words (NOTE - Also splitting 'Japanese full width space' in UTF8)
+				{
+					if(strlen($term) <= 1) continue;
+					if(++$used == 5) break;
+
+					$search .= " AND (subject LIKE :s{$index}id $database->escape OR description LIKE :s{$index}id $database->escape)";
+					$base[":s{$index}id"] = '%'.$system->database_escape($term).'%';
+				}
 			}
 
 			$query = array(); #List of database queries

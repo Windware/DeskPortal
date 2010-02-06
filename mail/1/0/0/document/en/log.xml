@@ -23,7 +23,7 @@
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="Failed to get list of folders." />
-	<string name="user/folder/get" value="New messages arrived for '%%' in '%%'." />
+	<string name="user/folder/get" value="New message for '%%' in '%%'." />
 
 	<string name="user/folder/empty/title" value="Failed to empty trash" />
 	<string name="user/folder/empty/message" value="An error occured trying to empty trash. Please try again later." />

@@ -52,7 +52,13 @@
 				container.id = $id + '_container';
 
 				var list = $system.dom.tags(xml, 'bookmark'); //List of bookmarks returned
-				var search = form.search.value.length ? $system.text.regexp(form.search.value) : null; //Search term
+				var search = []; //Search term
+
+				if(form.search.value.length)
+				{
+					var phrase = form.search.value.split(/[　\s]/); //List up the search phrases (NOTE : Also splitting 'Japanese full width space' in UTF8)
+					for(var i = 0; i < phrase.length; i++) if(phrase[i].match(/\S/)) search.push(RegExp(phrase[i], 'i'));
+				}
 
 				var section = $system.array.list('viewed added status cache'); //Bookmark property partial list
 
@@ -61,11 +67,22 @@
 					var address = $system.dom.attribute(list[i], 'address');
 					if(!$system.is.address(address)) continue; //Forget entries with no valid address
 
-					//Get its ID and name
-					var name = $system.dom.attribute(list[i], 'name') || $system.dom.attribute(list[i], 'title') || address;
+					var name = $system.dom.attribute(list[i], 'name') || $system.dom.attribute(list[i], 'title') || address; //Get its ID and name
 
-					//Crop entries those don't match
-					if(search && !name.match(search, 'i') && !address.replace(/^.+?:\/\//, '').match(search, 'i')) continue;
+					if(search.length) //Crop entries those don't match
+					{
+						var missed = false;
+
+						for(var j = 0; j < search.length; j++)
+						{
+							if(name.match(search[j]) || address.replace(/^.+?:\/\//, '').match(search[j])) continue; //If the keyword hits on anything, move on
+
+							missed = true;
+							break;
+						}
+
+						if(missed) continue; //If not hit on any keyword
+					}
 
 					var id = $system.dom.attribute(list[i], 'id');
 					__bookmarks[id] = {address : address, name : name};

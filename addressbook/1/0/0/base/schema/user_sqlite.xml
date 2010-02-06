@@ -21,6 +21,7 @@
 		<column name="created" param="DATETIME NOT NULL" />
 		<column name="updated" param="DATETIME NOT NULL" />
 
+		<index name="user, name" />
 		<index name="user, groups" />
 	</table>
 

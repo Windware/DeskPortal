@@ -2,7 +2,7 @@
 	<string name="account" value="Account" />
 	<string name="folder" value="Folder" />
 	<string name="loading" value="Loading..." />
-	<string name="recent" value="New mail has arrived in '%folder%' for '%account%'" />
+	<string name="recent" value="New mail in %folder% for %account%" />
 
 	<!-- Special folders -->
 	<string name="inbox" value="Inbox" />
