@@ -202,8 +202,9 @@
 				elseif($link['type'] == 'pop3') #List the unique ID and find the message number for POP3
 				{
 					$connection = Mail_1_0_0_Account::_special($link['info']);
+					$conf = $system->app_conf();
 
-					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $connection['receiver']['pass'], $user);
+					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $system->crypt_decrypt($connection['receiver']['pass'], $conf['key']), $user);
 					if(!$pop3) return false;
 
 					if(!is_array($listing = $pop3->getListing())) return false; #Get all listing
@@ -760,13 +761,14 @@
 			if(!$draft) #When sending
 			{
 				$info = Mail_1_0_0_Account::_special($row);
+				$conf = $system->app_conf();
 
 				$connection = array( #SMTP connection parameters - NOTE : TLS is automatically initiated if the mail server supports it
 					'host' => ($info['sender']['secure'] ? 'ssl://' : '').$info['sender']['host'],
 					'port' => $info['sender']['port'],
 					'auth' => strlen($info['sender']['user']) || strlen($info['sender']['pass']),
 					'username' => $info['sender']['user'],
-					'password' => $info['sender']['pass'],
+					'password' => $system->crypt_decrypt($info['sender']['pass'], $conf['key']),
 					'localhost' => $info['sender']['host'],
 					'timeout' => $system->app_conf('system', 'static', 'net_timeout'),
 					'persist' => false
@@ -1038,9 +1040,11 @@
 				if($link['info']['supported'])
 				{
 					$unique = array(); #Store the unique ID for each message
-					$connection = Mail_1_0_0_Account::_special($link['info']);
+					$conf = $system->app_conf();
 
-					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $connection['receiver']['pass'], $user);
+					$connection = Mail_1_0_0_Account::_special($link['info']);
+					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $system->crypt_decrypt($connection['receiver']['pass'], $conf['key']), $user);
+
 					if(!$pop3) return false;
 
 					if(!is_array($listing = $pop3->getListing())) return false; #Get all listing

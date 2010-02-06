@@ -76,6 +76,11 @@
 		public function compress_requested() { return System_1_0_0_Compress::requested($this); }
 
 
+		public function crypt_decrypt($data, $key) { return System_1_0_0_Crypt::decrypt($this, $data, $key); }
+
+		public function crypt_encrypt($data, $key) { return System_1_0_0_Crypt::encrypt($this, $data, $key); }
+
+
 		public function database($type, $caller, System_1_0_0_User $user = null, $app = null, $version = null, $reload = false)
 		{
 			static $_database; #Local database object cache

@@ -47,6 +47,7 @@
 			$query->run(array(':id' => $account, ':user' => $user->id));
 
 			if(!$query->success) return false;
+			$conf = $system->app_conf();
 
 			$info = $query->row();
 			$format = self::_special($info); #Get parameters for special account types
@@ -55,13 +56,13 @@
 			$info['receive_port'] = $format['receiver']['port'];
 			$info['receive_secure'] = $format['receiver']['secure'];
 			$info['receive_user'] = $format['receiver']['user'];
-			$info['receive_pass'] = $format['receiver']['pass'];
+			$info['receive_pass'] = $system->crypt_decrypt($format['receiver']['pass'], $conf['key']);
 
 			$info['send_host'] = $format['sender']['host'];
 			$info['send_port'] = $format['sender']['port'];
 			$info['send_secure'] = $format['sender']['secure'];
 			$info['send_user'] = $format['sender']['user'];
-			$info['send_pass'] = $format['sender']['pass'];
+			$info['send_pass'] = $system->crypt_decrypt($format['sender']['pass'], $conf['key']);
 
 			$type = self::type($info['receive_type']);
 
@@ -249,6 +250,8 @@
 			foreach(array(IMAP_OPENTIMEOUT, IMAP_READTIMEOUT, IMAP_WRITETIMEOUT, IMAP_CLOSETIMEOUT) as $section)
 				if(!imap_timeout($section, $system->app_conf('system', 'static', 'net_timeout'))) return false; #Set the timeout value
 
+			$conf = $system->app_conf();
+
 			if($id != 0 && (!strlen($param['receive_pass']) || !strlen($param['send_pass']))) #If password fields are left blank
 			{
 				$query = $database->prepare("SELECT receive_pass, send_pass FROM {$database->prefix}account WHERE id != :id AND user = :user");
@@ -257,8 +260,8 @@
 				if(!$query->success) return false;
 				$password = $query->row();
 
-				if(!strlen($param['receive_pass'])) $param['receive_pass'] = $password['receive_pass'];
-				if(!strlen($param['send_pass'])) $param['send_pass'] = $password['send_pass'];
+				if(!strlen($param['receive_pass'])) $param['receive_pass'] = $system->crypt_decrypt($password['receive_pass'], $conf['key']);
+				if(!strlen($param['send_pass'])) $param['send_pass'] = $system->crypt_decrypt($password['send_pass'], $conf['key']);
 			}
 
 			$info = self::_special($param); #Get parameters for special account types
@@ -283,7 +286,7 @@
 				stream_set_timeout($connection, $timeout);
 				if(fgets($connection) === false) return 2; #Receive the salute
 
-				if(!fwrite($connection, "1 CAPABILITY\r\n")) return 2; #Send for request
+				if(!fwrite($connection, "1 CAPABILITY\r\n")) return 2; #Request for its capability
 				$response = fgets($connection); #Capability response
 
 				fclose($connection);
@@ -350,6 +353,10 @@
 
 				if(!$query->success) return $database->rollback() && false;
 			}
+
+			#Encrypt the passwords when storing
+			$data[':receive_pass'] = strlen($data[':receive_pass']) ? $system->crypt_encrypt($data[':receive_pass'], $conf['key']) : null;
+			$data[':send_pass'] = strlen($data[':send_pass']) ? $system->crypt_encrypt($data[':send_pass'], $conf['key']) : null;
 
 			if($id == 0) #Insert new account data
 			{

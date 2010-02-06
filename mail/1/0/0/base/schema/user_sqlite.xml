@@ -5,7 +5,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="base" param="INT" /> <!-- Whether this account is default or not -->
 
-		<column name="description" param="VARCHAR(255) UNIQUE" />
+		<column name="description" param="VARCHAR(255)" />
 		<column name="name" param="VARCHAR(255) NOT NULL" />
 		<column name="address" param="VARCHAR(255) NOT NULL" />
 		<column name="preference" param="VARCHAR(12) NOT NULL" /> <!-- Mail display preference either in 'plain' or 'html' -->
