@@ -11,6 +11,8 @@
 
 		var _pressed = false; //presto engine specific variable to track shift key press
 
+		var _queue = {}; //List of actions to take and messages to show when user clicks on the notification
+
 		var _timer; //Timer for fixing corrupted rendering for IE6
 
 		var _window = $id + '_alert_'; //The name of the alert window
@@ -128,23 +130,52 @@
 		this.notice = function(id, message, action, remove) //Make or remove an alert icon on the application window's toolbar
 		{
 			var log = $system.log.init(_class + '.notice');
-			if(!$system.is.text(id) || !$system.window.list[id] || !$system.is.text(message)) return log.param();
 
-			var node = $system.node.id($system.info.id + '_' + id + '_notice');
+			if(!$system.is.text(id) || !$system.is.text(message)) return log.param();
+			if(!$system.window.list[id]) return false; //Only allow notification on an existing window
 
-			if(remove !== true)
+			var run = function(id)
 			{
-				var run = function(node, action)
-				{
-					$system.node.hide(node, true); //Let go of the notice icon
-					if(typeof action == 'function') action(); //Run the associated action
-				}
+				var node = $system.node.id($system.info.id + '_' + id + '_notice');
+				var queue = _queue[id].pop(); //Remove the queue
 
-				node.onclick = $system.app.method(run, [node, action]); //Set a callback function
-				$system.tip.set(node, $system.info.id, 'blank', [message]); //Set a message
+				if(typeof queue.action == 'function') queue.action(); //Run it
+
+				if(!_queue[id].length) $system.node.hide(node, true); //Let go of the notice icon when the queue is empty
+				else
+				{
+					var display = []; //Concatenate list of messages
+					for(var i = _queue[id].length - 1; i >= 0; i++) display.push(_queue[id][i].message);
+
+					$system.tip.set(node, $system.info.id, 'blank', [display.join('\n')], true); //Set a message
+				}
 			}
 
-			$system.node.hide(node, !!remove);
+			if(!$system.is.array(_queue[id])) _queue[id] = [];
+			var node = $system.node.id($system.info.id + '_' + id + '_notice');
+
+			var found = false;
+			for(var i = 0; i < _queue[id].length; i++) if(_queue[id][i].message == message && _queue[id][i].action == action) found = i;
+
+			if(remove !== true) //When setting a new notification
+			{
+				if(found === false) _queue[id].push({message : message, action : action}); //Queue up the message and the action if a new message or action is specified
+				node.onclick = $system.app.method(run, [id]); //Set a callback function when clicking the notification
+
+				var display = []; //Concatenate list of messages
+				for(var i = _queue[id].length - 1; i >= 0; i++) display.push(_queue[id][i].message);
+
+				$system.tip.set(node, $system.info.id, 'blank', [display.join('\n')], true); //Set a message
+				$system.node.hide(node, false); //Show the indicator
+			}
+			//Only remove the specific message when asked to turn off
+			else
+			{
+				if(found) delete _queue[id][found]; //If matches on existing queue, remove the message and the action
+				if(!_queue[id].length) $system.node.id(node, true); //Hide the indicator if no more messages are set
+			}
+
+			return true;
 		}
 
 		/*this.remove = function() //Remove the context menu TODO - Not implemented yet

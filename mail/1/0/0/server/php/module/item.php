@@ -1035,7 +1035,7 @@
 			elseif($link['type'] == 'pop3') #NOTE : Get the UID with an alternative method, since 'imap_search' cannot get UID on POP3
 			{
 				#Remember downloaded mails for POP3
-				$query['loaded'] = $database->prepare("REPLACE INTO {$database->prefix}loaded (user, account, uid, signature) VALUES (:user, :account, :uid, :signature)");
+				$query['loaded'] = $database->prepare("INSERT INTO {$database->prefix}loaded (user, account, $part) VALUES (:user, :account, :$part)");
 
 				if($link['info']['supported'])
 				{
@@ -1275,7 +1275,7 @@
 
 				if($link['type'] == 'pop3') #For POP3
 				{
-					$query['loaded']->run(array(':user' => $user->id, ':account' => $account, ':uid' => $attributes[':uid'], ':signature' => $attributes[':signature'])); #Remember the downloaded mail
+					$query['loaded']->run(array(':user' => $user->id, ':account' => $account, ":$part" => $attributes[":$part"])); #Remember the downloaded mail
 					if(!$query['loaded']->success) return $database->rollback() && false;
 				}
 
@@ -1397,16 +1397,7 @@
 			}
 			else #For POP3, remove list of downloaded mails those do not exist on the mail server anymore to avoid increasing the data indefinitely
 			{
-				if($link['info']['supported'])
-				{
-					$part = 'uid';
-					$active = $unique;
-				}
-				else
-				{
-					$part = 'signature';
-					$active = $exist;
-				}
+				$active = $link['info']['supported'] ? $unique : $exist;
 
 				if(!count($active)) #If no mail is on the server
 				{

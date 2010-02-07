@@ -298,7 +298,7 @@
 			}
 
 			_shown = account;
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.folder', account : account, update : 1, subscribed : 0}, null, update);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.folder', account : account, update : 2, subscribed : 0}, null, update);
 		}
 
 		this.move = function() //Move a folder to another folder

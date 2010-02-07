@@ -41,6 +41,7 @@
 	<string name="3/reply" value="To reply to a mail, click on either 'Reply' or 'Reply all' button in the mail window. When replying to all, it will be sent to the sender as well as all of the receiver of the mail. 'Forwardig' will start composing the mail without setting any destination address automatically." />
 	<string name="3/mark" value="Any mail can be put mark on it and marked mails will be displayed emphasized in the mail list. To put a mark on a mail, check the 'On' for 'Mark' option in the mail window." />
 	<string name="3/trash" value="To remove a mail, click on the 'Trash' button. The mail will be moved to the trash folder but will not be deleted." />
+	<string name="3/empty" value="To empty the trash, click on the 'recycle' icon next to the trash folder in the main window folder listing. This will empty the trash but be noted that mails cannot be recovered after emptying the trash." />
 	<string name="3/next" value="To display the previous or next mail, click on the 'Next' or 'Previous' link below the 'Reply' buttons. If mails do not exist anymore, clicking will not do anything." />
 	<string name="3/move" value="To move mails to other folders, click on a mail and hold down the mouse and move and release it to another folder. Multiple mails can be moved at once when the checkboxes at the left of each mails are checked and they are dragged to a new folder." />
 	<string name="3/close" value="To close the mail window, click on the 'Close' button." />
