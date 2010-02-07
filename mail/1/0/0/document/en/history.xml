@@ -4,4 +4,24 @@
 			<new summary="Initial release">Initial release</new>
 		</user>
 	</current>
+
+	<plan>
+		<user>
+			<change summary="Allow deletion of mails on POP3 servers" priority="3">
+				Allow deleting old mails on POP3 account servers
+			</change>
+			<change summary="Allow moving mails across multiple accounts" priority="2">
+				Allow mails in folders belonging to different accounts to be moved to each others
+			</change>
+			<change summary="Display folders from all accounts at once" priority="2">
+				Display all folders in all accounts at once
+			</change>
+			<change summary="Allow folders to be drag and dropped to move them" priority="2">
+				Allow folders to be moved on the main window instead from the configuration panel
+			</change>
+			<change summary="Improve general performance" priority="2">
+				Improve general performance of the application
+			</change>
+		</user>
+	</plan>
 </root>

@@ -204,7 +204,7 @@
 					$connection = Mail_1_0_0_Account::_special($link['info']);
 					$conf = $system->app_conf();
 
-					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $system->crypt_decrypt($connection['receiver']['pass'], $conf['key']), $user);
+					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $connection['receiver']['pass'], $user);
 					if(!$pop3) return false;
 
 					if(!is_array($listing = $pop3->getListing())) return false; #Get all listing
@@ -652,7 +652,7 @@
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!$system->is_digit($account) || !is_string($subject) || !is_string($body) || !$system->is_text($to)) return $log->param(1);
+			if(!$system->is_digit($account) || !is_string($subject) || !is_string($body) || !$draft && !$system->is_text($to)) return $log->param(1);
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return 1;
@@ -1043,7 +1043,7 @@
 					$conf = $system->app_conf();
 
 					$connection = Mail_1_0_0_Account::_special($link['info']);
-					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $system->crypt_decrypt($connection['receiver']['pass'], $conf['key']), $user);
+					$pop3 = self::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $connection['receiver']['pass'], $user);
 
 					if(!$pop3) return false;
 

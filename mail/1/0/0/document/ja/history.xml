@@ -4,4 +4,24 @@
 			<new summary="初リリース">初リリース</new>
 		</user>
 	</current>
+
+	<plan>
+		<user>
+			<change summary="POP3アカウントでサーバー上のメールを削除できるようにする" priority="3">
+				POP3アカウントにてサーバーからメッセージの削除を可能にする
+			</change>
+			<change summary="アカウント越しにメールを移動できるようにする" priority="2">
+				アカウントをまたがるフォルダー同士でメールの移動をできるようにする
+			</change>
+			<change summary="全アカウントのフォルダーを一覧できるようにする" priority="2">
+				全アカウントのフォルダーをまとめて表示できるようにする
+			</change>
+			<change summary="フォルダーの移動をドラッグ＆ドロップで可能にする" priority="2">
+				フォルダーの移動を設定画面からでなく、メインウインドウで可能にする
+			</change>
+			<change summary="パフォーマンス向上" priority="2">
+				メールアプリケーションの全体的なパフォーマンスの向上
+			</change>
+		</user>
+	</plan>
 </root>

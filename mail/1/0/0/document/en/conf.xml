@@ -15,7 +15,7 @@
 	<string name="name" value="Name" />
 	<string name="address" value="Address" />
 
-	<string name="prefer" value="Preferred read format" />
+	<string name="prefer" value="Preferred format" />
 	<string name="plain" value="Plain text" />
 	<string name="html" value="HTML" />
 

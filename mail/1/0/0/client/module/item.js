@@ -149,7 +149,7 @@
 				if(__selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
 					return __update[folder] = 1; //If not currently displayed, flag to note that this folder should be updated on next display
 
-				delete __cache[folder][page][order][reverse]; //Remove the cache
+				if(__cache[folder] && __cache[folder][page] && __cache[folder][page][order]) delete __cache[folder][page][order][reverse]; //Remove the cache
 				$self.item.get(folder, 1); //Update the displaying list
 			}
 

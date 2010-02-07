@@ -2,10 +2,6 @@
 	<current>
 		<user>
 			<new summary="初リリース">初リリース</new>
-
-			<bug summary="500文字以上のアドレスを登録できない">
-				技術的な制限のため、500文字以上のフィードや記事のリンクが保存できない
-			</bug>
 		</user>
 	</current>
 

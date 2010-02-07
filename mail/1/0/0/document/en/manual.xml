@@ -1,2 +1,70 @@
 <root>
+	<string name="_1_intro" value="Introduction" />
+	<string name="1/intro" value="This is an applicatin to receive and send mails." />
+
+	<string name="_2_account" value="Account" />
+	<string name="2/basic" value="Basic" />
+
+	<string name="2/add" value="To add a new account, go to 'Setting' tab in this window and go to the 'Account' section and input the account information in the fields below." />
+	<string name="2/default" value="If set as 'Default account', this account will be used to compose a new mail when no account is selected on the main window. If there is no other default account, it will be forced to be default." />
+	<string name="2/desc" value="'Description' field can be any description for the account, which will be used for account listings." />
+	<string name="2/name" value="'Name' will be used as the sender name when sending mails from this account." />
+	<string name="2/address" value="'Address' field is the mail address used for this account." />
+	<string name="2/prefer" value="'Preferred format' is used when displaying mails. Selecting 'text' will render all of mails, including HTML mails as text only mails." />
+	<string name="2/sig" value="'Signature' field can be used to store a signature to be placed on mails." />
+
+	<string name="2/receive" value="Receive Settings" />
+	<string name="2/type" value="'Type' is the type of the mail account. It will be either IMAP or POP3. If you're not sure which, please either try both or consult the mail address provider about mail server connection settings. If you are using either Hotmail or Gmail, you may choose that as account type to use easier pre configured settings." />
+	<string name="2/manual" value="When either IMAP or POP3 is chosen, you will need to type in the receiving mail server name (ex : mail.example.com) in the 'Server' field. If SSL encryption is required, you need to check the 'Secure' checkbox. If only TLS is required, you do not need to check the box. Then, type in the mail user credential into the 'User' and 'Password' fields." />
+	<string name="2/auto" value="If either Hotmail or Gmail is chosen, insert the account password below and the configuration is complete." />
+
+	<string name="2/send" value="Send Settings" />
+	<string name="2/server" value="When either IMAP or POP3 is chosen at the receive settings, you will need to type in the send server name. (ex : smtp.example.com) If SSL encryption is required, you need to check the 'Secure' checkbox. If only TLS is required, you do not need to check the box. Then, type in the mail user credential into the 'User' and 'Password' fields." />
+
+	<string name="2/save" value="Save" />
+	<string name="2/set" value="When all the required fields are filled, click on the 'Save' button to save the settings. At this moment, connection test will be made to the mail server. When an error is encountered, it will be displayed on the screen and in that case, please revise the settings or wait a while in cases such as mail server unavailability." />
+
+	<string name="2/edit" value="Edit" />
+	<string name="2/pick" value="To edit saved accounts, select the account from the list at the top and edit the fields." />
+	<string name="2/remove" value="When editing an existing account, 'Delete' button will appear next to the 'Save' button and when clicked, will delete the account. When deleting accounts for POP3 or Hotmail, by the nature of the account, all the mails other than in the inbox will be permanently deleted and cannot be recovered. Mails received in the past in the inbox can be retrieved again if the account is re-registered, unless deleted by other mail client and by other reasons. IMAP and Gmail accounts don't have this restriction and all the mails can be retrieved again on re-registration of the account." />
+
+	<string name="_3_receive" value="Receiving" />
+	<string name="3/folder" value="Folder" />
+
+	<string name="3/select" value="After configuring an account, the account may be chosen at the left upper part of the main window." />
+	<string name="3/list" value="When an account is selected, the list of folders will be displayed at left and list of mails will be displayed at right. If there are no mails to display, it will be displayed as '(Empty)'. Mails those are unread, marked or under draft will be displayed emphasized." />
+	<string name="3/change" value="To display mails in other than inbox, click on a folder in the folder listing. If there are many mails inside the folder, it will take a while to receive them all for the first time. If the list of mails do not fit in a page, you may change the page to display by switching the page selection above the mail listing." />
+	<string name="3/unread" value="If there are unread mails in the folder, the number of unread mails will be displayed next to the folder name. New mails will be checked periodically and when they arrive, it will be notified at the title bar of the application window." />
+
+	<string name="3/mail" value="Mail" />
+	<string name="3/read" value="By placing the mouse over the mail list, a preview of the mail will be displayed. And by clicking on the mail, a new window will be opened to display the content of the mail. Replying, forwarding and deleting the mail can be done from this window. And by clicking on the '+' sign next to mail addresses, the address can be registered to the Address Book application. If the mail has attachment files, clicking on the file names will initiate downloading the attached files." />
+	<string name="3/reply" value="To reply to a mail, click on either 'Reply' or 'Reply all' button in the mail window. When replying to all, it will be sent to the sender as well as all of the receiver of the mail. 'Forwardig' will start composing the mail without setting any destination address automatically." />
+	<string name="3/mark" value="Any mail can be put mark on it and marked mails will be displayed emphasized in the mail list. To put a mark on a mail, check the 'On' for 'Mark' option in the mail window." />
+	<string name="3/trash" value="To remove a mail, click on the 'Trash' button. The mail will be moved to the trash folder but will not be deleted." />
+	<string name="3/next" value="To display the previous or next mail, click on the 'Next' or 'Previous' link below the 'Reply' buttons. If mails do not exist anymore, clicking will not do anything." />
+	<string name="3/move" value="To move mails to other folders, click on a mail and hold down the mouse and move and release it to another folder. Multiple mails can be moved at once when the checkboxes at the left of each mails are checked and they are dragged to a new folder." />
+	<string name="3/close" value="To close the mail window, click on the 'Close' button." />
+
+	<string name="_4_send" value="Send" />
+	<string name="4/compose" value="To compose a mail, click on the 'Reply' button on an existing mail window or click on the composing icon at the left upper part of the main window." />
+	<string name="4/reply" value="When replying, the content of the mail will be auomatically quoted." />
+	<string name="4/option" value="In the mail composing window, the account to send from can be changed by switching the account selection at the top of the window. To use 'Cc' or 'Bcc' field, click on the '+' button next to the 'To' field. To attach files to the mail, click on the '+' button next to the 'Attachment'. Attachments can be made as many as necessary. To delete already specified attachment files, click on the 'x' button to remove it." />
+	<string name="4/draft" value="To save the mail as a draft, click on the 'Save' button and it will be saved under the drafts folder. Any attachments will not be saved at this moment, and you are required to add them again when sending. While composing a mail, the content of the mail will be saved automatically in the drafts folder periodically. Please be noted that attachments are not saved in this case as well." />
+	<string name="4/send" value="After filling the title, the address to send to and the message body, click on the 'Send' button to send the mail. Sent mails will be saved in the sent folder." />
+	<string name="4/attachment" value="When a mail is sent with attachments under POP3 or Hotmail accounts, due to the application's restriction, the attachments will be removed when being saved under the sent folder. However, the attachments will be delivered to the destination addresses." />
+
+	<string name="_5_display" value="Display" />
+	<string name="5/filter" value="At the upper part of the main window, mails can be filtered by clicking on the 'Marked' or 'Unread'. You may also enter search words in the 'Search' field and hit the enter key to filter the mails by its contents. Search words may be delimited by spaces and can be up to 5 words. To search from all mails in every accounts, please use the Search application." />
+	<string name="5/sort" value="When mails are displayed, by clicking on the most upper row of the list, the mails may be re-ordered by that column. Clicking on the same column will make the listing transition between ascending and descending. Also, by clicking on the far left column of the most upper row, it will select or deselect every mail displayed to move them at once to another folder." />
+
+	<string name="_6_folder" value="Folder Management" />
+	<string name="6/intro" value="To manage folders of an account, go to the 'Setting' tab in this window and go to the 'Folder' section and pick the account you want to manage." />
+	<string name="6/adjust" value="In the 'Adjustment' section, pick the folder to manage from the list of folders loaded. Special folders including inbox will have restriction from being managed." />
+	<string name="6/move" value="To move a folder, pick the parent folder (to move to the root, pick '(Top)') and click on the 'Move' button." />
+	<string name="6/rename" value="To change the name of the folder, enter a new name for the folder next to 'Rename' and click on the 'Rename' button." />
+	<string name="6/display" value="To set whether to display the folder or not in the listing, pick the option next to 'Display' button and click on 'Display' button." />
+	<string name="6/remove" value="To remove a folder, click on the 'Remove' button. Please be noted that all of the deleted mails inside the folder and other folders within the deleted folder cannot be recovered once deleted." />
+
+	<string name="6/new" value="To create a new folder, in the 'New' section, pick the parent folder (pick '(Top)' to make it at the root) and enter the name of the folder and click on the 'Create' button." />
+	<string name="6/special" value="'Special Folders' section will allow you to change which folders should be treated as storing drafts, storing sent mails and where trashed mails go. Due to the nature of mail servers, you may not change the inbox's setting." />
 </root>

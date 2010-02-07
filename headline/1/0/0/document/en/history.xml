@@ -2,10 +2,6 @@
 	<current>
 		<user>
 			<new summary="Initial version">Initial release.</new>
-
-			<bug summary="Cannot store addresses longer than 500 characters">
-				By technical limitation, feeds and entries address length cannot be more than 500 characters
-			</bug>
 		</user>
 	</current>
 

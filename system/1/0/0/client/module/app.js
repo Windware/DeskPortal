@@ -362,7 +362,7 @@
 			load.push(info.root + 'meta.xml', info.devroot + 'graphic/icon.png');
 			load.push(info.devroot + 'style/style.js', info.devroot + 'style/common.css', info.devroot + 'style/' + $self.browser.engine + '.css');
 
-			var picked = $system.language.pick(id, '*.*');
+			var picked = $system.language.pick(id, '*.*'); //TODO - Likely not necessary to download English fallback files for other languages
 			for(var i = 0; i < picked.length; i++) load.push(picked[i]);
 
 			for(var i = 0; i < info.depend.length; i++) //Load any application's info file that the application depends on

@@ -482,13 +482,13 @@
 
 			for(var i = 0; i < section.length; i++) //Check on address fields
 			{
-				if(!form[section[i]].value.length) continue;
+				if(!draft && !form[section[i]].value.length) continue;
 				var address = form[section[i]].value.split(/\s*,\s*/);
 
 				for(var j = 0; j < address.length; j++)
 				{
-					if(!address[j].match(/.@./)) warn[section[i]] = true;
-					else exist = true;
+					if(draft && !address[j].length || address[j].match(/.@./)) exist = true; //Allow empty address under draft composition
+					else warn[section[i]] = true;
 				}
 			}
 
