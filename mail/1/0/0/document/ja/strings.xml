@@ -46,7 +46,7 @@
 	<string name="no" value="いいえ" />
 
 	<string name="purge" value="ごみ箱を空にしますか？この操作は元に戻す事はできません。" />
-	<string name="wait" value="メールの一覧をダウンロード中です。しばらくかかる場合があります。" />
+	<string name="wait" value="メールをダウンロード中です。しばらくかかる場合があります。" />
 	<string name="none" value="空" />
 
 	<!-- メールウインドウ -->

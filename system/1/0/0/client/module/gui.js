@@ -145,7 +145,7 @@
 				else
 				{
 					var display = []; //Concatenate list of messages
-					for(var i = _queue[id].length - 1; i >= 0; i++) display.push(_queue[id][i].message);
+					for(var i = _queue[id].length - 1; i >= 0; i--) display.push(_queue[id][i].message);
 
 					$system.tip.set(node, $system.info.id, 'blank', [display.join('\n')], true); //Set a message
 				}
@@ -154,7 +154,7 @@
 			if(!$system.is.array(_queue[id])) _queue[id] = [];
 			var node = $system.node.id($system.info.id + '_' + id + '_notice');
 
-			var found = false;
+			var found = false; //Check for duplicates
 			for(var i = 0; i < _queue[id].length; i++) if(_queue[id][i].message == message && _queue[id][i].action == action) found = i;
 
 			if(remove !== true) //When setting a new notification
@@ -163,15 +163,14 @@
 				node.onclick = $system.app.method(run, [id]); //Set a callback function when clicking the notification
 
 				var display = []; //Concatenate list of messages
-				for(var i = _queue[id].length - 1; i >= 0; i++) display.push(_queue[id][i].message);
+				for(var i = _queue[id].length - 1; i >= 0; i--) display.push(_queue[id][i].message);
 
 				$system.tip.set(node, $system.info.id, 'blank', [display.join('\n')], true); //Set a message
 				$system.node.hide(node, false); //Show the indicator
 			}
-			//Only remove the specific message when asked to turn off
-			else
+			else if(found) //Only remove the specific message when asked to turn off
 			{
-				if(found) delete _queue[id][found]; //If matches on existing queue, remove the message and the action
+				delete _queue[id][found]; //If matches on existing queue, remove the message and the action
 				if(!_queue[id].length) $system.node.id(node, true); //Hide the indicator if no more messages are set
 			}
 

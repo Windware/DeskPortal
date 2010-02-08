@@ -10,7 +10,7 @@
 		var _display = function(id) //Fade process that is called repeatedly (Make it as less computational as possible)
 		{
 			var target = __node.fading[id]; //Keep the fade state
-			if(!target) return;
+			if(!target) return false;
 
 			target.level += target.way; //Level of opacity at this cycle
 
@@ -34,6 +34,8 @@
 				delete __node.fading[id]; //Let go of the state object
 			}
 			else $system.node.opacity(target.node, target.level); //Set the opacity to the current level
+
+			return true;
 		}
 
 		this.classes = function(node, name, set) //Set a class attribute to a node safely
@@ -59,7 +61,11 @@
 			var node = $system.node.id(id); //The node element
 			if(!node) return log.dev($global.log.info, 'dev/fade', 'dev/exist', [id]);
 
-			if(__node.fading[id]) return; //Do not let it fade while fading
+			if(__node.fading[id]) //If currently in the fade process
+			{
+				__node.fading[id].level = __node.fading[id].way > 0 ? 100 : 0; //Set fade level to the finished state
+				_display(id); //Call the fade processor
+			}
 
 			if(direction === undefined) //If direction is not defined, try to flip the current visibility
 			{

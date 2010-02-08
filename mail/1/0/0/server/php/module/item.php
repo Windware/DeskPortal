@@ -187,7 +187,7 @@
 
 			if(!$query->success) return false;
 
-			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server (TODO - Avoid connecting here for POP3)
+			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server
 			if(!$link) return false;
 
 			$numbers = array(); #Returning sequence numbers

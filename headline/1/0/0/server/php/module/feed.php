@@ -286,11 +286,19 @@
 			if(!$query->success) return false;
 			if($query->column() != 0) return true;
 
-			#Remove the feed to avoid fetching the content remotely anymore
-			$query = $database->prepare("DELETE FROM {$database->prefix}feed WHERE id = :id");
-			$query->run(array(':id' => $id));
+			#Report everything as success even failed below here
+			if(!$database->begin()) return true;
 
-			return $query->success; #Still report error, if this operation fails
+			$query = $database->prepare("DELETE FROM {$database->prefix}feed WHERE id = :id");
+			$query->run(array(':id' => $id)); #Remove the feed to avoid fetching the content remotely anymore
+
+			if(!$query->success) $database->rollback();
+
+			$query = $database->prepare("DELETE FROM {$database->prefix}entry WHERE feed = :id");
+			$query->run(array(':id' => $id)); #Remove entries when no user is subscribed
+
+			if(!$query->success || !$database->commit()) $database->rollback();
+			return true;
 		}
 
 		public function update() { return $this->id ? Headline_1_0_0::update($this->address) : false; } #Update the feed content

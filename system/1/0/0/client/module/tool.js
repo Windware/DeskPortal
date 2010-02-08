@@ -3,7 +3,7 @@
 	{
 		var _class = $id + '.tool';
 
-		var _fade = {}; //To keep which window is fading a part in or out
+		var _fade = {window : {}, part : {}}; //To keep which window is fading a part in or out
 
 		this.create = function(id) //Load an application saving its state
 		{
@@ -96,19 +96,24 @@
 			var log = $system.log.init(_class + '.fade');
 			if(!$system.is.id(id) || !$system.node.id(id)) return log.param();
 
+			if(_fade.window[id]) return false;
+			_fade.window[id] = true;
+
 			var state = $system.node.hidden(id); //Find current status
 			if(direction === undefined) direction = !state;
 
-			if($system.is.md5($global.user.ticket) && direction != state) //Save the display state
+			if($system.is.md5($global.user.ticket) && direction != state) //Save the displayed state
 				$system.network.send($system.info.root + 'server/php/front.php', {task : 'tool.fade', section : 'used'}, {id : id, loaded : !direction ? 1 : 0});
 
 			var run = function(id, direction, callback)
 			{
+				delete _fade.window[id];
+
 				if(!direction) $system.window.raise(id); //If fading in, raise the window to the front most
-				if(typeof callback == 'function') callback();
+				$system.app.callback(log.origin, callback);
 			}
 
-			$system.window.fade(id, direction, $system.app.method(run, [id, direction, callback])); //Fade the window in or out
+			return $system.window.fade(id, direction, $system.app.method(run, [id, direction, callback])); //Fade the window in or out
 		}
 
 		this.hide = function(id, part, quick) //Hides a component from a window
@@ -131,9 +136,9 @@
 			$system.tip.clear(); //Remove any tips displayed
 
 			if(!reference.visible(other)) return log.dev($global.log.notice, 'dev/tool/both', '', [id]); //If both parts tries to hide, don't
-			if(_fade[id]) return log.dev($global.log.notice, 'dev/tool/fade', 'dev/tool/fade/solution', [id]); //If other parts are fading in/out, quit
+			if(_fade.part[id]) return log.dev($global.log.notice, 'dev/tool/fade', 'dev/tool/fade/solution', [id]); //If other parts are fading in/out, quit
 
-			_fade[id] = true; //Keep the fade state to be on
+			_fade.part[id] = true; //Keep the fade state to be on
 
 			reference.displayed[part] = !visibility; //Set the display state
 			var style = $system.node.id(id).style; //Window's style
@@ -173,7 +178,7 @@
 					node.parentNode.style.height = '1px'; //Reset the size to shrink the toolbar area (webkit doesn't like 0px : as of Safari 3)
 				}
 
-				delete _fade[id]; //Let go of the fade state
+				delete _fade.part[id]; //Let go of the fade state
 			}
 
 			//Change the visibility and swap the tip message on completion

@@ -165,18 +165,20 @@
 
 			if(_shown != account)
 			{
-				$system.node.fade($id + '_conf_folder_area', true); //Hide the options
-				$system.node.fade($id + '_conf_folder_list', true); //Hide the folder options
+				$system.node.hide($id + '_conf_folder_area', true); //Hide the options
+				$system.node.hide($id + '_conf_folder_list', true); //Hide the folder options
 			}
+
+			_shown = account;
 
 			if(account == '0') return $system.app.callback(_class + '.folder', callback);
 			$system.node.hide($id + '_conf_folder_loading', false);
 
 			var update = function(request)
 			{
-				if(account != _shown) return $system.app.callback(_class + '.folder', callback);
-
 				$system.node.hide($id + '_conf_folder_loading', true);
+
+				if(account != _shown) return $system.app.callback(_class + '.folder', callback);
 				var form = {adjust : $system.node.id($id + '_conf_folder_form_adjust'), assign : $system.node.id($id + '_conf_folder_form_assign')};
 
 				form.create = $system.node.id($id + '_conf_folder_form_create');
@@ -297,7 +299,6 @@
 				return $system.node.fade($id + '_conf_folder_area', false); //Show the options
 			}
 
-			_shown = account;
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.folder', account : account, update : 2, subscribed : 0}, null, update);
 		}
 

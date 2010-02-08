@@ -8,7 +8,7 @@
 			return html_entity_decode(trim(str_replace("\n", ' ', preg_replace('/<.+?>/', ' ', $string))));
 		}
 
-		public static function update($feed = null) #Update the feed caches
+		public static function update($feed = null) #Update the feed caches (Supports RSS 0.9/1.0/2.0 and ATOM)
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
@@ -45,7 +45,7 @@
 				$header = strtotime($row['updated']) ? array('If-Modified-Since' => gmdate('r', $row['updated'])) : array();
 				$request[] = array('address' => $row['address'], 'header' => $header);
 
-				$log->dev(LOG_NOTICE, "Making a remote call to {$row['address']} to get a news RSS");
+				$log->dev(LOG_NOTICE, "Making a remote call to {$row['address']} to get the feed");
 			}
 
 			#TODO - Add favicon.ico along with the feed request
@@ -63,7 +63,7 @@
 				{
 					try
 					{
-						#Placing '@' to avoid errors displayed when it is captured (libxml_use_internal_errors() works?)
+						#NOTE : Placing '@' to avoid errors displayed when it is captured (libxml_use_internal_errors() works?)
 						$xml = @new SimpleXMLElement($content['body'], LIBXML_COMPACT); #Parse the feed received
 
 						switch(strtolower($xml->getName())) #Depending on what type of feed it is
@@ -96,7 +96,7 @@
 								foreach($site->link as $source) if($source['rel'] != 'self') $link = $source['href'];
 
 								$summary = 'content';
-								$href = true; #Link to the article is an attribute of a 'link' node
+								$href = true; #Link to the article is the attribute of a 'link' node
 							break;
 
 							default :
@@ -133,7 +133,6 @@
 
 				#Update the feed information
 				$query->run(array(':id' => $index, ':site' => self::_flatten($link), ':description' => self::_flatten($site->title), ':icon' => $icon));
-
 				if(!$query->success) continue; #If the site entry cannot be updated, do not update the entries
 
 				if(!is_object($entries))
@@ -155,7 +154,7 @@
 				{
 					$page = $href ? $headline->link['href'] : $headline->link; #Get the page link
 
-					$query['entry']->run(array(':feed' => $index, ':link' => $page));
+					$query['entry']->run(array(':feed' => $index, ':link' => self::_flatten($page))); #NOTE : Only finding out duplicates via link to work universally on all type of feeds
 					if(!$query['entry']->success || $query['entry']->column() > 0) continue; #If the entry is already registered, ignore it
 
 					if(preg_match('/^(dc):(.+)/', $date, $matches)) #Get the namespace values
