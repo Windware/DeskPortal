@@ -33,6 +33,9 @@
 	<string name="user/user/expire/title" value="セッションリミット" />
 	<string name="user/user/expire/message" value="このユーザーはログアウトされます%%" />
 
+	<string name="user/user/demo" value="デモモードです" />
+	<string name="user/user/demo/message" value="デモモードではデータの保存はできません" />
+
 	<!-- window.js -->
 	<string name="user/window/create" value="アプリケーション'%%'の起動に失敗しました。" />
 </root>
