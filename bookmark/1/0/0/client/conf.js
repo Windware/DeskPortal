@@ -3,6 +3,8 @@
 	{
 		var _class = $id + '.conf';
 
+		var _submit = false; //Whether bookmark import has been made or not
+
 		this._1_group = function() //Configuration tab action to list the groups in the select form
 		{
 			var log = $system.log.init(_class + '._1_group');
@@ -29,6 +31,9 @@
 			$self.group.get(list);
 		}
 
+		//Set the form action address
+		this._2_import = function() { $system.node.id($id + '_import_form').action = $system.network.form($self.info.root + 'server/php/front.php?task=conf._2_import'); }
+
 		this.display = function(id) //Change the group selection
 		{
 			var log = $system.log.init(_class + '.display');
@@ -41,5 +46,48 @@
 			}
 
 			$self.group.get(show); //Get the group listings
+		}
+
+		this.imported = function(frame) //Loads when the importing process finishes
+		{
+			if(!_submit) return; //If form is not submitted, quit
+			if(!$system.is.element(frame, 'iframe')) return false;
+
+			var form = $system.node.id($id + '_import_form');
+			form.bookmark.value = '';
+
+			var language = $system.language.strings($id, 'conf.xml');
+			var button = form.submit.value; //Submit button
+
+			form.submit.value = language.load; //Revert the message
+			form.submit.disabled = false; //Re-enable the submit button
+
+			var body = frame.contentWindow.document.body;
+			if(!body) return false;
+
+			if(body.innerHTML == '0')
+			{
+				$system.gui.alert($id, 'user/item/import', 'user/item/import/message', 3);
+
+				__group = undefined; //Remove group caching
+				return $self.run(); //Update the listing on success
+			}
+
+			$system.gui.alert($id, 'user/item/import/fail', 'user/item/import/fail/message', 3);
+			return false;
+		}
+
+		this.submit = function() //Submit the import form
+		{
+			var form = $system.node.id($id + '_import_form');
+			if(!form.bookmark.value.length) return false;
+
+			var language = $system.language.strings($id, 'conf.xml');
+			var button = form.submit.value; //Submit button
+
+			form.submit.value = language.loading; //Change the message
+			form.submit.disabled = true; //Disable clicking while uploading
+
+			return _submit = true; //Note about form submission
 		}
 	}

@@ -5,15 +5,11 @@
 
 		var _drag; //The message drag parameter
 
-		var _float = 7; //Amount of pixels to move to trigger message move instead of displaying message when dragging them
+		var _expire = 5; //Minute for IMAP folder freshness to expire
+
+		var _float = 7; //Amount of pixels to move to trigger message move instead of displaying message when clicking and dragging them
 
 		var _lock; //Mail drag mouse move event throttling lock
-
-		var _page = {}; //Selected page for each folders
-
-		var _preserve = 5; //Amount of minutes to keep local cache for each folder listings
-
-		var _scroll = {}; //Scroll amount for each folders
 
 		var _stack = {}; //List of selected mails
 
@@ -118,7 +114,7 @@
 				var folder = __mail[_drag.id[0]].folder; //The folder the mail belongs to
 
 				//Move the selected mails if targetting another folder
-				if(target != folder) $self.item.move(_drag.id, target, $system.app.method($self.item.get, [folder, 0]));
+				if(target != folder) $self.item.move(_drag.id, target, $system.app.method($self.item.get, [folder, __page[folder], 0]));
 
 				break; //Only checking the target folder ID in the loop
 			}
@@ -127,10 +123,12 @@
 			return true;
 		}
 
-		this.get = function(folder, update, callback, request) //Get list of mails of a folder
+		this.get = function(folder, page, update, callback, request) //Get list of mails of a folder
 		{
 			var log = $system.log.init(_class + '.get');
 			if(!$system.is.text(folder)) return log.param();
+
+			if(!$system.is.digit(page) || !page) page = 1;
 
 			$self.gui.indicator(true); //Show indicator
 			$system.node.hide($id + '_mail_empty', true, true); //Remove the empty notification
@@ -138,38 +136,22 @@
 			var language = $system.language.strings($id);
 			var table = $system.node.id($id + '_read_zone'); //Mail listing table
 
-			if(__selected.folder == folder) _page[folder] = $system.node.id($id + '_show').value; //Get current page selection
-			else if(!$system.is.digit(_page[folder])) _page[folder] = 1;
-
-			var previous = __selected; //Remember previous selection
-			__selected = {account : __selected.account, folder : folder, page : _page[folder], marked : __filter.marked, unread : __filter.unread, order : __order.item, reverse : __order.reverse, search : $system.node.id($id + '_form').search.value}; //Remember current selection
-
-			var expire = function(folder, page, order, reverse) //Expire the cache
-			{
-				if(__selected.folder != folder || __selected.page != page || __selected.order != order || __selected.reverse != reverse)
-					return __update[folder] = 1; //If not currently displayed, flag to note that this folder should be updated on next display
-
-				if(__cache[folder] && __cache[folder][page] && __cache[folder][page][order]) delete __cache[folder][page][order][reverse]; //Remove the cache
-				$self.item.get(folder, 1); //Update the displaying list
-			}
-
-			var list = function(folder, page, order, reverse, marked, unread, search, previous, update, callback, request) //List the mails upon receiving the contents
+			var list = function(folder, page, param, order, update, callback, request) //List the mails upon receiving the contents
 			{
 				$self.gui.indicator(false); //Remove indicator
-				$system.node.hide($id + '_wait', true, true); //Remove the wait message
 
 				var section = $system.array.list('subject to from cc bcc date'); //List of data to cache
-				var cache = __cache[folder][page][order][reverse][marked][unread][search]; //Page listing cache
+				var cache = __cache[folder][page][order.item][order.reverse][param.marked][param.unread][param.search]; //Page listing cache
 
 				if($system.is.object(request)) //If a new data is passed, create the cache
 				{
 					if($system.dom.status(request.xml) != '0') //Show message on error but do list if any data is returned
 					{
-						log.user($global.log.error, 'user/item/list/message', 'user/generic/again/solution');
-						$system.gui.alert($id, 'user/item/list/title', 'user/item/list/message', 3);
+						log.user($global.log.error, 'user/item/list/message', 'user/generic/again/solution', [__account[__belong[folder]].description]);
+						$system.gui.alert($id, 'user/item/list/title', 'user/item/list/message', 3, null, [__account[__belong[folder]].description]);
 					}
 
-					cache = __cache[folder][page][order][reverse][marked][unread][search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
+					cache = __cache[folder][page][order.item][order.reverse][param.marked][param.unread][param.search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
 					if(!$system.is.digit(cache.max) || !cache.max) cache.max = 1;
 
 					var list = $system.dom.tags(request.xml, 'mail');
@@ -216,16 +198,30 @@
 					}
 				}
 
+				if(__account[__belong[folder]].type == 'imap') //Synchronize IMAP folder periodically
+				{
+					var expire = function(folder)
+					{
+						if(__selected.folder == folder) $self.item.update(1);
+						else __update[folder] = 1;
+					}
+
+					if(!__refresh[folder]) { if(update != 1) expire(folder); } //If never updated, synchronize once now
+					else clearTimeout(__refresh[folder]);
+
+					__refresh[folder] = setTimeout($system.app.method(expire, [folder]), _expire * 60 * 1000);
+				}
+
 				//If displaying state changed, do not show it
-				if(__selected.folder != folder || __selected.page != page || __selected.marked != marked) return $system.app.callback(_class + '.get.list', callback);
-				if(__selected.unread != unread || __selected.order != order || __selected.reverse != reverse || __selected.search != search) return $system.app.callback(_class + '.get.list', callback);
+				if(__selected.folder != folder || __page[folder] != page || __selected.marked != param.marked || __selected.unread != param.unread) return $system.app.callback(_class + '.get.list', callback);
+				if(__selected.order != order.item || __selected.reverse != order.reverse || __selected.search != param.search) return $system.app.callback(_class + '.get.list', callback);
 
 				__current = cache; //Remember current listing
 
-				if(__selected.page > cache.max) //If the chosen page exceeds the max page (Ex : After moving mails to another folder)
+				if(__page[folder] > cache.max) //If the chosen page exceeds the max page (Ex : After moving mails to another folder)
 				{
 					$system.node.id($id + '_show').value = cache.max;
-					__selected.page = cache.max;
+					__page = cache.max;
 
 					$self.item.update(); //Show earlier page
 					return $system.app.callback(_class + '.get.list', callback);
@@ -268,7 +264,7 @@
 					var sign = document.createElement('span'); //Create an area to put sort sign
 					sign.id = $id + '_sign_' + sort;
 
-					if(sort == __order.item) sign.innerHTML = !__order.reverse ? ' &uarr;' : ' &darr;';
+					if(sort == order.item) sign.innerHTML = !order.reverse ? ' &uarr;' : ' &darr;';
 
 					header.appendChild(sign);
 					row.appendChild(header);
@@ -290,6 +286,8 @@
 				{
 					var mail = __mail[cache.list[i]]; //Mail information cache
 					if(!mail) continue; //If the mail is deleted, ignore
+
+					if(__selected.marked && mail.marked != '1' || __selected.unread && mail.seen == '1') continue; //Leave out if the state has internally changed
 
 					var row = document.createElement('tr');
 					row.id = $id + '_mail_row_' + mail.id;
@@ -369,27 +367,10 @@
 					body.appendChild(row);
 				}
 
-				if(previous && $system.is.digit(previous.folder)) //If a folder was previously selected
-				{
-					if(!_scroll[previous.folder]) _scroll[previous.folder] = {};
-					_scroll[previous.folder][previous.page] = {order : previous.order, reverse : previous.reverse, position : table.parentNode.scrollTop}; //Remember the scroll height
-				}
-
 				while(table.firstChild) table.removeChild(table.firstChild); //Clean up the listing (innerHTML on table breaks khtml)
 				table.appendChild(body);
 
 				for(var i = 0; i < cache.list.length; i++) if(_stack[cache.list[i]]) $self.item.select(cache.list[i], true); //Check selected mails
-				var scroll = _scroll[folder] && _scroll[folder][page]; //Check if the scroll position cache is still valid
-
-				if(scroll) //If the scroll position is declared
-				{
-					scroll = scroll.order == order && scroll.reverse == reverse && scroll.position; //Check if order has changed
-
-					if($system.is.digit(scroll)) table.parentNode.scrollTop = scroll; //Recover the scroll height
-					else delete _scroll[folder]; //If any of the display order changes, discard the positions
-				}
-
-				if(!scroll) table.parentNode.scrollTop = 0; //Move to top of page
 
 				if(__update[folder] !== undefined) //If cache should be updated - TODO : May be better to only delete cache for specific setting
 				{
@@ -398,7 +379,7 @@
 					delete __cache[folder]; //Remove the entire cache for the folder
 					delete __update[folder];
 
-					$self.item.get(folder, mode); //Update it
+					$self.item.get(folder, __page[folder], mode); //Update it
 				}
 
 				return $system.app.callback(_class + '.get.list', callback);
@@ -406,35 +387,22 @@
 
 			//Create cache storage
 			if(!__cache[folder]) __cache[folder] = {};
-			if(!__cache[folder][__selected.page]) __cache[folder][__selected.page] = {};
-			if(!__cache[folder][__selected.page][__selected.order]) __cache[__selected.folder][__selected.page][__selected.order] = {};
+			if(!__cache[folder][page]) __cache[folder][page] = {};
+			if(!__cache[folder][page][__order.item]) __cache[folder][page][__order.item] = {};
+			if(!__cache[folder][page][__order.item][__order.reverse]) __cache[folder][page][__order.item][__order.reverse] = {};
 
-			var hash = __cache[folder][__selected.page][__selected.order]; //A shortcut
+			var hash = __cache[folder][page][__order.item][__order.reverse]; //A shortcut
 
-			if(!hash[__selected.reverse]) hash[__selected.reverse] = {};
-			if(!hash[__selected.reverse][__selected.marked]) hash[__selected.reverse][__selected.marked] = {};
-			if(!hash[__selected.reverse][__selected.marked][__selected.unread]) hash[__selected.reverse][__selected.marked][__selected.unread] = {};
+			if(!hash[__selected.marked]) hash[__selected.marked] = {};
+			if(!hash[__selected.marked][__selected.unread]) hash[__selected.marked][__selected.unread] = {};
 
-			var items = [folder, __selected.page, __selected.order, __selected.reverse, __selected.marked, __selected.unread, __selected.search, previous, update, callback];
-			var run = $system.app.method(list, items);
+			var run = $system.app.method(list, [folder, page, __selected, __order, update, callback]);
 
 			if($system.is.object(request)) return run(request); //If updating, use the passed object
-			if(!$system.is.digit(update) && $system.is.object(hash[__selected.reverse][__selected.marked][__selected.unread][__selected.search])) return run(null); //If already cached, use it
+			if(!$system.is.digit(update) && $system.is.object(hash[__selected.marked][__selected.unread][__selected.search])) return run(null); //If already cached, use it
 
-			if(__refresh[folder]) clearTimeout(__refresh[folder]);
-			__refresh[folder] = setTimeout($system.app.method(expire, items), _preserve * 60000); //Update local cache after a period
-
-			if(String(update).match(/^1$/) && $system.is.element(table.firstChild) && table.firstChild.childNodes.length == 1) //If no mails are found, warn the user for the wait
-			{
-				var note = document.createElement('div');
-				note.id = $id + '_wait';
-
-				$system.node.text(note, language.wait);
-				table.parentNode.appendChild(note);
-			}
-
-			var param = {task : 'item.get', folder : folder, page : __selected.page, order : __selected.order, reverse : __selected.reverse ? 1 : 0, marked : __selected.marked ? 1 : 0, unread : __selected.unread ? 1 : 0, search : __selected.search, update : $system.is.digit(update) ? update : 0};
-			return $system.network.send($self.info.root + 'server/php/front.php', param, null, run);
+			var value = {task : 'item.get', folder : folder, page : page, order : __order.item, reverse : __order.reverse ? 1 : 0, marked : __selected.marked ? 1 : 0, unread : __selected.unread ? 1 : 0, search : __selected.search, update : $system.is.digit(update) ? update : 0};
+			return $system.network.send($self.info.root + 'server/php/front.php', value, null, run);
 		}
 
 		this.mark = function(id, mode) //Flag a mail as marked or not
@@ -465,17 +433,18 @@
 			var log = $system.log.init(_class + '.move');
 			if(!$system.is.array(id) || !$system.is.digit(folder)) return log.param();
 
-			var notify = function(folder, update, callback)
+			var notify = function(folder, reload, callback)
 			{
 				__update[folder] = __account[__belong[folder]].type == 'imap' ? 1 : 0; //Set the target folder for update on next access
 
 				//Update the unread mail counts ('update' mode 2 will update the folder unread count but not access the POP3 server to avoid extra overhead)
-				if(update) $self.folder.get(__belong[folder], __account[__belong[folder]].type == 'imap' ? 1 : 2);
+				if(reload) $self.folder.get(__belong[folder], __account[__belong[folder]].type == 'imap' ? 1 : 2);
 
 				$system.app.callback(_class + '.move.notify', callback);
 			}
 
 			var group = false; //Whether to send the other selected mails or not
+			var reload = false; //Whether to get new unread message count from the mail server after move or not
 
 			for(var i = 0; i < id.length; i++)
 			{
@@ -485,6 +454,7 @@
 				$self.item.clear(id[i], mail.folder); //Remove the mail from the folder listing
 				$system.node.hide($id + '_mail_row_' + id[i], true, true); //Remove from the interface
 
+				if(mail.seen != '1') reload = true; //If moving unread mails, prepare to upload folder's unread mail count
 				if(_stack[id[i]]) group = true; //If within the selected items, move others too
 			}
 
@@ -498,15 +468,14 @@
 					$self.item.clear(index, mail.folder); //Remove the mail from the folder listing
 					$system.node.hide($id + '_mail_row_' + index, true, true); //Remove from the interface
 
+					if(mail.seen != '1') reload = true; //If moving unread mails, prepare to upload folder's unread mail count
+
 					delete _stack[index];
 					id.push(index);
 				}
 			}
 
-			var update = false; //Whether to update the unread mail count
-			for(var i = 0; i < id.length; i++) if(__mail[id[i]].read != '1') update = true;
-
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.move'}, {id : $system.array.unique(id), folder : folder}, $system.app.method(notify, [folder, update, callback]));
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.move'}, {id : $system.array.unique(id), folder : folder}, $system.app.method(notify, [folder, reload, callback]));
 		}
 
 		this.select = function(id, checked) //Add a mail to the selection
@@ -533,13 +502,13 @@
 			var reset = function(account, folder, id, page) //Reset filters, search and sorting
 			{
 				//Remove filters to avoid filtering the mail out
-				__filter.marked = __filter.unread = $system.node.id($id + '_marked').checked = $system.node.id($id + '_unread').checked = false;
-				__filter.search = $system.node.id($id + '_form').search.value = ''; //Remove search criteria
+				$system.node.id($id + '_marked').checked = $system.node.id($id + '_unread').checked = false;
+				$system.node.id($id + '_form').search.value = ''; //Remove search criteria
 
 				__order = {item : 'sent', reverse : true}; //Set ordering back to default
 
-				_page[folder] = page; //Set the page to where the mail is
-				__selected.folder = null; //NOTE : Forget about current folder to avoid reading current page from the selection box or it will override '_page' value (In 'this.get')
+				__selected.page = page; //Set the page to where the mail is
+				__selected.folder = null; //NOTE : Forget about current folder to avoid reading current page from the selection box
 
 				var align = function(id) //Scroll to where the mail is
 				{
@@ -573,7 +542,7 @@
 			var log = $system.log.init(_class + '.remove');
 			if(!$system.is.digit(id) || !$system.is.digit(index)) return log.param();
 
-			var refresh = function(folder, mode) { return __selected.folder == folder ? $self.item.get(folder, mode) : __update[folder] = mode; } //Update the folder
+			var refresh = function(folder, mode) { return __selected.folder == folder ? $self.item.get(folder, __page[folder], mode) : __update[folder] = mode; } //Update the folder
 
 			var update = function(account, folder, request)
 			{
@@ -597,5 +566,8 @@
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.trash'}, {id : [id]}, $system.app.method(update, [__mail[id].account, folder]));
 		}
 
-		this.update = function(mode) { return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder, mode) : false; } //Reload the mails from the server
+		this.update = function(mode) //Reload the mails from the server
+		{
+			return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder, __page[__selected.folder], mode) : false;
+		}
 	}

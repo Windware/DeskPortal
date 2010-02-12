@@ -1,0 +1,13 @@
+<form id="%id%_import_form" onsubmit="return %top%.%id%.conf.submit()" method="post" enctype="multipart/form-data" target="%id%_import_frame">
+	<p>%string:intro%</p>
+	<p>%string:explain%</p>
+
+	<p style="text-align : center; color : #789">
+		(<a onclick="%top%.%system%.conf.swap('%id%', 'manual'); %top%.%system%.conf.flip('%id%', 'manual', '_7_import')">%string:open%</a>)
+	</p>
+
+	<p><input type="file" name="bookmark" /></p>
+	<p><input type="submit" name="submit" value="%string:load%" /></p>
+
+	<iframe name="%id%_import_frame" style="display : none" onload="%top%.%id%.conf.imported(this)"></iframe>
+</form>

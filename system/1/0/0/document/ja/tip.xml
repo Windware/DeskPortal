@@ -7,6 +7,7 @@
 	<string name="drop" value="内容を隠します" />
 	<string name="show" value="内容を表示します" />
 	<string name="resize" value="ここでマウスを押し、動かすとサイズを変更できます" />
+	<string name="static" value="縮小中はサイズの変更はできません" />
 	<string name="unremovable" value="今はツールバーは隠せません" />
 	<string name="remove" value="ツールバーを隠します" />
 	<string name="restore" value="ツールバーを表示します" />

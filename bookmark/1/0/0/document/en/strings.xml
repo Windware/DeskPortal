@@ -19,7 +19,6 @@
 
 	<!-- Category list -->
 	<string name="all" value="All" />
-	<string name="clear" value="Clear" />
 
 	<!-- Bookmarks -->
 	<string name="data" value="Data" />

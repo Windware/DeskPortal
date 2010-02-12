@@ -13,7 +13,7 @@
 			var notify = function() //Notify that the user needs to reload for the change to take effect
 			{
 				log.user($global.log.notice, 'user/gui/complete');
-				$system.gui.alert($id, 'user/gui/change/title', 'user/gui/change/message');
+				$system.gui.alert($id, 'user/gui/change/title', 'user/gui/change/message', 3);
 			}
 
 			var values = {language : form.language.value, logout : form.logout.value, move : form.move.value, fade : form.fade.checked ? 5 : 0, round : form.round.checked ? 1 : 0, resize : form.resize.checked ? 1 : 0, stretch : form.stretch.checked ? 1 : 0, center : form.center.checked ? 1 : 0};

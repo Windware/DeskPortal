@@ -1,6 +1,6 @@
 
 	window = '555555';
-	border = '333333';
+	border = '222222';
 
 	color = 'cccccc';
 	hover = 'ffffff';

@@ -19,7 +19,6 @@
 
 	<!-- カテゴリー一覧 -->
 	<string name="all" value="全て" />
-	<string name="clear" value="解除" />
 
 	<!-- ブックマーク -->
 	<string name="data" value="データ" />

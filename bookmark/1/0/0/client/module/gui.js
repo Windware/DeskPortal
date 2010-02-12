@@ -110,21 +110,20 @@
 					if($system.is.element(form, 'form')) form.innerHTML = _list(id);
 				}
 
-				if(typeof callback == 'function') callback();
+				return $system.app.callback(log.origin + '.list', callback);
 			}
 
-			$self.group.get($system.app.method(list, [callback]));
+			return $self.group.get($system.app.method(list, [callback]));
 		}
 
-		this.open = function(address) //Open a link
+		this.open = function(id) //Open a link
 		{
 			var log = $system.log.init(_class + '.open');
-			open(address); //Open the page
+			open(__bookmarks[id].address); //Open the page
 
 			//TODO - Dynamically increase the count on the gui
 
-			//Increase the view count
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.viewed'}, {address : address});
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.viewed'}, {id : id}); //Increase the view count
 		}
 
 		this.select = function(on) //Select or deselect all categories

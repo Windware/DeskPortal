@@ -124,9 +124,7 @@
 
 			if($system.is.digit(source)) //If a timestamp is given
 			{
-				var date = new Date(); //Initialize a date object
-				date.setTime(source * 1000); //Set the time to the specified timestamp
-
+				var date = new Date(source * 1000); //Initialize a date object
 				if(date.getTime() / 1000 != source) date = null; //Check for validness
 			}
 			else if($system.is.array(source)) //If an array of time is given
@@ -142,9 +140,10 @@
 
 					var date = new Date(source[0], source[1] - 1, source[2], source[3], source[4], source[5]);
 
-					//Check for the date's validity by matching the date values to the value specified
+					//Check for the date's validness by matching the date values to the value specified
 					if(source[0] != date.getFullYear() || source[1] != date.getMonth() + 1 || source[2] != date.getDate()) date = null;
 					else if(source[3] != date.getHours() || source[4] != date.getMinutes() || source[5] != date.getSeconds()) date = null;
+					else date = new Date(Date.UTC(source[0], source[1] - 1, source[2], source[3], source[4], source[5])); //Create local time from GMT
 				}
 			}
 			else if(String(source).match(/^(\d+-\d+-\d+)( \d+:\d+:\d+)?$/)) //If a DATETIME string is given

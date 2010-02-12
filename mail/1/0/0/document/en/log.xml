@@ -32,6 +32,9 @@
 	<string name="user/gui/search" value="Search term must be bigger than %% letters and smaller than %% letters." />
 	<string name="user/gui/search/solution" value="Please specify correct length for search term." />
 
+	<string name="user/gui/search/short" value="Search term too short" />
+	<string name="user/gui/search/short/solution" value="Please specify more than 2 letters when searching" />
+
 	<string name="user/gui/send/success" value="Mail sent" />
 	<string name="user/gui/send/success/message" value="The mail has been successfully sent" />
 
@@ -58,8 +61,8 @@
 	<string name="user/show/solution" value="Please reload the page and try again." />
 	<string name="user/item/delete" value="Failed to delete a mail." />
 
-	<string name="user/item/list/title" value="Error" />
-	<string name="user/item/list/message" value="Error occured during getting list of mails." />
+	<string name="user/item/list/title" value="Error listing mails" />
+	<string name="user/item/list/message" value="Error occured during listing mails for %%." />
 
 	<string name="user/item/mark" value="Changed marked state of a mail." />
 	<string name="user/item/mark/error" value="Failed to change marked state of a mail." />

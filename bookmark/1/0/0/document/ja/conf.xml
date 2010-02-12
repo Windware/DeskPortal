@@ -6,6 +6,13 @@
 	<string name="new" value="新規" />
 	<string name="delete" value="削除" />
 	<string name="set" value="決定" />
-
 	<string name="confirm" value="このカテゴリーを削除しますか？" />
+
+	<string name="_2_import" value="読み込み" />
+
+	<string name="intro" value="ブラウザーのお気に入りリストを読み込む事ができます。" />
+	<string name="explain" value="ブラウザーのお気に入りのエクスポートについてはマニュアルを参照してください。" />
+	<string name="open" value="マニュアルを開く" />
+	<string name="load" value="読み込む" />
+	<string name="loading" value="読み込み中…" />
 </root>

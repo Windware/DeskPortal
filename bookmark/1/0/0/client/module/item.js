@@ -8,10 +8,21 @@
 			var log = $system.log.init(_class + '.add');
 			var address = $system.is.address(element.value) ? element.value : 'http://' + element.value; //Prepend the protocol if missing
 
+			if(address.match(/^http:\/\/[^/]+$/)) address += '/'; //If no slash exists, add one
+
 			var update = function(request)
 			{
-				if($system.dom.status(request.xml) == '0') log.user($global.log.notice, 'user/add');
-				element.value = ''; //Clear the input field
+				switch(Number($system.dom.status(request.xml)))
+				{
+					case 0 : //Success
+						log.user($global.log.notice, 'user/add');
+						$system.gui.alert($id, 'user/item/add', 'user/item/add/message', 3);
+					break;
+
+					case 1 : return $system.gui.alert($id, 'user/item/add/fail', 'user/item/add/fail/message', 3); break; //Error
+
+					case 2 : return $system.gui.alert($id, 'user/item/add/duplicate', 'user/item/add/duplicate/message', 3); break; //Duplicate
+				}
 
 				var still = false; //If any group is chosen or not
 				var items = $system.node.id($id + '_selection').elements; //Category selection form
@@ -20,7 +31,9 @@
 				if(!still) $self.item.get(); //Update the listing only no group is selected
 			}
 
+			element.value = ''; //Clear the input field
 			$system.network.send($self.info.root + 'server/php/front.php', {task : 'item.add'}, {address : address}, update);
+
 			return false; //Avoid the form from getting submitted
 		}
 
@@ -61,6 +74,7 @@
 				}
 
 				var section = $system.array.list('viewed added status cache'); //Bookmark property partial list
+				var index = 0; //Bookmark counter for alternate coloring on rows
 
 				for(var i = 0; i < list.length; i++)
 				{
@@ -106,10 +120,13 @@
 						}
 					}
 
-					var row = document.createElement('div'); //The link row
-
 					var link = document.createElement('a'); //Create the link
-					link.onclick = $system.app.method($self.gui.open, [address]); //Set to open the page on click
+
+					link.className = $id + '_row';
+					$system.node.classes(link, $id + (++index % 2 ? '_light' : '_dark'), true); //Make every other row look darker
+
+					link.onclick = $system.app.method($self.gui.open, [id]); //Set to open the page on click
+					$system.node.hover(link, $id + '_active');
 
 					var replace = function(phrase, match)
 					{
@@ -122,8 +139,7 @@
 					//Create the link content
 					link.innerHTML = $system.text.format($self.info.template.line, {item : id, name : $system.text.escape(name)});
 
-					row.appendChild(link);
-					container.appendChild(row); //Append to the area
+					container.appendChild(link); //Append to the area
 				}
 
 				zone.appendChild(container);

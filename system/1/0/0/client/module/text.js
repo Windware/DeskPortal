@@ -3,35 +3,6 @@
 	{
 		var _class = $id + '.text';
 
-		this.dump = function(object, match, detail) //Dump an object's elements as a concatenated string
-		{
-			var list = ''; //Text to return
-
-			if(!$system.is.object(object)) return alert('(Not an object)'); //If not an object, quit
-			if(match !== undefined && !$system.is.text(match) && !(match instanceof RegExp)) return alert('(Invalid second paramter)');
-
-			if(typeof match == 'string') match = RegExp($system.text.regexp(match)); //Make sure escape strings don't act funny
-
-			if(object instanceof Array) //If it is an array
-			{
-				//Iterate over and add the content
-				for(var i = 0; i < object.length; i++) if(!match || object[i].match(match)) list += object[i] + '\n';
-			}
-			else //If an object
-			{
-				for(var i in object) //Iterate over the object's members
-				{
-					if(match && !i.match(match)) continue; //If not matching, try next
-
-					//If needs detailed dump, dump the content of a function too
-					var functions = (detail || typeof object[i] != 'function') ? object[i] : '(function)';
-					list += i + ' : ' + functions + '\n';
-				}
-			}
-
-			return alert(list);
-		}
-
 		this.escape = function(text) //Escapes the HTML sensitive characters
 		{
 			text = text.replace(/&(?!(#?\w+;))/g, '&amp;'); //Do not over escape the entities
@@ -73,6 +44,7 @@
 			local = local ? '' : ' target="_blank"';
 
 			//TODO - Also link texts starting with 'www.' or ending with '.com/net/org'
+			//FIXME - If a mail address is within a link, and 'this.mail' is used together, linking breaks
 			return text.replace(/\b((mailto|https?|ftp|irc):\/\/[\w\.,\-@%&\+=~\?\/:#;\*]+)/g, '<a href="$1"' + local + '>$1</a>');
 		}
 
@@ -125,8 +97,8 @@
 			var scroll = lock + ' onscroll="%top%.%system%.gui.clear(this, event)"'; //For scrolling events
 
 			//Set the replace strings and values
-			var target = [/%cancel%/g, /%lock%/g, /%scroll%/g, /%system%/g, /%top%/g];
-			var replace = [cancel, lock, scroll, $id, $global.root];
+			var target = [/%cancel%/g, /%lock%/g, /%scroll%/g, /%system%/g, /%top%/g, /%language%/g, /%brand%/g, /%brand_site%/g, /%brand_info%/g, /%developer%/g, /%developer_site%/g];
+			var replace = [cancel, lock, scroll, $id, $global.root, $global.user.language.replace(/-.+$/, ''), $global.brand.name, $global.brand.site, $global.brand.info, $global.developer.name, $global.developer.site];
 
 			if($system.is.id(id)) //If 'id' is set
 			{
@@ -140,15 +112,14 @@
 				}
 
 				//Replace any given tip links
-				text = text.replace(/%tip:(.+?)%/g, $system.app.method($system.tip.link, [id]));
+				target.push(/%tip:(.+?)%/g);
+				replace.push($system.app.method($system.tip.link, [id]));
 
-				var image = function(phrase, match) { return $system.image.source(id, match); }
-				text = text.replace(/%image:(.+?)%/g, image); //Replace the images with proper request address
+				var image = function(phrase, match) { return $system.image.source(id, match); } //Replace the images with proper request address
+
+				target.push(/%image:(.+?)%/g);
+				replace.push(image);
 			}
-
-			//Replace the brand and developer information
-			target.push(/%brand%/g, /%brand_site%/g, /%brand_info%/g, /%developer%/g, /%developer_site%/g);
-			replace.push($global.brand.name, $global.brand.site, $global.brand.info, $global.developer.name, $global.developer.site);
 
 			return $system.text.replace(text, target, replace); //Replace each variables
 		}

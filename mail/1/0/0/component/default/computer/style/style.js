@@ -1,7 +1,7 @@
 
 	window = 'eeddcc';
 
-	border = 'cccccc';
+	border = '555555';
 	hover = '333333';
 
 	bar = true;

@@ -150,26 +150,10 @@
 			{
 				if(part == 'body') //When fading the content area
 				{
-					if(visibility) //If fading out
-					{
-						//Set new tip messages
-						var resize = 'static';
-						var hide = 'unremovable';
+					$system.image.set($system.node.id(base + '_hide').firstChild, $system.info.devroot + 'graphic/' +  (visibility ? 'recover' : 'hide') + '.png'); //Flip the graphic
+					$system.tip.set(base + '_resize', $id, visibility ? 'static' : 'resize'); //Flip the tip if window is not locked
 
-						var image = 'recover'; //New image name
-					}
-					else //Set new tip messages
-					{
-						var resize = 'resize';
-						var hide = 'remove';
-
-						var image = 'hide'; //New image name
-					}
-
-					$system.image.set($system.node.id(base + '_hide').firstChild, $system.info.devroot + 'graphic/' +  image + '.png'); //Flip the graphic
-					$system.tip.set(base + '_resize', $id, resize); //Flip the tip if window is not locked
-
-					$system.tip.set(base + '_invisible', $id, hide); //Flip the tip on the right upper corner
+					$system.tip.set(base + '_invisible', $id, visibility ? 'unremovable' : 'remove'); //Flip the tip on the right upper corner
 					$system.tip.set(base + '_hide', $id, visibility ? 'show' : 'drop'); //Flip the tip message
 				}
 				else //When fading the toolbar

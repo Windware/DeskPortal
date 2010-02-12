@@ -144,7 +144,11 @@
 		this.save = function(id) //Save the memo content
 		{
 			var log = $system.log.init(_class + '.save');
-			var content = $system.node.id($id + '_field_' + id).value; //The content text
+
+			var field = $system.node.id($id + '_field_' + id);
+			if(!field) return false; //If memo is deleted, quit
+
+			var content = field.value; //The content text
 
 			var confirmation = function(request) //Upon request completion
 			{
@@ -158,7 +162,7 @@
 			}
 
 			//Save the content remotely
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'item.save'}, {id : id, content : content}, confirmation);
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.save'}, {id : id, content : content}, confirmation);
 		}
 
 		this.set = function(id, form) //Submit the edited memo information to the server
@@ -182,10 +186,8 @@
 				$self.item.get(request.xml); //Update the list with the given data
 			}
 
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'item.set'}, param, load);
 			$system.window.fade($id + '_edit_' + id, true, null, true); //Let go of the edit window
-
-			return false; //Reject for submission
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.set'}, param, load);
 		}
 
 		this.show = function(id, group) //Load a memo

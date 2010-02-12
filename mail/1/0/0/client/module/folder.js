@@ -5,11 +5,7 @@
 
 		var _cache = {}; //Listing cache
 
-		var _loaded = {}; //Flag to indicate if a folder has been updated
-
-		var _lock = {}; //Lock to wait for mails to finish loading
-
-		var _previous = {}; //Previously selected folder
+		var _scroll = {}; //Scroll amount for each folders
 
 		var _space = 10; //Amount of space to put on left for folders below another
 
@@ -22,51 +18,46 @@
 
 			var account = __belong[folder];
 
-			if(_lock[account]) return false; //Wait till previous loading finishes
-			_lock[account] = true;
+			var page = $system.node.id($id + '_show').value;
+			var table = $system.node.id($id + '_read_zone'); //Mail listing table
 
-			//Change the look of the chosen folder
-			if(_previous[account]) $system.node.classes($id + '_folder_' + _previous[account], $id + '_displayed', false);
-			$system.node.classes($id + '_folder_' + folder, $id + '_displayed', true);
-
-			var unlock = function(folder, callback)
+			if(__selected.folder) //If a previously chosen folder exists
 			{
-				var account = __belong[folder];
+				$system.node.classes($id + '_folder_' + __selected.folder, $id + '_displayed', false); //Revert the look of the previous folder
 
-				_lock[account] = false; //Release update lock
-				if(!__account[account]) return $system.app.callback(log.origin, callback);
-
-				if(_loaded[folder]) return $system.app.callback(log.origin, callback); //If updated from the mail server once, do not do it anymore (Periodical interval timer will update from mail server)
-				_loaded[folder] = true;
-
-				if(__account[account].type == 'pop3' && __special.inbox[account] != folder) return true; //Do not update anything from mail server if it is not INBOX for POP3
-
-				_lock[account] = true;
-				return $self.item.get(folder, 1, $system.app.method(unlock, [folder, callback])); //Update it
+				if(!_scroll[__selected.folder]) _scroll[__selected.folder] = {};
+				_scroll[__selected.folder][__page[__selected.folder]] = {order : __selected.order, reverse : __selected.reverse, position : table.parentNode.scrollTop}; //Remember the scroll height
 			}
 
-			if(!_loaded[folder]) delete __update[folder]; //If never loaded, drop the update flag to avoid duplicate updating
-			_previous[account] = folder;
+			$system.node.classes($id + '_folder_' + folder, $id + '_displayed', true); //Emphasize the current selection
+			var form = $system.node.id($id + '_form');
 
-			return $self.item.get(folder, false, $system.app.method(unlock, [folder, callback])); //Get the folder items for current account
+			var run = function(folder, callback)
+			{
+				var scroll = _scroll[folder] && _scroll[folder][page]; //Check if the scroll position cache is still valid
+
+				if(scroll) //If the scroll position is declared
+				{
+					scroll = scroll.order == __order.item && scroll.reverse == __order.reverse && scroll.position; //Check if order has changed
+
+					if($system.is.digit(scroll)) table.parentNode.scrollTop = scroll; //Recover the scroll height
+					else delete _scroll[folder]; //If any of the display order changes, discard the positions
+				}
+
+				if(!scroll) table.parentNode.scrollTop = 0; //Move to top of page
+				return $system.app.callback(_class + '.change.run', callback);
+			}
+
+			__selected = {account : __selected.account, folder : folder, marked : form.marked.checked, unread : form.unread.checked, order : __order.item, reverse : __order.reverse, search : form.search.value}; //Remember current selection
+			return $self.item.get(folder, __page[folder] = page, false, $system.app.method(run, [folder, callback])); //Get the folder items for current account
 		}
 
 		this.clear = function(folder) //Clear caches for a folder
 		{
 			delete __cache[folder]; //Delete message list cache
-			delete __belong[folder]; //Delete which account this folder belongs to
 
 			for(var id in __mail) if(__mail[id].folder == folder) delete __mail[id]; //Remove all mail data in this folder
 			delete __update[folder]; //Remove the flags to indicate that a folder should be updated on next access
-
-			if(__refresh[folder]) clearTimeout(__refresh[folder]);
-			delete __refresh[folder]; //Remove the timer trying to invalidate caches
-
-			if(__timer[folder]) clearInterval(__timer[folder]);
-			delete __timer[folder]; //Remove the periodic folder listing timer
-
-			var section = $system.array.list('inbox drafts sent trash'); //Invalidate the special folder ID if set to this folder
-			for(var i = 0; i < section.length; i++) for(var account in __special[section]) if(__special[section][account] == folder) __special[section][account] == null;
 		}
 
 		this.empty = function(account) //Empty trash folder
@@ -87,11 +78,10 @@
 				if($system.dom.status(request.xml) != '0') return $system.gui.alert($id, 'user/folder/empty/title', 'user/folder/empty/message', 3);
 				$self.folder.clear(trash); //Clear mail data for the folder
 
-				if(__selected.account == account)
-				{
-					$self.folder.get(account, __account[account].type == 'imap' ? 1 : 2);
-					if(__selected.folder == trash) $self.item.get(trash); //Update the listing to be empty
-				}
+				if(__selected.account != account) return;
+
+				$self.folder.get(account, __account[account].type == 'imap' ? 1 : 2);
+				if(__selected.folder == trash) $self.item.get(trash, __page[trash]); //Update the listing to be empty
 			}
 
 			$self.gui.indicator(true); //Show indicator
@@ -108,13 +98,15 @@
 				$system.node.id($id + '_folder').innerHTML = '';
 				$system.node.hide($id + '_mail_empty', true, true); //Remove the empty notification
 
-				$system.node.id($id + '_show').innerHTML = ''; //Clear up the page list
+				$system.node.id($id + '_show').innerHTML = '<option value="1">1</option>'; //Clear up the page list
 
 				var table = $system.node.id($id + '_read_zone');
 				while(table.firstChild) table.removeChild(table.firstChild);
 
 				$system.app.callback(log.origin, callback);
-				__selected = {};
+
+				delete __selected.account;
+				delete __selected.folder;
 
 				return true;
 			}
@@ -132,7 +124,9 @@
 			var list = function(account, update, callback, request)
 			{
 				$self.gui.indicator(false); //Hide indicator
-				_cache[account] = request.xml || request;
+				_cache[account] = $system.is.object(request.xml) && request.xml || request;
+
+				if(!__account[account]) return;
 
 				var construct = function(tree, depth) //Create the directory structure tree
 				{
@@ -163,17 +157,29 @@
 							break;
 						}
 
-						if(update == 1 && __account[account] && recent > count) //If new mail count is bigger than before
+						if(update == 1 && Number(count) > 0) //If new mail exists after an update
 						{
-							__update[id] = 1; //Make it update on next access
-
-							if(id != __special.drafts[account] && id != __special.sent[account] && id != __special.trash[account]) //If not under drafts, sent and trash folder
+							var notify = function(id, account, name)
 							{
+								if(!__account[account]) return;
 								var message = language.recent.replace('%folder%', name).replace('%account%', __account[account].description);
-								$system.gui.notice($id, message, null); //Notify the new message presence
 
+								var open = function(account, folder) //Show the folder with new mails
+								{
+									if(!$system.window.list[$id].displayed.body) $system.tool.hide($id, 'body'); //Uncover the body
+									$self.account.change(account, folder); //Change account and folder
+								}
+
+								$system.gui.notice($id, message, $system.app.method(open, [account, id])); //Notify the new message presence
 								log.user($global.log.notice, 'user/folder/get', '', [__account[account].description, name]);
 							}
+
+							var run = null;
+
+							if(id != __special.drafts[account] && id != __special.sent[account] && id != __special.trash[account])
+								run = $system.app.method(notify, [id, account, name]); //If not under drafts, sent and trash folder, notify of new mails
+
+							$self.item.get(id, __page[id], 1, run); //Update the listing
 						}
 
 						__belong[id] = account; //Remember the belonging account
@@ -241,7 +247,6 @@
 								$system.image.set(icon, $self.info.devroot + 'graphic/empty.png');
 								link.appendChild(icon); //Put empty trash icon
 							}
-
 						}
 						else //If not special
 						{
@@ -273,7 +278,7 @@
 
 				var section = $system.browser.engine == 'trident' ? 1 : 0; //IE counts first 'xml' tag as first node
 
-				if(!request.xml || !request.xml.childNodes || !construct(request.xml.childNodes[section], 0)) //Create folder listing
+				if(!_cache[account].childNodes || !construct(_cache[account].childNodes[section], 0)) //Create folder listing
 					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/solution');
 
 				if(__selected.account != account) return true; //If displaying account got changed, do not display the result
@@ -290,7 +295,7 @@
 				for(var i = 0; i < group.length; i++) //Create the folder listing starting from the special folders
 					if($system.is.array(group[i])) for(var j = 0; j < group[i].length; j++) area.appendChild(group[i][j]);
 
-				if(_previous[account]) $system.node.classes($id + '_folder_' + _previous[account], $id + '_displayed', true);
+				if(__selected.folder) $system.node.classes($id + '_folder_' + __selected.folder, $id + '_displayed', true);
 				$system.app.callback(_class + '.get.list', callback);
 
 				return true;
@@ -300,6 +305,8 @@
 			{
 				if($system.is.object(request)) return list(account, update, callback, request); //If cached object is given, call it directly
 				if(_cache[account]) return list(account, update, callback, _cache[account]); //If cached object is given, call it directly
+
+				update = 0;
 			}
 
 			$self.gui.indicator(true); //Show indicator

@@ -6,6 +6,13 @@
 	<string name="new" value="New" />
 	<string name="delete" value="Delete" />
 	<string name="set" value="Set" />
-
 	<string name="confirm" value="Delete this category?" />
+
+	<string name="_2_import" value="Import" />
+
+	<string name="intro" value="You can import bookmarks from your browser." />
+	<string name="explain" value="Please refer to the manual to export your current bookmarks." />
+	<string name="open" value="Open the manual" />
+	<string name="load" value="Load" />
+	<string name="loading" value="Loading..." />
 </root>

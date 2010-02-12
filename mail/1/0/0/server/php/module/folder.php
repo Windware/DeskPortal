@@ -336,6 +336,8 @@
 			$log = $system->log(__METHOD__);
 
 			if(!is_array($folder)) return $log->param();
+			if(!count($folder)) return true;
+
 			foreach($folder as $id) if(!$system->is_digit($id)) return $log->param();
 
 			if($user === null) $user = $system->user();
@@ -606,7 +608,7 @@
 			if(!$query->success) return false;
 			$local = $query->all();
 
-			if(Mail_1_0_0_Account::type($info['receive_type']) != 'imap') #If POP3, look through the list of mails to find unread mail counts
+			if(Mail_1_0_0_Account::type($info['receive_type']) == 'pop3') #If POP3, look through the list of mails to find unread mail counts
 			{
 				if(!$info['supported']) return true; #Do not try to count for new mails without UIDL support as every mail must be downloaded
 
@@ -639,67 +641,115 @@
 					if(!$query['count']->success) return false;
 
 					$recent = $query['count']->column();
-					if(strtolower($row['name']) == 'inbox') $recent += $new; #Add the new mail count for inbox
 
-					$query['update']->run(array(':count' => $row['recent'], ':recent' => $recent, ':id' => $row['id'], ':user' => $user->id));
+					if(strtolower($row['name']) == 'inbox')
+					{
+						$recent += $new; #Add the new mail count for inbox
+						$count = $new;
+					}
+					else $count = 0; #No new mails will arrive other than in inbox
+
+					$query['update']->run(array(':count' => $count, ':recent' => $recent, ':id' => $row['id'], ':user' => $user->id));
 					if(!$query['update']->success) return false;
 				}
 
 				return true;
 			}
 
+			#For IMAP
 			$link = Mail_1_0_0_Account::connect($account, '', $user); #Connect to the server
 
-			$all = imap_getmailboxes($link['connection'], '{'.$link['host'].'}', '*'); #Get subscribed folder names
-			if(!$all) return Mail_1_0_0_Account::error($link['host']);
+			$list = imap_getsubscribed($link['connection'], '{'.$link['host'].'}', '*'); #Get subscribed folder names
+			if(!$list) return Mail_1_0_0_Account::error($link['host']);
 
-			$subscribed = imap_getsubscribed($link['connection'], '{'.$link['host'].'}', '*'); #Get subscribed folder names
-			if(!$subscribed) return Mail_1_0_0_Account::error($link['host']);
+			$subscribed = array();
+			foreach($list as $info) $subscribed[] = $info->name; #List subscribed folder names
 
-			$id = $folders = $stored = $connector = $parent = $recent = $read = $remove = $target = $used = array();
-			foreach($subscribed as $info) $used[] = $info->name; #Get list of subscribed folder names
+			$list = imap_getmailboxes($link['connection'], '{'.$link['host'].'}', '*'); #Get all folder names
+			if(!$list) return Mail_1_0_0_Account::error($link['host']);
 
-			foreach($all as $info) #TODO - It does not honor LATT_NOSELECT (Those folders not allowing to be selected for viewing)
+			foreach($local as $row) $exist[$row['name']] = $row; #Existing folders in the database
+
+			$part = $link['info']['supported'] ? 'uid' : 'signature';
+			$query = array('id' => $database->prepare("SELECT $part FROM {$database->prefix}mail WHERE user = :user AND folder = :folder"));
+
+			$query['update'] = $database->prepare("UPDATE {$database->prefix}folder SET count = :count, recent = :recent, subscribed = :subscribed, connector = :connector, parent = :parent WHERE id = :id AND user = :user");
+			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, recent, count, connector, subscribed) VALUES (:user, :account, :name, :parent, :recent, :count, :connector, :subscribed)");
+
+			foreach($list as $folder) #TODO - It does not honor LATT_NOSELECT (Those folders not allowing to be selected for viewing)
 			{
-				$name = $folders[] = preg_replace('/^{'.preg_quote($link['host'], '/').'}/', '', mb_convert_encoding($info->name, 'UTF-8', 'UTF7-IMAP'));
+				if(imap_reopen($link['connection'], $folder->name) !== true) continue; #Change folder
+				$name = preg_replace('/^{'.preg_quote($link['host'], '/').'}/', '', mb_convert_encoding($folder->name, 'UTF-8', 'UTF7-IMAP')); #Folder name
 
-				$connector[$name] = $info->delimiter; #Keep folder delimiter character
-				$parent[$name] = $info->attributes & LATT_NOINFERIORS == $info->attributes ? 0 : 1; #Find if it can have child folders
+				$parent = $folder->attributes & LATT_NOINFERIORS == $folder->attributes ? 0 : 1; #Find if it can have child folders
 
-				$read[$name] = in_array($info->name, $used) ? 1 : 0;
+				if($link['info']['supported']) #If UID is available
+				{
+					$identity = imap_search($link['connection'], 'ALL', SE_UID); #All UID in the folder
 
-				$recent[$name] = imap_status($link['connection'], $info->name, SA_UNSEEN); #Check for new message numbers
-				$recent[$name] = $recent[$name]->unseen ? $recent[$name]->unseen : 0;
+					if(!is_array($identity) || !count($identity)) $count = 0; #If no mail on the mail server, set new mail count as 0
+					elseif($exist[$name]) #If folder exists in the database
+					{
+						$query['id']->run(array(':user' => $user->id, ':folder' => $exist[$name]['id']));
+						if(!$query['id']->success) return false;
+
+						$loaded = array();
+						foreach($query['id']->all() as $row) $loaded[] = $row[$part];
+
+						$count = count(array_diff($identity, $loaded));
+					}
+					else $count = count($identity);
+				}
+				else
+				{
+					$identity = array();
+
+					if($system->is_digit($amount = imap_num_msg($link['connection'])))
+					{
+						for($i = 0; $i < $amount; $i++)
+						{
+							$signature = $identity[] = imap_fetchheader($link['connection'], $i); #Signature of a message
+							if(!$signature) return Mail_1_0_0_Account::error($link['host']);
+						}
+					}
+
+					if(!count($identity)) $count = 0;
+					elseif($exist[$name]['id'])
+					{
+						$query['id']->run(array(':user' => $user->id, ':folder' => $exist[$name]['id']));
+						if(!$query['id']->success) return false;
+
+						$loaded = array();
+						foreach($query['id']->all() as $row) $loaded[] = $row[$part];
+
+						$count = count(array_diff($identity, $loaded));
+					}
+					else $count = count($identity);
+				}
+
+				$recent = imap_status($link['connection'], $folder->name, SA_UNSEEN); #Check for new message numbers
+				$recent = $recent->unseen ? $recent->unseen : 0;
+
+				$read = in_array($folder->name, $subscribed) ? 1 : 0; #If subscribed or not
+
+				if(!$exist[$name]) #If the folder does not exist in the database
+				{
+					$query['insert']->run(array(':user' => $user->id, ':account' => $account, ':name' => $name, ':parent' => $parent, ':recent' => $recent, ':count' => $count, ':connector' => $folder->delimiter, ':subscribed' => $read));
+					if(!$query['insert']->success) return false; #Create the folder
+				}
+				else
+				{
+					$query['update']->run(array(':count' => $count, ':recent' => $recent, ':subscribed' => $read, ':connector' => $folder->delimiter, ':parent' => $parent, ':id' => $exist[$name]['id'], ':user' => $user->id));
+					if(!$query['update']->success) return false;
+
+					unset($exist[$name]);
+				}
 			}
 
-			if(!$query->success) return false;
-			$query = $database->prepare("UPDATE {$database->prefix}folder SET count = :count, recent = :recent, subscribed = :subscribed WHERE id = :id AND user = :user");
+			$remove = array();
+			foreach($exist as $row) $remove[] = $row['id'];
 
-			foreach($local as $row) #Keep name and ID relation
-			{
-				$stored[] = $row['name'];
-				$id[$row['name']] = $row['id'];
-
-				$mode = null;
-
-				if($read[$row['name']]) { if(!$row['subscribed']) $row['subscribed'] = 1; } #If not subscribed locally but remotely, flip it
-				elseif($row['subscribed']) $row['subscribed'] = 0; #If subscribed locally but note remotely, flip it
-
-				$query->run(array(':count' => $row['recent'], ':recent' => $recent[$row['name']], ':subscribed' => $row['subscribed'], ':id' => $row['id'], ':user' => $user->id));
-				if(!$query->success) return false;
-			}
-
-			foreach(array_diff($stored, $folders) as $name) $target[] = $id[$name]; #For folders not existing anymore
-			self::remove($target, false, $user); #Remove them
-
-			$query = $database->prepare("INSERT INTO {$database->prefix}folder (user, account, name, parent, recent, connector, subscribed) VALUES (:user, :account, :name, :parent, :recent, :connector, :subscribed)");
-
-			foreach(array_diff($folders, $stored) as $name) #For newly added folders, add them
-			{
-				$query->run(array(':user' => $user->id, ':account' => $account, ':name' => $name, ':parent' => $parent[$name], ':recent' => $recent[$name], ':connector' => $connector[$name], ':subscribed' => $read[$name]));
-				if(!$query->success) return false;
-			}
-
+			self::remove($remove, false, $user); #Remove the folder if not existing on the mail server
 			return true;
 		}
 	}

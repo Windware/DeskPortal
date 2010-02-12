@@ -73,7 +73,7 @@
 		{
 			_box = $system.window.edge * 4; //Box size
 
-			var params = '%%server/php/front.php?task=motion.init&background=cccccc&border=333333&round=%%&shadow=%%&place=circle&edge=%%';
+			var params = '%%server/php/front.php?task=motion.init&color=333333&background=cccccc&border=333333&round=%%&shadow=%%&place=circle&edge=%%';
 			var variables = [$system.info.root, $global.user.pref.round == 1 ? 1 : 0, $system.window.shadow, _box / 2];
 
 			_design = $system.text.format(params, variables);

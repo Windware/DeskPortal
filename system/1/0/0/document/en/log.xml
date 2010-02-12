@@ -95,6 +95,16 @@
 	<string name="dev/size" value="Cannot set the body size to the window size." />
 	<string name="dev/size/solution" value="Check for the engine's capability." />
 
+	<!-- conf.js -->
+	<string name="dev/tool/element" value="The element '%%' to display app information does not exist." />
+	<string name="dev/tool/script" value="Failed to run the script for app '%%' on section '%%' in %% with error : %%." />
+	<string name="dev/tool/page" value="Page content does not exist for '%%'." />
+	<string name="dev/tool/page/solution" value="Make sure the page content exists and is cached." />
+	<string name="dev/tool/tab" value="Config tab for '%%' does not exist for app '%%'." />
+	<string name="dev/tool/tab/solution" value="Switch to a tab that exists." />
+	<string name="dev/tool/conf" value="Error loading configuration component for '%%'." />
+	<string name="dev/tool/conf/solution" value="Make sure configuration template html is reachable." />
+
 	<!-- gui.js -->
 	<string name="dev/language" value="Language unavailable for alerting on app '%%' with title '%%' and message '%%'." />
 	<string name="dev/language/solution" value="Check that messages are given to 'strings.xml'." />
@@ -143,18 +153,9 @@
 	<string name="dev/tip/empty/solution" value="Make sure the tip is registered in tip.xml." />
 
 	<!-- tool.js -->
-	<string name="dev/tool/script" value="Failed to run the configuration script with error : %%." />
-	<string name="dev/tool/element" value="The element '%%' to display app information does not exist." />
-	<string name="dev/tool/page" value="Page content does not exist for '%%'." />
-	<string name="dev/tool/page/solution" value="Make sure the page content exists and is cached." />
 	<string name="dev/tool/both" value="Cannot make both body and bar to disappear for '%%'." />
 	<string name="dev/tool/fade" value="Cannot fade another part at the same time for window '%%'." />
 	<string name="dev/tool/fade/solution" value="Wait until a part finishes fading." />
-
-	<string name="dev/tool/tab" value="Config tab for '%%' does not exist for app '%%'." />
-	<string name="dev/tool/tab/solution" value="Switch to a tab that exists." />
-	<string name="dev/tool/conf" value="Error loading configuration component for '%%'." />
-	<string name="dev/tool/conf/solution" value="Make sure configuration template html is reachable." />
 
 	<!-- user.js -->
 	<string name="dev/user/conf" value="Getting user application configurations from the server." />

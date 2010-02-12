@@ -20,8 +20,6 @@
 
 		private static $_structure; #Mime structure for each mails
 
-		public static $_limit = 500; #Max number of place holders possible in database queries
-
 		protected static function _dig($parts, $position = '') #Dig through the multi part message
 		{
 			if(!is_array($parts)) return false;
@@ -254,17 +252,19 @@
 			{
 				foreach(self::$_flag as $column => $mark) if($mark == $flag) $set = $column; #Find the column name for the flag
 
-				for($i = 0; $i < count($list); $i += self::$_limit) #Split into flagging limit count ID at once to avoid place holder limitation
+				for($i = 0; $i < count($list); $i += $database->limit) #Split into flagging limit count ID at once to avoid place holder limitation
 				{
 					$target = array();
 					$param = array(':mode' => $mode ? 1 : 0, ':user' => $user->id);
 
-					foreach(array_slice($list, $i, self::$_limit) as $index => $id)
-					{
-						if(!$system->is_digit($index)) continue;
+					$index = 0;
 
+					foreach(array_slice($list, $i, $database->limit) as $id)
+					{
 						$value = $target[] = ":i{$index}d"; #NOTE : Having the place holder as ':id[DIGIT]' confuses in cases like ':id1' and ':id10'
 						$param[$value] = $id;
+
+						$index++;
 					}
 
 					if(!count($target)) continue;
@@ -547,17 +547,19 @@
 				if(!$copy) #On move
 				{
 					#NOTE : Not making transaction to keep the result if it fails on later recursion
-					for($i = 0; $i < count($list); $i += self::$_limit) #Split into moving limit count ID at once to avoid place holder limitation
+					for($i = 0; $i < count($list); $i += $database->limit) #Split into moving limit count ID at once to avoid place holder limitation
 					{
 						$target = array();
 						$param = array(':folder' => $folder, ':user' => $user->id);
 
-						foreach(array_slice($list, $i, self::$_limit) as $index => $id)
-						{
-							if(!$system->is_digit($index)) continue;
+						$index = 0;
 
+						foreach(array_slice($list, $i, $database->limit) as $id)
+						{
 							$value = $target[] = ":i{$index}d";
 							$param[$value] = $id;
+
+							$index++;
 						}
 
 						if(!count($target)) continue;
@@ -608,16 +610,17 @@
 			if(!$local && !self::flag($list, 'Deleted', true, $user)) return false; #If set to also remove from the mail server, flag and expunge
 			if(!$database->begin()) return false; #Make the deletion atomic
 
-			for($i = 0; $i < count($list); $i += self::$_limit) #Split by maximum possible place holder number
+			for($i = 0; $i < count($list); $i += $database->limit) #Split by maximum possible place holder number
 			{
 				$param = $target = array();
+				$index = 0;
 
-				foreach(array_slice($list, $i, self::$_limit) as $index => $id)
+				foreach(array_slice($list, $i, $database->limit) as $id)
 				{
-					if(!$system->is_digit($index)) continue;
-
 					$value = $target[] = ":i{$index}d";
 					$param[$value] = $id;
+
+					$index++;
 				}
 
 				if(!count($target)) continue;
@@ -990,13 +993,20 @@
 			$query->run(array(':id' => $folder, ':user' => $user->id));
 
 			if(!$query->success) return false;
+
 			$row = $query->row();
-
 			$account = $row['id'];
-			if(Mail_1_0_0_Account::type($row['receive_type']) == 'pop3' && $folder != $row['folder_inbox']) return true; #Quit if it is POP3 but not INBOX
 
+			if(Mail_1_0_0_Account::type($row['receive_type']) == 'pop3' && $folder != $row['folder_inbox']) return true; #Quit if it is POP3 but not INBOX
 			$link = Mail_1_0_0_Account::connect($account, $folder, $user); #Connect to the mail server
-			if(!$link) return false;
+
+			if(!$link) #On connection failure
+			{
+				#NOTE : Pretend success to avoid Hotmail throwing errors repeatedly as it throttles login attempts within a time frame
+				if($row['receive_type'] == 'hotmail' && stristr(imap_last_error(), 'login allowed only every ')) return true;
+
+				return false;
+			}
 
 			$content = imap_check($link['connection']);
 			if(!is_object($content)) return Mail_1_0_0_Account::error($link['host']);
@@ -1135,7 +1145,7 @@
 				{
 					$exist[] = $attributes[':signature']; #Keep remembering the header signatures
 
-					if($current[$attributes[':signature']]) #Check mail existance by header signature
+					if($current[$attributes[':signature']]) #Check mail existence by header signature
 					{
 						if($link['type'] == 'imap')
 						{
@@ -1245,7 +1255,7 @@
 							if($attributes[':encode'] == 'us-ascii' || $attributes[':encode'] == 'utf-8') $attributes[':plain'] = $body['html'];
 							else $attributes[':plain'] = mb_convert_encoding($body['html'], 'utf-8', $attributes[':encode']);
 
-							$attributes[':preview'] = $attributes[':plain'] = preg_replace('/(\s){2,}/', '\1', strip_tags($attributes[':plain']));
+							$attributes[':preview'] = $attributes[':plain'] = strip_tags(preg_replace('/<(p|br|div).*?>/', "\n", preg_replace('/(\s){2,}/', '\1', $attributes[':plain'])));
 
 							foreach(array(':plain', ':preview') as $section)
 							{
@@ -1329,15 +1339,19 @@
 
 						for($i = 0; $i <= 1; $i++) #For mails both flags set and unset 
 						{
-							for($j = 0; $j < count($set[$i][$column]); $j += self::$_limit) #Split by maximum possible place holder number
+							for($j = 0; $j < count($set[$i][$column]); $j += $database->limit) #Split by maximum possible place holder number
 							{
 								$target = array();
 								$param = array(":$column" => $i, ':user' => $user->id, ':folder' => $folder);
 
-								foreach(array_slice($set[$i][$column], $j, self::$_limit) as $index => $id)
+								$index = 0;
+
+								foreach(array_slice($set[$i][$column], $j, $database->limit) as $id)
 								{
 									$value = $target[] = ":i{$index}d";
 									$param[$value] = $id;
+
+									$index++;
 								}
 
 								if(!count($target)) continue;
@@ -1367,15 +1381,19 @@
 
 				if(count($exist)) #If mails should be deleted
 				{
-					for($i = 0; $i < count($exist); $i += self::$_limit) #Split by maximum possible place holder number
+					for($i = 0; $i < count($exist); $i += $database->limit) #Split by maximum possible place holder number
 					{
 						$target = array();
 						$param = array(':user' => $user->id, ':folder' => $folder);
 
-						foreach(array_slice($exist, $i, self::$_limit) as $index => $id)
+						$index = 0;
+
+						foreach(array_slice($exist, $i, $database->limit) as $id)
 						{
 							$value = $target[] = ":i{$index}d";
 							$param[$value] = $id;
+
+							$index++;
 						}
 
 						if(!count($target)) continue;
@@ -1399,22 +1417,26 @@
 			{
 				$active = $link['info']['supported'] ? $unique : $exist;
 
-				if(!count($active)) #If no mail is on the server
+				if(!is_array($active) || !count($active)) #If no mail is on the server
 				{
 					$query = $database->prepare("DELETE FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
 					$query->run(array(':user' => $user->id, ':account' => $account)); #Delete unused list of downloaded mails (NOTE : Ignoring error here)
 				}
 				else
 				{
-					for($i = 0; $i < count($active); $i += self::$_limit) #Split by maximum possible place holder number
+					for($i = 0; $i < count($active); $i += $database->limit) #Split by maximum possible place holder number
 					{
 						$target = array();
 						$param = array(':user' => $user->id, ':account' => $account);
 
-						foreach(array_slice($active, $i, self::$_limit) as $index => $id)
+						$index = 0;
+
+						foreach(array_slice($active, $i, $database->limit) as $id)
 						{
 							$value = $target[] = ":i{$index}d";
 							$param[$value] = $id;
+
+							$index++;
 						}
 
 						if(!count($target)) continue;

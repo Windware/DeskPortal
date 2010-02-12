@@ -9,15 +9,15 @@
 
 	var __default; //The default account ID
 
-	var __filter = {}; //List filter options
-
 	var __mail = {}; //List of mails
 
 	var __order = {item : 'sent', reverse : true}; //Current sort order method
 
-	var __refresh = {}; //Timer to invalidate caches for folders
+	var __page = {}; //Selected page for folders
 
-	var __selected = {}; //Currently displayed account, folder and page
+	var __refresh = {}; //Expire folder freshness for IMAP
+
+	var __selected = {marked : false, unread : false, search : ''}; //Currently displayed account, folder and page
 
 	var __special = {'inbox' : {}, 'drafts' : {}, 'sent' : {}, 'trash' : {}} //Special folders
 

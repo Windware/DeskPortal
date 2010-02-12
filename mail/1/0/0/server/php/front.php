@@ -80,16 +80,6 @@
 			print $system->xml_dump($result);
 		break;
 
-		case 'gui.load' : #Load an embedded image
-			$system->cache_header(); #Cache attachment data on the client side
-			print Mail_1_0_0_Item::image($_GET['id'], $_GET['cid']);
-		break;
-
-		case 'gui.show' : #Get message body of a mail and return as is
-			$system->cache_header(); #Cache mail body
-			print Mail_1_0_0_Item::show($_GET['message']);
-		break;
-
 		case 'gui._body' : #Download the attachment
 			#NOTE : Set an attachment header in all cases not to let errors make browser shift into a new page
 			#Not sending caching header under errors in case of occasions like mail server unavailability for that moment
@@ -112,8 +102,18 @@
 			print $data;
 		break;
 
+		case 'gui.load' : #Load an embedded image
+			$system->cache_header(); #Cache attachment data on the client side
+			print Mail_1_0_0_Item::image($_GET['id'], $_GET['cid']);
+		break;
+
 		case 'gui.send' : #Send out a mail (Send the result status as a plain text to be grabbed inside 'iframe')
 			print Mail_1_0_0_Item::send($_POST['account'], $_POST['subject'], $_POST['body'], $_POST['to'], $_POST['cc'], $_POST['bcc'], $_POST['source'], $_FILES, $_POST['draft'], $_POST['resume']);
+		break;
+
+		case 'gui.show' : #Get message body of a mail and return as is
+			$system->cache_header(); #Cache mail body
+			print Mail_1_0_0_Item::show($_GET['message']);
 		break;
 
 		case 'item.get' : #Get list of mails stored in the database

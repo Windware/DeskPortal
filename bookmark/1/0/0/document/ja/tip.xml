@@ -8,6 +8,7 @@
 	<!-- 一覧 -->
 	<string name="edit" value="ブックマークの情報を編集します" />
 	<string name="info" value="%%" />
+	<string name="all" value="全てのカテゴリーを選択または解除します" />
 
 	<!-- Cache -->
 	<string name="source" value="元のページを開く" />

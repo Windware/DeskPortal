@@ -17,15 +17,12 @@
 				__group.indexed[id] = param;
 			}
 
-			if(typeof callback == 'function') return callback(__group);
-			return true;
+			return $system.app.callback(_class + '._load', callback, [__group]);
 		}
 
-		this.get = function(callback) //Get the current group listing with a callback
+		this.get = function(callback) //Get the current group listing
 		{
-			var log = $system.log.init(_class + '.get');
-			if(__group !== undefined && typeof callback == 'function') return callback(__group);
-
+			if(__group !== undefined) return $system.app.callback(_class + 'get', callback, [__group]);
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'group.get'}, null, $system.app.method(_load, [callback]));
 		}
 

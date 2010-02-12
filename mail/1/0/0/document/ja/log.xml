@@ -23,7 +23,7 @@
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
-	<string name="user/folder/get" value="'%%'の'%%'に新着があります。" />
+	<string name="user/folder/get" value="%%の%%に新着があります。" />
 
 	<string name="user/folder/empty/title" value="メール削除エラー" />
 	<string name="user/folder/empty/message" value="ごみ箱を空にする際にエラーが発生しました。時間をおいて再度試してください。" />
@@ -59,7 +59,7 @@
 	<string name="user/item/delete" value="メールの削除に失敗しました" />
 
 	<string name="user/item/list/title" value="エラー" />
-	<string name="user/item/list/message" value="メールの一覧取得中にエラーが発生しました" />
+	<string name="user/item/list/message" value="%%のメール取得中にエラーが発生しました" />
 
 	<string name="user/item/mark" value="メールのマークを変更しました" />
 	<string name="user/item/mark/error" value="メールのマークの変更に失敗しました" />

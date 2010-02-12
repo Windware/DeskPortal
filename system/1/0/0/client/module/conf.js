@@ -7,7 +7,7 @@
 
 		var _shown = {}; //Currently displayed configuration field
 
-		var _run = {}; //Flag to see if the initialization code already run on the configuration tab
+		var _run = {}; //Flag to see if the initialization code already run on the configuration tabs
 
 		var _viewed; //Currnetly displayed page for manual
 
@@ -55,9 +55,9 @@
 			{
 				try { $global.top[id].conf[section](); } //Run the custom configuration code
 
-				catch(error) { log.dev($global.log.error, 'dev/tool/script', 'dev/check', [$system.browser.report(error)]); }
+				catch(error) { log.dev($global.log.error, 'dev/tool/script', 'dev/check', [id, section, 'configuration', $system.browser.report(error)]); }
 
-				finally { _run[id][section] = true; } //Save the run state in either case
+				_run[id][section] = true; //Save the run state
 			}
 
 			$system.node.hide([$id, 'conf', id, 'field', section].join('_'), false);
@@ -68,7 +68,7 @@
 			_shown[id] = section; //Remember the currently shown tab
 		}
 
-		this.flip = function(id, section, page) //Flip a page of an info page
+		this.flip = function(id, section, page) //Flip a page of a manual
 		{
 			var log = $system.log.init(_class + '.flip');
 			if(!$system.is.id(id) || !$system.node.id(id) || !$system.is.text(section) || !$system.is.text(page)) return log.param();
@@ -77,16 +77,23 @@
 			var element = $system.node.id(node);
 
 			if(!element) return log.dev($global.log.error, 'dev/tool/element', 'dev/exist', [node]);
+			var info = __conf.pages[id];
 
-			try { element.innerHTML = __conf.pages[id][section][page]; }
+			if(info && info[section] && info[section][page]) element.innerHTML = info[section][page];
+			else return log.dev($global.log.error, 'dev/tool/page', 'dev/tool/page/solution', [[id, section, page].join (' - ')]);
 
-			catch(error) { return log.dev($global.log.error, 'dev/tool/page', 'dev/tool/page/solution', [[id, section, page].join (' - ')]); }
-
-			if(_viewed) $system.node.classes(_viewed, $system.info.id + '_viewed', false); //Revert style class for the link
+			if(_viewed) $system.node.classes(_viewed, $system.info.id + '_viewed', false); //Revert style class for the previous page link
 			element.scrollTop = 0; //Scroll back to top
 
+			if($global.top[id] && $global.top[id].manual && typeof $global.top[id].manual[page] == 'function')
+			{
+				try { $global.top[id].manual[page](); } //Run the custom script for the manual page
+
+				catch(error) { log.dev($global.log.error, 'dev/tool/script', 'dev/check', [id, page, 'manual', $system.browser.report(error)]); }
+			}
+
 			_viewed = [$system.info.id, 'page', id, section, page].join('_'); //Remember the selection
-			$system.node.classes(_viewed, $system.info.id + '_viewed', true); //Set style class for the link
+			$system.node.classes(_viewed, $system.info.id + '_viewed', true); //Set style class for the current page link
 		}
 
 		this.swap = function(id, panel) //Swap the information window content
@@ -214,9 +221,10 @@
 				case 'conf' : //Configuration panel
 					//Get all of the template from the application
 					var request = $system.network.item(info.devroot + 'template/conf/', true);
-					var regions = tabs = ''; //Template placeholders
-
 					var length = parseInt(100 / (request.length + 1), 10) + '%';
+
+					var regions = ''; //Template placeholders
+					var tabs = '';
 
 					for(var i = 0; i < request.length; i++) //For all of the configuration templates
 					{

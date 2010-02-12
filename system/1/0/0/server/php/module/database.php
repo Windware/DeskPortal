@@ -7,6 +7,8 @@
 
 		public $adapter, $caller, $handler, $logger, $prefix, $app, $success, $type, $user, $version;
 
+		public $limit = 500; #Max amounts of place holders that can go in a single query
+
 		protected function _build($structure) #Create a table from a schema object
 		{
 			if(!is_object($structure)) return false;

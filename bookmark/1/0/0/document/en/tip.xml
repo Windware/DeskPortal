@@ -8,6 +8,7 @@
 	<!-- Entries -->
 	<string name="edit" value="Click here to edit the bookmark information" />
 	<string name="info" value="%%" />
+	<string name="all" value="Selects or deselects all categories" />
 
 	<!-- Cache -->
 	<string name="source" value="Open the source page" />

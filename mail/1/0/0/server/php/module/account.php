@@ -178,15 +178,19 @@
 			if(!$query->success) return $database->rollback() && false;
 			$mail = array(); #Mail list
 
-			for($i = 0; $i < count($folder); $i += Mail_1_0_0_Item::$_limit)
+			for($i = 0; $i < count($folder); $i += $database->limit)
 			{
 				$param = array(':user' => $user->id);
 				$target = array();
 
-				foreach(array_slice($folder, $i, Mail_1_0_0_Item::$_limit) as $index => $id)
+				$index = 0;
+
+				foreach(array_slice($folder, $i, $database->limit) as $id)
 				{
 					$value = $target[] = ":i{$index}d";
 					$param[$value] = $id;
+
+					$index++;
 				}
 
 				if(!count($target)) continue;
@@ -204,14 +208,17 @@
 				if(!$query->success) return $database->rollback() && false;
 			}
 
-			for($i = 0; $i < count($mail); $i += Mail_1_0_0_Item::$_limit)
+			for($i = 0; $i < count($mail); $i += $database->limit)
 			{
 				$param = $target = array();
+				$index = 0;
 
-				foreach(array_slice($mail, $i, Mail_1_0_0_Item::$_limit) as $index => $id)
+				foreach(array_slice($mail, $i, $database->limit) as $id)
 				{
 					$value = $target[] = ":i{$index}d";
 					$param[$value] = $id;
+
+					$index++;
 				}
 
 				if(!count($target)) continue;

@@ -9,7 +9,9 @@
 
 	table#%id%_tab th { cursor : pointer; border : 1px #333 solid; }
 
-	table#%id%_read_zone { background-color : #fafafa; empty-cells : show; border-collapse : collapse; width : 100%; }
+	table#%id%_read_zone { border-color : #333; background-color : #fafafa; empty-cells : show; border-collapse : collapse; width : 100%; }
+
+	table#%id%_read_zone th, table#%id%_read_zone td { border-color : #333; }
 
 	tr#%id%_read_header { background-color : #a87; }
 
@@ -40,8 +42,6 @@
 	th.%id%_row_date { width : 120px; }
 
 	img.%id%_indicator { width : 16px; height : 16px; }
-
-	div#%id%_wait { margin : 10px; font-style : italic; }
 
 	div#%id%_mail_empty { margin : 10px; }
 

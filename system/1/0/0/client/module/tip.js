@@ -7,7 +7,7 @@
 
 		var _background = {color : 'ffeeaa', opacity : 85}; //Tip background color and opacity
 
-		var _design = $system.text.format('%%server/php/front.php?task=tip.make&background=%%&border=333333&edge=1&shadow=1&round=1&place=cm&through=%%', [$system.info.root, _background.color, _background.opacity]);
+		var _design = $system.text.format('%%server/php/front.php?task=tip.make&color=333333&background=%%&border=333333&edge=1&shadow=1&round=1&place=cm&through=%%', [$system.info.root, _background.color, _background.opacity]);
 
 		var _displayed = []; //List of displayed tips
 

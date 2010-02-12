@@ -15,6 +15,8 @@
 
 		var _quote = '> '; //Quote marker to use in reply
 
+		var _reply = 'Re: '; //Marker to prepend on reply to subject
+
 		var _state; //Mail send/draft state
 
 		var _submit = {}; //Remember mail send form submission
@@ -83,7 +85,7 @@
 					{
 						var draft = $system.array.find(field, 'bcc'); //If the field includes 'bcc', treat it as draft composing screen
 
-						if(!draft) value.subject = 'Re : ' + __mail[id].subject.replace(/^\s*re\s*:\s*/i, ''); //If not resuming a draft, put the reply marker after stripping the previous one
+						if(!draft) value.subject = _reply + __mail[id].subject.replace(/^\s*re\s*:\s*/i, ''); //If not resuming a draft, put the reply marker after stripping the previous one
 						else
 						{
 							value.subject = __mail[id].subject; //Use the subject as is for resuming draft
@@ -249,6 +251,7 @@
 			if(mode == 'success') //When succeeded
 			{
 				if(_state) mode = 'draft'; //Show the draft saved message instead
+				var update = __account[_submit[index].account].type == 'imap' ? 1 : 0;
 
 				if(_state != 2) //If not automatic saving
 				{
@@ -259,7 +262,7 @@
 				var target = _state ? 'drafts' : 'sent';
 				var special = __special[target][_submit[index].account];
 
-				if(special == __selected.folder) $self.item.update(1); //Update the folder
+				if(special == __selected.folder) $self.item.update(update); //Update the folder
 				else __update[special] = 1; //Or mark the folder to be updated on next access
 
 				$self.folder.get(_submit[index].account, __account[_submit[index].account].type == 'imap' ? 1 : 2); //Update new mail count
@@ -270,8 +273,8 @@
 
 					if(special != home) //If the draft was placed not in the draft folder
 					{
-						if(home == __selected.folder) $self.item.update(1); //Update the folder
-						else __update[home] = 1; //Or mark the folder to be updated on next access
+						if(home == __selected.folder) $self.item.update(update); //Update the folder
+						else __update[home] = update; //Or mark the folder to be updated on next access
 					}
 				}
 			}
@@ -367,18 +370,29 @@
 		this.filter = function(section, value) //Filters the list of mails
 		{
 			var log = $system.log.init(_class + '.filter');
+			if(!__selected.folder) return false;
+
+			if(!$system.is.text(section)) return log.param();
 
 			switch(section)
 			{
-				case 'marked' : case 'unread' : if(typeof value != 'boolean') return log.param(); break;
+				case 'search' :
+					if(typeof value != 'string') return log.param();
 
-				default : return log.dev($global.log.error, 'dev/gui/filter', 'dev/gui/filter/solution'); break;
+					if(value.length == 1)
+					{
+						$system.gui.alert($id, 'user/gui/search/short', 'user/gui/search/short/solution', 3); 
+						return false;
+					}
+				break;
+
+				case 'marked' : case 'unread' :
+					if(typeof value != 'boolean') return log.param();
+				break;
 			}
 
-			__filter[section] = value;
-			$self.item.update(); //Update the listing
-
-			return false; //Avoid form submission
+			__selected[section] = value;
+			return $self.item.update(); //Update the listing
 		}
 
 		this.flip = function(page) //Change page
@@ -389,7 +403,7 @@
 			if(!$system.is.digit(page)) return log.param();
 
 			__selected.page = page;
-			return $self.item.get(__selected.folder);
+			return $self.item.update();
 		}
 
 		this.format = function(node) //Turn links and mail addresses clickable
@@ -465,7 +479,11 @@
 				return false;
 			}
 
-			if($system.node.id($id + '_compose_' + index + '_form').account.disabled) return false; //If the form is disabled while being processed, quit
+			var form = $system.node.id($id + '_compose_' + index + '_form');
+
+			if(form.account.disabled) return false; //If the form is disabled while being processed, quit
+			if(form.subject.value == '' && form.to.value == '' && form.cc.value == '' && form.bcc.value == '' && form.body.value == '') return false; //If nothing written yet, quit
+
 			return $self.gui.send(index, 2); //Save the draft silently
 		}
 
@@ -503,7 +521,7 @@
 
 			for(var field in warn)
 			{
-				$system.gui.alert($id, 'user/gui/send/field', 'user/gui/send/field/message');
+				$system.gui.alert($id, 'user/gui/send/field', 'user/gui/send/field/message', 3);
 				return false; //If invalid fields exist, quit
 			}
 
@@ -612,14 +630,16 @@
 			if(!$system.is.text(section)) return log.param();
 
 			__order = {item : section, reverse : __order.item == section && !__order.reverse}; //Set order option
-			var header = $system.array.list('from to cc bcc');
+
+			__selected.order = __order.item;
+			__selected.reverse = __order.reverse;
 
 			$self.item.update(); //Update the listing
+			var header = $system.array.list('subject from sent');
 
 			for(var i = 0; i < header.length; i++)
 			{
 				var sign = $system.node.id($id + '_sign_' + header[i]);
-				if(!$system.is.element(sign)) continue;
 
 				if(section != header[i]) sign.innerHTML = '';
 				else sign.innerHTML = !__order.reverse ? ' &uarr;' : ' &darr;';

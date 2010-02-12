@@ -17,12 +17,12 @@
 			return $global.loader[process][system](id); //Use that system version to process the loading
 		}
 
-		this.callback = function(source, callback) //Run a callback function safely
+		this.callback = function(source, callback, param) //Run a callback function safely
 		{
 			if(!$system.is.text(source)) return false;
 			if(typeof callback != 'function') return true;
 
-			try { return callback(); }
+			try { return $system.is.array(param) ? $system.app.method(callback, param)() : callback(); }
 
 			catch(error)
 			{
@@ -196,7 +196,7 @@
 				//Load all of the module scripts by asking for partial matches
 				var request = $system.network.item($self.info.root + 'client/module/', true);
 
-				var load = ['conf', 'run', 'init']; //Add required scripts for loading
+				var load = $system.array.list('conf manual run init'); //Add required scripts for loading
 				for(var i = 0; i < load.length; i++) request.push($system.network.item($self.info.root + 'client/' + load[i] + '.js'));
 
 				for(var i = 0; i < request.length; i++) //Concatenate all of the module codes

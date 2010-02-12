@@ -7,6 +7,7 @@
 	<string name="drop" value="Hide the content" />
 	<string name="show" value="Show the content" />
 	<string name="resize" value="Grab here to resize the pane" />
+	<string name="static" value="Cannot resize when shrinked" />
 	<string name="unremovable" value="Cannot remove the tool bar now" />
 	<string name="remove" value="Remove the tool bar" />
 	<string name="restore" value="Restore the tool bar" />

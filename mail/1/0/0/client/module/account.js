@@ -13,6 +13,7 @@
 			$system.node.id($id + '_account').value = __selected.account = account;
 			if($system.browser.engine == 'trident') document.body.focus(); //Let focus off the selection to allow mouse wheel use on other parts after selection
 
+			__selected.account = account;
 			if(account == '0') return $self.folder.get(account, undefined, callback);
 
 			var list = function(account, folder, callback) //Get mails for the default mail box
@@ -23,7 +24,7 @@
 				else $system.app.callback(log.origin, callback);
 			}
 
-			return $self.folder.get(account, 0, $system.app.method(list, [account, folder, callback])); //List the folders
+			return $self.folder.get(account, false, $system.app.method(list, [account, folder, callback])); //List the folders
 		}
 
 		this.get = function(cache, list, callback) //Get list of accounts
@@ -49,7 +50,7 @@
 			var list = function(request)
 			{
 				$self.gui.indicator(false); //Hide indicator
-				_list = request.xml || request;
+				_list = $system.is.object(request.xml) && request.xml || request;
 
 				var accounts = $system.dom.tags(_list, 'account');
 				var conf = {account : $system.node.id($id + '_conf_form'), folder : $system.node.id($id + '_conf_folder_form_account')}; //Configuration panel forms
@@ -103,7 +104,7 @@
 
 					for(var j = 1; j <= __window; j++) //For all of the composing windows
 					{
-						if(!$system.window.list[$id + '_display_' + j]) continue; //Check for window existance
+						if(!$system.window.list[$id + '_display_' + j]) continue; //Check for window existence
 
 						var form = $system.node.id($id + '_compose_' + j + '_form');
 						if(!$system.is.element(form, 'form')) continue;
@@ -145,9 +146,24 @@
 						$system.gui.alert($id, 'user/conf/remove/title', 'user/conf/remove/message', 3);
 						if(__selected.account == id) $self.account.change(0); //Reset account choice if the displayed account is removed
 
-						for(var folder in __belong) if(__belong[folder] == id) $self.folder.clear(folder); //Clear all folder related data for this account
-						delete __account[id]; //Remove account information
+						for(var folder in __belong)
+						{
+							if(__belong[folder] != id) continue;
 
+							$self.folder.clear(folder); //Clear mail caches
+							delete __belong[folder]; //Delete which account this folder belongs to
+
+							if(__timer[__belong[folder]]) clearInterval(__timer[folder]);
+							delete __timer[folder]; //Remove the periodic folder listing timer
+
+							if(__refresh[folder]) clearInterval(__refresh[folder]);
+							delete __refresh[folder]; //Remove the periodic item listing timer
+
+							var section = $system.array.list('inbox drafts sent trash'); //Invalidate the special folder ID if set to this folder
+							for(var i = 0; i < section.length; i++) for(var account in __special[section]) if(__special[section][account] == folder) __special[section][account] == null;
+						}
+
+						delete __account[id]; //Remove account information
 						$self.conf.folder(0);
 					break;
 

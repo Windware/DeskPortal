@@ -10,7 +10,7 @@
 		</td>
 
 		<td style="width : 60%; vertical-align : top">
-			<form onsubmit="return %top%.%id%.item.set(%value:id%, this)">
+			<form onsubmit="%top%.%id%.item.set(%value:id%, this); return false">
 				<p><strong>%string:name%</strong><br /><input name="name" type="text" value="%value:name%" /></p>
 
 				<p><strong>%string:last%</strong><br />%value:last%</p>

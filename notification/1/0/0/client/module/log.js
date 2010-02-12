@@ -10,7 +10,9 @@
 			var log = $system.node.id($id + '_log'); //The log display field
 			var source = origin.replace(/\..+/, '');
 
-			var hint = track = severity = ''; //Debug helpers
+			var hint = ''; //Debug helpers
+			var track = '';
+			var severity = '';
 
 			if($system.is.id(source)) //If it came from a proper application
 			{

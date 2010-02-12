@@ -6,19 +6,11 @@
 			<bug summary="Cannot drag the window inside the cache content">
 				Cannot drag the window by clicking inside the cache content and dragging the mouse
 			</bug>
-
-			<bug summary="Cannot store addresses longer than 500 characters">
-				By technical limitation, bookmark addresses must be less than 500 characters
-			</bug>
 		</user>
 	</current>
 
 	<plan>
 		<user>
-			<new summary="Import existing bookmarks" priority="2">
-				Allow importing bookmarks from browsers
-			</new>
-
 			<new summary="Check validity of bookmarks automatically" priority="2">
 				Automatically check for validity of bookmarks to find missing links and duplicates
 			</new>

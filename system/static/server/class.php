@@ -159,14 +159,14 @@
 			return $settings;
 		}
 
-		#Loads a file and exits with log level LOG_CRIT if it fails to load
+		#Loads a file
 		public static function file_load($file, $multiple = false, $severity = LOG_ERR) #FIXME - included file has too many variables visible from within this function
 		{
 			$log = self::log(__METHOD__);
 			if(!is_string($file)) $log->param();
 
 			$return = $multiple ? @include($file) : @include_once($file); #Load the specified file
-			return $return ? true : $log->system($severity, 'Cannot load file : '.self::file_relative($file), 'Make sure it is accessible');
+			return $return !== false ? true : $log->system($severity, 'Cannot load file : '.self::file_relative($file), 'Make sure it is accessible');
 		}
 
 		#Checks whether the file is readable or not

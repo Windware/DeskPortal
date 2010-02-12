@@ -1,18 +1,17 @@
 <table cellpadding="0" cellspacing="5" class="%system%_full"><tbody class="%system%_full">
 	<tr style="height : 5%">
 		<td colspan="2" style="width : 100%; text-align : left">
-			<form style="margin : 5px 0px" onsubmit="return %top%.%id%.item.add(this.add)"%tip:add%>
+			<form style="margin : 5px 0px" onsubmit="return %top%.%id%.item.add(this.add)"><span%tip:add%>
 				%string:new% : <input type="text" name="add" class="%id%_word" />
 				<input type="submit" value="%string:add%" class="%id%_check" />
-			</form>
+			</span></form>
 
 			<form style="margin : 5px 0px" id="%id%_settings" onsubmit="%top%.%id%.item.get(); return false">
-				<div%tip:search%>
-					%string:search% : <input type="text" name="search" class="%id%_word" />
-				</div>
+				<div><span%tip:search%>%string:search% : <input type="text" name="search" class="%id%_word" /></span></div>
 
-				<div%tip:order%>
+				<div><span%tip:order%>
 					%string:order% :
+
 					<label for="%id%_order_0">
 						<input type="radio" name="order" value="0" id="%id%_order_0" onclick="%top%.%id%.item.get()" checked="checked" />
 						%string:name%
@@ -37,12 +36,7 @@
 						<input type="radio" name="order" value="4" id="%id%_order_4" onclick="%top%.%id%.item.get()" />
 						%string:viewed%
 					</label>
-
-					<!--<label for="%id%_order_5">
-						<input type="radio" name="order" value="5" id="%id%_order_5" onclick="%top%.%id%.gui.sort(this.value)" />
-						%string:updated%
-					</label>-->
-				</div>
+				</span></div>
 			</form>
 		</td>
 	</tr>
@@ -55,16 +49,14 @@
 	<tr>
 		<td style="height : 90%; vertical-align : top">
 			<form id="%id%_selection" style="background-color : #aba"%scroll%>
-				<p style="text-align : center">
-					<input class="%id%_check" type="button" value="%string:clear%" onclick="%top%.%id%.gui.select(false)" />
-				</p>
+				<div><input id="%id%_all" type="checkbox" onclick="%top%.%id%.gui.select(this.checked)"%tip:all% /></div>
 
 				<div id="%id%_categories"%scroll%></div>
 			</form>
 		</td>
 
 		<td style="height : 90%; vertical-align : top">
-			<div id="%id%_entries" style="background-color : #eee"></div>
+			<div id="%id%_entries"%scroll%></div>
 		</td>
 	</tr>
 </tbody></table>

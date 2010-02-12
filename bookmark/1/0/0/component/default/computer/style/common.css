@@ -9,11 +9,19 @@
 	input.%id%_check { border : 1px #333 solid; background-color : #898; }
 
 	/* Bookmark entries */
-	div#%id%_entries div { margin : 5px; }
+	div#%id%_entries { background-color : #ded; }
 
 	div#%id%_entries span { background-color : #333; width : 5px; height : 16px; display : inline-block; }
 
 	div#%id%_entries img { border : none; width : 16px; height : 16px; }
+
+	a.%id%_active { background-color : #ded !important; }
+
+	a.%id%_row { border-bottom : 1px #333 dotted; padding : 5px; display : block; color : #333 !important; }
+
+	a.%id%_dark { background-color : #9a9; }
+
+	a.%id%_light { background-color : #aba; }
 
 	/* Filters */
 	input.%id%_word { width : 200px; background-color : #aba; border : 1px #333 solid; }

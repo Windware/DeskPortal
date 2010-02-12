@@ -31,26 +31,28 @@
 			$size_y /= self::$_zoom;
 		}
 
+		#FIXME - Borders aren't properly drawn (Visible when the background is black and border is white) - 
+		#TODO - Use sprite technique to send out 4 corners as a single image
 		public static function background(&$system, $param) #Creates a window's translucent background graphic piece according to the given parameters
-		{ #FIXME - Borders aren't properly drawn (Visible when the background is black and border is white)
+		{
 			$log = $system->log(__METHOD__);
-
-			#TODO Use sprite technique to send out 4 corners as a single image
-			#Probably can't combine all since the edges are repeated images than a static one and at least IE cant use repeated image from a sprite
 
 			#Positions are in combination of "Top/Center/Bottom" and "Left/Middle/Right" of 9 cells in a window
 			if(!preg_match('/^[tcb][lmr]$/', $param['place']) && $param['place'] != 'circle' || !preg_match('/^([a-f\d]{6})$/i', $param['background'])) return $log->param();
 			if($param['round'] != 0 && $param['round'] != 1) return $log->param();
 
-			if(!$system->is_color($param['background']) || !$system->is_color($param['border'])) return $log->param();
+			if(!$system->is_color($param['color']) || !$system->is_color($param['background']) || !$system->is_color($param['border'])) return $log->param();
 			if(!$system->is_digit($param['shadow']) || !$system->is_digit($param['shadow'])) return $log->param();
 
 			$through = $system->is_digit($param['through']) ? 100 - $param['through'] : self::$_through; #Set transparency
 			if($through > 100 || $through < 0) return false;
 
 			ksort($param); #Sort the keys
-			$id = 'pane/'.md5(implode('', $param)).'.png'; #Create a unique name from the query string for cache purpose
 
+			$id = '';
+			foreach($param as $key => $value) $id .= "$key=$value&";
+
+			$id = 'pane/'.md5($id).'.png'; #Create a unique name from the query string for cache purpose
 			if($built = $system->cache_get($id, false, $system->system['id'])) return $built; #Use cache if it exists
 
 			#Calculate the hex color from the specified values
@@ -160,8 +162,8 @@
 				case 'cm' : $canvas_x = $size_x = $canvas_y = $size_y = 1; break; #Center middle
 			}
 
-			#If this has rounded corners, zoom to apply resampling later for smoother corners
-			if($param['round'] && preg_match('/^[tb][lr]$/', $param['place']) || $param['place'] == 'circle')
+			#If this is the corner or circle, zoom to apply resampling later for smoother corners
+			if(preg_match('/^[tb][lr]$/', $param['place']) || $param['place'] == 'circle')
 			{
 				$canvas_x *= self::$_zoom;
 				$canvas_y *= self::$_zoom;
@@ -204,7 +206,7 @@
 					imagefilledellipse($image, $canvas_x / 2, $canvas_y / 2, $canvas_x - $adjust, $canvas_y - $adjust, $gradient[$param['shadow'] - $i]);
 				}
 
-				self::_resample($image, $canvas_x, $canvas_y, $size_x, $size_y); #Shrink to normal size
+				self::_resample($image, $canvas_x, $canvas_y, $size_x, $size_y); #Shrink back to normal size
 			}
 			elseif(preg_match('/^[tb][lr]$/', $param['place'])) #If this includes a corner
 			{
@@ -220,15 +222,15 @@
 
 							switch($param['place'])
 							{
-								case 'tr':
+								case 'tr' :
 									imagefilledellipse($image, 0, $canvas_y, $canvas_x * 2 - $adjust, $canvas_y * 2 - $adjust, $gradient[$param['shadow'] - $i]);
 								break;
 
-								case 'bl':
+								case 'bl' :
 									imagefilledellipse($image, $canvas_x, 0, $canvas_x * 2 - $adjust, $canvas_y * 2 - $adjust, $gradient[$param['shadow'] - $i]);
 								break;
 
-								case 'br':
+								case 'br' :
 									imagefilledellipse($image, 0, 0, $canvas_x * 2 - $adjust, $canvas_y * 2 - $adjust, $gradient[$param['shadow'] - $i]);
 								break;
 							}
@@ -241,31 +243,33 @@
 
 					#Create a pie shape that is a little smaller with the actual translucent color
 					imagefilledarc($image, $start_x * self::$_zoom, $start_y * self::$_zoom, $size_x * 2 - $space, $size_y * 2 - $space, $angle, $angle + 90, $color, IMG_ARC_PIE);
-
-					if($param['place'] == 'br') #For bottom right, add a line icon to indicate an action
-					{
-						imagesetthickness($image, self::$_zoom); #Set line thickness
-						imageline($image, $size_x / 4 * 3, 0, 0, $size_y / 4 * 3, $color);
-					}
-
-					self::_resample($image, $canvas_x, $canvas_y, $size_x, $size_y); #Shrink back to normal size
 				}
 				else #For a rectangular corner
 				{
 					imagefilledrectangle($image, 0, 0, $size_x, $size_y, $line); #Create the border color shape
 
 					#Override the inner part with the actual translucent color
-					imagefilledrectangle($image, 0 + $start_x, 0 + $start_y, $size_x - $end_x - $start_x, $size_y - $end_y - $start_y, $color);
-
-					#For bottom right, add a line icon to indicate an action
-					if($param['place'] == 'br') imageline($image, $size_x / 4 * 3, 0, 0, $size_y / 4 * 3, $color);
+					imagefilledrectangle($image, 0 + $start_x * self::$_zoom, 0 + $start_y * self::$_zoom, $size_x - $end_x, $size_y - $end_y, $color);
 				}
+
+				switch($param['place']) #For bottom right and upper right, add an indicator for click action
+				{
+					case 'tr' : #Toolbar hide/show indicator
+						imagefilledarc($image, $canvas_x / 4.5, $canvas_y / 1.7, $canvas_x / 4, $canvas_y / 2, 0, 360, $line, IMG_ARC_PIE);
+					break;
+
+					case 'br' : #Window resize indicator
+						imagefilledpolygon($image, array(0, $canvas_y / 4, $canvas_x / 4, 0, $canvas_x / 3, $canvas_y / 3), 3, $line);
+					break;
+				}
+
+				self::_resample($image, $canvas_x, $canvas_y, $size_x, $size_y); #Shrink back to normal size
 
 				if($param['shadow']) #If it should have shadows, add them to the appropriate edges
 				{
 					switch($param['place'])
 					{
-						case 'tr':
+						case 'tr' :
 							if(!$param['round'])
 							{
 								imagefilledrectangle($image, $size_x, 0, $canvas_x, $canvas_y, $transparent);
@@ -273,7 +277,7 @@
 							}
 						break;
 
-						case 'br':
+						case 'br' :
 							if(!$param['round'])
 							{
 								for($i = 0; $i < $param['shadow']; $i++)
@@ -284,7 +288,7 @@
 							}
 						break;
 
-						case 'bl':
+						case 'bl' :
 							if(!$param['round'])
 							{
 								imagefilledrectangle($image, 0, $canvas_y - $param['shadow'], $param['shadow'], $canvas_y, $transparent);
@@ -305,11 +309,11 @@
 				{
 					switch($param['place']) #For places those need shadows
 					{
-						case 'bm':
+						case 'bm' :
 							for($i = 0; $i < $param['shadow']; $i++) imageline($image, 0, $canvas_y - $param['shadow'] + $i, 1, $canvas_y - $param['shadow'] + $i, $gradient[$i]);
 						break;
 
-						case 'cr':
+						case 'cr' :
 							for($i = 0; $i < $param['shadow']; $i++) imageline($image, $canvas_x - $param['shadow'] + $i, 0, $canvas_x - $param['shadow'] + $i, 1, $gradient[$i]);
 						break;
 					}

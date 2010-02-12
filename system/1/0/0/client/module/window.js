@@ -185,10 +185,10 @@
 			if($system.is.digit(settings.depth)) $system.window.raise(pane.object, settings.depth, undefined, true); //Set the z axis height to the configured value
 			else $system.window.raise(id, undefined, undefined, true); //Otherwise bring the window to the foremost
 
-			var replacer = [$system.info.root, background, line, $system.window.edge, $system.window.shadow, $global.user.pref.round == "1" ? 1 : 0]; //Set the window design specifier
+			var replacer = [$system.info.root, color, background, line, $system.window.edge, $system.window.shadow, $global.user.pref.round == "1" ? 1 : 0]; //Set the window design specifier
 
 			//Pre define the pane design request string
-			pane.design = $system.text.format('%%server/php/front.php?task=window.create&background=%%&border=%%&edge=%%&shadow=%%&round=%%&place=', replacer);
+			pane.design = $system.text.format('%%server/php/front.php?task=window.create&color=%%&background=%%&border=%%&edge=%%&shadow=%%&round=%%&place=', replacer);
 
 			if(!$global.user.pref.fade || quick === true) //If not fading, set the background statically once
 			{
@@ -200,7 +200,7 @@
 					var cells = rows.item(i).cells; //The cells in the row
 
 					for(var j = 0; j < cells.length; j++) //Set the window color
-						$system.image.background(cells.item(j), $system.window.list[id].design + _spots[index++]);
+						$system.image.background(cells.item(j), pane.design + _spots[index++]);
 				}
 			}
 

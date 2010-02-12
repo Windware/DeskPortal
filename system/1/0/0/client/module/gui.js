@@ -154,8 +154,8 @@
 			if(!$system.is.array(_queue[id])) _queue[id] = [];
 			var node = $system.node.id($system.info.id + '_' + id + '_notice');
 
-			var found = false; //Check for duplicates
-			for(var i = 0; i < _queue[id].length; i++) if(_queue[id][i].message == message && _queue[id][i].action == action) found = i;
+			var found = false; //Check for duplicate messages
+			for(var i = 0; i < _queue[id].length; i++) if(_queue[id][i].message == message) found = i;
 
 			if(remove !== true) //When setting a new notification
 			{

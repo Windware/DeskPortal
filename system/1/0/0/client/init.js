@@ -2,12 +2,11 @@
 	//Code to be loaded after other modules are read
 	//NOTE : The order of execution is important as some modules rely on other modules to be initiated
 
-	//Class based local variables
-	var __conf = {pages : {}};
+	var __conf = {pages : {}}; //For configuration panels
 
-	var __node = {fading : {}};
+	var __node = {fading : {}}; //For node manipulation
 
-	var __tip = {};
+	var __tip = {}; //For tip management
 
 	new function()
 	{

@@ -13,6 +13,11 @@
 			print $system->xml_send($result, $data);
 		break;
 
+		case 'conf._2_import' : #Loads bookmarks uploaded into the database
+			$result = Bookmark_1_0_0_Item::import($_FILES['bookmark']['tmp_name']);
+			print $result ? 0 : 1;
+		break;
+
 		case 'gui.cache' : #Get the cache content in HTML
 			$result = Bookmark_1_0_0_Cache::get($_GET['id']);
 
@@ -32,7 +37,7 @@
 
 		case 'item.add' : #Add a new bookmark
 			$result = Bookmark_1_0_0_Item::add($_POST['address']);
-			print $system->xml_dump($result !== false);
+			print $system->xml_dump($result === null ? 2 : !!$result);
 		break;
 
 		case 'item.get' : #Get the list of bookmarks
