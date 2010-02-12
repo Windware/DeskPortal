@@ -76,6 +76,9 @@
 		public function compress_requested() { return System_1_0_0_Compress::requested($this); }
 
 
+		public function cookie_set($key, $value, $period = 0) { return System_1_0_0_Cookie::set($this, $key, $value, $period); }
+
+
 		public function crypt_decrypt($data, $key) { return System_1_0_0_Crypt::decrypt($this, $data, $key); }
 
 		public function crypt_encrypt($data, $key) { return System_1_0_0_Crypt::encrypt($this, $data, $key); }

@@ -223,7 +223,7 @@
 			if(!$period) $period = self::$_last; #If never set, use the default auto logout value
 			$period = time() + $period * 60; #Turn into expiration time
 
-			return setcookie('ticket', $this->ticket, $period) && setcookie('name', $this->name, $period); #Resend the same cookies with new expire time
+			return $system->cookie_set('ticket', $this->ticket, $period) && $system->cookie_set('name', $this->name, $period); #Resend the same cookies with new expire time
 		}
 
 		public function save($section, $data, $id = null) #Update user configuration values

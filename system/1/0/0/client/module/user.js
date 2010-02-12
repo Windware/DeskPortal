@@ -168,7 +168,12 @@
 			if($global.user.pref.logout) setInterval($system.user.timer, 60000); //Set the auto logout timer
 
 			$system.image.wallpaper($global.user.pref.wallpaper); //Set wallpaper
-			if($global.demo.mode) $system.gui.alert($id, 'user/user/demo', 'user/user/demo/message');
+
+			if($global.demo.mode) //Under demo mode
+			{
+				var index = $system.gui.alert($id, 'user/user/demo', 'user/user/demo/message'); //Show about write operation limitation
+				$system.window.raise(index, 10000); //Make sure other windows won't cover this
+			}
 
 			return true;
 		}

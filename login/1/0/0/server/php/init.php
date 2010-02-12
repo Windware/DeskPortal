@@ -122,8 +122,8 @@
 			$end = $keep ? time() + System_1_0_0_User::$_last * 24 * 3600 : 0; #Set the session to be kept or not
 
 			#Issue the cookies - NOTE : Passing both the ticket and the user name instead of just the ticket to make it difficult to brute force attack on ticket value
-			setcookie('name', $name, $end);
-			setcookie('ticket', $ticket, $end);
+			$system->cookie_set('name', $name, $end);
+			$system->cookie_set('ticket', $ticket, $end);
 
 			if(!$conf['system_demo'])
 			{

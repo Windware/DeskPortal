@@ -15,8 +15,8 @@
 	$system->cache_header(0); #Do not cache the top page for cookie purpose
 
 	#Set information necessary in the cookie
-	setcookie('language', implode(',', $system->language_order()));
-	setcookie('time', time());
+	$system->cookie_set('language', implode(',', $system->language_order()));
+	$system->cookie_set('time', time());
 
 	#NOTE : Not compressing as the output size is small enough
 	#TODO : cache by language : ex index.html.en
