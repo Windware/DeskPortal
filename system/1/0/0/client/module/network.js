@@ -209,11 +209,7 @@
 
 			var method = $system.is.object(post) ? 'POST' : 'GET'; //Specify request type according to the data given
 
-			if(method == 'POST' && $global.demo.mode)
-			{
-				$system.gui.alert($id, 'user/network/demo', 'user/network/demo/message', 2);
-				return $system.app.callback(_class + '.send', $system.app.method(callback, [new _response(address)])); //Avoid making call for POST on demo mode
-			}
+			if(method == 'POST' && $global.demo.mode) return $system.app.callback(_class + '.send', $system.app.method(callback, [new _response(address)])); //Avoid making call for POST on demo mode
 
 			var asynchronous = callback !== null; //Go asynchronous unless specifically specified not to
 

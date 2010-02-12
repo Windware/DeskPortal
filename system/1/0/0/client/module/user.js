@@ -168,6 +168,8 @@
 			if($global.user.pref.logout) setInterval($system.user.timer, 60000); //Set the auto logout timer
 
 			$system.image.wallpaper($global.user.pref.wallpaper); //Set wallpaper
+			if($global.demo.mode) $system.gui.alert($id, 'user/user/demo', 'user/user/demo/message');
+
 			return true;
 		}
 

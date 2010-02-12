@@ -22,9 +22,6 @@
 	<string name="user/wallpaper" value="Set a new wallpaper." />
 
 	<!-- network.js -->
-	<string name="user/network/demo" value="Under demo mode" />
-	<string name="user/network/demo/message" value="Demo mode does not allow saving data." />
-
 	<string name="user/network/error" value="Network error has occured." />
 	<string name="user/network/error/solution" value="Please try again in a few moments or check your network connectivity." />
 
@@ -35,6 +32,9 @@
 	<!-- user.js -->
 	<string name="user/user/expire/title" value="Session limit" />
 	<string name="user/user/expire/message" value="This user will be logged out%%" />
+
+	<string name="user/user/demo" value="Under demo mode" />
+	<string name="user/user/demo/message" value="Demo mode does not allow saving data." />
 
 	<!-- window.js -->
 	<string name="user/window/create" value="Application '%%' failed to run." />
