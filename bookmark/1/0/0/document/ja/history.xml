@@ -11,6 +11,10 @@
 
 	<plan>
 		<user>
+			<new summary="ブックマークのfaviconを取得する" priority="2">
+				ブックマークアクセス時にfaviconを取得する
+			</new>
+
 			<new summary="ブックマークの有効性を自動で検出する" priority="2">
 				自動的にブックマークのリンク切れ、重複を検出する。
 			</new>

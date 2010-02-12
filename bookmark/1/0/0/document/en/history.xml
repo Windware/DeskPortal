@@ -11,6 +11,10 @@
 
 	<plan>
 		<user>
+			<new summary="Add favicons" priority="2">
+				Add favicons when the bookmark is accessed
+			</new>
+
 			<new summary="Check validity of bookmarks automatically" priority="2">
 				Automatically check for validity of bookmarks to find missing links and duplicates
 			</new>

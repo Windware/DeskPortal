@@ -32,9 +32,7 @@
 			}
 
 			element.value = ''; //Clear the input field
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'item.add'}, {address : address}, update);
-
-			return false; //Avoid the form from getting submitted
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.add'}, {address : address}, update);
 		}
 
 		this.get = function(callback) //List the bookmarks
@@ -51,7 +49,7 @@
 			var items = $system.node.id($id + '_selection').elements; //Category selection form
 
 			for(var i = 0; i < items.length; i++) //Add the chosen categories
-				if(items[i].type == 'checkbox' && items[i].checked) param.cat.push(items[i].value);
+				if(items[i].type == 'checkbox' && $system.is.digit(items[i].value) && items[i].checked) param.cat.push(items[i].value);
 
 			var fetch = function(request) //TODO - Do the ordering on the client side
 			{

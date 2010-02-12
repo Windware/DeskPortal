@@ -1413,8 +1413,8 @@
 					}
 				}
 			}
-			else #For POP3, remove list of downloaded mails those do not exist on the mail server anymore to avoid increasing the data indefinitely
-			{
+			elseif(false) #For POP3, remove list of downloaded mails those do not exist on the mail server anymore to avoid increasing the data indefinitely
+			{ #FIXME - Sometimes the wrong records get deleted, making mails to be downloaded again
 				$active = $link['info']['supported'] ? $unique : $exist;
 
 				if(!is_array($active) || !count($active)) #If no mail is on the server
