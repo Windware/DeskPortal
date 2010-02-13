@@ -909,7 +909,7 @@
 				header('Content-Type: text/html; charset=utf-8');
 
 				$container = str_replace(array('%top%', '%id%'), array($system->app_conf('system', 'static', 'root'), $system->self['id']), $system->file_read("{$system->self['root']}/resource/mail.html"));
-				$body = str_replace(array('%subject%', '%body%'), array(htmlspecialchars($row['subject']), htmlspecialchars($row['plain'])), $container); #Dump the content in a container
+				$body = str_replace(array('%subject%', '%body%'), array(htmlspecialchars($row['subject']), str_replace("\n", "<br />\n", htmlspecialchars($row['plain']))), $container); #Dump the content in a container
 
 				if($system->compress_header()) $body = gzencode($body); #If gzip compression is allowed, send back compressed
 				header('Content-Length: '.strlen($body));

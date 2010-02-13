@@ -126,7 +126,7 @@
 			return $self.info.template[template].replace(/%value:(.+?)%/g, replace);
 		}
 
-		var _insert = function(id, index, raw) //Load the message body
+		var _insert = function(id, index, raw) //Load the message body for composing
 		{
 			if(!$system.is.digit(id) || !$system.is.digit(index)) return false;
 			if(!__mail[id] || !$system.node.id($id + '_compose_' + index + '_form')) return false;
