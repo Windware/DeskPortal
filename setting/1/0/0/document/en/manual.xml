@@ -14,6 +14,7 @@
 	<string name="_3_window" value="Window" />
 	<string name="3/window" value="The behavior of the window can be changed." />
 	<string name="3/move" value="At the 'Move type' option, it may change how the window can be moved. 'Body' type will move the window body itself. 'Border' will let the border of the window move and lets the body move when the position is determined. 'Object' will create a small object that you can drag around to determine the position of the window and then the window will be moved. The 'Object' method is the best for performance." />
+	<string name="3/translucent" value="Translucent move makes windows translucent when moving or resizing windows." />
 	<string name="3/fade" value="The 'Fade effect' option will determine giving fade effects when windows open and close and in some other circumstances. On some computers, it may decrease the performance, and in those cases, this option should be disabled." />
 	<string name="3/corner" value="The 'Rounded corners' option will make the corners rounded on windows. No performance difference is made either way." />
 

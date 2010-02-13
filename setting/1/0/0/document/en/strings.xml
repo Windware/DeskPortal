@@ -2,6 +2,7 @@
 	<string name="option" value="Options" />
 	<string name="language" value="Language" />
 	<string name="browser" value="Browser configured" />
+	<string name="translucent" value="Translucent move" />
 	<string name="fade" value="Fade effect" />
 	<string name="round" value="Rounded corners" />
 	<string name="move" value="Move type" />

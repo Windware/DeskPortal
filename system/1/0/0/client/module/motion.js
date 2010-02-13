@@ -174,7 +174,7 @@
 				event = event.touches[0]; //Get the touch event
 			}
 
-			if($system.browser.engine != 'trident' || $system.browser.version >= 7) $system.node.opacity(id, 50); //Set translucency when moving
+			if($global.user.pref.translucent && $system.browser.engine != 'trident' || $system.browser.version >= 7) $system.node.opacity(id, 50); //Set translucency when moving
 
 			_mover = //Keep the movement parameters
 			{
@@ -244,8 +244,11 @@
 
 			if(!_mover || !$system.node.id(_mover.object.id)) return true; //If nothing is moving, quit
 
-			if($system.browser.engine == 'trident' && $system.browser.version >= 7) _mover.node.style.removeAttribute('filter');
-			if($system.browser.engine != 'trident' || $system.browser.version >= 7) $system.node.opacity(_mover.node.id, 100); //Set back to normal opacity
+			if($global.user.pref.translucent)
+			{
+				if($system.browser.engine == 'trident' && $system.browser.version >= 7) _mover.node.style.removeAttribute('filter');
+				if($system.browser.engine != 'trident' || $system.browser.version >= 7) $system.node.opacity(_mover.node.id, 100); //Set back to normal opacity
+			}
 
 			if(_mover.diff && $system.is.element(_mover.node)) //If moving or resizing took place and the original object still exists
 			{

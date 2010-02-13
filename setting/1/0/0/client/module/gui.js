@@ -16,7 +16,7 @@
 				$system.gui.alert($id, 'user/gui/change/title', 'user/gui/change/message', 3);
 			}
 
-			var values = {language : form.language.value, logout : form.logout.value, move : form.move.value, fade : form.fade.checked ? 5 : 0, round : form.round.checked ? 1 : 0, resize : form.resize.checked ? 1 : 0, stretch : form.stretch.checked ? 1 : 0, center : form.center.checked ? 1 : 0};
+			var values = {language : form.language.value, logout : form.logout.value, move : form.move.value, translucent : form.translucent.checked ? 1 : 0, fade : form.fade.checked ? 5 : 0, round : form.round.checked ? 1 : 0, resize : form.resize.checked ? 1 : 0, stretch : form.stretch.checked ? 1 : 0, center : form.center.checked ? 1 : 0};
 			$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.apply'}, values, notify);
 
 			return false; //Avoid form submission

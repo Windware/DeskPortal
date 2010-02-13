@@ -44,7 +44,10 @@
 	<string name="_7_setting" value="Setting" />
 	<string name="setting" value="In order to change system settings such as the language and the wallpaper, click the 'System' category of the launcher application and click 'Setting'. This will display a list of user configurable options. The 'Wallpaper' tab at the top will show a list of available wallpapers to use as the background image. You may also enter a valid web address in the input field to specify a wallpaper of your choice." />
 
-	<string name="_8_other" value="Other" />
+	<string name="_8_iphone" value="iPhone" />
+	<string name="scroll" value="While using iPhone, when you'd like to scroll a content inside a window, use 2 fingers to scroll the content, since 1 finger will initiate window movements." />
+
+	<string name="_9_other" value="Other" />
 	<string name="community" value="If you need further information, please visit the community site." />
 	<string name="end" value="This concludes the guide. We hope you enjoy using %brand%." />
 </root>

@@ -27,7 +27,7 @@
 		var section = $system.array.list('language move logout'); //Select nodes
 		for(var i = 0; i < section.length; i++) form[section[i]].value = $global.user.pref[section[i]];
 
-		var section = $system.array.list('fade round resize stretch center'); //Checkbox nodes
+		var section = $system.array.list('translucent fade round resize stretch center'); //Checkbox nodes
 		for(var i = 0; i < section.length; i++) form[section[i]].checked = $global.user.pref[section[i]] != 0;
 
 		var system = $global.app.system.version; //Get list of system versions available

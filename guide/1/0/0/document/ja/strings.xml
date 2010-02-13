@@ -44,7 +44,10 @@
 	<string name="_7_setting" value="設定" />
 	<string name="setting" value="言語や壁紙などのシステムの設定の変更を行うには、ランチャーアプリケーションの'システム'のカテゴリーをクリックし、'設定’を起動します。変更できるオプションの一覧が表示され、上部には’壁紙’のタブがあり、そこを押すと、設定できる壁紙の一覧が表示されます。また、壁紙には入力欄にウェブアドレスを入力することで、任意の壁紙を指定する事もできます。" />
 
-	<string name="_8_other" value="その他" />
+	<string name="_8_iphone" value="iPhone" />
+	<string name="scroll" value="iPhoneをご利用の場合、ウインドウ内をスクロールするには2本の指でスクロールしてください。1本の指ではウインドウの移動を行なうことができます。" />
+
+	<string name="_9_other" value="その他" />
 	<string name="community" value="これ以外の詳しい情報に付きましては、コミュニティーサイトをご利用下さい。" />
 	<string name="end" value="これでガイドを終わります。是非%brand%をご活用ください。" />
 </root>

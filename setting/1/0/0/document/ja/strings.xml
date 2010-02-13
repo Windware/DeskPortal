@@ -2,6 +2,7 @@
 	<string name="option" value="設定" />
 	<string name="language" value="言語" />
 	<string name="browser" value="ブラウザー設定" />
+	<string name="translucent" value="半透明移動" />
 	<string name="fade" value="フェード効果" />
 	<string name="round" value="角を丸める" />
 	<string name="move" value="移動方式" />
