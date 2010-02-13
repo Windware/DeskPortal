@@ -9,16 +9,16 @@
 			this.format = function()
 			{
 				var base = parent.window.%top%;
-				if(base && base.%id%) base.%id%.gui.format(document.body); //Make links clickable
+				if(base && base.%id%) base.%id%.gui.format(document.body); //Make links clickable (Avoid when the frame is opened as a separate window)
 
 				document.body.style.display = ''; //Make it visible after the format to avoid possible flickering
 			}
 		}
 	</script>
 	<style type="text/css">
-		html { padding : 0px; margin : 0px; }
+		html, body { padding : 0px; margin : 0px; }
 
-		body { white-space : pre; padding : 0px; margin : 10px; font-size : 100%; }
+		body { white-space : pre; font-size : 100%; }
 
 		a { color : #567; cursor : pointer; text-decoration : none; }
 

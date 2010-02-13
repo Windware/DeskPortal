@@ -88,7 +88,7 @@
 				tag.style.cursor = 'pointer';
 
 				tag.onclick = $system.app.method($self.gui.expand, [id]); //Function to expand the group entries
-				tag.onmousedown = $system.app.method($system.event.cancel, [tag]);
+				$system.event.add(tag, 'onmousedown', $system.app.method($system.event.cancel, [tag]));
 
 				area.appendChild(tag);
 				$system.tip.set(tag, $id, 'expand');

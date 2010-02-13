@@ -97,7 +97,7 @@
 				row.className = $id + '_row';
 				$system.node.hover(row, $id + '_active'); //Make hover style
 
-				row.onmousedown = $system.app.method($system.event.cancel, [row]); //Don't let the window get dragged by clicking on the row
+				$system.event.add(row, 'onmousedown', $system.app.method($system.event.cancel, [row])); //Don't let the window get dragged by clicking on the row
 				row.onclick = $system.app.method($self.item.show, [info.id]); //Show the edit window on click
 
 				var desc = {none : '(' + language.none + ')', unknown : '(?)'}; //Texts to show when a value is empty

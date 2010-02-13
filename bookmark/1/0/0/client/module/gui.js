@@ -20,6 +20,26 @@
 			return category;
 		}
 
+		this.adjust = function(frame) //For iPhone, wrap the cache in a container to limit the content size, since iframe's size cannot be set
+		{
+			if(!$system.browser.os != 'iphone') return;
+			if(!$system.is.element(frame, 'iframe')) return false;
+
+			var node;
+			var inside = frame.contentWindow.document;
+
+			var zone = inside.createElement('div');
+			zone.style.overflow = 'auto';
+
+			while(node = inside.body.firstChild) zone.appendChild(node);
+
+			zone.style.width = frame.clientWidth + 'px';
+			zone.style.height = frame.clientHeight + 'px';
+
+			inside.body.appendChild(zone);
+			return true;
+		}
+
 		this.cache = function(id) //Create the cache content window of a bookmark
 		{
 			var log = $system.log.init(_class + '.cache');
@@ -30,11 +50,11 @@
 			var language = $system.language.strings($id);
 			var title = $self.info.title + ' ' + language.cache;
 
-			var values = {id : id, title : __bookmarks[id].name, root : $system.network.form($self.info.root + 'server/php/front.php?task=gui.cache&id=' + id)};
+			var values = {id : id, title : __bookmarks[id].name, cache : $system.network.form($self.info.root + 'server/php/front.php?task=gui.cache&id=' + id)};
 			var replace = function(phrase, match) { return values[match]; } //Replace variables
 
-			if($system.node.id(node)) $system.window.fade(node);
-			else $system.window.create(node, title, $self.info.template.cache.replace(/%value:(\w+?)%/g, replace), $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, undefined, undefined, 700, 400, true, false, true, null, null, true);
+			if($system.node.id(node)) return $system.window.fade(node);
+			return $system.window.create(node, title, $self.info.template.cache.replace(/%value:(\w+?)%/g, replace), $self.info.color, $self.info.hover, $self.info.window, $self.info.border, false, undefined, undefined, 700, 400, true, false, true, null, null, true);
 		}
 
 		this.edit = function(id) //Bring up bookmark edit window

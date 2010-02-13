@@ -107,7 +107,7 @@
 					replacer.push($system.image.source($id, star + '.png')); //Mark image
 					replacer.push($system.text.escape($system.dom.attribute(entries[i], 'subject')));
 
-					line.onmousedown = $system.app.method($system.event.cancel, [line]); //Prevent the window from getting dragged on mouse down event
+					$system.event.add(line, 'onmousedown', $system.app.method($system.event.cancel, [line])); //Prevent the window from getting dragged on mouse down event
 					line.onclick = $system.app.method($self.gui.view, [headline, $system.dom.attribute(entries[i], 'link'), line]);
 
 					if($system.dom.attribute(entries[i], 'seen') == '1') $system.node.classes(line, $id + '_read', true); //Set the read status

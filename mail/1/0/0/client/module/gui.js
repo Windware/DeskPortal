@@ -142,7 +142,7 @@
 
 				if(!raw) //When replying, quote the message
 				{
-					var source = _quote + language.from + ' : ' + sender + '\n' + _quote + language.date + ' : ' + __mail[id].sent;
+					var source = _quote + language.from + ' : ' + sender + '\n' + _quote + language.date + ' : ' + __mail[id].sent + ' GMT';
 					form.body.innerHTML = '\n\n' + source + '\n' + _quote + '\n' + _quote + request.text.replace(/\n/g, '\n' + _quote); //Fill the composing field with the mail quoted
 				}
 				else form.body.innerHTML = request.text; //If resuming draft, display as is
@@ -406,12 +406,13 @@
 			return $self.item.update();
 		}
 
-		this.format = function(node) //Turn links and mail addresses clickable
+		this.format = function(body) //Turn links and mail addresses clickable
 		{
 			var log = $system.log.init(_class + '.format');
-			if(!$system.is.element(node)) return log.param();
+			if(!$system.is.element(body)) return log.param();
 
-			node.innerHTML = $system.text.link($system.text.mail(node.innerHTML));
+			body.innerHTML = $system.text.link($system.text.mail(body.innerHTML));
+			return true;
 		}
 
 		this.indicator = function(on) //Manage indicator to show progress
@@ -433,13 +434,28 @@
 			indicator.style.visibility = 'hidden'; //Remove the loading indicator
 			if(reload) $self.folder.get(__mail[id].account, __account[__mail[id].account].type == 'imap' ? 1 : 2); //Update the unread counts in the folder list if it was not yet read
 
-			var image = frame.contentWindow.document.getElementsByTagName('img');
+			var inside = frame.contentWindow.document;
+			var image = inside.getElementsByTagName('img');
 
 			for(var i = 0; i < image.length; i++)
 			{
 				var source = $system.network.form($self.info.root + 'server/php/front.php?task=gui.load&id=' + id + '&cid=$1');
 				image[i].src = image[i].src.replace(/^cid:(.+)$/, source); //Set the embedded image target
 			}
+
+			if($system.browser.os != 'iphone') return true; //For iPhone, wrap the content with a clipped container since size cannot be set on an iframe
+			var node;
+
+			var zone = inside.createElement('div');
+			zone.style.overflow = 'auto';
+
+			while(node = inside.body.firstChild) zone.appendChild(node);
+
+			zone.style.width = frame.clientWidth + 'px';
+			zone.style.height = frame.clientHeight + 'px';
+
+			inside.body.appendChild(zone);
+			return true;
 		}
 
 		this.next = function(id, index, distance) //Show next or previous mail

@@ -22,6 +22,7 @@
 		if($self == $global.system) //If this is the first loaded core system
 		{
 			$global.user.pref.wallpaper = 'system/1/0/0/component/default/computer/graphic/wallpaper/db_tree.jpg'; //Set default wallpaper
+			if($system.browser.os == 'iphone') $global.user.pref.fade = false; //Avoid CPU intensive fade effect on iPhone
 
 			$global.user.language = $system.language.pref(); //Set the preferred language to use
 			$system.user.init(); //Load user configuration

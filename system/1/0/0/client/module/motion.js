@@ -6,7 +6,7 @@
 
 		var _box; //Box mover object size
 
-		var _design; //Box background image design URL parameters
+		var _design = {}; //Box background image design URL parameters
 
 		var _lock; //Lock to avoid the 'onmousemove' from getting triggered as fast as possible
 
@@ -16,14 +16,14 @@
 
 		var _type = {self : 0, clone : 1, box : 2}; //Motion type definitions
 
-		var _build = function(width, height, x, y) //Build a temporary object to indicate the window movement
+		var _build = function(width, height, x, y, resize) //Build a temporary object to indicate the window movement
 		{
 			var element = document.createElement('div'); //Create the movement indicator element
 			element.id = $id + '_mover'; //Give an unique ID
  
 			if(_mover.type == _type.box) //Give a graphic for the box
 			{
-				$system.image.background(element, _design);
+				$system.image.background(element, _design[resize ? 'resize' : 'move']);
 				element.className = $id + '_mover_box';
 			}
 			else element.className = $id + '_mover_clone'; //TODO - For clone type, give a bright border as well for better visiblity
@@ -72,12 +72,16 @@
 		this.init = function() //Initialize the move box object's background image
 		{
 			_box = $system.window.edge * 4; //Box size
+			var color = {move : '000000', resize : 'ffeeaa'}; //Colors for move box object when moving and resizing
 
-			var params = '%%server/php/front.php?task=motion.init&color=333333&background=cccccc&border=333333&round=%%&shadow=%%&place=circle&edge=%%';
-			var variables = [$system.info.root, $global.user.pref.round == 1 ? 1 : 0, $system.window.shadow, _box / 2];
+			for(var type in color)
+			{
+				var params = '%%server/php/front.php?task=motion.init&color=333333&background=%%&border=333333&round=%%&shadow=%%&place=circle&edge=%%';
+				var variables = [$system.info.root, color[type], $global.user.pref.round == 1 ? 1 : 0, $system.window.shadow, _box / 2];
 
-			_design = $system.text.format(params, variables);
-			$system.image.set(document.createElement('img'), _design); //Preload the box background image
+				_design[type] = $system.text.format(params, variables);
+				$system.image.set(document.createElement('img'), _design[type]); //Preload the box background image
+			}
 		}
 
 		this.move = function(event) //Moves the window by mouse dragging (Have as less computation as possible)
@@ -95,12 +99,21 @@
 
 			if(!_mover) return true;
 
-			//Find the mouse event that triggered
-			if(!event) event = window.event; //NOTE : Not using 'event.source' for a possible performance reason
+			if($system.browser.os == 'iphone')
+			{
+				event.preventDefault(); //Avoid scrolling the screen
 
-			//If mouse is not held, quit moving it (Happens when the cursor goes out of browser space before the button goes up)
-			//khtml reports 65535 on event.button
-			if($system.browser.engine != 'khtml' && event.button != $system.browser.click.left) return $system.motion.stop();
+				if(event.touches.length != 1) return true; //Only when touched by 1 finger
+				event = event.touches[0]; //Get the touch event
+			}
+			else
+			{
+				//Find the mouse event that triggered
+				if(!event) event = window.event; //NOTE : Not using 'event.source' for a possible performance reason
+
+				//If mouse is not held, quit moving it (Happens when the cursor goes out of browser space before the button goes up) (khtml reports 65535 on event.button)
+				if($system.browser.engine != 'khtml' && event.button != $system.browser.click.left) return $system.motion.stop();
+			}
 
 			var current = $system.event.position(event); //Get the cursor position
 			_mover.diff = {x : current.x - _mover.position.x, y : current.y - _mover.position.y}; //Amount moved from the start
@@ -133,20 +146,35 @@
 			var event = $system.event.source(arguments); //Find the mouse event that triggered
 			if(!event) return true;
 
-			if(event.button != $system.browser.click.left) return true; //If not clicked with a left button, quit
+			var source = $system.event.target(event); //Find what element was clicked on
+
+			if($system.browser.os == 'iphone')
+			{
+				if(event.touches.length != 1) return true; //Only when touched by 1 finger
+				while(source.nodeType != 1) source = source.parentNode; //Keep moving up till a tag element is found as text nodes will be recognized as the event source as well (Ultimately 'body' will stop the loop)
+			}
+			else if(event.button != $system.browser.click.left) return true; //If not clicked with a left button, quit
 
 			$system.browser.deselect(); //Let go of selected text if any
 			$system.tip.clear(); //Remove any tips displayed
 
 			var depth = $system.window.raise(id); //Bring the clicked pane to the front most
-			var source = $system.event.target(event); //Find what element was clicked on
 
 			//If clicked on any of the specified elements, do not drag the window to avoid crippled user interface
+			//TODO - Avoid images from getting dragged around in certain browsers by capturing 'onmousedown' on IMG elements (Setting it here is too late)
 			if($system.array.find(_static, source.nodeName)) return true;
 			var target = $system.window.list[id]; //The target window object
 
 			if(!target || !resize && target.locked) return true; //If the pane is locked for moving, quit
 			if(resize && !target.visible('body')) return true; //When resizing, do not allow resizing if body is hidden
+
+			if($system.browser.os == 'iphone')
+			{
+				event.preventDefault();
+				event = event.touches[0]; //Get the touch event
+			}
+
+			if($system.browser.engine != 'trident' || $system.browser.version >= 7) $system.node.opacity(id, 50); //Set translucency when moving
 
 			_mover = //Keep the movement parameters
 			{
@@ -160,7 +188,7 @@
 
 				position : $system.event.position(event), //Initially clicked position
 
-				type : Number($global.user.pref.move) //Movement type
+				type : $system.browser.os == 'iphone' ? _type.box : Number($global.user.pref.move) //Movement type (For performance reason, force box type for iPhone)
 			};
 
 			switch(_mover.type)
@@ -183,7 +211,7 @@
 				break;
 
 				case _type.box : //If move mode is box type, create the small box : TODO - Change color or appearance of the mover for move/resize
-					_mover.object = _build(_box, _box, _mover.position.x - _box / 2, _mover.position.y - _box / 2);
+					_mover.object = _build(_box, _box, _mover.position.x - _box / 2, _mover.position.y - _box / 2, resize);
 
 					if(resize) _mover.size = _size(_mover.body); //Initial window size
 					_mover.start = _offset(_mover.object); //Initial position (Required for both move/resize)
@@ -207,7 +235,17 @@
 		this.stop = function() //Stop any windows from moving
 		{
 			$self.gui.select(true); //Enable text selection
+
+			if($system.browser.os == 'iphone')
+			{
+				var event = $system.event.source(arguments);
+				event.preventDefault();
+			}
+
 			if(!_mover || !$system.node.id(_mover.object.id)) return true; //If nothing is moving, quit
+
+			if($system.browser.engine == 'trident' && $system.browser.version >= 7) _mover.node.style.removeAttribute('filter');
+			if($system.browser.engine != 'trident' || $system.browser.version >= 7) $system.node.opacity(_mover.node.id, 100); //Set back to normal opacity
 
 			if(_mover.diff && $system.is.element(_mover.node)) //If moving or resizing took place and the original object still exists
 			{

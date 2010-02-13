@@ -90,14 +90,11 @@
 				link.appendChild(source);
 				link.appendChild(document.createTextNode(' ' + info)); //Set its name
 
-				link.onmousedown = $system.app.method($system.event.cancel, [link]); //Prevent the window from getting dragged on click
+				$system.event.add(link, 'onmousedown', $system.app.method($system.event.cancel, [link])); //Prevent the window from getting dragged on click
 				link.onclick = $system.app.method($self.entry.get, [id, 1, null]); //Set a function on click
 
 				$system.tip.set(link, $id, 'read');
-
-				//Make hover color change IE compatible
-				$system.event.add(link, 'onmouseover', $system.app.method($system.node.classes, [link, $id + '_active', true]));
-				$system.event.add(link, 'onmouseout', $system.app.method($system.node.classes, [link, $id + '_active', false]));
+				$system.node.hover(link, $id + '_active');
 
 				if(id == __selected) $system.node.classes(link, $id + '_chosen', true); //Emphasize the selected feed
 				area.appendChild(link); //Append to the list

@@ -10,6 +10,18 @@
 
 			if(!$system.is.object(element) || !action.match(/^on[a-z]+$/i) || typeof execute != 'function') return log.param();
 
+			if($system.browser.os == 'iphone') //For touch device, replace the actions to the equivalents
+			{
+				switch(action)
+				{
+					case 'onmousedown' : action = 'ontouchstart'; break;
+
+					case 'onmouseup' : action = 'ontouchend'; break;
+
+					case 'onmousemove' : action = 'ontouchmove'; break;
+				}
+			}
+
 			//Add the event to an object
 			if(element.addEventListener) return element.addEventListener(action.replace(/^on/i, ''), execute, !!capture);
 			else return element.attachEvent(action, execute);
@@ -84,6 +96,18 @@
 		{
 			var log = $system.log.init(_class + '.remove');
 			if(!$system.is.object(element) || !action.match(/^on[a-z]+$/i) || typeof execute != 'function') return log.param();
+
+			if($system.browser.os == 'iphone') //For touch device, replace the actions to the equivalents
+			{
+				switch(action)
+				{
+					case 'onmousedown' : action = 'ontouchstart'; break;
+
+					case 'onmouseup' : action = 'ontouchend'; break;
+
+					case 'onmousemove' : action = 'ontouchmove'; break;
+				}
+			}
 
 			//Remove the event from an object
 			if(element.removeEventListener) return element.removeEventListener(action.replace(/^on/i, ''), execute, !!capture);

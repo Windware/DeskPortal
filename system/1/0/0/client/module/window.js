@@ -163,7 +163,7 @@
 					//For other cells, give regular move function
 					else action = $system.app.method($system.motion.start, [id, false]);
 
-					$system.event.add(cell, 'onmousedown', action); //Set the event on the cell
+					$system.event.add(cell, $system.browser.os == 'iphone' ? 'ontouchstart' : 'onmousedown', action); //Set the event on the cell
 				}
 			}
 
@@ -249,13 +249,13 @@
 
 			//Set the position of the window
 			//Use user specified value if set, else use app specified value or else put it at the middle of the screen
-			if(!$system.is.digit(settings.left))
+			if(!$system.is.digit(settings.left, true))
 			{
 				if($system.is.digit(left, true)) settings.left = left;
 				else if($system.is.digit(size.x)) settings.left = parseInt((size.x - pane.object.clientWidth) / 2, 10);
 			}
 
-			if(!$system.is.digit(settings.top))
+			if(!$system.is.digit(settings.top, true))
 			{
 				if($system.is.digit(top, true)) settings.top = top;
 				else if($system.is.digit(size.y)) settings.top = parseInt((size.y - pane.object.clientHeight) / 2, 10);
@@ -266,8 +266,8 @@
 			if($system.is.digit(settings.height)) pane.body.style.height = settings.height + 'px';
 
 			//Override settings on the window
-			if($system.is.digit(settings.left)) pane.object.style.left = settings.left + 'px';
-			if($system.is.digit(settings.top)) pane.object.style.top = settings.top + 'px';
+			if($system.is.digit(settings.left)) pane.object.style.left = (settings.left > 0 ? settings.left : 0) + 'px';
+			if($system.is.digit(settings.top)) pane.object.style.top = (settings.top > 0 ? settings.top : 0) + 'px';
 
 			//Set the locked state
 			if(settings.locked == 1) $system.tool.lock(id, true);

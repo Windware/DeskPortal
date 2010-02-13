@@ -11,7 +11,7 @@
 	<tr style="height : 90%">
 		<td style="height : 90%; width : 100%" colspan="2">
 			<!-- onload="%top%.%system%.gui.imitate(this, '%id%_cache_%value:id%')" -->
-			<iframe id="%id%_cache_%value:id%_viewer" class="%system%_full %id%_cache" src="%value:root%"></iframe>
+			<iframe id="%id%_cache_%value:id%_viewer" onload="%top%.%id%.gui.adjust(this)" class="%system%_full %id%_cache" src="%value:cache%"></iframe>
 		</td>
 	</tr>
 </tbody></table>

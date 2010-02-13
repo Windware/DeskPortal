@@ -20,7 +20,7 @@
 				var origin = this.origin; //Swap the origin, so that the language file of the system can be used
 				this.origin = $id;
 
-				if(!$system.is.text(message))
+				if(!$system.is.text(message) && !$system.is.digit(message))
 				{
 					var language = $system.language.strings($id);
 					message = '(' + language.none + ')';

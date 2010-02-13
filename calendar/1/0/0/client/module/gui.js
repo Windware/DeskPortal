@@ -139,7 +139,7 @@
 							cell.onclick = $system.app.method($self.item.show, [__current.year, __current.month, index]);
 
 							cell.style.cursor = 'pointer'; //Change the mouse cursor
-							cell.onmousedown = $system.app.method($system.event.cancel, [cell]); //Do not initiate window dragging
+							$system.event.add(cell, 'onmousedown', $system.app.method($system.event.cancel, [cell])); //Do not initiate window dragging
 
 							if(j == 0) $system.node.classes(cell, $id + '_sunday', true); //Give weekend colors
 							else if(j == 6) $system.node.classes(cell, $id + '_saturday', true);

@@ -13,6 +13,7 @@
 
 				//Make the button look pressed
 				$system.event.add(cell, 'onmousedown', $system.app.method($self.gui.press, [cell]));
+				$system.event.add(cell, 'onmousedown', $system.app.method($system.event.cancel, [cell]));
 
 				//Do the calculation
 				$system.event.add(cell, 'onclick', $system.app.method($self.gui.work, [cell]));

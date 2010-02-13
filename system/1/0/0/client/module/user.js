@@ -66,6 +66,8 @@
 					node[id][$system.dom.attribute(list[j], 'name')] = value; //Set the application preference value
 				}
 			}
+
+			if($system.browser.os == 'iphone') $global.user.pref.fade = false; //Avoid CPU intensive fade effect on iPhone
 		}
 
 		this.info = function() //Loads the user's preferences

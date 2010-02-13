@@ -203,7 +203,7 @@
 
 						var display = document.createElement('strong');
 
-						display.onmousedown = $system.app.method($system.event.cancel, [display]);
+						$system.event.add(display, 'onmousedown', $system.app.method($system.event.cancel, [display]));
 						display.appendChild(document.createTextNode(' ' + name));
 
 						if($system.is.digit(recent) && recent > 0) //If any new messages exist

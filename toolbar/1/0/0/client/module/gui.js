@@ -107,6 +107,8 @@
 
 				controller.innerHTML = '+'; //Set the sign
 				controller.onclick = $self.gui.create; //Set the add function
+
+				var node = $id;
 			}
 			else
 			{
@@ -114,9 +116,11 @@
 
 				controller.innerHTML = '-'; //Set the sign
 				controller.onclick = $system.app.method($self.gui.remove, [index]);
+
+				var node = $id + '_window_' + index;
 			}
 
-			var set = function(callback, request)
+			var set = function(node, callback, request)
 			{
 				var select = $system.dom.tags(request.xml, 'select')[0];
 				var feature = $system.dom.attribute(select, 'feature');
@@ -130,10 +134,16 @@
 				else feature = __initial; //Pick the default initial choice
 
 				$self.gui.swap(index, feature, method, source, target, true); //Set the choices
-				if(typeof callback == 'function') callback();
+				$system.app.callback(log.origin, callback);
+
+				if($system.browser.os == 'iphone') //Fix iPhone bug when selection boxes overlap without redrawing them
+				{
+					$system.node.hide(node, true);
+					setTimeout($system.app.method($system.node.hide, [node, false]), 0); //Directly reverting the state does not fix
+				}
 			}
 
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.set', index : index}, null, $system.app.method(set, [callback])); //Get the choices
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.set', index : index}, null, $system.app.method(set, [node, callback])); //Get the choices
 		}
 
 		this.swap = function(index, feature, method, source, target, quick, deep) //Swap the bar option

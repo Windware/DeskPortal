@@ -91,9 +91,10 @@
 		this.template = function(text, id, prepare) //Replace all template variables
 		{
 			if(!$system.is.text(text)) return '';
+			var action = $system.browser.os == 'iphone' ? 'ontouchstart' : 'onmousedown';
 
 			var cancel = '; %top%.%system%.event.cancel(this, event)'; //To cancel event bubbling to avoid window dragging
-			var lock = ' onmousedown="' + cancel + '"'; //Same as cancel, but as a whole attribute
+			var lock = ' ' + action + '="' + cancel + '"'; //Same as cancel, but as a whole attribute
 			var scroll = lock + ' onscroll="%top%.%system%.gui.clear(this, event)"'; //For scrolling events
 
 			//Set the replace strings and values

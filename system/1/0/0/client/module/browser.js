@@ -2,6 +2,7 @@
 	$self.browser = new function() //Browser specific processing
 	{
 		var _class = $id + '.browser';
+
 		this.click = {}; //Click values
 
 		this.request; //Remote request method

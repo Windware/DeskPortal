@@ -149,7 +149,15 @@
 							name = 'birthday'; //Set to a translatable name
 							_address[id][name] = birth.date;
 						}
-						else if(name == 'sex') param = param == '0' ? language.female : language.male;
+						else if(name == 'sex')
+						{
+							switch(param)
+							{
+								case '0' : param = language.female;
+
+								case '1' : param = language.male;
+							 }
+						}
 						else if(name == 'created') param = param.replace(/ .+/, ''); //Remove the time (But keep the data in the cache)
 
 						if(param.length) info += language[name] + ' : ' + param + '\n'; //Create the tip info
@@ -166,7 +174,7 @@
 					var row = document.createElement('tr'); //Create a row
 					$system.node.hover(row, $id + '_active'); //Make hover color change IE compatible
 
-					row.onmousedown = $system.app.method($system.event.cancel, [row]); //Don't let the window get dragged by clicking on the row
+					$system.event.add(row, 'onmousedown', $system.app.method($system.event.cancel, [row])); //Don't let the window get dragged by clicking on the row
 					row.onclick = $system.app.method($self.item.edit, [id]); //Show the edit window on click
 
 					for(var j = 0; j < __all.length; j++) //Sustain the order by looking at the master list

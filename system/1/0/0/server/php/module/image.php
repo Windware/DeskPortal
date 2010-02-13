@@ -179,18 +179,19 @@
 			imagesavealpha($image, true);
 
 			$transparent = imagecolorallocatealpha($image, 0, 0, 0, 127); #Allocate complete transparency color
+			$shadow = $param['place'] == 'circle' ? $color : array(0, 0, 0); #Shadow color
 
 			#Allocate the given color to the image object
 			$color = imagecolorallocatealpha($image, $color[0], $color[1], $color[2], $through);
 			$line = imagecolorallocatealpha($image, $outline[0], $outline[1], $outline[2], $through);
 
-			if($param['shadow'])
+			if($param['shadow'] || $param['place'] == 'circle')
 			{
 				$bit = self::$_depth % $param['shadow']; #Remaining value of the division
 				$step = (self::$_depth - $bit) / $param['shadow']; #Have grandient color for the shadow
 
 				for($i = 0; $i < $param['shadow']; $i++) #Allocate all the shadow colors to the image
-					$gradient[$i] = imagecolorallocatealpha($image, 0, 0, 0, $i * $step + 127 - self::$_depth + $bit);
+					$gradient[$i] = imagecolorallocatealpha($image, $shadow[0], $shadow[1], $shadow[2], $i * $step + 127 - self::$_depth + $bit);
 			}
 
 			if($param['place'] == 'circle') #For a single circle

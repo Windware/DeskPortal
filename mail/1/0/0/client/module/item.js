@@ -245,7 +245,7 @@
 				var row = document.createElement('tr');
 				row.id = $id + '_read_header';
 
-				row.onmousedown = $system.app.method($system.event.cancel, [row]);
+				$system.event.add(row, 'onmousedown', $system.app.method($system.event.cancel, [row]));
 				var column = $system.array.list('check subject from date'); //List of columns to display
 
 				for(var i = 0; i < column.length; i++) //Create table header

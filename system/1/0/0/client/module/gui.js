@@ -185,6 +185,8 @@
 
 		this.select = function(mode) //Enables or disables text selection
 		{
+			if($system.browser.os == 'iphone') return true;
+
 			if(!mode) //Disable
 			{
 				if(document.body.onselectstart !== undefined) document.body.onselectstart = function() { return false; } //IE
