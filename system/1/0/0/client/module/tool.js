@@ -96,14 +96,13 @@
 			var log = $system.log.init(_class + '.fade');
 			if(!$system.is.id(id) || !$system.node.id(id)) return log.param();
 
-			if(_fade.window[id]) return false;
-			_fade.window[id] = true;
-
 			var state = $system.node.hidden(id); //Find current status
 			if(direction === undefined) direction = !state;
 
-			if($system.is.md5($global.user.ticket) && direction != state) //Save the displayed state
+			if(!_fade.window[id] && $system.is.md5($global.user.ticket) && direction != state) //Save the displayed state
 				$system.network.send($system.info.root + 'server/php/front.php', {task : 'tool.fade', section : 'used'}, {id : id, loaded : !direction ? 1 : 0});
+
+			_fade.window[id] = true;
 
 			var run = function(id, direction, callback)
 			{

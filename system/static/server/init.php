@@ -1,6 +1,7 @@
 <?php
 	mb_detect_order('ascii,jis,utf-8,euc-jp,sjis'); #TODO - What about other languages?
 	mb_internal_encoding('utf-8');
+	date_default_timezone_set('UTC');
 
 	require(dirname(__FILE__).'/class.php'); #Load the base classes
 
