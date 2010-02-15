@@ -378,7 +378,7 @@
 
 			if(is_string($search) && strlen($search))
 			{
-				foreach(preg_split('/[　\s]/', $search) as $index => $term) #NOTE - Also splitting 'Japanese full width space' in UTF8 
+				foreach(preg_split('/(　|\s)/', $search) as $index => $term) #NOTE - Also splitting 'Japanese full width space' in UTF8 
 				{
 					if(strlen($term) <= 1) continue; #Avoid short terms
 					if(++$used == 5) break;

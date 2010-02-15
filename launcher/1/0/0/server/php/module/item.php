@@ -21,7 +21,7 @@
 			$database = $system->database('system', __METHOD__, null, 'system', 'static');
 			if(!$database->success) return $xml;
 
-			$query = $database->prepare("SELECT app FROM {$database->prefix}subscription WHERE User = :user AND invalid = :invalid AND app != :system");
+			$query = $database->prepare("SELECT app FROM {$database->prefix}subscription WHERE user = :user AND (invalid = :invalid OR invalid IS NULL) AND app != :system");
 			$query->run(array(':user' => $user->id, ':invalid' => 0, ':system' => 'system'));
 
 			if(!$query->success) return $xml;

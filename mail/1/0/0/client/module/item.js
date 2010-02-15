@@ -273,15 +273,6 @@
 				var body = document.createElement('tbody');
 				body.appendChild(row);
 
-				if(!cache.list.length && !$system.node.id($id + '_mail_empty')) //If empty
-				{
-					var empty = document.createElement('div');
-					empty.id = $id + '_mail_empty';
-
-					$system.node.text(empty, '(' + language.empty + ')');
-					table.parentNode.appendChild(empty); //Show it is empty
-				}
-
 				for(var i = 0; i < cache.list.length; i++)
 				{
 					var mail = __mail[cache.list[i]]; //Mail information cache

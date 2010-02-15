@@ -112,7 +112,7 @@
 
 				if(__search.length) //If searching
 				{
-					var phrase = __search.split(/[　\s]/); //NOTE : Also splitting 'Japanese full width space' in UTF8
+					var phrase = __search.split(/(　|\s)/); //NOTE : Also splitting 'Japanese full width space' in UTF8
 					for(var i = 0; i < phrase.length; i++) if(phrase[i].match(/\S/)) find.push(RegExp(phrase[i], 'i')); //Set the search phrases
 				}
 

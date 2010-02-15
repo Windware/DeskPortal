@@ -91,7 +91,7 @@
 
 			if(strlen($param['search'])) #Filter by search words
 			{
-				foreach(preg_split('/[　\s]/', $param['search']) as $index => $term) #Match on all given words (NOTE - Also splitting 'Japanese full width space' in UTF8)
+				foreach(preg_split('/(　|\s)/', $param['search']) as $index => $term) #Match on all given words (NOTE - Also splitting 'Japanese full width space' in UTF8)
 				{
 					if(strlen($term) <= 1) continue;
 					if(++$used == 5) break;

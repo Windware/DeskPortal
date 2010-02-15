@@ -21,7 +21,7 @@
 			if(!$database->success) return false;
 
 			#Look for the user with the given user name and password
-			$query = $database->prepare("SELECT id FROM {$database->prefix}user WHERE name = :name AND pass = :pass AND invalid = :invalid");
+			$query = $database->prepare("SELECT id FROM {$database->prefix}user WHERE name = :name AND pass = :pass AND (invalid = :invalid OR invalid IS NULL)");
 			$query->run(array(':name' => $name, ':pass' => hash($conf['user_hash'], $pass), ':invalid' => 0)); #Run the query
 
 			if($query->success) $id = $query->column(); #Get the user information

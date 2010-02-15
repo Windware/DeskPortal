@@ -19,9 +19,6 @@
 			<change summary="Allow folders to be drag and dropped to move them" priority="2">
 				Allow folders to be moved on the main window instead from the configuration panel
 			</change>
-			<change summary="Improve general performance" priority="2">
-				Improve general performance of the application
-			</change>
 		</user>
 	</plan>
 </root>

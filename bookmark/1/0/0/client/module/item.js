@@ -67,7 +67,7 @@
 
 				if(form.search.value.length)
 				{
-					var phrase = form.search.value.split(/[　\s]/); //List up the search phrases (NOTE : Also splitting 'Japanese full width space' in UTF8)
+					var phrase = form.search.value.split(/(　|\s)/); //List up the search phrases (NOTE : Also splitting 'Japanese full width space' in UTF8)
 					for(var i = 0; i < phrase.length; i++) if(phrase[i].match(/\S/)) search.push(RegExp(phrase[i], 'i'));
 				}
 

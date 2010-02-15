@@ -19,9 +19,6 @@
 			<change summary="フォルダーの移動をドラッグ＆ドロップで可能にする" priority="2">
 				フォルダーの移動を設定画面からでなく、メインウインドウで可能にする
 			</change>
-			<change summary="パフォーマンス向上" priority="2">
-				メールアプリケーションの全体的なパフォーマンスの向上
-			</change>
 		</user>
 	</plan>
 </root>

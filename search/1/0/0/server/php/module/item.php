@@ -13,7 +13,7 @@
 			if(!$system->is_text($phrase) || !is_array($area)) return $log->param();
 
 			$look = array();
-			foreach(preg_split('/[　\s]/', $phrase) as $term) if(strlen($term) > 1) $look[] = $term; #FIXME - Client side counts it as characters, but this counts as bytes
+			foreach(preg_split('/(　|\s)/', $phrase) as $term) if(strlen($term) > 1) $look[] = $term; #FIXME - Client side counts it as characters, but this counts as bytes
 
 			if(!count($look)) return array();
 			$look = array_slice($look, 0, self::$_max);

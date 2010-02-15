@@ -8,7 +8,7 @@
 
 	span.%id%_close { color : #731; font-weight : bold; }
 
-	tr.%id%_active { background-color : #ed9; cursor : pointer; }
+	tr.%id%_active { background-color : #ec5; cursor : pointer; }
 
 	tr.%id%_inactive { font-style : italic; }
 
