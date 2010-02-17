@@ -1,5 +1,5 @@
 
 	window = '998866';
-	hover = '998877';
+	hover = 'cba';
 
 	width = 600;

@@ -23,8 +23,6 @@
 
 			this.object = null; //Refer to the actual object within the DOM
 
-			this.shadow = true;
-
 			this.title = ''; //Title of the window
 
 			this.visible = function(part) //Return the visibility of various parts of a window

@@ -5,7 +5,7 @@
 
 		protected static $_depth = 70; #Shadow color depth (0 to 127)
 
-		protected static $_through = 50; #Transparency (0-127)
+		protected static $_through = 50; #Transparency (0 to 127)
 
 		protected static $_zoom = 50; #Zoom level to apply resampling on rounded corners to smooth the round
 
@@ -31,7 +31,7 @@
 			$size_y /= self::$_zoom;
 		}
 
-		#FIXME - Borders aren't properly drawn (Visible when the background is black and border is white) - 
+		#FIXME - Changing 'shadow' parameter breaks the image
 		#TODO - Use sprite technique to send out 4 corners as a single image
 		public static function background(&$system, $param) #Creates a window's translucent background graphic piece according to the given parameters
 		{
@@ -170,6 +170,14 @@
 
 				$size_x *= self::$_zoom;
 				$size_y *= self::$_zoom;
+
+				if($end_x) $end_x *= self::$_zoom;
+				if($end_y) $end_y *= self::$_zoom;
+			}
+			else
+			{
+				if($end_x) $end_x++;
+				if($end_y) $end_y++;
 			}
 
 			$image = imagecreatetruecolor($canvas_x, $canvas_y); #Create the image object
@@ -240,7 +248,7 @@
 
 					#Create a pie shape of a border color
 					imagefilledarc($image, $start_x * self::$_zoom, $start_y * self::$_zoom, $size_x * 2, $size_y * 2, $angle, $angle + 90, $line, IMG_ARC_PIE);
-					$space = self::$_border * self::$_zoom; #Have a space for borders
+					$space = self::$_border * 2 * self::$_zoom; #Have a space for borders (NOTE : Have double size border since, resampling a curve will shrink the size a little)
 
 					#Create a pie shape that is a little smaller with the actual translucent color
 					imagefilledarc($image, $start_x * self::$_zoom, $start_y * self::$_zoom, $size_x * 2 - $space, $size_y * 2 - $space, $angle, $angle + 90, $color, IMG_ARC_PIE);
@@ -266,35 +274,26 @@
 
 				self::_resample($image, $canvas_x, $canvas_y, $size_x, $size_y); #Shrink back to normal size
 
-				if($param['shadow']) #If it should have shadows, add them to the appropriate edges
+				if($param['shadow'] && !$param['round']) #If it should have shadows, add them to the appropriate edges
 				{
 					switch($param['place'])
 					{
 						case 'tr' :
-							if(!$param['round'])
-							{
-								imagefilledrectangle($image, $size_x, 0, $canvas_x, $canvas_y, $transparent);
-								for($i = 0; $i < $param['shadow']; $i++) imageline($image, $canvas_x - $param['shadow'] + $i, $i, $canvas_x - $param['shadow'] + $i, $canvas_y, $gradient[$i]);
-							}
+							imagefilledrectangle($image, $size_x, 0, $canvas_x, $canvas_y, $transparent);
+							for($i = 0; $i < $param['shadow']; $i++) imageline($image, $canvas_x - $param['shadow'] + $i, $i, $canvas_x - $param['shadow'] + $i, $canvas_y, $gradient[$i]);
 						break;
 
 						case 'br' :
-							if(!$param['round'])
+							for($i = 0; $i < $param['shadow']; $i++)
 							{
-								for($i = 0; $i < $param['shadow']; $i++)
-								{
-									imageline($image, $canvas_x - $param['shadow'] + $i, 0, $canvas_x - $param['shadow'] + $i, $canvas_y, $gradient[$i]);
-									imageline($image, 0, $canvas_y - $param['shadow'] + $i, $canvas_x, $canvas_y - $param['shadow'] + $i, $gradient[$i]);
-								}
+								imageline($image, $canvas_x - $param['shadow'] + $i, 0, $canvas_x - $param['shadow'] + $i, $canvas_y, $gradient[$i]);
+								imageline($image, 0, $canvas_y - $param['shadow'] + $i, $canvas_x, $canvas_y - $param['shadow'] + $i, $gradient[$i]);
 							}
 						break;
 
 						case 'bl' :
-							if(!$param['round'])
-							{
-								imagefilledrectangle($image, 0, $canvas_y - $param['shadow'], $param['shadow'], $canvas_y, $transparent);
-								for($i = 0; $i < $param['shadow']; $i++) imageline($image, 0 + $i, $canvas_y - $param['shadow'] + $i, $canvas_x, $canvas_y - $param['shadow'] + $i, $gradient[$i]);
-							}
+							imagefilledrectangle($image, 0, $canvas_y - $param['shadow'], $param['shadow'], $canvas_y, $transparent);
+							for($i = 0; $i < $param['shadow']; $i++) imageline($image, 0 + $i, $canvas_y - $param['shadow'] + $i, $canvas_x, $canvas_y - $param['shadow'] + $i, $gradient[$i]);
 						break;
 					}
 				}
@@ -302,9 +301,7 @@
 			else #For other straight line parts
 			{
 				imagefilledrectangle($image, 0, 0, $canvas_x, $canvas_y, $line); #Fill with border color first
-
-				#Fill in the window pane color, leaving space for the border
-				imagefilledrectangle($image, 0 + $start_x, 0 + $start_y, $canvas_x - $end_x, $canvas_y - $end_y, $color);
+				imagefilledrectangle($image, 0 + $start_x, 0 + $start_y, $size_x - $end_x, $size_y - $end_y, $color); #Fill in the window pane color, leaving space for the border
 
 				if($param['shadow'])
 				{

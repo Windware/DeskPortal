@@ -885,10 +885,8 @@
 			if(!$query->success) return false;
 			$row = $query->row();
 
-			if(!$row['seen']) #Mark as seen if not read (Not minding errors)
+			if(!$row['seen']) #Mark as seen if not read (Not minding errors) (NOTE : Mail server flag is updated by another process)
 			{
-				self::flag(array($id), 'Seen', true, $user);
-
 				$query = $database->prepare("UPDATE {$database->prefix}folder SET recent = :recent WHERE id = :id AND user = :user");
 				$query->run(array(':recent' => $recent - 1, ':id' => $folder, ':user' => $user->id)); #Update the amount of unread mails
 

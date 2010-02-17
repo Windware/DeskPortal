@@ -61,6 +61,8 @@
 			var language = $system.language.strings($id);
 			var feeds = $system.dom.tags(xml, 'feed'); //List of feeds passed
 
+			var notice = $system.language.strings($id, 'log.xml');
+
 			for(var i = 0; i < feeds.length; i++)
 			{
 				var id = $system.dom.attribute(feeds[i], 'id');
@@ -111,8 +113,15 @@
 				}
 
 				if(!__feed[id].newest || __feed[id].newest == loaded[id].newest) continue; //FIXME - If somehow the 'newest' shows older time, this looks wrong
-
 				loaded[id].since = $system.date.create(__feed[id].newest).timestamp(); //Remember the last update time
+
+				var open = function(id)
+				{
+					if(!$system.window.list[$id].displayed.body) $system.tool.hide($id, 'body'); //Uncover the body
+					$self.entry.get(id);
+				}
+
+				$system.gui.notice($id, $system.text.format(notice['user/feed/new'], [info]), $system.app.method(open, [id])); //Show alert on the title bar
 				log.user($global.log.notice, 'user/feed/new', '', [info]); //Notify about new entries
 			}
 

@@ -64,13 +64,13 @@
 				for(var i = 0; i < __mail[id].attachment.length; i++)
 				{
 					var text = $system.text.template('<a class="%id%_mail_attachment" href="%%"%%>%%</a> (%%KB)', $id);
-					var address = $system.network.form($self.info.root + 'server/php/front.php?task=gui._body&id=' + __mail[id].attachment[i].id);
+					var address = $system.network.form($self.info.root + 'server/php/front.php?task=gui._body.attachment&id=' + __mail[id].attachment[i].id);
 
 					attachment.push($system.text.format(text, [address, $system.tip.link($id, null, 'attachment'), __mail[id].attachment[i].name, Math.ceil(__mail[id].attachment[i].size / 1000)]));
 				}
 
 				value.attachment = attachment.join(', ');
-				value.body = $system.network.form($self.info.root + 'server/php/front.php?task=gui.show&message=' + id);
+				value.body = $system.network.form($self.info.root + 'server/php/front.php?task=gui._body&message=' + id);
 			}
 			else //For composing the mail
 			{
@@ -592,7 +592,12 @@
 			}
 
 			$system.window.create($id + '_display_' + __window, $self.info.title + ' [No. ' + (id || 0) + ']', _body(id, __window, compose, field), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
-			if($system.is.digit(id)) __mail[id].seen = '1'; //Mark it as read (Wait till '_body' processes using the 'seen' value)
+
+			if($system.is.digit(id) && __mail[id].seen != '1') //If mail is not read (NOTE : Waited till '_body' processes using the 'seen' value)
+			{
+				__mail[id].seen = '1'; //Mark it as read
+				$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.show'} , {id : id}); //Mark the mail as read on the mail server
+			}
 
 			if(compose)
 			{
