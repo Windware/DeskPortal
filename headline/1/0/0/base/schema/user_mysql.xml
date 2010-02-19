@@ -13,7 +13,6 @@
 	<table name="entry">
 		<column name="user" param="INT NOT NULL" />
 		<column name="entry" param="INT NOT NULL" />
-		<column name="category" param="INT DEFAULT 0" />
 		<column name="seen" param="INT DEFAULT 0" />
 		<column name="rate" param="INT DEFAULT 0" />
 		<column name="trash" param="INT DEFAULT 0" />
@@ -22,12 +21,12 @@
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 
-	<!-- Notification keywords -->
-	<table name="keyword">
+	<!-- Category relation -->
+	<table name="relation">
 		<column name="user" param="INT NOT NULL" />
-		<column name="word" param="VARCHAR(255)" />
+		<column name="entry" param="INT NOT NULL" />
+		<column name="category" param="INT NOT NULL" />
 
-		<column name="UNIQUE" param="(user, word)" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 

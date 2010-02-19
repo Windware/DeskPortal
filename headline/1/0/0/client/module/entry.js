@@ -65,17 +65,15 @@
 
 				for(var i = 0; i < entries.length; i++)
 				{
-					var time = $system.dom.attribute(entries[i], 'date'); //Published time
-					var day = time.replace(/ .+/, ''); //Day of the entry
+					var time = $system.date.create($system.dom.attribute(entries[i], 'date')); //Published time
+					var day = time.format($global.user.pref.format.date);
 
 					if(day != display) //If the current day is not yet displayed
 					{
 						var show = document.createElement('span'); //Create a date line
 						show.className = $id + '_date'; //Give a styling class
 
-						var date = $system.date.create(day);
-
-						$system.node.text(show, date.format($global.user.pref.format.date)); //Set the date
+						$system.node.text(show, day); //Set the date
 						area.appendChild(show); //Attach to the HTML area
 
 						display = day; //Remember the displayed date
@@ -113,7 +111,7 @@
 					if($system.dom.attribute(entries[i], 'seen') == '1') $system.node.classes(line, $id + '_read', true); //Set the read status
 
 					//Set new mark
-					if(!__feed[id].since || $system.date.create(time).timestamp() <= __feed[id].since) replacer.push('');
+					if(!__feed[id].since || time.timestamp() <= __feed[id].since) replacer.push('');
 					else replacer.push(' <strong class="' + $id + '_new">' + language['new'] + '</strong>');
 
 					$system.node.hover(line, $id + '_active'); //Make hover color change IE compatible

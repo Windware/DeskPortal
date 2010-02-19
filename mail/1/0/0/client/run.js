@@ -16,8 +16,8 @@
 			$system.app.callback($id + '.run.timer', callback)
 		}
 
-		$self.account.get(false, null, $system.app.method(timer, [callback])); //Get list of accounts
+		//Get list of accounts after a little moment to avoid choking other app downloads
+		setTimeout($system.app.method($self.account.get, [false, null, $system.app.method(timer, [callback])]), 5000);
 
-		var mover = document.createElement('img');
-		$system.image.set(mover, $self.info.devroot + 'graphic/drag.png'); //Preload the mail drag move image
+		$system.image.set(document.createElement('img'), $self.info.devroot + 'graphic/drag.png'); //Preload the mail drag move image
 	}

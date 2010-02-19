@@ -34,7 +34,7 @@
 
 			if(is_string($param['category']) && $param['category']) #Filter by category
 			{
-				$limiter .= ' AND category = :category';
+				$limiter .= ' AND rel.category = :category';
 				$values[':category'] = $param['category'];
 			}
 
@@ -116,7 +116,7 @@
 			if(!$database->success) return false;
 
 			#Get the user's preference on the entry
-			$query['user'] = $database->prepare("SELECT entry, category, rate, seen FROM {$database->prefix}entry WHERE user = :user AND entry = :entry$limiter");
+			$query['user'] = $database->prepare("SELECT entry.entry, rel.category, rate, seen FROM {$database->prefix}entry as entry LEFT JOIN {$database->prefix}relation as rel ON entry.entry = rel.entry WHERE entry.user = :user AND entry.entry = :entry$limiter");
 
 			#Position of entries to return back
 			$start = ($param['page'] - 1) * self::$_limit + 1;
@@ -131,10 +131,8 @@
 
 				$pref = $query['user']->row(); #Get the single result row of user's preference
 
-				#If looking for every unread entries, drop anything with 'seen' flag on
-				if($param['unread'] == 1 && !count($values)) { if($pref['seen'] == 1) continue; }
-				#Otherwise, pick the entry with filter properties set and 'seen' flag as off
-				elseif($limiter && !$pref) continue;
+				if($param['unread'] == 1 && !count($values)) { if($pref['seen'] == 1) continue; } #If looking for every unread entries, drop anything with 'seen' flag on
+				elseif($limiter && !$pref) continue; #Otherwise, pick the entry with filter properties set and 'seen' flag as off
 
 				if($param['category'] == '0' && $pref['category']) continue;
 				if(++$amount < $start || $amount >= $end) continue; #If not within the displaying page, drop
@@ -169,29 +167,46 @@
 
 			if(!$feed) #For updating the entries table
 			{
-				$query = $database->prepare("SELECT count(entry) FROM {$database->prefix}entry WHERE user = :user AND entry = :entry");
+				$query = $database->prepare("SELECT COUNT(entry) FROM {$database->prefix}entry WHERE user = :user AND entry = :entry");
 				$query->run(array(':user' => $user->id, ':entry' => $id));
 
 				if(!$query->success) return false;
+				$exist = $query->column();
 
-				if($query->column()) #If the entry exists, only update the category
-					$query = $database->prepare("UPDATE {$database->prefix}entry SET $column = :$column WHERE user = :user AND entry = :entry");
-				else #Otherwise, insert a new row with the category set
+				if($column == 'category') #For this version, only allow setting a single category by removing the older category set
 				{
-					$db_system = $system->database('system', __METHOD__);
-					if(!$db_system->success) return false;
-
-					$query = $db_system->prepare("SELECT feed, date FROM {$db_system->prefix}entry WHERE id = :id");
-					$query->run(array(':id' => $id));
+					$query = $database->prepare("DELETE FROM {$database->prefix}relation WHERE user = :user AND entry = :entry");
+					$query->run(array(':user' => $user->id, ':entry' => $id));
 
 					if(!$query->success) return false;
-					$result = $query->row();
 
-					#Insert the feed ID and the date as duplicate information for filter/sort purpose
-					$query = $database->prepare("INSERT INTO {$database->prefix}entry (user, entry, $column) VALUES (:user, :entry, :$column)");
+					if($value) #If setting, insert new row
+					{
+						$query = $database->prepare("INSERT INTO {$database->prefix}relation (user, entry, category) VALUES (:user, :entry, :category)");
+						$query->run(array(':user' => $user->id, ':entry' => $id, ':category' => $value));
+
+						if(!$query->success) return false;
+					}
+
+					if(!$exist) #Insert empty entry data if it does not exist
+					{
+						$query = $database->prepare("INSERT INTO {$database->prefix}entry (user, entry) VALUES (:user, :entry)");
+						$query->run(array(':user' => $user->id, ':entry' => $id));
+					}
 				}
-
-				$query->run(array(':user' => $user->id, ':entry' => $id, ":$column" => $value));
+				else
+				{
+					if($exist) #If the entry exists, only update the parameter
+					{
+						$query = $database->prepare("UPDATE {$database->prefix}entry SET $column = :$column WHERE user = :user AND entry = :entry");
+						$query->run(array(':user' => $user->id, ':entry' => $id, ":$column" => $value));
+					}
+					else #Otherwise, insert a new row with the parameter set
+					{
+						$query = $database->prepare("INSERT INTO {$database->prefix}entry (user, entry, $column) VALUES (:user, :entry, :$column)");
+						$query->run(array(':user' => $user->id, ':entry' => $id, ":$column" => $value));
+					}
+				}
 			}
 			else #For updating the feeds table
 			{
