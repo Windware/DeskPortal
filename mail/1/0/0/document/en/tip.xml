@@ -36,4 +36,5 @@
 	<string name="save" value="Save this mail as a draft" />
 	<string name="sign" value="Insert your signature" />
 	<string name="discard" value="Discard this mail" />
+	<string name="load" value="Display addresses from the address book" />
 </root>

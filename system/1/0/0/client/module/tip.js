@@ -110,6 +110,7 @@
 
 		this.set = function(node, id, tip, format, lines) //Shortcut to set a tip on a node
 		{ //FIXME : This overrides previous onmouseover/out
+			var log = $system.log.init(_class + '.set');
 			node = $system.node.target(node); //Get the target element
 
 			if(lines) for(var index in format) //Make new lines on the values if specified

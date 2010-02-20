@@ -4,9 +4,14 @@
 
 	switch($_GET['task'])
 	{
+		case 'conf.save' :
+			$user = $system->user();
+			print $system->xml_dump($user->save('conf', $_POST, $system->self['id']));
+		break;
+
 		case 'gui.expand' :
 			$result = Launcher_1_0_0_Item::expand($_POST['category'], $_POST['state']);
-			print $system->xml_send($result);
+			print $system->xml_dump($result);
 		break;
 
 		case 'gui.list' :

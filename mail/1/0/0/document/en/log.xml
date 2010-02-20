@@ -7,6 +7,11 @@
 	<string name="user/conf/remove/message" value="The account has been successfully removed." />
 	<string name="user/conf/error/remove" value="Error occured while removing the account." />
 
+	<!-- address.js -->
+	<string name="user/address/list" value="Error loading" />
+	<string name="user/address/list/message" value="Could not load address list" />
+	<string name="user/address/group/message" value="Could not load group list" />
+
 	<!-- conf.js -->
 	<string name="user/conf/error/title" value="Error occured" />
 	<string name="user/conf/error/message" value="Error occured while saving the configuration." />

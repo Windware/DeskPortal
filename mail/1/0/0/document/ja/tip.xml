@@ -36,4 +36,5 @@
 	<string name="save" value="下書きとして保存します" />
 	<string name="sign" value="署名を挿入します" />
 	<string name="discard" value="メールを破棄します" />
+	<string name="load" value="アドレス帳からアドレスを表示する" />
 </root>

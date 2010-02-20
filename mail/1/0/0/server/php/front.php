@@ -14,6 +14,16 @@
 			print $system->xml_dump($result);
 		break;
 
+		case 'address.list' : #Load addresses having mail addresses
+			$data = Mail_1_0_0_Address::load($_GET['group'], $_GET['type']);
+			print $system->xml_dump($data !== false, 'address', $data);
+		break;
+
+		case 'address.open' : #Load address groups
+			$data = Mail_1_0_0_Address::group();
+			print $system->xml_dump($data !== false, 'group', $data);
+		break;
+
 		case 'conf.create' : #Create a folder
 			$result = Mail_1_0_0_Folder::create($_POST['account'], $_POST['parent'], $_POST['name']);
 			$data = Mail_1_0_0_Folder::get($_POST['account'], false, true);

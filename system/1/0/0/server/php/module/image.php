@@ -55,11 +55,14 @@
 			$id = 'pane/'.md5($id).'.png'; #Create a unique name from the query string for cache purpose
 			if($built = $system->cache_get($id, false, $system->system['id'])) return $built; #Use cache if it exists
 
-			#Calculate the hex color from the specified values
+			#Calculate the background color in hex format
 			$color = array(hexdec(substr($param['background'], 0, 2)), hexdec(substr($param['background'], 2, 2)), hexdec(substr($param['background'], 4)));
 
 			#Calculate the border outline color in hex format
 			$outline = array(hexdec(substr($param['border'], 0, 2)), hexdec(substr($param['border'], 2, 2)), hexdec(substr($param['border'], 4)));
+
+			#Calculate the foreground color in hex format
+			$mark = array(hexdec(substr($param['color'], 0, 2)), hexdec(substr($param['color'], 2, 2)), hexdec(substr($param['color'], 4)));
 
 			switch($param['place']) #Depending on the specified location
 			{
@@ -261,14 +264,16 @@
 					imagefilledrectangle($image, 0 + $start_x * self::$_zoom, 0 + $start_y * self::$_zoom, $size_x - $end_x, $size_y - $end_y, $color);
 				}
 
+				$mark = imagecolorallocatealpha($image, $mark[0], $mark[1], $mark[2], $through);
+
 				switch($param['place']) #For bottom right and upper right, add an indicator for click action
 				{
 					case 'tr' : #Toolbar hide/show indicator
-						imagefilledarc($image, $canvas_x / 4.5, $canvas_y / 1.7, $canvas_x / 4, $canvas_y / 2, 0, 360, $line, IMG_ARC_PIE);
+						imagefilledarc($image, $canvas_x / 4.5, $canvas_y / 1.7, $canvas_x / 4, $canvas_y / 2, 0, 360, $mark, IMG_ARC_PIE);
 					break;
 
 					case 'br' : #Window resize indicator
-						imagefilledpolygon($image, array(0, $canvas_y / 4, $canvas_x / 4, 0, $canvas_x / 3, $canvas_y / 3), 3, $line);
+						imagefilledpolygon($image, array(0, $canvas_y / 4, $canvas_x / 4, 0, $canvas_x / 3, $canvas_y / 3), 3, $mark);
 					break;
 				}
 

@@ -1,0 +1,6 @@
+<root>
+	<string name="_1_display" value="表示" />
+
+	<string name="name" value="ユーザー名を表示する" />
+	<string name="save" value="保存" />
+</root>

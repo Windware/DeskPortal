@@ -299,7 +299,11 @@
 			{
 				if(direction)
 				{
-					if(destroy) $system.node.remove(id); //Completely let go of the window
+					if(destroy)
+					{
+						$system.node.remove(id); //Completely let go of the window
+						delete $system.window.list[id];
+					}
 					else if($global.user.pref.fade) $system.node.hide(id, true); //Hide the window
 				}
 

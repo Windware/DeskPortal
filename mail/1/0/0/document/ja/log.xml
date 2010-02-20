@@ -7,6 +7,11 @@
 	<string name="user/conf/remove/message" value="アカウントが削除されました" />
 	<string name="user/conf/error/remove" value="アカウント削除時にエラーが発生しました。" />
 
+	<!-- address.js -->
+	<string name="user/address/list" value="読み込み失敗" />
+	<string name="user/address/list/message" value="アドレス一覧取得に失敗しました" />
+	<string name="user/address/group/message" value="グループ一覧取得に失敗しました" />
+
 	<!-- conf.js -->
 	<string name="user/conf/error/title" value="エラーが起きました" />
 	<string name="user/conf/error/message" value="設定の保存に失敗しました。" />

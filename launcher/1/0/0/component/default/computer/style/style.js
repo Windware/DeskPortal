@@ -5,7 +5,7 @@
 	hover = 'ffffff';
 
 	color = 'cccccc';
-	border = 'cccccc';
+	border = '333333';
 
 	width = 170;
 

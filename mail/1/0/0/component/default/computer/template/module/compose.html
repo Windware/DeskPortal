@@ -12,14 +12,22 @@
 
 		<tr>
 			<th>
+				<img src="%image:address.png%" onclick="%top%.%id%.address.open(%value:index%)"%tip:load% style="cursor : pointer" class="%system%_button" />
 				%string:to%
 				<img src="%image:add.png%" id="%id%_compose_%value:index%_extra" onclick="%top%.%id%.gui.extra(%value:index%)" style="cursor : pointer" class="%system%_button"%tip:cc% />
 			</th>
 			<td><input type="text" name="to" style="width : 100%" value="%value:to%" /></td>
 		</tr>
 
-		<tr id="%id%_compose_%value:index%_cc" class="%system%_hidden"><th>%string:cc%</th><td><input type="text" name="cc" style="width : 100%" value="%value:cc%" /></td></tr>
-		<tr id="%id%_compose_%value:index%_bcc" class="%system%_hidden"><th>%string:bcc%</th><td><input type="text" name="bcc" style="width : 100%" value="%value:bcc%" /></td></tr>
+		<tr id="%id%_compose_%value:index%_cc" class="%system%_hidden">
+			<th>%string:cc%</th>
+			<td><input type="text" name="cc" style="width : 100%" value="%value:cc%" /></td>
+		</tr>
+
+		<tr id="%id%_compose_%value:index%_bcc" class="%system%_hidden">
+			<th>%string:bcc%</th>
+			<td><input type="text" name="bcc" style="width : 100%" value="%value:bcc%" /></td>
+		</tr>
 
 		<tr>
 			<th style="vertical-align : top">

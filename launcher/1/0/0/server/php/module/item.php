@@ -4,8 +4,6 @@
 		public static function get($language, System_1_0_0_User $user = null)
 		{
 			$system = new System_1_0_0(__FILE__);
-			$log = $system->log(__METHOD__);
-
 			$xml = '';
 
 			if($user === null) $user = $system->user();
@@ -97,7 +95,9 @@
 		public static function expand($category, $state, System_1_0_0_User $user = null) #Set opened category
 		{
 			$system = new System_1_0_0(__FILE__);
+
 			$log = $system->log(__METHOD__);
+			if(!preg_match('/^\w+$/', $category)) return $log->param();
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;

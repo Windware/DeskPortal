@@ -77,4 +77,14 @@
 	<string name="discard" value="Quit writing this mail?" />
 	<string name="sending" value="Sending..." />
 	<string name="saving" value="Saving..." />
+
+	<!-- Address list -->
+	<string name="address" value="Address List" />
+	<string name="group" value="Group" />
+	<string name="type" value="Type" />
+	<string name="uncategorized" value="Uncategorized" />
+
+	<string name="main" value="Main" />
+	<string name="alt" value="Alt" />
+	<string name="mobile" value="Mobile" />
 </root>
