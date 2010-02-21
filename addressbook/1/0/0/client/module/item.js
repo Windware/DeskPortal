@@ -263,7 +263,7 @@
 			var log = $system.log.init(_class + '.set');
 			if(!$system.is.element(form, 'form') || !$system.is.digit(id)) return log.param();
 
-			var quit = function(type) { return $system.gui.alert($id, type, type + '/solution', 3) && false; }
+			var quit = function(type) { return $system.gui.alert($id, type, type + '/solution') && false; }
 			if(form.name.value == '') return quit('user/save/fail');
 
 			var value = form.birth_year.value; //Check on birthday values

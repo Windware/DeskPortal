@@ -685,7 +685,7 @@
 
 				if($link['info']['supported']) #If UID is available
 				{
-					$identity = imap_search($link['connection'], 'ALL', SE_UID); #All UID in the folder
+					$identity = imap_search($link['connection'], 'UNDELETED', SE_UID); #All UID in the folder those are not deleted
 
 					if(!is_array($identity) || !count($identity)) $count = 0; #If no mail on the mail server, set new mail count as 0
 					elseif($exist[$name]) #If folder exists in the database

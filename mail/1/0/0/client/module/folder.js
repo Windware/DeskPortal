@@ -75,7 +75,7 @@
 			{
 				$self.gui.indicator(false); //Hide indicator
 
-				if($system.dom.status(request.xml) != '0') return $system.gui.alert($id, 'user/folder/empty/title', 'user/folder/empty/message', 3);
+				if($system.dom.status(request.xml) != '0') return $system.gui.alert($id, 'user/folder/empty/title', 'user/folder/empty/message');
 				$self.folder.clear(trash); //Clear mail data for the folder
 
 				if(__selected.account != account) return;
@@ -125,6 +125,16 @@
 			{
 				$self.gui.indicator(false); //Hide indicator
 				_cache[account] = $system.is.object(request.xml) && request.xml || request;
+
+				var area = $system.node.id($id + '_folder');
+
+				if($system.dom.status(_cache[account]) != '0')
+				{
+					area.innerHTML = ''; //Empty the listing
+					delete _cache[account]; //Clear the cache to try again later
+
+					return $system.gui.alert($id, 'user/folder/list', 'user/folder/list/message', undefined, null, ['<strong>' + __account[account].description + '</strong>']);
+				}
 
 				if(!__account[account]) return;
 
@@ -279,11 +289,14 @@
 				var section = $system.browser.engine == 'trident' ? 1 : 0; //IE counts first 'xml' tag as first node
 
 				if(!_cache[account].childNodes || !construct(_cache[account].childNodes[section], 0)) //Create folder listing
-					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/solution');
+				{
+					area.innerHTML = ''; //Empty the listing
+					delete _cache[account]; //Clear the cache to try again later
+
+					return log.user($global.log.warning, 'user/folder/list', 'user/folder/list/message');
+				}
 
 				if(__selected.account != account) return true; //If displaying account got changed, do not display the result
-
-				var area = $system.node.id($id + '_folder');
 				area.innerHTML = '';
 
 				var header = document.createElement('div');

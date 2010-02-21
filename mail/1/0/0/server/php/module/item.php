@@ -405,7 +405,7 @@
 			if(!$query['account']->success) return false;
 			$account = $query['account']->column();
 
-			$query['count'] = $database->prepare("SELECT count(id) FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter");
+			$query['count'] = $database->prepare("SELECT COUNT(id) FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter");
 			$query['count']->run($param);
 
 			if(!$query['count']->success) return false;

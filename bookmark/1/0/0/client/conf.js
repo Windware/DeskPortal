@@ -67,13 +67,13 @@
 
 			if(body.innerHTML == '0')
 			{
-				$system.gui.alert($id, 'user/item/import', 'user/item/import/message', 3);
+				$system.gui.alert($id, 'user/item/import', 'user/item/import/message');
 
 				__group = undefined; //Remove group caching
 				return $self.run(); //Update the listing on success
 			}
 
-			$system.gui.alert($id, 'user/item/import/fail', 'user/item/import/fail/message', 3);
+			$system.gui.alert($id, 'user/item/import/fail', 'user/item/import/fail/message');
 			return false;
 		}
 

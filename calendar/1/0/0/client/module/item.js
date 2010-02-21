@@ -43,10 +43,10 @@
 			var form = __node(year, month, day, 'form');
 			if(!$system.is.element(form, 'form')) return log.param();
 
-			if(!form.title.value) return $system.gui.alert($id, 'user/title', 'user/title/solution', 3);
+			if(!form.title.value) return $system.gui.alert($id, 'user/title', 'user/title/solution');
 
 			if(!form.start_hour.value != !form.start_minute.value || !form.end_hour.value != !form.end_minute.value)
-				return $system.gui.alert($id, 'user/date', 'user/date/solution', 3); //Avoid having only part of a time set
+				return $system.gui.alert($id, 'user/date', 'user/date/solution'); //Avoid having only part of a time set
 
 			var date = $system.date.create([year, month, day]);
 

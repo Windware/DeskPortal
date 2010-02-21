@@ -143,7 +143,7 @@
 					case '0' :
 						$self.account.get(false, null, $system.app.method($self.conf.change, [0])); //Update account lists
 
-						$system.gui.alert($id, 'user/conf/remove/title', 'user/conf/remove/message', 3);
+						$system.gui.alert($id, 'user/conf/remove/title', 'user/conf/remove/message');
 						if(__selected.account == id) $self.account.change(0); //Reset account choice if the displayed account is removed
 
 						for(var folder in __belong)
@@ -167,7 +167,7 @@
 						$self.conf.folder(0);
 					break;
 
-					default : $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/remove', 3); break;
+					default : $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/remove'); break;
 				}
 			}
 

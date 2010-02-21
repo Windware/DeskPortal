@@ -30,7 +30,7 @@
 				}
 
 				var errors = $system.array.list(' login error network'); //4 items
-				$system.gui.alert($id, 'user/login/fail/title', 'user/login/fail/' + errors[mode], 3);
+				$system.gui.alert($id, 'user/login/fail/title', 'user/login/fail/' + errors[mode]);
 
 				form.pass.value = ''; //Clear out the password which should have been wrong
 				return log.dev($global.log.notice, 'dev/login');

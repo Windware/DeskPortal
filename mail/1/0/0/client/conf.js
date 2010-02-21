@@ -15,9 +15,9 @@
 		{
 			switch($system.dom.status(xml))
 			{
-				case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message', 3); break;
+				case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message'); break;
 
-				default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 3) && false; break;
+				default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message') && false; break;
 			}
 
 			var form = {account : $system.node.id($id + '_conf_folder_form_account').account, folder : $system.node.id($id + '_conf_folder_form_adjust').source};
@@ -382,7 +382,7 @@
 			{
 				if(form[required[i]].value != '') continue;
 
-				$system.gui.alert($id, 'error', 'fill', 3, null, null, 'conf.xml'); //If any field is left blank that is required, notify it
+				$system.gui.alert($id, 'error', 'fill', undefined, null, null, 'conf.xml'); //If any field is left blank that is required, notify it
 				return false; //Avoid form submission
 			}
 
@@ -406,7 +406,7 @@
 
 						if(value.length > _max) //Check on the signature length
 						{
-							$system.gui.alert($id, 'user/conf/signature/title', 'user/conf/signature/message', 5, null, [value.length]);
+							$system.gui.alert($id, 'user/conf/signature/title', 'user/conf/signature/message', undefined, null, [value.length]);
 							return false;
 						}
 					break;
@@ -423,13 +423,13 @@
 
 				switch($system.dom.status(request.xml))
 				{
-					case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message', 3); break;
+					case '0' : $system.gui.alert($id, 'user/conf/success/title', 'user/conf/success/message'); break;
 
-					case '2' : return $system.gui.alert($id, 'user/conf/auth', 'user/conf/read', 5); break;
+					case '2' : return $system.gui.alert($id, 'user/conf/auth', 'user/conf/read'); break;
 
-					case '3' : return $system.gui.alert($id, 'user/conf/auth', 'user/conf/send', 5); break;
+					case '3' : return $system.gui.alert($id, 'user/conf/auth', 'user/conf/send'); break;
 
-					default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message', 5); break;
+					default : return $system.gui.alert($id, 'user/conf/error/title', 'user/conf/error/message'); break;
 				}
 
 				$self.conf.change(0); //Empty the fields

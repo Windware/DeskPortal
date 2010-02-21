@@ -243,7 +243,7 @@
 				if(form[_times[i]].value == '') end = true; //If a value is unspecified, only track the upper selections
 				else if(end && form[_times[i]].value != '') //If any other values are set with empty selection in between
 				{
-					$system.gui.alert($id, 'user/time', 'user/time/solution', 3);
+					$system.gui.alert($id, 'user/time', 'user/time/solution');
 					return log.user($global.log.warning, 'user/time', 'user/time/solution');
 				}
 			}

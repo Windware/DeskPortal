@@ -211,7 +211,7 @@
 			if($global.user.pref.logout <= 0) return true;
 			if(++_inactivity < $global.user.pref.logout) return true; //Increase the inactive time
 
-			$system.gui.alert($id, 'user/user/expire/title', 'user/user/expire/message', null, null, [$system.info.template.cancel]);
+			$system.gui.alert($id, 'user/user/expire/title', 'user/user/expire/message', undefined, null, [$system.info.template.cancel]);
 			return _timer = setTimeout($system.app.method($system.user.logout, [true]), _wait * 1000); //Force logout the user
 		}
 	}

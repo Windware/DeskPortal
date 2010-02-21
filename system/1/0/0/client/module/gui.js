@@ -7,6 +7,8 @@
 
 		var _index = 0; //Alert window index
 
+		var _last = 5; //Amount of seconds alert will stay visible by default
+
 		var _menu = $id + '_context'; //The contextual menu node ID
 
 		var _pressed = false; //presto engine specific variable to track shift key press
@@ -33,6 +35,7 @@
 			if(!_alerts[title + message]) _alerts[title + message] = _window + (++_index); //The alert window ID
 			else if($system.node.id(_alerts[title + message])) return $system.window.raise(_alerts[title + message]); //Do not make a duplicate warning
 
+			if(!$system.is.digit(timer)) timer = _last;
 			var pane = _alerts[title + message];
 
 			//Convert the placeholders
@@ -42,9 +45,7 @@
 			//Create the alert window - TODO Do not define color in script : maybe put the info in style.js
 			$system.window.create(pane, language[title], body, '333333', '777777', 'ddcc55', '555555', false, undefined, undefined, 400, undefined, true, false, undefined, undefined, undefined, true);
 
-			if($system.is.digit(timer) && timer > 0) //Fade the alert away
-				setTimeout($system.app.method($system.window.fade, [pane, true, null, true]), timer * 1000);
-
+			if(timer > 0) setTimeout($system.app.method($system.window.fade, [pane, true, null, true]), timer * 1000); //Fade the alert away
 			return pane; //Return the window ID
 		}
 

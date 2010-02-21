@@ -243,7 +243,7 @@
 					var app = $system.app.component(id);
 					var name = $global.app[id] && $global.app[id].title || id;
 
-					$system.gui.alert($id, 'user/app/fail/title', 'user/app/fail/message', 10, null, [name]); //Make an alert (FIXME - This avoids another alert of this to display if the previous one exists)
+					$system.gui.alert($id, 'user/app/fail/title', 'user/app/fail/message', undefined, null, [name]); //Make an alert (FIXME - This avoids another alert of this to display if the previous one exists)
 					$system.app.unload(id);
 
 					return $private.log.dev($global.log.error, 'dev/library/object', 'dev/library/object/solution', [id]);
@@ -257,7 +257,7 @@
 
 				if(!$system.is.text(info.devroot) || !$system.is.text(info.id)) //If it does not have proper information, quit
 				{
-					$system.gui.alert($id, 'user/app/fail/title', 'user/app/fail/message', 10, null, [id]); //Make an alert 
+					$system.gui.alert($id, 'user/app/fail/title', 'user/app/fail/message', undefined, null, [id]); //Make an alert 
 					$system.app.unload(id);
 
 					return $private.log.dev($global.log.error, 'dev/object', 'dev/object/solution', [info.id]);
@@ -291,7 +291,7 @@
 
 					catch(error)
 					{
-						$private.system.gui.alert($private.system.info.id, 'user/app/fail/title', 'user/app/fail/message', 10, null, [$private.id]); //Make an alert on the user side
+						$private.system.gui.alert($private.system.info.id, 'user/app/fail/title', 'user/app/fail/message', undefined, null, [$private.id]); //Make an alert on the user side
 						$private.system.app.unload($private.id); //Unload the application
 
 						return $private.log.dev($global.log.error, 'dev/execute', 'dev/execute/solution', [$private.id, $private.system.browser.report(error)]);

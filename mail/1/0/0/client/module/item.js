@@ -145,14 +145,16 @@
 
 				if($system.is.object(request)) //If a new data is passed, create the cache
 				{
+					cache = __cache[folder][page][order.item][order.reverse][param.marked][param.unread][param.search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
+					if(!$system.is.digit(cache.max) || !cache.max) cache.max = 1;
+
 					if($system.dom.status(request.xml) != '0') //Show message on error but do list if any data is returned
 					{
 						log.user($global.log.error, 'user/item/list/message', 'user/generic/again/solution', [__account[__belong[folder]].description]);
-						$system.gui.alert($id, 'user/item/list/title', 'user/item/list/message', 3, null, [__account[__belong[folder]].description]);
-					}
+						$system.gui.alert($id, 'user/item/list/title', 'user/item/list/message', undefined, null, [__account[__belong[folder]].description]);
 
-					cache = __cache[folder][page][order.item][order.reverse][param.marked][param.unread][param.search] = {list : [], max : $system.dom.attribute($system.dom.tags(request.xml, 'page')[0], 'total')};
-					if(!$system.is.digit(cache.max) || !cache.max) cache.max = 1;
+						delete __cache[folder][page][order.item][order.reverse][param.marked][param.unread][param.search]; //Do not cache failed attempt
+					}
 
 					var list = $system.dom.tags(request.xml, 'mail');
 

@@ -28,8 +28,9 @@
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="Failed to get list of folders." />
-	<string name="user/folder/get" value="New message for '%%' in '%%'." />
+	<string name="user/folder/list/message" value="List of folders could not be retrieved for account %%. Please try again later." />
 
+	<string name="user/folder/get" value="New message for '%%' in '%%'." />
 	<string name="user/folder/empty/title" value="Failed to empty trash" />
 	<string name="user/folder/empty/message" value="An error occured trying to empty trash. Please try again later." />
 

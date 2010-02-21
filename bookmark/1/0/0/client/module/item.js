@@ -16,12 +16,12 @@
 				{
 					case 0 : //Success
 						log.user($global.log.notice, 'user/add');
-						$system.gui.alert($id, 'user/item/add', 'user/item/add/message', 3);
+						$system.gui.alert($id, 'user/item/add', 'user/item/add/message');
 					break;
 
-					case 1 : return $system.gui.alert($id, 'user/item/add/fail', 'user/item/add/fail/message', 3); break; //Error
+					case 1 : return $system.gui.alert($id, 'user/item/add/fail', 'user/item/add/fail/message'); break; //Error
 
-					case 2 : return $system.gui.alert($id, 'user/item/add/duplicate', 'user/item/add/duplicate/message', 3); break; //Duplicate
+					case 2 : return $system.gui.alert($id, 'user/item/add/duplicate', 'user/item/add/duplicate/message'); break; //Duplicate
 				}
 
 				var still = false; //If any group is chosen or not

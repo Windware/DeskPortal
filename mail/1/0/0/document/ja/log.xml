@@ -28,8 +28,9 @@
 
 	<!-- folder.js -->
 	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
-	<string name="user/folder/get" value="%%の%%に新着があります。" />
+	<string name="user/folder/list/message" value="%%のアカウントのフォルダー一覧が取得できませんでした。時間をおいて再度試してください。" />
 
+	<string name="user/folder/get" value="%%の%%に新着があります。" />
 	<string name="user/folder/empty/title" value="メール削除エラー" />
 	<string name="user/folder/empty/message" value="ごみ箱を空にする際にエラーが発生しました。時間をおいて再度試してください。" />
 

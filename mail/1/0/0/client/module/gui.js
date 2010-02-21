@@ -214,8 +214,6 @@
 			mode = mode[state]; //Find out the status
 
 			if(!mode) mode = 'error';
-			var timer;
-
 			$system.node.hide($id + '_compose_' + index + '_progress', true); //Hide the status message
 
 			if(mode == 'success') //When succeeded
@@ -223,11 +221,7 @@
 				if(_state) mode = 'draft'; //Show the draft saved message instead
 				var update = __account[_submit[index].account].type == 'imap' ? 1 : 0;
 
-				if(_state != 2) //If not automatic saving
-				{
-					timer = 3; //Clear the message
-					$system.window.fade($id + '_display_' + index, true, null, true); //Remove the composing window
-				}
+				if(_state != 2) $system.window.fade($id + '_display_' + index, true, null, true); //If not automatic saving, remove the composing window
 
 				var target = _state ? 'drafts' : 'sent';
 				var special = __special[target][_submit[index].account];
@@ -256,7 +250,7 @@
 				if(!__account[form.account.value].signature.length) form.sign.disabled = true; //Disable the signing button if no signature exists
 			}
 
-			return _state == 2 ? true : $system.gui.alert($id, 'user/gui/send/' + mode, 'user/gui/send/' + mode + '/message', timer); //Show the status
+			return _state == 2 ? true : $system.gui.alert($id, 'user/gui/send/' + mode, 'user/gui/send/' + mode + '/message'); //Show the status
 		}
 
 		this.compose = function(id, index, field) //Compose a mail
