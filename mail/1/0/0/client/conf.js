@@ -246,7 +246,7 @@
 							if(!skip && _subscribed[option.value]) limited[index].push(option); //If all parents and itself are subscribed, add the folder
 
 							var spacer = '';
-							for(var j = 0; j < depth; j++) spacer += '&nbsp;';
+							for(var j = 0; j < depth; j++) spacer += '&#160;';
 
 							if(spacer) option.innerHTML = spacer + option.innerHTML;
 						}

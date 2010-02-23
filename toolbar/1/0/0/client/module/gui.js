@@ -180,7 +180,7 @@
 
 				if(__mutual[feature][method]) //For having multiple selections
 				{
-					if(!__external[feature][method]) node.innerHTML = '&nbsp;'; //Clear out the display (Keep a character to avoid getting flattened)
+					if(!__external[feature][method]) node.innerHTML = '&#160;'; //Clear out the display (Keep a character to avoid getting flattened)
 					else //Show the redirection message
 					{
 						var language = $system.language.strings($id);

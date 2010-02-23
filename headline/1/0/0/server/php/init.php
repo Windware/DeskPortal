@@ -64,7 +64,7 @@
 					try
 					{
 						#NOTE : Placing '@' to avoid errors displayed when it is captured (libxml_use_internal_errors() works?)
-						$xml = @new SimpleXMLElement($content['body'], LIBXML_COMPACT); #Parse the feed received
+						$xml = @new SimpleXMLElement($system->xml_entity($content['body']), LIBXML_COMPACT); #Parse the feed received
 
 						switch(strtolower($xml->getName())) #Depending on what type of feed it is
 						{

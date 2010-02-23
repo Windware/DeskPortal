@@ -257,6 +257,8 @@
 
 		public function xml_dump($status, $name = null, $list = array(), $exclude = array(), $compress = false) { return System_1_0_0_Xml::dump($this, $status, $name, $list, $exclude, $compress); }
 
+		public function xml_entity($string) { return System_1_0_0_Xml::entity($this, $string); }
+
 		public function xml_header($declare = true) { return System_1_0_0_Xml::header($this, $declare); }
 
 		public function xml_fill($template, $values) { return System_1_0_0_Xml::fill($this, $template, $values); }
