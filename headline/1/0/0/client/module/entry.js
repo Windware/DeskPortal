@@ -46,7 +46,8 @@
 
 			var list = function(id, page, callback, request)
 			{
-				log.user($global.log.info, 'user/entry/get', '', [__feed[id] ? __feed[id].description : id]);
+				__cache[id][page] = $system.is.object(request.xml) ? request.xml : request;
+				if($system.is.object(request.xml)) log.user($global.log.info, 'user/entry/get', '', [__feed[id] ? __feed[id].description : id]);
 
 				clearTimeout(timer); //Release the lock timer
 				if(!$system.is.element(area, 'form')) return release(); //Make sure the HTML node exists
@@ -58,7 +59,7 @@
 				$system.node.hide(area, true);
 
 				var holder = $system.array.list('%index% %category% %star% %subject% %new%'); //Template variables
-				var entries = $system.dom.tags(request.xml, 'entry'); //List of entries
+				var entries = $system.dom.tags(__cache[id][page], 'entry'); //List of entries
 
 				area.innerHTML = ''; //Clear the current entries
 				var display; //Current line's date
@@ -124,7 +125,7 @@
 				var paging = document.createElement('p'); //Create the page selection line
 				paging.className = $id + '_paging';
 
-				var amount = $system.dom.attribute($system.dom.tags(request.xml, 'amount')[0], 'value'); //Number of pages
+				var amount = $system.dom.attribute($system.dom.tags(__cache[id][page], 'amount')[0], 'value'); //Number of pages
 				if(!$system.is.digit(amount) || amount < 1) amount = 1;
 
 				var select = document.createElement('select'); //Page selections
@@ -183,6 +184,10 @@
 			}
 
 			for(var section in __feed[id]) if(section != 'description' && section != 'address') options[section] = __feed[id][section] || __feed[id][section] == 0 || '';
+
+			if(!__cache[id]) __cache[id] = {};
+			if(__cache[id][page]) return list(id, page, callback, __cache[id][page]);
+
 			return $system.network.send($self.info.root + 'server/php/front.php', options, null, $system.app.method(list, [id, page, callback]));
 		}
 

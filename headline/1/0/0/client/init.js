@@ -1,4 +1,6 @@
 
+	var __cache = {}; //Entry caches
+
 	var __filter = {}; //Chosen filter option by the user
 
 	var __feed = {}; //Feed information

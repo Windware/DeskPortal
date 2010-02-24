@@ -123,6 +123,8 @@
 
 				$system.gui.notice($id, $system.text.format(notice['user/feed/new'], [info]), $system.app.method(open, [id])); //Show alert on the title bar
 				log.user($global.log.notice, 'user/feed/new', '', [info]); //Notify about new entries
+
+				delete __cache[id]; //Remove the feed cache
 			}
 
 			area.scrollTop = scroll; //Recover the scroll amount
