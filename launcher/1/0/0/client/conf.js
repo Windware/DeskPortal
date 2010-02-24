@@ -30,7 +30,7 @@
 		{
 			if(!$system.is.element(form, 'form')) return false;
 
-			var state = form.display.checked ? 1 : 0;
+			var state = $global.user.conf[$id].display = form.display.checked ? 1 : 0;
 			$system.node.fade($id + '_name', !state);
 
 			var exclude = []; //Find list of excluded apps
