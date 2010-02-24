@@ -6,7 +6,11 @@
 	{
 		case 'conf.save' :
 			$user = $system->user();
-			print $system->xml_dump($user->save('conf', $_POST, $system->self['id']));
+
+			$state = $user->save('conf', array('display', $_POST['display']), $system->self['id']);
+			$exclude = Launcher_1_0_0_Item::exclude($_POST['exclude'], 1, $user);
+
+			print $system->xml_dump($state && $exclude);
 		break;
 
 		case 'gui.expand' :
@@ -14,7 +18,7 @@
 			print $system->xml_dump($result);
 		break;
 
-		case 'gui.list' :
+		case 'run' :
 			$data = Launcher_1_0_0_Item::get($_GET['language']);
 			$xml = '';
 

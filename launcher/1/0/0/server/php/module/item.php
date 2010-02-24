@@ -1,6 +1,51 @@
 <?php
 	class Launcher_1_0_0_Item
 	{
+		public static function exclude($app, $state, System_1_0_0_User $user = null) #Set an application as excluded from listed
+		{
+			$system = new System_1_0_0(__FILE__);
+
+			$log = $system->log(__METHOD__);
+			if(!is_array($app)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return false;
+
+			if(!$database->begin()) return false;
+
+			$query = $database->prepare("DELETE FROM {$database->prefix}exclude WHERE user = :user");
+			$query->run(array(':user' => $user->id)); #Remove all exclusion first
+
+			if(!$query->success) return false;
+			$query = $database->prepare("INSERT INTO {$database->prefix}exclude (user, app) VALUES (:user, :app)");
+
+			foreach(array_unique($app) as $id)
+			{
+				if(!$system->is_id($id)) continue;
+
+				$query->run(array(':user' => $user->id, ':app' => $id)); #Add to the exclusion list
+				if(!$query->success) return false;
+			}
+
+			return $database->commit();
+		}
+
+		public static function expand($category, $state, System_1_0_0_User $user = null) #Set opened category
+		{
+			$system = new System_1_0_0(__FILE__);
+
+			$log = $system->log(__METHOD__);
+			if(!preg_match('/^\w+$/', $category)) return $log->param();
+
+			if($user === null) $user = $system->user();
+			if(!$user->valid) return false;
+
+			return $system->database_key('user', "opened_$category", $state ? 1 : 0, $user);
+		}
+
 		public static function get($language, System_1_0_0_User $user = null)
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -9,8 +54,7 @@
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return $xml;
 
-			#Load the category name XML file
-			$names = simplexml_load_file($system->language_file($system->system['id'], 'categories.xml', $language));
+			$names = simplexml_load_file($system->language_file($system->system['id'], 'categories.xml', $language)); #Load the category name XML file
 			if(!$names) return $xml;
 
 			$localized = array(); #List of localized category names
@@ -34,17 +78,28 @@
 			$database = $system->database('user', __METHOD__, $user, 'system', 'static');
 			if(!$database->success) return $xml;
 
-			$query = $database->prepare("SELECT app, version FROM {$database->prefix}used WHERE User = :user");
+			$display = array(); #List of titles to display
+			$list = array(); #List of version numbers the user prefers
+
+			$icon = array(); #List to hold the icon's presence
+			$versions = array(); #List of version numbers the user prefers
+
+			$query = $database->prepare("SELECT app, version FROM {$database->prefix}used WHERE user = :user");
+			$query->run(array(':user' => $user->id));
+
+			if(!$query->success) return $xml;
+			foreach($query->all() as $row) $versions[$row['app']] = $row['version'];
+
+			$database = $system->database('user', __METHOD__, $user);
+			if(!$database->success) return $xml;
+
+			$query = $database->prepare("SELECT app FROM {$database->prefix}exclude WHERE user = :user");
 			$query->run(array(':user' => $user->id));
 
 			if(!$query->success) return $xml;
 
-			$display = array(); #List of titles to display
-			$list = array(); #List of version numbers the user prefers
-			$icon = array(); #List to hold the icon's presence
-
-			$versions = array(); #List of version numbers the user prefers
-			foreach($query->all() as $row) $versions[$row['app']] = $row['version'];
+			$exclude = array(); #List of states to show the app or not
+			foreach($query->all() as $row) $exclude[] = $row['app'];
 
 			$conf = array(); #User configurations
 			foreach($user->conf('conf') as $row) if($system->is_id($row['app'])) $conf[$row['app']][$row['name']] = $row['value'];
@@ -74,6 +129,7 @@
 				$graphic = "$theme{$system->global['define']['device']}/graphic/icon.png"; #Load the icon on the current theme
 
 				$icon[$id] = $system->file_readable($graphic) ? $graphic : ''; #Note the icon's theme
+				$remove[$id] = in_array($id, $exclude) ? 1 : 0;
 			}
 
 			$apps = array();
@@ -83,26 +139,13 @@
 				$show = $localized[$category] ? $localized[$category] : $category;
 				$each = array();
 
-				foreach($entry as $launcher) $each[] = array('name' => $launcher, 'icon' => $icon[$launcher]);
+				foreach($entry as $launcher) $each[] = array('name' => $launcher, 'exclude' => $remove[$launcher], 'icon' => $icon[$launcher]);
 
 				$state = $system->database_key('user', "opened_$category", null, $user);
 				$apps[] = array('attributes' => array('name' => $category, 'display' => $show, 'expand' => $state), 'entry' => $each);
 			}
 
 			return $apps;
-		}
-
-		public static function expand($category, $state, System_1_0_0_User $user = null) #Set opened category
-		{
-			$system = new System_1_0_0(__FILE__);
-
-			$log = $system->log(__METHOD__);
-			if(!preg_match('/^\w+$/', $category)) return $log->param();
-
-			if($user === null) $user = $system->user();
-			if(!$user->valid) return false;
-
-			return $system->database_key('user', "opened_$category", $state ? 1 : 0, $user);
 		}
 	}
 ?>

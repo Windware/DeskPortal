@@ -6,3 +6,9 @@
 	div#%id%_logout { text-align : center; border-top : 1px #ccc dotted; margin-top : 10px; padding-top : 10px; }
 
 	table.%id%_icon { border : none; width : 20px; height : 20px; cursor : pointer; margin : 8px 5px; }
+
+	div#%id%_listed { border : 1px #333 solid; width : 80%; background-color : #eee; height : 200px; margin : auto; text-align : left; overflow : auto; }
+
+	div#%id%_listed label { margin-left : 20px; }
+
+	div#%id%_listed h4 { border-bottom : 1px #333 dotted; padding : 5px; text-align : center; margin : 5px; }

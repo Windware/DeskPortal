@@ -2,5 +2,6 @@
 	<string name="_1_display" value="Display" />
 
 	<string name="name" value="Show user name" />
+	<string name="display" value="Display Selection" />
 	<string name="save" value="Save" />
 </root>

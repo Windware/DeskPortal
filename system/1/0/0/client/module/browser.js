@@ -145,13 +145,12 @@
 			//The values set by the user in the browser sent to the server as HTTP_ACCEPT_LANGUAGE
 			//cannot be retrieved directly on the client side, thus getting it back from the server as a cookie value
 
-			//Fetch the client's preferred list of languages
-			dev.language = decodeURIComponent(dev.cookie('language')).split(',');
+			dev.language = decodeURIComponent(dev.cookie('language')).split(','); //Fetch the client's preferred list of languages
 
 			var displayed = window.navigator.language || window.navigator.browserLanguage; //Browser interface language
 			if(!$system.is.text(displayed)) return; //If not valid, quit
 
-			if(!$system.array.find(dev.language, displayed)) dev.language.push(displayed); //If not in the list, add to the list
+			if(!$system.array.find(dev.language, displayed.toLowerCase())) dev.language.push(displayed.toLowerCase()); //If not in the list, add to the list
 			$system.browser.cookie('language', '', true); //Remove the cookie
 		}
 

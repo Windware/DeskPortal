@@ -56,7 +56,7 @@
 				this.log[this.log.names[i]] = i; //Set the log level values
 			}
 
-			this.online = false; //Status if the system is online or offline
+			//this.online = false; //Status if the system is online or offline (NOTE : Not used now)
 
 			this.root = '%root%'; //The root node name of the system in the DOM tree
 

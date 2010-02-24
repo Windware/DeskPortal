@@ -191,7 +191,7 @@
 				if(!request.valid()) return $private.failure('dev/meta', 'dev/meta/solution', [$id]);
 
 				$self.info.meta = request.xml; //Hold the meta information as XML
-				$self.info.category = $system.dom.attribute($system.dom.tags($self.info.meta, 'category')[0], 'name'); //Pick its category
+				$self.info.category = $system.dom.attribute($system.dom.tags($self.info.meta, 'info')[0], 'category'); //Pick its category
 
 				//Load all of the module scripts by asking for partial matches
 				var request = $system.network.item($self.info.root + 'client/module/', true);

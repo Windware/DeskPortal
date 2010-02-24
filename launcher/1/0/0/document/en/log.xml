@@ -1,4 +1,12 @@
 <root>
+	<!-- USER -->
+	<!-- conf.js -->
+	<string name="user/conf/save" value="Saved configuration" />
+	<string name="user/conf/save/message" value="Display configuration has been saved." />
+
+	<string name="user/conf/fail" value="Failed saving configuration" />
+	<string name="user/conf/fail/message" value="Display configuration could not be saved." />
+
 	<!-- DEVELOPER -->
 	<!-- gui.js -->
 	<string name="dev/list" value="No applications were returned in the list." />
