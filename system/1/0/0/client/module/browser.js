@@ -146,6 +146,7 @@
 			//cannot be retrieved directly on the client side, thus getting it back from the server as a cookie value
 
 			dev.language = decodeURIComponent(dev.cookie('language')).split(','); //Fetch the client's preferred list of languages
+			for(var i = 0; i < dev.language.length; i++) if(!$system.is.language(dev.language[i])) delete dev.language[i];
 
 			var displayed = window.navigator.language || window.navigator.browserLanguage; //Browser interface language
 			if(!$system.is.text(displayed)) return; //If not valid, quit

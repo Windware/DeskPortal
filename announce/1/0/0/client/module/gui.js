@@ -9,13 +9,10 @@
 
 		var _node = $id + '_box'; //The ID of the node to place the news in
 
-		this.fetch = function(year, month, execute, language) //Get the news remotely
+		this.fetch = function(year, month, execute) //Get the news remotely
 		{
 			var log = $system.log.init(_class + '.fetch');
 			if(typeof execute != 'function' || !String(year).match(/^\d{4}$/) || !$system.is.digit(month) || month < 1 || month > 12) return log.param();
-
-			if(language === undefined) language = $system.language.pref(); //Pick user's language by default
-			if(!$system.is.language(language)) return log.param();
 
 			var cache = year + '/' + month; //ID of the cache reference
 			if($system.is.object(_news[cache])) return execute(year, month, _news[cache]); //If cache exists, use it
@@ -28,9 +25,8 @@
 				log.user($global.log.info, 'user/get', '', [year, $system.date.month.full[month]]);
 			}
 
-			//The feed to get to show the news from
-			var callback = $system.app.method(completion, [year, month, execute]);
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.fetch', year : year, month : month, language : language}, null, callback);
+			var callback = $system.app.method(completion, [year, month, execute]); //The feed to get to show the news from
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.fetch', year : year, month : month, language : $global.user.language}, null, callback);
 		}
 
 		this.swap = function(year, month, callback) //Swap the news to another month's : TODO - Cache instead of getting every time

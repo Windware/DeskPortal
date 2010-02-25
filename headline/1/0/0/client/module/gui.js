@@ -86,14 +86,15 @@
 			return quick ? true : $self.entry.get(index); //Update the entries list
 		}
 
-		this.view = function(id, address, line) //Show the headline feed's original page
+		this.view = function(id, address, line) //Show the entry's source page
 		{
 			var log = $system.log.init(_class + '.view');
-			if(!$system.is.address(address)) return log.param();
+			if(!$system.is.digit(id) || !__entry[id] || !$system.is.address(address) || !$system.is.element(line)) return log.param();
 
 			window.open(address, $id + '_source_' + id); //Display the linked page
 			$system.node.classes(line, $id + '_read', true);
 
+			delete __cache[__entry[id].feed][__entry[id].page];
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.view'}, {id : id, mode : 1});
 		}
 	}

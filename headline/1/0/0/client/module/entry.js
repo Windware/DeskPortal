@@ -10,8 +10,9 @@
 		this.category = function(id, category) //Set a category for an entry
 		{
 			var log = $system.log.init(_class + '.category');
-			if(!$system.is.digit(id) || !$system.is.digit(category)) return log.param();
+			if(!$system.is.digit(id) || !__entry[id] || !$system.is.digit(category)) return log.param();
 
+			delete __cache[__entry[id].feed][__entry[id].page]; //Remove cache for the entry's page
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'entry.category'}, {id : id, category : category});
 		}
 
@@ -47,9 +48,9 @@
 			var area = $system.node.id($id + '_entries'); //The entry area
 			area.innerHTML = $system.text.format('<span class="%%_spacer">%%</span>', [$id, language.loading]); //Show current state
 
-			var list = function(id, page, callback, request)
+			var list = function(id, page, options, callback, request)
 			{
-				__cache[id][page] = $system.is.object(request.xml) ? request.xml : request;
+				var cache = __cache[id][page][options.year][options.month][options.week][options.day][options.marked == '1'][options.unread == '1'][options.category][options.search] = $system.is.object(request.xml) ? request.xml : request;
 				if($system.is.object(request.xml)) log.user($global.log.info, 'user/entry/get', '', [__feed[id] ? __feed[id].description : id]);
 
 				clearTimeout(timer); //Release the lock timer
@@ -62,7 +63,7 @@
 				$system.node.hide(area, true);
 
 				var holder = $system.array.list('%index% %category% %star% %subject% %new%'); //Template variables
-				var entries = $system.dom.tags(__cache[id][page], 'entry'); //List of entries
+				var entries = $system.dom.tags(cache, 'entry'); //List of entries
 
 				area.innerHTML = ''; //Clear the current entries
 				var display; //Current line's date
@@ -127,21 +128,21 @@
 					if($system.browser.engine == 'khtml' && text.length == 1) text = ''; //Avoid Konqueror from inserting white space in tooltip
 
 					$system.tip.set(line, $id, 'info', [text || '(' + language.none + ')']); //Give a summary tooltip
+					__entry[headline] = {feed : id, page : page}; //Set entry information
 				}
 
 				var paging = document.createElement('p'); //Create the page selection line
 				paging.className = $id + '_paging';
 
-				var amount = $system.dom.attribute($system.dom.tags(__cache[id][page], 'amount')[0], 'value'); //Number of pages
+				var amount = $system.dom.attribute($system.dom.tags(cache, 'amount')[0], 'value'); //Number of pages
 				if(!$system.is.digit(amount) || amount < 1) amount = 1;
 
 				var select = document.createElement('select'); //Page selections
 
-				select.id = $id + '_page_selector'; //NOTE : IE6 refuses to set 'name' attribute on dynamically created 'select' node...
+				select.id = $id + '_page_selector'; //NOTE : IE6 refuses to set 'name' attribute on dynamically created 'select' node
 				$system.tip.set(select, $id, 'page');
 
-				//NOTE : IE6 refuses to execute event handlers placed on 'select' node with setAttribute (to use 'this.value')...
-				select.onchange = $system.app.method($self.gui.page, [id]);
+				select.onchange = $system.app.method($self.gui.page, [id]); //NOTE : IE6 refuses to execute event handlers placed on 'select' node with setAttribute (to use 'this.value')
 
 				var alter = function(amount, select, id) //Alter the page flip selection
 				{
@@ -192,18 +193,36 @@
 
 			for(var section in __feed[id]) if(section != 'description' && section != 'address') options[section] = __feed[id][section] || __feed[id][section] == 0 || '';
 
-			if(!__cache[id]) __cache[id] = {};
-			if(__cache[id][page]) return list(id, page, callback, __cache[id][page]);
+			if(!__cache[id]) __cache[id] = {}; //Create cache container
+			if(!__cache[id][page]) __cache[id][page] = {};
+			if(!__cache[id][page][options.year]) __cache[id][page][options.year] = {};
 
-			return $system.network.send($self.info.root + 'server/php/front.php', options, null, $system.app.method(list, [id, page, callback]));
+			var hash = __cache[id][page][options.year]; //Shortcut
+
+			if(!hash[options.month]) hash[options.month] = {};
+			if(!hash[options.month][options.week]) hash[options.month][options.week] = {};
+			if(!hash[options.month][options.week][options.day]) hash[options.month][options.week][options.day] = {};
+
+			var hash = hash[options.month][options.week][options.day]; //Shortcut
+
+			var marked = options.marked == '1';
+			var unread = options.unread == '1';
+
+			if(!hash[marked]) hash[marked] = {};
+			if(!hash[marked][unread]) hash[marked][unread] = {};
+			if(!hash[marked][unread][options.category]) hash[marked][unread][options.category] = {};
+
+			if(hash[marked][unread][options.category][options.search]) return list(id, page, options, callback, hash[marked][unread][options.category][options.search]);
+			return $system.network.send($self.info.root + 'server/php/front.php', options, null, $system.app.method(list, [id, page, options, callback]));
 		}
 
-		this.mark = function(id, node, event) //Mark a topic
+		this.mark = function(id, node) //Mark a topic
 		{
 			var log = $system.log.init(_class + '.mark');
-			if(!$system.is.digit(id)) return log.param();
+			if(!$system.is.digit(id) || !__entry[id]) return log.param();
 
-			$system.event.cancel(node, event);
+			delete __cache[__entry[id].feed][__entry[id].page]; //Remove cache for the entry's page
+			$system.event.cancel(node, $system.event.source(arguments));
 
 			if(_mark[id] == 5)
 			{

@@ -1,6 +1,8 @@
 
 	var __cache = {}; //Entry caches
 
+	var __entry = {}; //Each entry's information
+
 	var __filter = {}; //Chosen filter option by the user
 
 	var __feed = {}; //Feed information

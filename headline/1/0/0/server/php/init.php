@@ -54,6 +54,15 @@
 
 			$success = true; #Indicates if the whole operations were successful
 
+			$query = array('updated' => $database->prepare("UPDATE {$database->prefix}feed SET updated = :updated WHERE id = :id"));
+			$query['set'] = $database->prepare("UPDATE {$database->prefix}feed SET site = :site, description = :description, icon = :icon WHERE id = :id");
+
+			#Keep the query prepared for consecutive selects
+			$query['entry'] = $database->prepare("SELECT COUNT(id) FROM {$database->prefix}entry WHERE feed = :feed AND link = :link");
+
+			#Keep the query prepared for possible consecutive inserts
+			$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}entry (feed, subject, link, date, description) VALUES (:feed, :subject, :link, :date, :description)");
+
 			foreach($results as $content)
 			{
 				$failure = false; #Indicates if the feed is valid or not
@@ -122,32 +131,22 @@
 				if($failure) $success = false;
 
 				$log->dev(LOG_INFO, "Setting updated time for feed '{$content['address']}'");
-				$query = $database->prepare("UPDATE {$database->prefix}feed SET updated = :updated WHERE id = :id");
 
 				#Update the feed information and give some minutes difference, so feeds are retrieved sporadically
-				$query->run(array(':id' => $index, ':updated' => $system->date_datetime(time() + mt_rand(0, 600))));
-				if(!$query->success || $failure) continue; #If the site entry cannot be updated, do not update the entries
+				$query['updated']->run(array(':id' => $index, ':updated' => $system->date_datetime(time() + mt_rand(0, 600))));
+				if(!$query['updated']->success || $failure) continue; #If the site entry cannot be updated, do not update the entries
 
 				$log->dev(LOG_INFO, "Updating site information for feed '{$content['address']}'");
-				$query = $database->prepare("UPDATE {$database->prefix}feed SET site = :site, description = :description, icon = :icon WHERE id = :id");
 
 				#Update the feed information
-				$query->run(array(':id' => $index, ':site' => self::_flatten($link), ':description' => self::_flatten($site->title), ':icon' => $icon));
-				if(!$query->success) continue; #If the site entry cannot be updated, do not update the entries
+				$query['set']->run(array(':id' => $index, ':site' => self::_flatten($link), ':description' => self::_flatten($site->title), ':icon' => $icon));
+				if(!$query['set']->success) continue; #If the site entry cannot be updated, do not update the entries
 
 				if(!is_object($entries))
 				{
 					$log->dev(LOG_WARNING, "The feed '{$content['address']}' includes no entries");
 					continue;
 				}
-
-				$query = array(); #Reinitialize the variable
-
-				#Keep the query prepared for consecutive selects
-				$query['entry'] = $database->prepare("SELECT COUNT(id) FROM {$database->prefix}entry WHERE feed = :feed AND link = :link");
-
-				#Keep the query prepared for possible consecutive inserts
-				$query['insert'] = $database->prepare("INSERT INTO {$database->prefix}entry (feed, subject, link, date, description) VALUES (:feed, :subject, :link, :date, :description)");
 
 				#TODO - Sort the '$entries' in the order of '$date' in descending order instead of simple 'array_reverse'
 				foreach($entries as $headline) #For all of the headline entries in the feed retrieved

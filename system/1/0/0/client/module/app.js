@@ -71,7 +71,7 @@
 
 			if(!$private.request.valid()) return $private.failure('dev/find', '', [$private.info]);
 
-			new function(_class, log, id) //Run in a closed environment to allow $id/$self/$system redeclaration inside
+			new function(_class, log, id) //Run in a closed environment to allow $id/$self/$system re-declaration inside
 			{
 				//Give these local to the application
 				var $self;

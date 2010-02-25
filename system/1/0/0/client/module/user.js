@@ -165,9 +165,11 @@
 			for(var i = 0; i < load.length; i++) if($system.is.id(load[i])) $system.app.load(load[i], null, undefined, true); //Load the apps without fade effect
 			$global.user.pref.fade = fade; //Recover the value
 
-			//Keep exchanging the ticket to a new one once in a while if it expires
-			if(!$global.user.session) $global.user.refresh = setInterval($system.user.refresh, _refresh * 60000);
-			if($global.user.pref.logout) setInterval($system.user.timer, 60000); //Set the auto logout timer
+			if(!$global.demo.mode) //Keep exchanging the ticket to a new one once in a while if it expires
+			{
+				if(!$global.user.session) $global.user.refresh = setInterval($system.user.refresh, _refresh * 60000);
+				if($global.user.pref.logout) setInterval($system.user.timer, 60000); //Set the auto logout timer
+			}
 
 			$system.image.wallpaper($global.user.pref.wallpaper); //Set wallpaper
 

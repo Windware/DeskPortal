@@ -1,6 +1,6 @@
 
 	$self.language = new function() //Language related class
-	{ //TODO - Do any of the caches in the module need to be cleared at certain time?
+	{
 		var _class = $id + '.language';
 
 		var _cache = {}; //A list to keep caches of the retrieved language files
@@ -14,8 +14,7 @@
 			var request = $system.network.item($system.info.root + 'resource/language.xml');
 			var list = $system.dom.tags(request.xml, 'language');
 
-			for(var i = 0; i < list.length; i++)
-				$system.language.supported.push({name : $system.dom.attribute(list[i], 'name'), code : $system.dom.attribute(list[i], 'code')});
+			for(var i = 0; i < list.length; i++) $system.language.supported.push({name : $system.dom.attribute(list[i], 'name'), code : $system.dom.attribute(list[i], 'code')});
 		}
 
 		this.apply = function(id, text, file, language, prepare) //Apply language specific strings to a textual template
@@ -26,10 +25,10 @@
 			if(!$system.is.id(id) || !String(file).match(/\.xml$/i) || typeof text != 'string') return log.param();
 
 			if(text == '') return ''; //Do not bother processing an empty string
-			var language = $system.language.strings(id, file, language); //Get the language specific strings from the specified file
+			var collection = $system.language.strings(id, file, language); //Get the language specific strings from the specified file
 
 			//A function to do replacing through regular expression
-			var translator = function(phrase, match) { return language[match] || match; }
+			var translator = function(phrase, match) { return collection[match] || match; }
 
 			//Replace all the template syntaxes into actual language strings
 			text = text.replace(/%string:(.+?)%/g, translator).replace(/%tip:(.+?)%/g, $system.app.method($system.tip.link, [id]));
@@ -49,11 +48,11 @@
 
 			var list = $system.language.pick(id, file, language); //Pick the appropriate language files
 
-			for(var i = list.length - 1; i >= 0; i--) //For each of the language files, from the least accurate language
+			for(var i = 0; i < list.length; i++) //For each of the language files, from the least accurate language
 			{
 				var request = $system.network.item(list[i]); //Make a request
 
-				//Do not exit the loop to keep flushing out the caches made by '$system.network.fetch'
+				//NOTE : Do not exit the loop to keep flushing out the caches made by '$system.network.fetch'
 				if(request.valid() && !_cache[tag]) _cache[tag] = request.xml || request.text; //Store the response
 			}
 
@@ -68,11 +67,14 @@
 			var load = []; //List of files to return
 			if(!$system.is.id(id) || !$system.is.text(file)) return log.param(load);
 
-			var candidates = ['en']; //List of possible languages. Use 'en' as the last fallback
-			if(!language) language = $system.language.pref(); //If language is unspecified, use the user preferred one
+			var candidates = []; //List of possible languages
 
-			//If it's a language string, add it to the candidate list
-			if($system.is.language(language)) candidates.push(language.replace(/[\-_]\w+$/, ''), language);
+			if($system.is.language(language)) candidates.push(language.replace('_', '-'), language); //If it's a language string, add it to the candidate list
+			language = $system.language.pref(); //Add the user preferred one
+
+			for(var i = 0; i < $system.browser.language.length; i++) candidates.push($system.browser.language[i]); //Look through browser configured language preference
+
+			candidates.push('en');
 			candidates = $system.array.unique(candidates); //Try to crop out same entries
 
 			for(var i = 0; i < candidates.length; i++) //For each of the candidates
@@ -127,7 +129,7 @@
 			var load = $system.language.pick(id, file, language); //Pick a list of possible language files
 			_text[tag] = {}; //A hash to keep the cache
 
-			for(var i = 0; i < load.length; i++) //For each of the language files
+			for(var i = load.length - 1; i >= 0; i--) //For each of the language files
 			{
 				var request = $system.network.item(load[i]); //Get the requested file
 				if(!request.valid()) continue; //If it could not be retrieved, try next
@@ -142,7 +144,7 @@
 
 				for(var j = 0; j < nodes.length; j++) //For each of the nodes in the XML
 				{
-					if(nodes[j].nodeType != 1) continue; //If only the type of the node is 1
+					if(nodes[j].nodeType != 1) continue; //If only the type of the node is an element
 
 					var name = $system.dom.attribute(nodes[j], 'name');
 					var value = $system.dom.attribute(nodes[j], 'value').replace('\\n', '<br />\n');
