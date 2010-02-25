@@ -143,9 +143,9 @@
 				if(!raw) //When replying, quote the message
 				{
 					var source = _quote + language.from + ' : ' + sender + '\n' + _quote + language.date + ' : ' + __mail[id].sent + ' GMT';
-					form.body.innerHTML = '\n\n' + source + '\n' + _quote + '\n' + _quote + request.text.replace(/\n/g, '\n' + _quote); //Fill the composing field with the mail quoted
+					$system.node.text(form.body, '\n\n' + source + '\n' + _quote + '\n' + _quote + request.text.replace(/\n/g, '\n' + _quote)); //Fill the composing field with the mail quoted
 				}
-				else form.body.innerHTML = request.text; //If resuming draft, display as is
+				else $system.node.text(form.body, request.text); //If resuming draft, display as is (FIXME - IE6 will have rendering corrupted on the textarea until redrawn)
 
 				if(_timer[index])
 				{
@@ -263,6 +263,11 @@
 
 			node.body.innerHTML = _body(id, index, true, field);
 			$self.gui.signable(index);
+
+			var form = $system.node.id($id + '_compose_' + index + '_form');
+
+			if(!field.length) form.to.focus(); //Put focus on the receiver address on forwarding
+			else form.body.focus(); //Put focus on the message for reply
 
 			return id ? _insert(id, index) : true; //Insert the reply text if ID is specified
 		}
@@ -572,6 +577,11 @@
 
 				if(id) _insert(id, __window, true); //Load the message body
 				else _timer[__window] = setInterval($system.app.method($self.gui.save, [__window]), _interval * 60 * 1000); //Set auto draft save on
+
+				//Move focus to elements not yet filled
+				if(!form.subject.value.length) form.subject.focus();
+				else if(!form.to.value.length) form.to.focus();
+				else form.body.focus();
 			}
 
 			return __window; //Return the window ID

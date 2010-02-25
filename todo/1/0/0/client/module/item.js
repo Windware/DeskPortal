@@ -120,7 +120,7 @@
 								var expanded = false; //Flag to keep unit expansion occurance
 								var last = {}; //The absolute last moment till the expire time (Complements the undefined part of the expiration time)
 
-								for(var k = 0; k < _times.length; k++) //For all of the time paramters
+								for(var k = 0; k < _times.length; k++) //For all of the time parameters
 								{
 									if(info[_times[k]] === '') //If the value is undefined
 									{
@@ -137,7 +137,7 @@
 									else last[_times[k]] = info[_times[k]]; //Otherwise, use as is
 								}
 
-								var expire = $system.date.create([last.year, last.month, last.day, last.hour, last.minute]);
+								var expire = $system.date.create([last.year, last.month, last.day, last.hour, last.minute], true);
 								var left = parseInt((expire.timestamp() - today.timestamp()) / (3600 * 24), 10); //Get the days left
 
 								if(left <= 0) left = 0; //Don't show negative expiration time
@@ -237,15 +237,31 @@
 			if(!$system.is.element(form, 'form')) return log.param();
 
 			var end = false; //Indicates if the time specified ends there
+			var param = []; //Time parameter
 
 			for(var i = 0; i < _times.length; i++)
 			{
-				if(form[_times[i]].value == '') end = true; //If a value is unspecified, only track the upper selections
-				else if(end && form[_times[i]].value != '') //If any other values are set with empty selection in between
+				var value = form[_times[i]].value;
+
+				if(!$system.is.digit(value)) end = true; //If a value is unspecified, only track the upper selections
+				else
 				{
-					$system.gui.alert($id, 'user/time', 'user/time/solution');
-					return log.user($global.log.warning, 'user/time', 'user/time/solution');
+					if(end) //If any other values are set after having an empty selection, show error
+					{
+						$system.gui.alert($id, 'user/time', 'user/time/solution');
+						return log.user($global.log.warning, 'user/time', 'user/time/solution');
+					}
+
+					param.push(value);
 				}
+			}
+
+			var time = $system.date.create([param[0], param[1], param[2], param[3], param[4]]); //Get the time object with the specified time
+
+			if(!time.valid)
+			{
+				$system.gui.alert($id, 'user/time', 'user/time/solution');
+				return log.user($global.log.warning, 'user/time', 'user/time/solution');
 			}
 
 			var param = {}; //Parameters to send

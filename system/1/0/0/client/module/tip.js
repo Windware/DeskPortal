@@ -99,8 +99,8 @@
 			__tip.timer = setTimeout($system.app.method(display, [id, section, format, line]), $global.user.pref.delay * 1000); //Set a timer event to display the tip
 		}
 
-		this.remove = function(node) //Removes the tip off a node
-		{ //FIXME : This overrides previous onmouseover/out
+		this.remove = function(node) //Removes the tip off a node (FIXME : This overrides previous onmouseover/out)
+		{
 			var log = $system.log.init(_class + '.remove');
 			node = $system.node.target(node); //Get the target element
 
@@ -108,15 +108,15 @@
 			node.onmouseover = node.onmouseout = '';
 		}
 
-		this.set = function(node, id, tip, format, lines) //Shortcut to set a tip on a node
-		{ //FIXME : This overrides previous onmouseover/out
+		this.set = function(node, id, tip, format, lines) //Shortcut to set a tip on a node (FIXME : This overrides previous onmouseover/out)
+		{
 			var log = $system.log.init(_class + '.set');
 			node = $system.node.target(node); //Get the target element
 
+			if(!$system.is.text(tip) || !$system.is.id(id) || !$system.is.type(format, 'array') || !$system.is.element(node)) return log.param();
+
 			if(lines) for(var index in format) //Make new lines on the values if specified
 				if($system.is.text(format[index])) format[index] = format[index].replace(/\n/g, '<br />\n');
-
-			if(!$system.is.text(tip) || !$system.is.id(id) || !$system.is.type(format, 'array') || !$system.is.element(node)) return log.param();
 
 			node.onmouseover = $system.app.method($system.tip.make, [id, tip, format]); //Set the new tip content
 			node.onmouseout = $system.tip.clear;

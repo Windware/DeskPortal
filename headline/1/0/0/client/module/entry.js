@@ -39,6 +39,9 @@
 			if(__selected) $system.node.classes($id + '_feed_' + __selected, $id + '_chosen', false);
 			$system.node.classes($id + '_feed_' + id, $id + '_chosen', true);
 
+			$system.node.id($id + '_feed_name').innerHTML = '';
+			$system.node.id($id + '_feed_name').innerHTML = ' : ' + __feed[id].description;
+
 			var language = $system.language.strings($id);
 
 			var area = $system.node.id($id + '_entries'); //The entry area
@@ -116,10 +119,14 @@
 					else replacer.push(' <strong class="' + $id + '_new">' + language['new'] + '</strong>');
 
 					$system.node.hover(line, $id + '_active'); //Make hover color change IE compatible
-					line.innerHTML = $system.text.replace($self.info.template.line, holder, replacer); //Set the subject
 
+					line.innerHTML = $system.text.replace($self.info.template.line, holder, replacer); //Set the subject
 					area.appendChild(line); //Append the line to the topic area
-					$system.tip.set(line, $id, 'info', [$system.dom.text(entries[i]) || '(' + language.none + ')']); //Give a summary tooltip
+
+					var text = $system.dom.text(entries[i]);
+					if($system.browser.engine == 'khtml' && text.length == 1) text = ''; //Avoid Konqueror from inserting white space in tooltip
+
+					$system.tip.set(line, $id, 'info', [text || '(' + language.none + ')']); //Give a summary tooltip
 				}
 
 				var paging = document.createElement('p'); //Create the page selection line

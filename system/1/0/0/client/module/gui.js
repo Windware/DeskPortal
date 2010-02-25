@@ -140,6 +140,7 @@
 				var node = $system.node.id($system.info.id + '_' + id + '_notice');
 				var queue = _queue[id].pop(); //Remove the queue
 
+				if(!queue) return;
 				if(typeof queue.action == 'function') queue.action(); //Run it
 
 				if(!_queue[id].length) $system.node.hide(node, true); //Let go of the notice icon when the queue is empty

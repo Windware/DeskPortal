@@ -207,6 +207,8 @@
 					$system.node.fade($id + '_field_' + id, false); //Show the edit area
 				}
 
+				//NOTE : Konqueror sets the scroll to the bottom when a value is set in 'textarea' and 'scrollTop' cannot control it
+
 				if(__clicked) __clicked.className = $id + '_opened'; //Revert the look
 				node.className = $id + '_active'; //Change the look to be active
 

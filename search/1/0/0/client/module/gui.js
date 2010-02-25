@@ -86,8 +86,13 @@
 						break;
 					}
 
-					link.innerHTML = text;
+					var container = document.createElement('span');
+
+					$system.event.add(container, 'onmousedown', $system.app.method($system.event.cancel, [container])); //Don't let the window get dragged by clicking on the row
+					container.innerHTML = text; //NOTE : IE throws an error by using 'innerHTML' directly on the 'link' object
+
 					link.onclick = $system.app.method($self.display.load, [app[0], major, list[j].nodeName, extras]);
+					link.appendChild(container);
 
 					bullet.appendChild(link);
 					pack.appendChild(bullet);

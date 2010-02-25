@@ -23,7 +23,7 @@
 	<string name="6/search" value="If you wish to search for the entire bookmarks, please use the 'Search' application." />
 
 	<string name="_7_import" value="Importing" />
-	<string name="7/intro" value="The favorites stored in the browser can be imported into this application. You will need to follow the steps to export your current bookmarks." />
+	<string name="7/intro" value="The favorites stored in the browser can be imported into this application. You will need to export your current bookmarks to a file in order to import them." />
 
 	<string name="7/ie/open" value="Select 'File' from the menu bar and click on 'Import and Export'." />
 	<string name="7/ie/choice" value="Next, at the settings window, select 'Export to a file'." />
@@ -38,5 +38,6 @@
 	<string name="7/chrome/open" value="Click on the tool icon to open the menu on the far right next to the address bar and click on 'Bookmark manager'." />
 	<string name="7/chrome/export" value="Next, in the bookmark manager window, select 'Tools' in the menu and click on 'Export bookmarks' to specify the location and save the file." />
 
+	<string name="7/other/export" value="Please use the export feature of your browser to save the bookmarks to a file." />
 	<string name="7/finish" value="You may now import the file exported from the 'Setting' tab in the 'Import' section to complete the process." />
 </root>

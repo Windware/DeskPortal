@@ -66,7 +66,7 @@
 
 			for(var category in __apps) //Give tip to the category links
 			{
-				var link = [$id, 'category', __apps[category].name].join('_');
+				var link = [$id, 'category', category].join('_');
 
 				$system.tip.set(link, $id, 'open', [__apps[category].name]);
 				$system.node.hover(link, $id + '_active'); //Make hover style

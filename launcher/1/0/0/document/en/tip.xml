@@ -1,4 +1,4 @@
 <root>
-	<string name="open" value="Expand the %% section" />
-	<string name="close" value="Shrink the %% section" />
+	<string name="open" value="Expand the '%%' section" />
+	<string name="close" value="Shrink the '%%' section" />
 </root>
