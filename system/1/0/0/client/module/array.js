@@ -94,15 +94,14 @@
 			if(!(list instanceof Array)) return []; //Return empty if given an invalid parameter
 			var result = []; //Result array
 
-			for(var i = 0; i < list.length; i++) //Check all elements (except the last one) for duplicates
+			for(var i = list.length - 1; i >= 0; i--) //Check all elements (except the last one) for duplicates
 			{
 				var duplicate = false; //State of duplicate existence
 
-				//Go through the rest of the variables in the array
-				for(var j = i + 1; j < list.length; j++) if(list[i] == list[j]) duplicate = true;
+				for(var j = i - 1; j >= 0; j--) if(list[i] == list[j]) duplicate = true; //Go through the rest of the variables in the array
 				if(!duplicate) result.push(list[i]); //If no duplicates, return it
 			}
 
-			return result;
+			return result.reverse();
 		}
 	}
