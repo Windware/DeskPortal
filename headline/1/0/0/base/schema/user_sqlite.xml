@@ -20,12 +20,14 @@
 		<column name="UNIQUE" param="(user, entry)" />
 	</table>
 
-	<!-- Notification keywords -->
-	<table name="keyword">
+	<!-- Category relation -->
+	<table name="relation">
 		<column name="user" param="INT NOT NULL" />
-		<column name="word" param="VARCHAR(255)" />
+		<column name="entry" param="INT NOT NULL" />
+		<column name="category" param="INT NOT NULL" />
 
-		<column name="UNIQUE" param="(user, word)" />
+		<column name="UNIQUE" param="(user, entry, category)" />
+		<extra name="ENGINE" param="INNODB" />
 	</table>
 
 	<!-- Feed source -->

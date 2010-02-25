@@ -27,6 +27,7 @@
 		<column name="entry" param="INT NOT NULL" />
 		<column name="category" param="INT NOT NULL" />
 
+		<column name="UNIQUE" param="(user, entry, category)" />
 		<extra name="ENGINE" param="INNODB" />
 	</table>
 
