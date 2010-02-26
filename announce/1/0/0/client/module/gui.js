@@ -43,9 +43,7 @@
 
 			if(!String(year).match(/^\d{4}$/) || !$system.is.digit(month) || month < 1 || month > 12) return log.param();
 
-			if(_locked) //Wait until the loading completes for next transformation request
-				return log.dev($global.log.notice, 'dev/remote', 'dev/remote/solution');
-
+			if(_locked) return log.dev($global.log.notice, 'dev/remote', 'dev/remote/solution'); //Wait until the loading completes for next transformation request
 			_locked = true; //Set the locked state
 
 			var day = $system.date.create([year, month]);
@@ -119,15 +117,15 @@
 						var components = {}; //News components
 						for(var j = 0; j < sections.length; j++) components[sections[j]] = $system.dom.text($system.dom.tags(entries[i], sections[j])[0], true);
 
-						components['date'] = components['date'].split(' ')[0].replace(/-/g, '.'); //Format the date
-						components['description'] = $system.text.escape(components['description']); //Escape the HTML code
+						components.date = $system.date.create(components.date).format($global.user.pref.format.monthdate); //Format the date
+						components.description = $system.text.escape(components.description); //Escape the HTML code
 
 						output += $system.text.format($self.info.template.news, components); //Concatenate the entries
 					}
 				}
 
 				container.innerHTML = output; //Write out the news
-				if(typeof callback == 'function') callback();
+				$system.app.callback(log.origin + '.display', callback);
 			}
 
 			$self.gui.fetch(year, month, $system.app.method(display, [callback])); //Get the news remotely

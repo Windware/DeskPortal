@@ -19,6 +19,10 @@
 				Automatically check for validity of bookmarks to find missing links and duplicates
 			</new>
 
+			<new summary="Allow exporting bookmarks" priority="3">
+				Allow exporting bookmarks.
+			</new>
+
 			<change summary="Allow multiple versions of caches to be saved" priority="3">
 				Allow multiple versions of caches of different dates to be saved
 			</change>
