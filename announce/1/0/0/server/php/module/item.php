@@ -7,6 +7,7 @@
 			$log = $system->log(__METHOD__);
 
 			if(!$system->is_language($language)) $langauge = 'en'; #Defaults to English
+			else $language = preg_replace('/[\-_].+$/', '', $language); #Only allow major language category to be specified
 
 			$conf = $system->app_conf();
 			$feed = new Headline_1_0_0_Feed("{$conf['url']}?language=$language"); #Get the news feed content
