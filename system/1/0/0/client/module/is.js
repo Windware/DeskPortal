@@ -25,6 +25,8 @@
 
 		this.digit = function(subject, signed, decimal) //Checks if a value is a valid number or not
 		{
+			if(typeof subject != 'number' && typeof subject != 'string') return false;
+
 			signed = signed ? '[+-]?' : ''; //If signs are allowed or not
 			decimal = decimal ? '(\\.\\d+)?' : ''; //If signs are allowed or not : FIXME - need to allow '.8' style too
 

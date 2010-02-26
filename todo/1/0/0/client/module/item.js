@@ -162,13 +162,13 @@
 										}
 										else
 										{
-											var time = $system.date.create([info.year, info.month, info.day]);
+											var time = $system.date.create([info.year, info.month]);
 											var display = time.format($global.user.pref.format.month);
 										}
 									}
 									else
 									{
-										var time = $system.date.create([info.year, info.month, info.day]);
+										var time = $system.date.create([info.year]);
 										var display = time.format($global.user.pref.format.year);
 									}
 								}
