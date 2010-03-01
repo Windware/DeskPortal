@@ -299,7 +299,7 @@
 				fclose($connection);
 				if(!strlen($response)) return 2;
 
-				$param['supported'] = !!preg_match('/ imap4/i', $response) ? '1' : '0'; #If IMAP version 4, then it supports UID (NOTE : Keep as string to pass 'sis_string' test)
+				$param['supported'] = !!preg_match('/ imap4/i', $response) ? '1' : '0'; #If IMAP version 4, then it supports UID (NOTE : Keep as string to pass 'is_string' test)
 
 			}
 			elseif($type == 'pop3') #NOTE : For POP3, check for UIDL capability as well as authentication

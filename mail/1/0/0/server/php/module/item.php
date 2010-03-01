@@ -725,7 +725,7 @@
 				'To' => implode(', ', $encoded['to']),
 				'Subject' => mb_encode_mimeheader($subject),
 				'Date' => $sent = gmdate('r'),
-				'Message-ID' => $mid = microtime(true).'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']), #Create a unique message ID
+				'Message-ID' => $mid = '<'.microtime(true).'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']).'>', #Create a unique message ID
 				'X-Mailer' => $mailer,
 				'Return-Path' => $row['address']
 			);
