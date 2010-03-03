@@ -53,6 +53,9 @@
 	<string name="user/gui/send/smtp" value="メールの送信に失敗しました" />
 	<string name="user/gui/send/smtp/message" value="メールを送信できませんでした。メールの送り先アドレス、設定を確認して下さい。または時間をおいて再度試してください。" />
 
+	<string name="user/gui/send/address" value="無効なアドレスです" />
+	<string name="user/gui/send/address/message" value="アドレスを確認してください" />
+
 	<string name="user/gui/send/draft" value="メールを保存しました" />
 	<string name="user/gui/send/draft/message" value="メールを下書きフォルダーに保存しました" />
 

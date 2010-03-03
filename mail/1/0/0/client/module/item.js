@@ -223,7 +223,7 @@
 				if(__page[folder] > cache.max) //If the chosen page exceeds the max page (Ex : After moving mails to another folder)
 				{
 					$system.node.id($id + '_show').value = cache.max;
-					__page = cache.max;
+					__page[folder] = cache.max;
 
 					$self.item.update(); //Show earlier page
 					return $system.app.callback(_class + '.get.list', callback);
@@ -559,7 +559,7 @@
 			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.trash'}, {id : [id]}, $system.app.method(update, [__mail[id].account, folder]));
 		}
 
-		this.update = function(mode) //Reload the mails from the server
+		this.update = function(mode) //Reload the mail listing
 		{
 			return $system.is.digit(__selected.folder) ? $self.item.get(__selected.folder, __page[__selected.folder], mode) : false;
 		}

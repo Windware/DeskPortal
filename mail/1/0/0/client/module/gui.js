@@ -210,7 +210,7 @@
 
 			if(!$system.is.digit(state)) state = 1;
 
-			var mode = $system.array.list('success error big smtp imap');
+			var mode = $system.array.list('success error big smtp imap address');
 			mode = mode[state]; //Find out the status
 
 			if(!mode) mode = 'error';
@@ -371,7 +371,7 @@
 			if(!$system.is.digit(__selected.folder)) return false;
 			if(!$system.is.digit(page)) return log.param();
 
-			__selected.page = page;
+			__page[__selected.folder] = page;
 			return $self.item.update();
 		}
 

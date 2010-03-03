@@ -649,7 +649,7 @@
 			return $database->commit() || $database->rollback() && false;
 		}
 
-		#NOTE : Error codes are (0 : success, 1 : system error, 2 : size too big, 3 : SMTP send error, 4 : IMAP store error)
+		#NOTE : Error codes are (0 : success, 1 : system error, 2 : size too big, 3 : SMTP send error, 4 : IMAP store error, 5 : Invalid address)
 		public static function send($account, $subject, $body, $to, $cc = null, $bcc = null, $source = null, $attachment = array(), $draft = false, $resume = null, System_1_0_0_User $user = null) #Send a mail (Or only save as a draft)
 		{
 			$system = new System_1_0_0(__FILE__);
@@ -692,9 +692,9 @@
 			$row = $query->row();
 			$encoded = $list = $toward = array(); #List of encoded addresses, list of addresses and raw mail addresses to send to
 
-			foreach(imap_rfc822_parse_adrlist("{$row['name']} <{$row['address']}>", '') as $parsed)
+			foreach(imap_rfc822_parse_adrlist("{$row['name']} <{$row['address']}>", '') as $parsed) #Parse the 'from' addresses
 			{
-				if($parsed->host == '.SYNTAX-ERROR.') return 3; #Parse the 'from' addresses
+				if($parsed->host == '.SYNTAX-ERROR.') return 5; #Return as invalid address
 
 				$address = "{$parsed->mailbox}@{$parsed->host}";
 				$list['from'][$address] = $parsed->personal;
@@ -708,7 +708,7 @@
 
 				foreach(imap_rfc822_parse_adrlist($$section, '') as $parsed) #Parse the addresses
 				{
-					if($parsed->host == '.SYNTAX-ERROR.') return 3; #Return as SMTP error for invalid addresses
+					if($parsed->host == '.SYNTAX-ERROR.') return 5; #Return as invalid addresses
 
 					$address = $toward[] = "{$parsed->mailbox}@{$parsed->host}"; #List of addresses to send to
 					$list[$section][$address] = $parsed->personal;

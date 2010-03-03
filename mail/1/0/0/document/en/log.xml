@@ -56,6 +56,9 @@
 	<string name="user/gui/send/smtp" value="Failed sending the message" />
 	<string name="user/gui/send/smtp/message" value="Failed to send the message. Please check the mail addresses and configuration or try again at a later time." />
 
+	<string name="user/gui/send/address" value="Invalid address specified" />
+	<string name="user/gui/send/address/message" value="Please check the address" />
+
 	<string name="user/gui/send/draft" value="Saved the mail" />
 	<string name="user/gui/send/draft/message" value="Saved the mail in the draft folder." />
 

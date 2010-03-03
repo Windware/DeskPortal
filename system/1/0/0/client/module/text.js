@@ -11,6 +11,8 @@
 
 		this.format = function(template, target, escape) //Returns a string from a preformatted string by associating variables to it
 		{
+			if(typeof template == 'number') template = String(template);
+
 			if(!$system.is.text(template)) return '';
 			if(!$system.is.object(target)) return template;
 

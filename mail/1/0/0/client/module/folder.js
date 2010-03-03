@@ -18,7 +18,7 @@
 
 			var account = __belong[folder];
 
-			var page = $system.node.id($id + '_show').value;
+			__page[folder] = __page[folder] ? $system.node.id($id + '_show').value : 1; //Pick the selected page or start from page 1
 			var table = $system.node.id($id + '_read_zone'); //Mail listing table
 
 			if(__selected.folder) //If a previously chosen folder exists
@@ -34,7 +34,7 @@
 
 			var run = function(folder, callback)
 			{
-				var scroll = _scroll[folder] && _scroll[folder][page]; //Check if the scroll position cache is still valid
+				var scroll = _scroll[folder] && _scroll[folder][__page[folder]]; //Check if the scroll position cache is still valid
 
 				if(scroll) //If the scroll position is declared
 				{
@@ -49,7 +49,7 @@
 			}
 
 			__selected = {account : __selected.account, folder : folder, marked : form.marked.checked, unread : form.unread.checked, order : __order.item, reverse : __order.reverse, search : form.search.value}; //Remember current selection
-			return $self.item.get(folder, __page[folder] = page, false, $system.app.method(run, [folder, callback])); //Get the folder items for current account
+			return $self.item.get(folder, __page[folder], false, $system.app.method(run, [folder, callback])); //Get the folder items for current account
 		}
 
 		this.clear = function(folder) //Clear caches for a folder
