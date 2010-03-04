@@ -286,7 +286,8 @@
 
 			for(var section in target) //Set the address fields
 			{
-				if(!$system.is.array(target[section])) continue;
+				//NOTE : When an array is passed as a parameter from the child window, it loses 'instanceof Array' characteristics, while still holding 'length' attribute
+				if(!$system.is.array(target[section]) && (!$system.is.object(target[section]) || !$system.is.digit(target[section].length))) continue;
 				var address = [];
 
 				for(var i = 0; i < target[section].length; i++) address.push(target[section][i]);
@@ -380,7 +381,9 @@
 			var log = $system.log.init(_class + '.format');
 			if(!$system.is.element(body)) return log.param();
 
-			body.innerHTML = $system.text.link($system.text.mail(body.innerHTML));
+			var target = ['parent.window', $global.root, $id, 'gui.create(null, null, [\'%match%\'])'].join('.'); //Target function to create a new mail
+			body.innerHTML = $system.text.link($system.text.mail(body.innerHTML, target));
+
 			return true;
 		}
 

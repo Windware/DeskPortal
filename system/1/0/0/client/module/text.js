@@ -54,7 +54,7 @@
 		{
 			if(!$system.is.text(text)) return '';
 
-			if(!$system.is.text(run)) run = $global.root + ".mail_1_0_0.item.create('$1')"; //Give a default mail creation link
+			if(!$system.is.text(run)) run = $global.root + ".mail_1_0_0.gui.create('$1')"; //Give a default mail creation link
 			run = $system.text.template(run).replace(/%match%/g, '$1');
 
 			var component = '[\\w\.\-]+';
