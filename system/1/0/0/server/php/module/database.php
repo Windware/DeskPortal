@@ -409,13 +409,15 @@
 			try
 			{
 				$this->handler->execute($parameter);
-				$this->success = true; #Query succeeded
+				return $this->success = true; #Query succeeded
 			}
 
 			catch(PDOException $error)
 			{
 				$this->database->logger(LOG_ERR, "Database query failed for [$this->query] : \"".$error->getMessage().'"', 'Check the error');
 				$this->error = $error; #Keep the error object
+
+				return false;
 			}
 		}
 	}

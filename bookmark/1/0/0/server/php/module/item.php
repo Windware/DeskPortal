@@ -147,8 +147,8 @@
 			if(count($filter)) $filter = ' AND rl.category IN ('.implode(',', $filter).')'; #Concatenate the query
 			else $filter = '';
 
-			$statement = "SELECT bm.id, count(rl.bookmark) as count, bm.added, bm.name, bm.viewed FROM {$database->prefix}bookmark as bm LEFT JOIN
-			{$database->prefix}relation as rl ON bm.id = rl.bookmark WHERE bm.user = :user$filter GROUP BY id$order";
+			$statement = "SELECT bm.id, COUNT(rl.bookmark) as count, bm.added, bm.name, bm.viewed FROM {$database->prefix}bookmark as bm LEFT JOIN
+			{$database->prefix}relation as rl ON bm.id = rl.bookmark AND rl.user = :user WHERE bm.user = :user AND rl.user = :user$filter GROUP BY id$order";
 
 			$query = $database->prepare($statement);
 			$query->run($values);

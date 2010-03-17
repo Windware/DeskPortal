@@ -4,6 +4,8 @@
 
 	span.%id%_spacer { margin : 10px; border : none !important; }
 
+	span#%id%_feed_name { color : #fff; }
+
 	/* Description row */
 	th.%id%_section { padding : 5px; background-color : #333; color : #ccc; text-align : center; border : 1px #ccc solid; font-weight : bold; }
 

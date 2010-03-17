@@ -135,7 +135,7 @@
 
 		public function database_escape($string) { return System_1_0_0_Database::escape($string); }
 
-		public function database_key($type, $key, $value = false, System_1_0_0_User $user = null, $app = null, $version = null)
+		public function database_key($type, $key, $value = null, System_1_0_0_User $user = null, $app = null, $version = null)
 		{
 			return System_1_0_0_Database::key($this, $type, $key, $value, $user, $app, $version);
 		}

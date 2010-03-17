@@ -260,6 +260,7 @@
 	<conf name="app_subscribed" value="calculator" />
 	<conf name="app_subscribed" value="calendar" />
 	<conf name="app_subscribed" value="clock" />
+	<conf name="app_subscribed" value="d2ch" />
 	<conf name="app_subscribed" value="guide" />
 	<conf name="app_subscribed" value="headline" />
 	<conf name="app_subscribed" value="launcher" />

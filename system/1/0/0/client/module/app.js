@@ -177,7 +177,7 @@
 				{
 					if(!request[i].valid())
 					{
-						log.dev($global.log.warning, 'dev/template', 'dev/template/solution', [$id, request[i].file]);
+						$private.log.dev($global.log.warning, 'dev/template', 'dev/template/solution', [$id, request[i].file]);
 						continue;
 					}
 

@@ -29,9 +29,7 @@
 			if(!$user->valid) return false;
 
 			$database = $system->database('user', __METHOD__, $user);
-
-			if(!$database->success) return false;
-			if(!$database->begin()) return false; #Keep the category and relation together
+			if(!$database->success || !$database->begin()) return false; #Keep the category and relation together
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}category WHERE id = :id AND user = :user");
 			$query->run(array(':id' => $id, ':user' => $user->id));

@@ -6,7 +6,7 @@
 
 		this.app = function(name, version) //Checks if the value is a valid name/version for an application or not
 		{
-			return $system.is.text(name, false, /^[a-z\d]+$/) && (version === undefined || $system.is.version(version));
+			return $system.is.text(name, false, /^[a-z][a-z\d]+$/) && (version === undefined || $system.is.version(version));
 		}
 
 		this.array = function(subject) { return subject instanceof Array; } //Check if the subject is an array

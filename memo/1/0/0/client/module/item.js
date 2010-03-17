@@ -229,12 +229,15 @@
 			edit.id = field; //Give a unique ID for the text area
 
 			$system.node.hide(edit, true); //Hide before the last entry disappears
+			edit.disabled = true; //Do not allow editing the loading indicator
 
 			$system.node.text(edit, language.loading); //Set initial loading text
 			$system.node.id($id + '_edit').appendChild(edit); //Create the new edit area
 
-			var load = function(id, group, request) //Show the memo content to the screen
+			var load = function(id, group, edit, request) //Show the memo content to the screen
 			{
+				edit.disabled = false; //Allow editing the memo field upon load
+
 				var text = $system.dom.text($system.dom.tags(request.xml, 'content')[0]); //Memo content
 				var field = $system.node.id($id + '_field_' + id);
 
@@ -245,6 +248,6 @@
 			}
 
 			//Load the memo content
-			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.show', id : id}, null, $system.app.method(load, [id, group]));
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'item.show', id : id}, null, $system.app.method(load, [id, group, edit]));
 		}
 	}

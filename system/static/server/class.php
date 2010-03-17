@@ -183,7 +183,7 @@
 		public static function is_app($name, $version = null) #Returns if the given string is a proper existing application name
 		{
 			#Returns if the given name is a readable application folder
-			if(!is_string($name) || !preg_match('/^[a-z\d]+$/', $name)) return false;
+			if(!is_string($name) || !preg_match('/^[a-z][a-z\d]+$/', $name)) return false;
 			return $version === null || self::is_version($version);
 		}
 
