@@ -11,7 +11,7 @@
 
 		Changing this value during use will render all request to remote mail servers invalid.
 	-->
-	<conf name="key" value="PLEASE CHANGE ME T0 A LONG RANDOM STRING!" />
+	<conf name="key" value="CHANGE THIS T0 A RANDOM STRING" />
 
 	<!--
 		The mailer name to be sent as 'X-Mailer' in the mail header when mails are sent

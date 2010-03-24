@@ -533,7 +533,7 @@
 					if(!imap_mail_move($link['connection'], implode(',', $sequence), $target)) return Mail_1_0_0_Account::error($link['host']);
 					if(!imap_expunge($link['connection'])) return Mail_1_0_0_Account::error($link['host']); #Clean up the mails after move
 
-					#NOTE : Aquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies trying to update the folder parameter only
+					#NOTE : Acquiring the new UID of the moved messages is not easy since they change, thus not keeping the local copies trying to update the folder parameter only
 					self::remove($list, true, $user); #Remove mails in the source folder
 				}
 				else
@@ -720,11 +720,13 @@
 			$conf = $system->app_conf();
 			$mailer = str_replace(array('%APP%', '%VERSION%'), array($system->self['name'], str_replace('_', '.', $system->self['version'])), $conf['mailer']);
 
+			$time = time();
+
 			$header = array( #Headers to go inside the mail header section
 				'From' => implode(', ', $encoded['from']),
 				'To' => implode(', ', $encoded['to']),
 				'Subject' => mb_encode_mimeheader($subject),
-				'Date' => $sent = gmdate('r'),
+				'Date' => $sent = gmdate('r', $time),
 				'Message-ID' => $mid = '<'.microtime(true).'-'.md5(mt_rand()).'@'.preg_replace('/^.+@/', '', $row['address']).'>', #Create a unique message ID
 				'X-Mailer' => $mailer,
 				'Return-Path' => $row['address']
@@ -782,7 +784,7 @@
 			}
 
 			#NOTE : For this version, attachments are not stored locally at all.
-			#For IMAP, the mail will be sent to the server to keep the mail entirely including all attachments and can be reaquired
+			#For IMAP, the mail will be sent to the server to keep the mail entirely including all attachments and can be reacquired
 			#but for POP3, attachments will be discarded when saving the mail locally.
 			#
 			#In future versions those store attachments locally, they will be stored as files locally named after the ID of the mail
@@ -792,18 +794,26 @@
 			if($system->is_digit($resume)) Mail_1_0_0_Item::remove(array($resume), false, $user); #If a draft is being saved from a suspended draft, delete the old one. Not stopping if error occurs here.
 			if(!$draft && $row['receive_type'] == 'gmail') return 0; #Quit here for gmail as gmail automatically puts mails in the sent folder
 
+			$header = ''; #Get list of headers to upload to IMAP server
+			foreach($mail['header'] as $key => $value) $header .= "$key: $value\r\n";
+
 			if($type == 'pop3') #For POP3, store the mail locally
 			{
 				if(!$database->begin()) return 1;
-				$section = explode(' ', 'user folder subject mid sent preview plain seen draft');
+				$section = explode(' ', 'user folder uid signature subject mid sent preview plain seen draft');
 
 				$column = implode(', ', $section);
 				$variable = ':'.implode(', :', $section);
 
+				$preview = strip_tags(preg_replace('/<(p|br|div).*?>/', "\n", preg_replace('/(\s){2,}/', '\1', $body)));
+
+				$preview = substr($preview, 0, self::$_preview[0]); #Limit the size of the message body TODO - This does not corrupt multi byte characters and the outputting XML?
+				$preview = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', preg_replace(array("/\r/", "/\n{2,}/"), array('', "\n"), $preview)); #Limit the lines of the message body
+
 				try
 				{
 					$query = $database->prepare("INSERT INTO {$database->prefix}mail ($column) VALUES ($variable)");
-					$query->run(array(':user' => $user->id, ':folder' => $folder, ':subject' => $subject, ':mid' => $mid, ':sent' => $sent, ':preview' => $preview, ':plain' => $body, ':seen' => 1, ':draft' => $draft ? 1 : 0));
+					$query->run(array(':user' => $user->id, ':folder' => $folder, ':uid' => $time.md5(mt_rand()), ':signature' => md5("$header\r\n"), ':subject' => $subject, ':mid' => preg_replace('/^<(.+?)>$/', '\1', $mid), ':sent' => $system->date_datetime($time), ':preview' => $preview, ':plain' => $body, ':seen' => 1, ':draft' => $draft ? 1 : 0));
 
 					if(!$query->success || !$system->is_digit($id = $database->id())) throw new Exception();
 
@@ -829,9 +839,6 @@
 				}
 			}
 
-			$header = ''; #Get list of headers to upload to IMAP server
-			foreach($mail['header'] as $key => $value) $header .= "$key: $value\r\n";
-
 			if(!imap_append($link['connection'], '{'.$link['host']."}$name", "$header\r\n{$mail['body']}", $draft ? '\\Draft' : '')) #Store the mail on the mail server
 			{
 				Mail_1_0_0_Account::error($link['host']);
@@ -851,7 +858,7 @@
 				#NOTE : Returning a negative number to indicate it is a mail ID and not a status code (Implying success for status)
 				foreach($query->all() as $row) if($signature == $row['signature']) return 0 - $row['id']; #Match on the header hash
 
-				return 1; #If mail cannot be aquired in the database, claim failure even if the mail is supposed to be on the mail server
+				return 1; #If mail cannot be acquired in the database, claim failure even if the mail is supposed to be on the mail server
 			}
 
 			return 0;

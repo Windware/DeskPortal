@@ -97,7 +97,7 @@
 			$system.event.remove(document.body, 'onmousemove', $self.item.drag); //Remove the mouse move event hook
 			$system.event.remove(document.body, 'onmouseup', $self.item.drop); //Remove the mouse up event hook
 
-			$system.gui.select(true); //Let text become selectable again
+			$system.gui.select(true); //Let texts become selectable again
 			$system.node.fade($id + '_drag', true, null, true);
 
 			if(!$system.is.array(_drag.id)) return false;

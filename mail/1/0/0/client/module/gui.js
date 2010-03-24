@@ -34,7 +34,7 @@
 			if(!compose) //For displaying the mail
 			{
 				var template = 'mail'; //The HTML template to use
-				var value = {id : id, index : index, account : __mail[id].account, sent : $system.date.create(__mail[id].sent).format($global.user.pref.format.full), subject : __mail[id].subject || '(' + language.empty + ')', reload : __mail[id].seen == '1' ? 0 : 1};
+				var value = {id : id, index : index, account : __mail[id].account, sent : $system.date.create(__mail[id].sent).format($global.user.pref.format.full), subject : $system.text.escape(__mail[id].subject) || '(' + language.empty + ')', reload : __mail[id].seen == '1' ? 0 : 1};
 
 				if(__mail[id].marked == '1') value.marked = ' checked="checked"';
 				else value.unmarked = ' checked="checked"';
@@ -565,7 +565,7 @@
 
 			$system.window.create($id + '_display_' + __window, $self.info.title + ' [No. ' + (id || 0) + ']', _body(id, __window, compose, field), 'cccccc', 'ffffff', '000000', '333333', false, undefined, undefined, 600, undefined, false, true, true, null, null, true);
 
-			if($system.is.digit(id) && __mail[id].seen != '1') //If mail is not read (NOTE : Waited till '_body' processes using the 'seen' value)
+			if($system.is.digit(id) && __mail[id].seen != '1') //If mail is not read (NOTE : Waited till '_body' function processes using the 'seen' value)
 			{
 				__mail[id].seen = '1'; //Mark it as read
 				$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.show'}, {id : id}); //Mark the mail as read on the mail server
@@ -581,7 +581,7 @@
 				if(id) _insert(id, __window, true); //Load the message body
 				else _timer[__window] = setInterval($system.app.method($self.gui.save, [__window]), _interval * 60 * 1000); //Set auto draft save on
 
-				//Move focus to elements not yet filled
+				//Move focus to the element not yet filled
 				if(!form.subject.value.length) form.subject.focus();
 				else if(!form.to.value.length) form.to.focus();
 				else form.body.focus();
