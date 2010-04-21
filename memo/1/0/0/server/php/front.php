@@ -44,7 +44,7 @@
 			$result = Memo_1_0_0_Item::set($_POST['name'], $_POST['groups'], $_POST['id'] ? $_POST['id'] : 0);
 			$data = Memo_1_0_0_Item::get();
 
-			print $system->xml_dump($result !== false && $data !== false, 'memo', $data);
+			print $system->xml_dump($result === true && $data !== false ? true : $result, 'memo', $data);
 		break;
 
 		case 'item.show' : #Get a memo's content

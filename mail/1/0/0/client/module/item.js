@@ -138,6 +138,7 @@
 
 			var list = function(folder, page, param, order, update, callback, request) //List the mails upon receiving the contents
 			{
+				if(!__cache[folder]) return false;
 				$self.gui.indicator(false); //Remove indicator
 
 				var section = $system.array.list('subject to from cc bcc date'); //List of data to cache
@@ -156,18 +157,18 @@
 						delete __cache[folder][page][order.item][order.reverse][param.marked][param.unread][param.search]; //Do not cache failed attempt
 					}
 
-					var list = $system.dom.tags(request.xml, 'mail');
+					var all = $system.dom.tags(request.xml, 'mail');
 
-					for(var i = 0; i < list.length; i++)
+					for(var i = 0; i < all.length; i++)
 					{
-						var id = $system.dom.attribute(list[i], 'id');
+						var id = $system.dom.attribute(all[i], 'id');
 						cache.list.push(id); //List the mails in the page cache
 
 						__mail[id] = {id : id, folder : folder, page : page};
 
-						for(var j = 0; j < list[i].attributes.length; j++) //Keep mail attributes
+						for(var j = 0; j < all[i].attributes.length; j++) //Keep mail attributes
 						{
-							var parameter = list[i].attributes[j];
+							var parameter = all[i].attributes[j];
 							__mail[id][parameter.name] = parameter.value;
 						}
 
@@ -176,7 +177,7 @@
 							switch(section[j])
 							{
 								case 'from' : case 'to' : case 'cc' : case 'bcc' :
-									var address = $system.dom.tags(list[i], section[j]);
+									var address = $system.dom.tags(all[i], section[j]);
 									__mail[id][section[j]] = [];
 
 									for(var k = 0; k < address.length; k++) //Store all the address fields
@@ -185,7 +186,7 @@
 							}
 						}
 
-						var attachment = $system.dom.tags(list[i], 'attachment');
+						var attachment = $system.dom.tags(all[i], 'attachment');
 						__mail[id].attachment = [];
 
 						var field = $system.array.list('id name size type');
@@ -196,11 +197,11 @@
 							for(var k = 0; k < field.length; k++) __mail[id].attachment[j][field[k]] = $system.dom.attribute(attachment[j], field[k]);
 						}
 
-						__mail[id].preview = $system.dom.text($system.dom.tags(list[i], 'preview')[0]);
+						__mail[id].preview = $system.dom.text($system.dom.tags(all[i], 'preview')[0]);
 					}
 				}
 
-				if(__account[__belong[folder]].type == 'imap') //Synchronize IMAP folder periodically
+				if(__account[__belong[folder]] && __account[__belong[folder]].type == 'imap') //Synchronize IMAP folder periodically
 				{
 					var expire = function(folder)
 					{

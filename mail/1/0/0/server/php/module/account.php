@@ -9,7 +9,7 @@
 			{
 				case 'hotmail' :
 					$receiver = array('host' => 'pop3.live.com', 'secure' => 1, 'port' => 995, 'user' => $param['address'], 'pass' => $param['receive_pass']);
-					$sender = array('host' => 'smtp.live.com', 'secure' => 0, 'port' => 25, 'user' => $param['address'], 'pass' => $param['receive_pass']);
+					$sender = array('host' => 'smtp.live.com', 'secure' => 0, 'port' => 587, 'user' => $param['address'], 'pass' => $param['receive_pass']);
 				break;
 
 				case 'gmail' :
@@ -44,9 +44,8 @@
 			$name = $system->is_digit($folder) ? Mail_1_0_0_Folder::name($folder, $user) : ''; #Convert it into textual name
 
 			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $account, ':user' => $user->id));
+			if(!$query->run(array(':id' => $account, ':user' => $user->id))) return false;
 
-			if(!$query->success) return false;
 			$conf = $system->app_conf();
 
 			$info = $query->row();
@@ -122,9 +121,8 @@
 			}
 
 			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE$limit user = :user ORDER BY LOWER(description)");
-			$query->run($param);
+			if(!$query->run($param)) return false;
 
-			if(!$query->success) return false;
 			$list = array();
 
 			foreach($query->all() as $row)
@@ -155,27 +153,20 @@
 			if(!$database->begin()) return false;
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}account WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id)); #Remove the account
-
-			if(!$query->success) return $database->rollback() && false;
+			if(!$query->run(array(':id' => $id, ':user' => $user->id))) return $database->rollback() && false; #Remove the account
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
-			$query->run(array(':user' => $user->id, ':account' => $id)); #Remove the POP3 download history
-
-			if(!$query->success) return $database->rollback() && false;
+			if(!$query->run(array(':user' => $user->id, ':account' => $id))) return $database->rollback() && false; #Remove the POP3 download history
 
 			$query = $database->prepare("SELECT id FROM {$database->prefix}folder WHERE user = :user AND account = :account");
-			$query->run(array(':user' => $user->id, ':account' => $id)); #Find the folders
-
-			if(!$query->success) return $database->rollback() && false;
+			if(!$query->run(array(':user' => $user->id, ':account' => $id))) return $database->rollback() && false; #Find the folders
 
 			$folder = array(); #Folder list
 			foreach($query->all() as $row) $folder[] = $row['id'];
 
 			$query = $database->prepare("DELETE FROM {$database->prefix}folder WHERE user = :user AND account = :account");
-			$query->run(array(':user' => $user->id, ':account' => $id)); #Remove the folders
+			if(!$query->run(array(':user' => $user->id, ':account' => $id))) return $database->rollback() && false; #Remove the folders
 
-			if(!$query->success) return $database->rollback() && false;
 			$mail = array(); #Mail list
 
 			for($i = 0; $i < count($folder); $i += $database->limit)
@@ -197,15 +188,12 @@
 				$target = implode(', ', $target);
 
 				$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder IN ($target)");
-				$query->run($param); #Find the mails
+				if(!$query->run($param)) return $database->rollback() && false; #Find the mails
 
-				if(!$query->success) return $database->rollback() && false;
 				foreach($query->all() as $row) $mail[] = $row['id'];
 
 				$query = $database->prepare("DELETE FROM {$database->prefix}mail WHERE user = :user AND folder IN ($target)");
-				$query->run($param); #Delete the mails
-
-				if(!$query->success) return $database->rollback() && false;
+				if(!$query->run($param)) return $database->rollback() && false; #Delete the mails
 			}
 
 			for($i = 0; $i < count($mail); $i += $database->limit)
@@ -227,15 +215,11 @@
 				foreach(explode(' ', 'from to cc attachment reference') as $section)
 				{
 					$query = $database->prepare("DELETE FROM {$database->prefix}$section WHERE mail IN ($target)");
-					$query->run($param); #Delete mail related data
-
-					if(!$query->success) return $database->rollback() && false;
+					if(!$query->run($param)) return $database->rollback() && false; #Delete mail related data
 				}
 
 				$query = $database->prepare("DELETE FROM {$database->prefix}reference WHERE reference IN ($target)");
-				$query->run($param); #Delete mail referer
-
-				if(!$query->success) return $database->rollback() && false;
+				if(!$query->run($param)) return $database->rollback() && false; #Delete mail referer
 			}
 
 			return $database->commit() || $database->rollback() && false;
@@ -259,12 +243,11 @@
 
 			$conf = $system->app_conf();
 
-			if($id != 0 && (!strlen($param['receive_pass']) || !strlen($param['send_pass']))) #If password fields are left blank
+			if($id != 0 && (!strlen($param['receive_pass']) || !strlen($param['send_pass']))) #If either of the password field is left blank
 			{
-				$query = $database->prepare("SELECT receive_pass, send_pass FROM {$database->prefix}account WHERE id != :id AND user = :user");
-				$query->run(array(':id' => $id, ':user' => $user->id)); #Recover passwords from database
+				$query = $database->prepare("SELECT receive_pass, send_pass FROM {$database->prefix}account WHERE id = :id AND user = :user");
+				if(!$query->run(array(':id' => $id, ':user' => $user->id))) return false; #Recover passwords from database
 
-				if(!$query->success) return false;
 				$password = $query->row();
 
 				if(!strlen($param['receive_pass'])) $param['receive_pass'] = $system->crypt_decrypt($password['receive_pass'], $conf['key']);
@@ -348,17 +331,14 @@
 			if(!$database->begin()) return false;
 
 			$query = $database->prepare("SELECT count(id) FROM {$database->prefix}account WHERE id != :id AND user = :user AND base = :base");
-			$query->run(array(':id' => $id, ':user' => $user->id, ':base' => 1)); #Find any default accounts
 
-			if(!$query->success) return $database->rollback() && false;
+			if(!$query->run(array(':id' => $id, ':user' => $user->id, ':base' => 1))) return $database->rollback() && false; #Find any default accounts
 			if(!$query->column()) $data[':base'] = 1; #If no other default accounts are set, force it to be default
 
 			if($data[':base']) #If a new default account is set
 			{
 				$query = $database->prepare("UPDATE {$database->prefix}account SET base = :base WHERE user = :user");
-				$query->run(array(':base' => 0, ':user' => $user->id)); #Reset the previous default account
-
-				if(!$query->success) return $database->rollback() && false;
+				if(!$query->run(array(':base' => 0, ':user' => $user->id))) return $database->rollback() && false; #Reset the previous default account
 			}
 
 			#Encrypt the passwords when storing
@@ -370,9 +350,8 @@
 				$variable = implode(', ', $variable);
 
 				$query = $database->prepare("INSERT INTO {$database->prefix}account ($name) VALUES ($variable)");
-				$query->run($data);
+				if(!$query->run($data)) return $database->rollback() && false;
 
-				if(!$query->success) return $database->rollback() && false;
 				$id = $database->id();
 			}
 			else #Edit current account data
@@ -380,18 +359,15 @@
 				$data[':id'] = $id;
 
 				$query = $database->prepare("UPDATE {$database->prefix}account SET $name WHERE id = :id AND user = :user");
-				$query->run($data);
-
-				if(!$query->success) return $database->rollback() && false;
+				if(!$query->run($data)) return $database->rollback() && false;
 			}
 
 			if(!$database->commit()) return $database->rollback() && false;
 			Mail_1_0_0_Folder::update($id, $user); #Update the folder listing on an account
 
 			$query = $database->prepare("SELECT folder_inbox, folder_drafts, folder_sent, folder_trash FROM {$database->prefix}account WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id));
+			if(!$query->run(array(':id' => $id, ':user' => $user->id))) return false;
 
-			if(!$query->success) return false;
 			$account = $query->row();
 
 			$query = array('select' => $database->prepare("SELECT id FROM {$database->prefix}folder WHERE user = :user AND account = :account AND name LIKE :name AND subscribed = :subscribed"));
@@ -434,9 +410,7 @@
 
 				foreach($candidate as $store)
 				{
-					$query['select']->run(array(':user' => $user->id, ':account' => $id, ':name' => $store, ':subscribed' => 1)); #Look for special named folders
-					if(!$query['select']->success) return false;
-
+					if(!$query['select']->run(array(':user' => $user->id, ':account' => $id, ':name' => $store, ':subscribed' => 1))) return false; #Look for special named folders
 					if($folder = $query['select']->column()) break;
 				}
 
@@ -447,12 +421,9 @@
 				}
 
 				$query['update'] = $database->prepare("UPDATE {$database->prefix}account SET folder_$name = :folder WHERE id = :id AND user = :user");
-				$query['update']->run(array(':folder' => $folder, ':id' => $id, ':user' => $user->id)); #Remember the special folder ID
+				if(!$query['update']->run(array(':folder' => $folder, ':id' => $id, ':user' => $user->id))) return false; #Remember the special folder ID
 
-				if(!$query['update']->success) return false;
-
-				$query['subscribe']->run(array(':subscribed' => 1, ':id' => $folder, ':user' => $user->id)); #Make sure the folder is subscribed
-				if(!$query['subscribe']->success) return false;
+				if(!$query['subscribe']->run(array(':subscribed' => 1, ':id' => $folder, ':user' => $user->id))) return false; #Make sure the folder is subscribed
 			}
 
 			return true;

@@ -6,6 +6,10 @@
 
 	<string name="user/add" value="Added a new memo '%%'." />
 	<string name="user/edit" value="Updated memo information for '%%'." />
+	<string name="user/edit/duplicate" value="Duplicate name already exists" />
+	<string name="user/edit/duplicate/message" value="Please use another name to save this memo." />
+	<string name="user/edit/error" value="Faild saving the memo." />
+	<string name="user/edit/error/message" value="Please try again at a later time." />
 	<string name="user/load" value="Loaded memo '%%'." />
 	<string name="user/remove" value="Removed memo '%%'." />
 

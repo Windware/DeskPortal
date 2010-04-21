@@ -84,18 +84,21 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT at.name, at.position, mail.id as mail, mail.folder FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.id = :id AND at.mail = mail.id AND mail.user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id));
+			$query = $database->prepare("SELECT at.name, at.position, mail.id as mail, mail.folder FROM
+			{$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.id = :id AND at.mail = mail.id AND mail.user = :user");
 
-			if(!$query->success) return false;
+			if(!$query->run(array(':id' => $id, ':user' => $user->id))) return false;
 			$attachment = $query->row();
 
-			$query = $database->prepare("SELECT account.id FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id");
-			$query->run(array(':id' => $attachment['folder'], ':user' => $user->id));
+			$query = $database->prepare("SELECT folder_inbox, receive_type FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id");
+			if(!$query->run(array(':id' => $attachment['folder'], ':user' => $user->id))) return false;
 
-			if(!$query->success) return false;
+			$row = $query->row();
 
-			list($link, $sequence) = self::find(array($attachment['mail']), $user);
+			#NOTE : Force to look in the inbox for POP3 where the attachement is on the remote server even if the mail is in another folder locally
+			$base = Mail_1_0_0_Account::type($row['receive_type']) == 'pop3' ? $row['folder_inbox'] : null;
+
+			list($link, $sequence) = self::find(array($attachment['mail']), $user, $base);
 			if(!$link || !is_array($sequence)) return false;
 
 			$structure = imap_bodystruct($link['connection'], $sequence[0], $attachment['position']); #Get the attachment information
@@ -136,12 +139,12 @@
 		}
 
 		#NOTE - Only allows specifying mail ID under a same folder or returns false
-		public static function find($list, System_1_0_0_User $user = null) #Find sequence number on the mail server for mails by ID
+		public static function find($list, System_1_0_0_User $user = null, $base = null) #Find sequence number on the mail server for mails by ID
 		{
 			$system = new System_1_0_0(__FILE__);
 			$log = $system->log(__METHOD__);
 
-			if(!is_array($list)) return $log->param();
+			if(!is_array($list) || $base !== null && !$system->is_digit($base)) return $log->param();
 			if(!count($list)) return array(array(), array());
 
 			foreach($list as $id) if(!$system->is_digit($id)) return $log->param();
@@ -167,13 +170,14 @@
 			$target = implode(', ', $target);
 
 			$query = $database->prepare("SELECT id, folder, uid, signature FROM {$database->prefix}mail WHERE id IN ($target) AND user = :user");
-			$query->run($param);
+			if(!$query->run($param)) return false;
 
-			if(!$query->success) return false;
 			if(!count($collection = $query->all())) return array(null, null); #When no matching mail is found
 
 			foreach($collection as $identity)
 			{
+				if($base !== null) $identity['folder'] = $base; #Override the folder if specified (Special case from self::attachment)
+
 				if(isset($folder) && $folder != $identity['folder']) #Only allow mail ID of a single folder
 					return $log->dev(LOG_WARNING, 'Cannot specify mail ID spanning across other accounts and folders', 'Specify list of mail ID belonging to a single folder');
 
@@ -181,9 +185,7 @@
 			}
 
 			$query = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $folder, ':user' => $user->id));
-
-			if(!$query->success) return false;
+			if(!$query->run(array(':id' => $folder, ':user' => $user->id))) return false;
 
 			$link = Mail_1_0_0_Account::connect($query->column(), $folder, $user); #Connect to the server
 			if(!$link) return false;
@@ -271,16 +273,13 @@
 					$target = implode(', ', $target);
 
 					$query = $database->prepare("UPDATE {$database->prefix}mail SET $set = :mode WHERE id IN ($target) AND user = :user");
-					$query->run($param);
-
-					if(!$query->success) return false;
+					if(!$query->run($param)) return false;
 				}
 			}
 
 			$query = $database->prepare("SELECT receive_type FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.account = account.id");
-			$query->run(array(':id' => $list[0], ':user' => $user->id)); #Pick the account type the mail belongs to
+			if(!$query->run(array(':id' => $list[0], ':user' => $user->id))) return false; #Pick the account type the mail belongs to
 
-			if(!$query->success) return false;
 			if(Mail_1_0_0_Account::type($query->column()) != 'imap') return true; #Only flag on server for IMAP
 
 			list($link, $sequence) = self::find($list, $user); #Find the sequence number for the mail ID
@@ -319,15 +318,11 @@
 			$query = $database->prepare("SELECT account.id as account, mail.folder FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account
 			WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
 
-			$query->run(array(':id' => $id, ':user' => $user->id));
-			if(!$query->success) return false;
-
+			if(!$query->run(array(':id' => $id, ':user' => $user->id))) return false;
 			$relation = $query->row();
 
 			$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder ORDER BY sent DESC");
-			$query->run(array(':user' => $user->id, ':folder' => $relation['folder'])); #Get entire list of ID to find on which page the mail belongs to
-
-			if(!$query->success) return false;
+			if(!$query->run(array(':user' => $user->id, ':folder' => $relation['folder']))) return false; #Get entire list of ID to find on which page the mail belongs to
 
 			foreach($query->all() as $index => $row)
 			{
@@ -400,23 +395,18 @@
 			$start = ($page - 1) * $amount;
 
 			$query['account'] = $database->prepare("SELECT account FROM {$database->prefix}folder WHERE id = :id AND user = :user");
-			$query['account']->run(array(':id' => $folder, ':user' => $user->id));
+			if(!$query['account']->run(array(':id' => $folder, ':user' => $user->id))) return false;
 
-			if(!$query['account']->success) return false;
 			$account = $query['account']->column();
 
 			$query['count'] = $database->prepare("SELECT COUNT(id) FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter");
-			$query['count']->run($param);
-
-			if(!$query['count']->success) return false;
+			if(!$query['count']->run($param)) return false;
 
 			$total = $query['count']->column();
 			if(!$total) $total = 0;
 
 			$query['all'] = $database->prepare("SELECT id, subject, sent, received, preview, draft, marked, seen, replied FROM {$database->prefix}mail$foreign WHERE user = :user AND folder = :folder$filter ORDER BY $order$reverse LIMIT $start,$amount");
-			$query['all']->run($param);
-
-			if(!$query['all']->success) return false;
+			if(!$query['all']->run($param)) return false;
 
 			$all = $query['all']->all();
 			$mail = $target = $param = array();
@@ -434,16 +424,14 @@
 				foreach(array('from', 'to', 'cc', 'bcc') as $section)
 				{
 					$query['address'] = $database->prepare("SELECT mail, name, address FROM {$database->prefix}$section WHERE mail IN ($target)");
-					$query['address']->run($param);
+					if(!$query['address']->run($param)) return false;
 
-					if(!$query['address']->success) return false;
 					foreach($query['address']->all() as $row) $mail[$row['mail']][$section][] = array('name' => $row['name'], 'address' => $row['address']);
 				}
 
 				$query['attachment'] = $database->prepare("SELECT id, mail, name, size, type FROM {$database->prefix}attachment WHERE mail IN ($target) AND name != ''");
-				$query['attachment']->run($param);
+				if(!$query['attachment']->run($param)) return false;
 
-				if(!$query['attachment']->success) return false;
 				foreach($query['attachment']->all() as $row) $mail[$row['mail']]['attachment'][] = array('id' => $row['id'], 'cid' => $row['cid'], 'name' => $row['name'], 'size' => $row['size'], 'type' => $row['type']);
 			}
 
@@ -476,9 +464,8 @@
 			if(!$database->success) return false;
 
 			$query = $database->prepare("SELECT at.id FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.mail = :id AND at.cid = :cid AND at.mail = mail.id AND mail.user = :user");
-			$query->run(array(':id' => $id, ':cid' => $cid, ':user' => $user->id));
+			if(!$query->run(array(':id' => $id, ':cid' => $cid, ':user' => $user->id))) return false;
 
-			if(!$query->success) return false;
 			return self::attachment($query->column(), 'inline', $user);
 		}
 
@@ -499,19 +486,15 @@
 			if(!$database->success) return false;
 
 			$query = $database->prepare("SELECT receive_type, account.id FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
-			$query->run(array(':id' => $folder, ':user' => $user->id));
+			if(!$query->run(array(':id' => $folder, ':user' => $user->id))) return false;
 
-			if(!$query->success) return false;
 			$account = $query->row();
-
 			$type = Mail_1_0_0_Account::type($account['receive_type']);
 
 			if($type == 'imap') #For IMAP, move the mails on the server - TODO : Need different code for cross account move. It now breaks when source account and target account differs.
 			{
 				$query = $database->prepare("SELECT folder.id, folder.name, mail.uid FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user");
-				$query->run(array(':id' => $list[0], ':user' => $user->id)); #Get folder name from the first mail item (If another mail belongs to another folder, self::find will fail)
-
-				if(!$query->success) return false;
+				if(!$query->run(array(':id' => $list[0], ':user' => $user->id))) return false; #Get folder name from the first mail item (If another mail belongs to another folder, self::find will fail)
 
 				$current = $query->row(); #Current folder ID
 				if($current['id'] == $folder) return true; #If the target is the same folder, quit
@@ -566,9 +549,7 @@
 						$target = implode(', ', $target);
 
 						$query = $database->prepare("UPDATE {$database->prefix}mail SET folder = :folder WHERE id IN ($target) AND user = :user");
-						$query->run($param); #Move to another folder
-
-						if(!$query->success) return false;
+						if(!$query->run($param)) return false; #Move to another folder
 					}
 				}
 				else #On copy
@@ -581,9 +562,7 @@
 					foreach($list as $id) #Copy each mail to the target folder
 					{
 						$param[':id'] = $id;
-						$query->run($param);
-
-						if(!$query->success) return false;
+						if(!$query->run($param)) return false;
 					}
 				}
 			}
@@ -629,21 +608,16 @@
 				foreach(explode(' ', 'from to cc bcc attachment reference') as $section) #Remove related data
 				{
 					$query = $database->prepare("DELETE FROM {$database->prefix}$section WHERE mail IN ($target)");
-					$query->run($param);
-
-					if(!$query->success) return $database->rollback() && false;
+					if(!$query->run($param)) return $database->rollback() && false;
 				}
 
 				$query = $database->prepare("DELETE FROM {$database->prefix}reference WHERE reference IN ($target)");
-				$query->run($param);
+				if(!$query->run($param)) return $database->rollback() && false;
 
-				if(!$query->success) return $database->rollback() && false;
 				$param[':user'] = $user->id;
 
 				$query = $database->prepare("DELETE FROM {$database->prefix}mail WHERE id IN ($target) AND user = :user");
-				$query->run($param); #Delete the mail entry
-
-				if(!$query->success) return $database->rollback() && false;
+				if(!$query->run($param)) return $database->rollback() && false; #Delete the mail entry
 			}
 
 			return $database->commit() || $database->rollback() && false;
@@ -685,9 +659,7 @@
 			foreach($attachment as $file) $mime->addAttachment(file_get_contents($file['tmp_name']), $file['type'], $file['name'], false); #Add attachment files if given
 
 			$query = $database->prepare("SELECT * FROM {$database->prefix}account WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $account, ':user' => $user->id));
-
-			if(!$query->success) return 1;
+			if(!$query->run(array(':id' => $account, ':user' => $user->id))) return 1;
 
 			$row = $query->row();
 			$encoded = $list = $toward = array(); #List of encoded addresses, list of addresses and raw mail addresses to send to
@@ -753,9 +725,7 @@
 				if(!$folder) return 1;
 
 				$query = $database->prepare("UPDATE {$database->prefix}account SET folder_$storage = :folder WHERE id = :id AND user = :user");
-				$query->run(array(':folder' => $folder, ':id' => $account, ':user' => $user->id));
-
-				if(!$query->success) return 1;
+				if(!$query->run(array(':folder' => $folder, ':id' => $account, ':user' => $user->id))) return 1;
 			}
 
 			$type = Mail_1_0_0_Account::type($row['receive_type']);
@@ -822,9 +792,7 @@
 						foreach($list[$section] as $address => $name)
 						{
 							$query = $database->prepare("INSERT INTO {$database->prefix}$section (mail, name, address) VALUES (:mail, :name, :address)");
-							$query->run(array(':mail' => $id, ':name' => $name, ':address' => $address));
-
-							if(!$query->success) throw new Exception();
+							if(!$query->run(array(':mail' => $id, ':name' => $name, ':address' => $address))) throw new Exception();
 						}
 					}
 
@@ -851,9 +819,7 @@
 				$signature = md5("$header\r\n"); #The mail's header hash
 
 				$query = $database->prepare("SELECT id, header, signature FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND draft = :draft ORDER BY id DESC");
-				$query->run(array(':user' => $user->id, ':folder' => $folder, ':draft' => 1)); #Get list of mails to find the draft
-
-				if(!$query->success) return 1;
+				if(!$query->run(array(':user' => $user->id, ':folder' => $folder, ':draft' => 1))) return 1; #Get list of mails to find the draft
 
 				#NOTE : Returning a negative number to indicate it is a mail ID and not a status code (Implying success for status)
 				foreach($query->all() as $row) if($signature == $row['signature']) return 0 - $row['id']; #Match on the header hash
@@ -878,18 +844,16 @@
 			if(!$database->success) return false;
 
 			$query = $database->prepare("SELECT folder.id, recent, preference FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder, {$database->prefix}account as account WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the display preference
+			if(!$query->run(array(':id' => $id, ':user' => $user->id))) return false; #Get the display preference
 
-			if(!$query->success) return false;
 			$row = $query->row();
 
 			list($preference, $folder, $recent) = array($row['preference'], $row['id'], $row['recent']);
 			if(!in_array($preference, array('plain', 'html'))) $preference = 'plain'; #Fallback to plain text
 
 			$query = $database->prepare("SELECT seen, plain, html, subject, encode FROM {$database->prefix}mail WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the mail body
+			if(!$query->run(array(':id' => $id, ':user' => $user->id))) return false; #Get the mail body
 
-			if(!$query->success) return false;
 			$row = $query->row();
 
 			if(!$row['seen']) #Mark as seen if not read (Not minding errors) (NOTE : Mail server flag is updated by another process)
@@ -942,16 +906,13 @@
 			if(!$system->is_digit($account))
 			{
 				$query = $database->prepare("SELECT folder.account FROM {$database->prefix}mail as mail, {$database->prefix}folder as folder WHERE mail.id = :id AND mail.user = :user AND mail.folder = folder.id AND folder.user = :user");
-				$query->run(array(':id' => $list[0], ':user' => $user->id)); #Target the account of the mail if not specified
+				if(!$query->run(array(':id' => $list[0], ':user' => $user->id))) return false; #Target the account of the mail if not specified
 
-				if(!$query->success) return false;
 				$account = $query->column();
 			}
 
 			$query = $database->prepare("SELECT folder.name FROM {$database->prefix}account as account, {$database->prefix}folder as folder WHERE account.id = :id AND account.user = :user AND account.folder_$type = folder.id AND folder.user = :user");
-			$query->run(array(':id' => $account, ':user' => $user->id)); #Pick the special folder on the specified account
-
-			if(!$query->success) return false;
+			if(!$query->run(array(':id' => $account, ':user' => $user->id))) return false; #Pick the special folder on the specified account
 
 			$special = $query->column();
 			if(!$special) $special = ucfirst($type); #If not defined, use a generic name
@@ -976,9 +937,7 @@
 			if(!$database->success) return false;
 
 			$query = $database->prepare("SELECT plain FROM {$database->prefix}mail WHERE id = :id AND user = :user");
-			$query->run(array(':id' => $id, ':user' => $user->id)); #Get the mail body
-
-			return $query->success ? $query->column() : false;
+			return $query->run(array(':id' => $id, ':user' => $user->id)) ? $query->column() : false; #Get the mail body
 		}
 
 		public static function update($folder, System_1_0_0_User $user = null) #Store any new messages to the local database
@@ -995,9 +954,7 @@
 			if(!$database->success) return false;
 
 			$query = $database->prepare("SELECT account.id, folder_inbox, receive_host, receive_port, receive_type FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id AND account.user = :user");
-			$query->run(array(':id' => $folder, ':user' => $user->id));
-
-			if(!$query->success) return false;
+			if(!$query->run(array(':id' => $folder, ':user' => $user->id))) return false;
 
 			$row = $query->row();
 			$account = $row['id'];
@@ -1042,9 +999,8 @@
 				}
 
 				$query['exist'] = $database->prepare("SELECT $part FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
-				$query['exist']->run(array(':user' => $user->id, ':folder' => $folder)); #Get list of existing mails' identifiers
+				if(!$query['exist']->run(array(':user' => $user->id, ':folder' => $folder))) return false; #Get list of existing mails' identifiers
 
-				if(!$query['exist']->success) return false;
 				foreach($query['exist']->all() as $row) if(strlen($row[$part])) $current[$row[$part]] = true;
 			}
 			elseif($link['type'] == 'pop3') #NOTE : Get the UID with an alternative method, since 'imap_search' cannot get UID on POP3
@@ -1067,9 +1023,8 @@
 				}
 
 				$query['exist'] = $database->prepare("SELECT $part FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
-				$query['exist']->run(array(':user' => $user->id, ':account' => $account)); #Get list of mail identifiers
+				if(!$query['exist']->run(array(':user' => $user->id, ':account' => $account))) return false; #Get list of mail identifiers
 
-				if(!$query['exist']->success) return false;
 				foreach($query['exist']->all() as $row) $current[$row[$part]] = true;
 			}
 
@@ -1281,18 +1236,13 @@
 				$attributes[':preview'] = preg_replace('/^((.*\n){1,'.self::$_preview[1].'})(.|\n)+$/', '\1', preg_replace(array("/\r/", "/\n{2,}/"), array('', "\n"), $attributes[':preview'])); #Limit the lines of the message body
 
 				if(!$database->begin()) return false; #NOTE : Only do transaction per mail, as network failure during fetching mails will not rollback for the mails already saved
-
-				$query['insert']->run($attributes); #Insert the mail in the database
-				if(!$query['insert']->success) return $database->rollback() && false;
+				if(!$query['insert']->run($attributes)) return $database->rollback() && false; #Insert the mail in the database
 
 				$id = $database->id(); #Generated ID for the mail in the database
 				if($id === false) return $database->rollback() && false;
 
-				if($link['type'] == 'pop3') #For POP3
-				{
-					$query['loaded']->run(array(':user' => $user->id, ':account' => $account, ":$part" => $attributes[":$part"])); #Remember the downloaded mail
-					if(!$query['loaded']->success) return $database->rollback() && false;
-				}
+				if($link['type'] == 'pop3' && !$query['loaded']->run(array(':user' => $user->id, ':account' => $account, ":$part" => $attributes[":$part"])))
+					return $database->rollback() && false; #For POP3, remember the downloaded mail
 
 				foreach(array('from', 'to', 'cc', 'bcc') as $section) #Insert the addresses
 				{
@@ -1301,9 +1251,7 @@
 					foreach($addresses[$section] as $values)
 					{
 						$values[':mail'] = $id;
-						$query[$section]->run($values);
-
-						if(!$query[$section]->success) return $database->rollback() && false;
+						if(!$query[$section]->run($values)) return $database->rollback() && false;
 					}
 				}
 
@@ -1324,12 +1272,9 @@
 					}
 
 					$query['flag'] = $database->prepare("SELECT id, uid, marked, seen, replied FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
-					$query['flag']->run(array(':user' => $user->id, ':folder' => $folder)); #Select all messages in the folder
+					if(!$query['flag']->run(array(':user' => $user->id, ':folder' => $folder))) return false; #Select all messages in the folder
 
-					if(!$query['flag']->success) return false;
-					$a=$query['flag']->all();
-
-					foreach($a as $row)
+					foreach($query['flag']->all() as $row)
 					{
 						foreach(self::$_flag as $column => $mark) #Prepare the difference for update
 						{
@@ -1363,9 +1308,7 @@
 								$target = implode(', ', $target);
 
 								$update = $database->prepare("UPDATE {$database->prefix}mail SET $column = :$column WHERE user = :user AND folder = :folder AND id IN ($target)");
-								$update->run($param); #Mark the mails
-
-								if(!$update->success) return false;
+								if(!$update->run($param)) return false; #Mark the mails
 							}
 						}
 					}
@@ -1375,9 +1318,8 @@
 				elseif(!count($exist)) #If no mail is on the server for this folder
 				{
 					$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder");
-					$query->run(array(':user' => $user->id, ':folder' => $folder)); #Pick all mails in the folder
+					if(!$query->run(array(':user' => $user->id, ':folder' => $folder))) return false; #Pick all mails in the folder
 
-					if(!$query->success) return false;
 					$target = array();
 
 					foreach($query->all() as $row) $target[] = $row['id'];
@@ -1408,9 +1350,8 @@
 						$sql = $link['info']['supported'] ? "uid IN ($target)" : "signature NOT IN ($target)";
 
 						$query = $database->prepare("SELECT id FROM {$database->prefix}mail WHERE user = :user AND folder = :folder AND $sql");
-						$query->run($param); #Pick non existing mails
+						if(!$query->run($param)) return false; #Pick non existing mails
 
-						if(!$query->success) return false;
 						$target = array();
 
 						foreach($query->all() as $row) $target[] = $row['id'];

@@ -92,10 +92,10 @@
 
 		case 'gui._body.attachment' : #Download the attachment
 			#NOTE : Set an attachment header in all cases not to let errors make browser shift into a new page
-			#Not sending caching header under errors in case of occasions like mail server unavailability for that moment
-			#Be warned that if an error is generated and printed, the attachment will be a text file displaying the errors
+			#NOTE : Not sending caching header under errors in case of occasions like mail server unavailability for that moment
+			#NOTE : Be warned that if an error is generated and printed, the attachment will be a text file displaying the errors
 			header('Content-Type: text/plain');
-			header('Content-Disposition: attachment');
+			header('Content-Disposition: attachment; filename=empty.txt');
 
 			print Mail_1_0_0_Item::attachment($_GET['id']); #Get the attachment file from the mail server
 		break;

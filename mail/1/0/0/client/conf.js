@@ -420,6 +420,7 @@
 			var update = function(request)
 			{
 				$system.node.hide($id + '_conf_saving', true);
+				$system.node.id($id + '_conf_form').account.disabled = false;
 
 				switch($system.dom.status(request.xml))
 				{
@@ -439,10 +440,10 @@
 				$self.account.get(false, null, _force); //Update account listing
 			}
 
-			$system.node.hide($id + '_conf_saving', false);
-			$system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.set'}, option, update);
+			$system.node.hide($id + '_conf_saving', false); //Show the saving message
+			$system.node.id($id + '_conf_form').account.disabled = true; //Disable the account selection box while saving
 
-			return false; //Avoid form submission
+			return $system.network.send($self.info.root + 'server/php/front.php', {task : 'conf.set'}, option, update);
 		}
 
 		this.special = function() //Set the special folders

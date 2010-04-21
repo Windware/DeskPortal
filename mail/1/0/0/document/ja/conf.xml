@@ -36,7 +36,8 @@
 
 	<string name="user" value="ユーザー" />
 	<string name="pass" value="パスワード" />
-	<string name="saving" value="保存中・・・" />
+	<string name="saving" value="設定の確認、保存、フォルダーの更新を行なっています・・・" />
+	<string name="while" value="時間がかかる場合があります" />
 	<string name="save" value="保存" />
 
 	<string name="folder" value="フォルダー" />

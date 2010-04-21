@@ -1,4 +1,4 @@
-<form id="%id%_conf_form" style="text-align : left" onsubmit="return %top%.%id%.conf.set(this)">
+<form id="%id%_conf_form" style="text-align : left" onsubmit="%top%.%id%.conf.set(this); return false">
 	<p>
 		%string:account% :
 		<select name="account" onchange="%top%.%id%.conf.change(this.value)"><option value="0">(%string:new%)</option></select>
@@ -118,7 +118,7 @@
 
 		<tr>
 			<td colspan="2" style="text-align : center">
-				<p id="%id%_conf_saving" class="%system%_hidden">%string:saving%</p>
+				<p id="%id%_conf_saving" class="%system%_hidden">%string:saving%<br />(%string:while%)</p>
 
 				<p>
 					<input type="submit" value="%string:save%" />

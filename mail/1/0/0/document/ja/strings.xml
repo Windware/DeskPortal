@@ -76,7 +76,7 @@
 	<string name="sign" value="署名" />
 	<string name="discard" value="メール作成を中止しますか？" />
 	<string name="sending" value="送信中・・・" />
-	<string name="saving" value="保存中..." />
+	<string name="saving" value="保存中・・・" />
 
 	<!-- Address list -->
 	<string name="address" value="アドレス一覧" />

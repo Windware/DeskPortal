@@ -20,7 +20,15 @@
 
 			var load = function(request)
 			{
-				log.user($global.log.notice, 'user/add', '', [title]);
+				switch($system.dom.status(request.xml))
+				{
+					case '2' : $system.gui.alert($id, 'user/edit/duplicate', 'user/edit/duplicate/message'); break; //Log about duplicate name
+
+					case '0' : log.user($global.log.notice, 'user/add', '', [title]); break; //Normal operation
+
+					default : $system.gui.alert($id, 'user/edit/error', 'user/edit/error/message'); break; //On error
+				}
+
 				$self.item.get(request.xml); //Load the memos
 			}
 
@@ -129,7 +137,7 @@
 			$system.node.fade($id + '_field_' + id, true, null, true); //Let go of the text field
 
 			delete __opened[id]; //Let go from the list of opened info window list
-			if(id == _displayed.id) _displayed = null; //Forget about current selection
+			if(_displayed && id == _displayed.id) _displayed = null; //Forget about current selection
 
 			var load = function(request)
 			{
@@ -180,7 +188,14 @@
 
 			var load = function(request)
 			{
-				log.user($global.log.notice, 'user/edit', '', [param.name]);
+				switch($system.dom.status(request.xml))
+				{
+					case '2' : $system.gui.alert($id, 'user/edit/duplicate', 'user/edit/duplicate/message'); break; //Log about duplicate name
+
+					case '0' : log.user($global.log.notice, 'user/edit', '', [param.name]); break; //Normal operation
+
+					default : $system.gui.alert($id, 'user/edit/error', 'user/edit/error/message'); break; //On error
+				}
 
 				$self.group.get(); //Update the list
 				$self.item.get(request.xml); //Update the list with the given data

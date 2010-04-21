@@ -6,7 +6,7 @@
 			$system = new System_1_0_0(__FILE__);
 
 			$log = $system->log(__METHOD__);
-			if(!is_array($app)) return $log->param();
+			if(!is_array($app)) $app = array();
 
 			if($user === null) $user = $system->user();
 			if(!$user->valid) return false;
