@@ -40,4 +40,6 @@
 
 	<string name="previous" value="Previous" />
 	<string name="next" value="Next" />
+
+	<string name="sample" value="No headlines are registered. Do you wish to add sample headlines?" />
 </root>

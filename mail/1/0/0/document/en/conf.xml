@@ -36,7 +36,7 @@
 
 	<string name="user" value="User" />
 	<string name="pass" value="Password" />
-	<string name="saving" value="Checking configuration, saving and refreshing folders..." />
+	<string name="saving" value="Checking, saving configuration and refreshing folders..." />
 	<string name="while" value="This may take a moment" />
 	<string name="save" value="Save" />
 

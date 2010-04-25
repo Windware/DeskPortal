@@ -1,7 +1,7 @@
 
 	$self.run = function(callback)
 	{
-		var interval = 300000; //Feed request interval
+		var interval = 5; //Feed request interval in minutes
 
 		var now = $system.date.create(); //Get current time
 		var form = $system.node.id($id + '_selection_span'); //Span selection form
@@ -43,8 +43,14 @@
 		$self.category.get(); //Get the list of categories
 		$self.category.update(); //Update the category lists
 
-		$self.feed.get(); //Get the headline list
-		__updater = setInterval($self.feed.get, interval); //Do so periodically
+		var check = function(callback) //Offer the user sample feeds if no feeds are registered
+		{
+			for(var id in __feed) return $system.app.callback($id + '.run', callback); //If any feeds are registered, quit here
+			return $self.feed.sample(callback); //Provide samples
+		}
 
-		if(typeof callback == 'function') callback();
+		$self.feed.get(null, $system.app.method(check, [callback])); //Get the headline list
+		__updater = setInterval($self.feed.get, interval * 60 * 1000); //Do so periodically
+
+		return true;
 	}

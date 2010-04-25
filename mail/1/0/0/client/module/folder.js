@@ -128,7 +128,7 @@
 
 				var area = $system.node.id($id + '_folder');
 
-				if($system.dom.status(_cache[account]) != '0')
+				if($system.dom.status(_cache[account]) != '0') //On failure
 				{
 					area.innerHTML = ''; //Empty the listing
 					delete _cache[account]; //Clear the cache to try again later

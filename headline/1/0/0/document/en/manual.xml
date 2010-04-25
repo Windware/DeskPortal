@@ -12,29 +12,24 @@
 	<string name="2/copy" value="When you have found the feed's address, you may copy that address and go to 'Setting' tab of this window and to the 'Headline' section and paste that address in the text input field. Click on the 'Add' button and the headline should be registered for reading." />
 	<string name="2/trouble" value="If any error occurs, please check the address of the feed to be valid." />
 
-	<string name="_3_sample" value="Sample feeds" />
-	<string name="3/sample" value="If you would like to register some sample feeds, please click on the link below." />
-	<string name="3/add" value="Add sample headlines" />
-	<string name="3/confirm" value="Do you wish to add sample headlines?" />
+	<string name="_3_article" value="Article" />
+	<string name="3/display" value="When the feeds are registered, they will appear as a list on the left side of the main window. By clicking on the feeds shown, the news headlines will be displayed on the right side and by clicking on the left icon on the feed title, a new window will open showing the original news site." />
+	<string name="3/entry" value="By putting the mouse over the headline title, the summary of the article will be displayed. And by clicking on the star icon on the left side of the headline, the article will be marked. By marking an article, it will make it easier to find it later on, also by filtering to display only the marked articles." />
+	<string name="3/view" value="By clicking on the title of the article, it will open a new window that shows the original source of the article. Previously read articles will look different from others." />
+	<string name="3/category" value="To categorize an article, you need to add new categories, which will be explained in the next section." />
+	<string name="3/notice" value="If the 'Notification' application is open, when new articles are published on the registered feeds, it will be displayed there." />
 
-	<string name="_4_article" value="Article" />
-	<string name="4/display" value="When the feeds are registered, they will appear as a list on the left side of the main window. By clicking on the feeds shown, the news headlines will be displayed on the right side and by clicking on the left icon on the feed title, a new window will open showing the original news site." />
-	<string name="4/entry" value="By putting the mouse over the headline title, the summary of the article will be displayed. And by clicking on the star icon on the left side of the headline, the article will be marked. By marking an article, it will make it easier to find it later on, also by filtering to display only the marked articles." />
-	<string name="4/view" value="By clicking on the title of the article, it will open a new window that shows the original source of the article. Previously read articles will look different from others." />
-	<string name="4/category" value="To categorize an article, you need to add new categories, which will be explained in the next section." />
-	<string name="4/notice" value="If the 'Notification' application is open, when new articles are published on the registered feeds, it will be displayed there." />
+	<string name="_4_category" value="Category" />
+	<string name="4/register" value="In order to register a category, go to the 'Setting' tab of this window to the 'Category' section, input a new category name and click on the 'Set' button. These categories can be chosen on each article on the main window." />
+	<string name="4/edit" value="To edit or delete existing categories, in the configuration window, pick the category from the left selection and either change its name and click on the 'Set' button or click on the 'Delete' button to delete it." />
 
-	<string name="_5_category" value="Category" />
-	<string name="5/register" value="In order to register a category, go to the 'Setting' tab of this window to the 'Category' section, input a new category name and click on the 'Set' button. These categories can be chosen on each article on the main window." />
-	<string name="5/edit" value="To edit or delete existing categories, in the configuration window, pick the category from the left selection and either change its name and click on the 'Set' button or click on the 'Delete' button to delete it." />
+	<string name="_5_display" value="Display" />
+	<string name="5/period" value="The display period of a feed may be changed by the selection box above the feed list. After selecting a feed, by default, it is set to display a single day's articles but it may be changed to display a week of articles or a month of articles. This setting is effective per feed." />
+	<string name="5/choose" value="For daily display, you need to specify the day and for weekly display, you need to specify the week of the month to view along with the year and the month to be specified." />
 
-	<string name="_6_display" value="Display" />
-	<string name="6/period" value="The display period of a feed may be changed by the selection box above the feed list. After selecting a feed, by default, it is set to display a single day's articles but it may be changed to display a week of articles or a month of articles. This setting is effective per feed." />
-	<string name="6/choose" value="For daily display, you need to specify the day and for weekly display, you need to specify the week of the month to view along with the year and the month to be specified." />
-
-	<string name="_7_filter" value="Filter" />
-	<string name="7/filter" value="To ease finding the articles, it has the ability to filter the articles to display." />
-	<string name="7/item" value="At the top of the main window, by clicking on the 'Marked' option, it will only display the articles marked by clicking on the stars next to the articles and are turned into yellow stars and by clicking on the 'Unread' option, it will only display articles those are not read." />
-	<string name="7/other" value="If the articles have categories assigned, by selecting the category in the filters option, it will only display the articles categorized as the selection and if you type in a word inside 'Search' option and press the 'Enter' key, it will only display the articles containing the words typed but only 5 or less words having more than 1 character can be used for each search. These settings are effective throughout all of the feeds and not per feed." />
-	<string name="7/search" value="If you would like to search from the entire feeds and articles, please use the 'Search' application." />
+	<string name="_6_filter" value="Filter" />
+	<string name="6/filter" value="To ease finding the articles, it has the ability to filter the articles to display." />
+	<string name="6/item" value="At the top of the main window, by clicking on the 'Marked' option, it will only display the articles marked by clicking on the stars next to the articles and are turned into yellow stars and by clicking on the 'Unread' option, it will only display articles those are not read." />
+	<string name="6/other" value="If the articles have categories assigned, by selecting the category in the filters option, it will only display the articles categorized as the selection and if you type in a word inside 'Search' option and press the 'Enter' key, it will only display the articles containing the words typed but only 5 or less words having more than 1 character can be used for each search. These settings are effective throughout all of the feeds and not per feed." />
+	<string name="6/search" value="If you would like to search from the entire feeds and articles, please use the 'Search' application." />
 </root>

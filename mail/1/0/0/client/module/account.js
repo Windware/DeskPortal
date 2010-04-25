@@ -16,7 +16,7 @@
 			__selected.account = account;
 			if(account == '0') return $self.folder.get(account, undefined, callback);
 
-			var list = function(account, folder, callback) //Get mails for the default mail box
+			var list = function(account, folder, callback) //Get mails for the specified folder
 			{
 				folder = $system.is.digit(folder) ? folder : __special.inbox[account];
 
@@ -61,11 +61,16 @@
 				{
 					if(!conf[area]) continue; //If configuration pane is loaded
 
-					conf[area] = conf[area].account; //Account configuration selection box
+					conf[area] = conf[area].account; //The account selection box
 					choice[area] = conf[area].value; //Keep the selected value
 
-					var start = area == 'account' ? '(' + language['new'] + ')' : '-----';
-					conf[area].innerHTML = '<option value="0">' + start + '</option>';
+					conf[area].innerHTML = '';
+					var option = document.createElement('option'); //Create the default selection
+
+					option.value = 0;
+					$system.node.text(option, area == 'account' ? '(' + language['new'] + ')' : '-----');
+
+					conf[area].appendChild(option); //NOTE : IE6 failed to set the tag properly with innerHTML
 				}
 
 				var selection = [];

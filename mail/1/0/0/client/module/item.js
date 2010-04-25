@@ -501,21 +501,21 @@
 
 				__order = {item : 'sent', reverse : true}; //Set ordering back to default
 
-				__selected.page = page; //Set the page to where the mail is
-				__selected.folder = null; //NOTE : Forget about current folder to avoid reading current page from the selection box
-
-				var align = function(id) //Scroll to where the mail is
+				var load = function(id, folder, page) //Load the page where the mail is
 				{
-					var form = $system.node.id($id + '_mail_list');
-					if(!$system.is.element(form)) return false;
+					var align = function(id) //Scroll to where the mail is
+					{
+						var form = $system.node.id($id + '_mail_list');
+						var row = $system.node.id($id + '_mail_row_' + id);
 
-					var row = $system.node.id($id + '_mail_row_' + id);
-					if(!$system.is.element(row)) return false;
+						if(!$system.is.element(form) || !$system.is.element(row)) return false;
+						form.scrollTop = row.offsetTop;
+					}
 
-					form.scrollTop = row.offsetTop;
+					return $self.item.get(__selected.folder = folder, __page[__selected.folder] = page, false, $system.app.method(align, [id]));
 				}
 
-				return $self.account.change(account, folder, $system.app.method(align, [id]));
+				return $self.account.change(account, folder, $system.app.method(load, [id, folder, page])); //TODO : It should be able to directly load a specific page directly
 			}
 
 			if(__mail[id]) return reset(__mail[id].account, __mail[id].folder, id, __mail[id].page); //If mail is already loaded, change to the folder where the mail belongs to

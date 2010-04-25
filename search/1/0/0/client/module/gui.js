@@ -188,6 +188,7 @@
 			}
 
 			if(!area.length) return _alert(zone, 'select');
+			_alert(zone, 'searching'); //Show the current state
 
 			//Send the search request
 			$system.network.send($self.info.root + 'server/php/front.php', {task : 'gui.search', area : area, search : _search}, null, $system.app.method(_display, [zone, false, log]));

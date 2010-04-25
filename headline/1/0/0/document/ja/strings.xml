@@ -40,4 +40,6 @@
 
 	<string name="previous" value="前" />
 	<string name="next" value="次" />
+
+	<string name="sample" value="ヘッドラインが登録されていません。サンプルヘッドラインを追加しますか？" />
 </root>

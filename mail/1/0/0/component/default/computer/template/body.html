@@ -1,13 +1,14 @@
 <form id="%id%_form" style="margin : 10px 0px" onsubmit="%top%.%id%.gui.filter('search', this.search.value); return false">
 	<p style="background-color : #cba; padding : 5px; border : 1px #333 solid">
-		<img id="%id%_indicator" src="%image:loading/red.gif%" style="visibility : hidden" class="%id%_indicator"></img>
+		<img id="%id%_indicator" src="%file:mail/1/0/0/component/default/computer/graphic/loading/red.gif%" style="visibility : hidden" class="%id%_indicator" />
 
 		[<img class="%system%_icon" style="cursor : pointer" src="%image:new.png%" onclick="%top%.%id%.gui.compose()"%tip:new% />]
 
 		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>]
 
 		[<span%tip:page% style="cursor : help"><strong>%string:page%</strong> :
-			<select id="%id%_show" onchange="%top%.%id%.gui.flip(this.value)"><option value="1">1</option></select></span>]
+			<select id="%id%_show" onchange="%top%.%id%.gui.flip(this.value)"><option value="1">1</option></select>
+		</span>]
 
 		[<strong>%string:filter%</strong> :
 		<label for="%id%_marked"%tip:marked%>
@@ -15,7 +16,8 @@
 		</label>
 
 		<label for="%id%_unread"%tip:unread%>
-			<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter('unread', this.checked)" name="unread">%string:unread%</label>]
+			<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter('unread', this.checked)" name="unread">%string:unread%
+		</label>]
 
 		[<span%tip:search% style="cursor : help"><strong>%string:search%</strong> : <input type="text" name="search" style="width : 120px" /></span>]
 	</p>

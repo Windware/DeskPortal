@@ -93,9 +93,10 @@
 		this.template = function(text, id, prepare) //Replace all template variables
 		{
 			if(!$system.is.text(text)) return '';
-			var action = $system.browser.os == 'iphone' ? 'ontouchstart' : 'onmousedown';
 
+			var action = $system.browser.os == 'iphone' ? 'ontouchstart' : 'onmousedown';
 			var cancel = '; %top%.%system%.event.cancel(this, event)'; //To cancel event bubbling to avoid window dragging
+
 			var lock = ' ' + action + '="' + cancel + '"'; //Same as cancel, but as a whole attribute
 			var scroll = lock + ' onscroll="%top%.%system%.gui.clear(this, event)"'; //For scrolling events
 
@@ -122,6 +123,17 @@
 
 				target.push(/%image:(.+?)%/g);
 				replace.push(image);
+
+				var file = function(phrase, match) //Replace into the direct path to the file
+				{
+					var extension = match.replace(/^.+\./, '').toLowerCase(); //Get the extension
+					var type = $system.array.find($global.extensions, extension) ? extension : 'php'; //If a proper server side script is specified, use it, but use PHP by default
+
+					return $system.text.format('router-%%.%%?_version=%%&_self=%%', [type, $global.extensions[type], $system.info.version, match]);
+				}
+
+				target.push(/%file:(.+?)%/g);
+				replace.push(file);
 			}
 
 			return $system.text.replace(text, target, replace); //Replace each variables
