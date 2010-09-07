@@ -1,5 +1,5 @@
 <root>
-	<developer name="Windware Solution" site="http://windware-solution.com/" />
+	<developer name="Windware Solution" site="http://windware.com/" />
 	<info revision="1" category="personal" />
 
 	<language name="en">
@@ -12,7 +12,7 @@
 
 	<license>
 		<folder name="." license="Windware Reference License">
-			<author name="Windware Solution" site="http://windware-solution.com/" />
+			<author name="Windware Solution" site="http://windware.com/" />
 
 			<folder name="component">
 				<folder name="default">
