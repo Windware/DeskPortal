@@ -81,15 +81,6 @@
 
 			$system.node.fade($id + '_conf_folder_list', folder == '0'); //Show or hide the area
 
-			var disable = false; //See if the chosen folder is a special folder
-			for(var special in __special) if(__special[special][account] == folder) disable = true;
-
-			for(var i = 0; i < form.elements.length; i++) //Hide some options according to chosen folder
-			{
-				if($system.node.classes(form.elements[i], $id + '_conf_folder_custom')) form.elements[i].disabled = disable;
-				else if($system.node.classes(form.elements[i], $id + '_conf_folder_inbox')) form.elements[i].disabled = __special.inbox[account] == folder;
-			}
-
 			var button = _subscribed[folder] == '1' ? 'displayed' : 'hidden';
 			return $system.node.id($id + '_conf_folder_' + button).checked = true;
 		}

@@ -5,9 +5,9 @@
 
 		protected static $_flag = array('deleted' => 'Deleted', 'seen' => 'Seen', 'marked' => 'Flagged', 'replied' => 'Answered', 'draft' => 'Draft'); #Table column names and corresponding IMAP flags
 
-		protected static $_max = 200; #Max kilobytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger.
+		protected static $_max = 200; #Max kilobytes allowed to be transferred from mail servers as the message body. No body will be retrieved if it is bigger
 
-		protected static $_page = 50; #Default number of mails to display per page
+		protected static $_page = 50; #Default number of mails to display per page (TODO - Should be entirely client side config)
 
 		#Amount of max (bytes, lines) of a message body preview to be sent with the list of mails. Any message bodies that are larger will be truncated to the size and lines for previews
 		protected static $_preview = array(500, 5);
@@ -16,7 +16,7 @@
 
 		protected static $_type = array('text', 'multipart', 'message', 'application', 'audio', 'image', 'video', 'other'); #Mime categories (Order is important)
 
-		private static $_connection = array(); #POP3 connection cache for manual connection instead of using 'imap_' functions
+		private static $_connection = array(); #POP3 connection cache for manual connection instead of using 'imap_' functions (For UIDL supports)
 
 		private static $_structure; #Mime structure for each mails
 
@@ -84,10 +84,9 @@
 			$database = $system->database('user', __METHOD__, $user);
 			if(!$database->success) return false;
 
-			$query = $database->prepare("SELECT at.name, at.position, mail.id as mail, mail.folder FROM
-			{$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.id = :id AND at.mail = mail.id AND mail.user = :user");
-
+			$query = $database->prepare("SELECT at.name, at.position, mail.id as mail, mail.folder FROM {$database->prefix}attachment as at, {$database->prefix}mail as mail WHERE at.id = :id AND at.mail = mail.id AND mail.user = :user");
 			if(!$query->run(array(':id' => $id, ':user' => $user->id))) return false;
+
 			$attachment = $query->row();
 
 			$query = $database->prepare("SELECT folder_inbox, receive_type FROM {$database->prefix}folder as folder, {$database->prefix}account as account WHERE folder.id = :id AND folder.user = :user AND folder.account = account.id");
@@ -1090,13 +1089,18 @@
 					}
 					else #Array parameters are list of addresses
 					{
+						$check = array();
+
 						foreach($value as $index => $inner) #Store the mail addresses
 						{
 							if(!$system->is_digit($index)) continue;
 							$parts = array();
 
 							foreach($inner as $name => $text) $parts[$name] = self::decode($text);
-							$addresses[$key][] = array(':name' => $parts['personal'] ? $parts['personal'] : null, ':address' => "{$parts['mailbox']}@{$parts['host']}");
+							$full = "{$parts['mailbox']}@{$parts['host']}";
+
+							if(in_array($full, $check)) continue; #Avoid adding duplicate addresses for a mail
+							$addresses[$key][] = array(':name' => $parts['personal'] ? $parts['personal'] : null, ':address' => $check[] = $full);
 						}
 					}
 				}

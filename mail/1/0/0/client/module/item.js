@@ -221,7 +221,7 @@
 
 				__current = cache; //Remember current listing
 
-				if(__page[folder] > cache.max) //If the chosen page exceeds the max page (Ex : After moving mails to another folder)
+				if(parseInt(__page[folder], 10) > parseInt(cache.max, 10)) //If the chosen page exceeds the max page (Ex : After moving mails to another folder)
 				{
 					$system.node.id($id + '_show').value = cache.max;
 					__page[folder] = cache.max;

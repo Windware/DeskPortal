@@ -115,13 +115,18 @@
 				var log = $system.log.init(_class + '.init.quit');
 				log.dev($global.log.critical, 'dev/feature', 'dev/feature/solution', [feature]);
 
+				if(feature == 'request') return alert('Your browser cannot make remote request, please use another browser.'); //Quit with local message, since language files cannot be retrieved
 				$system.language.init(); //Force initialize the language function
 
-				var language = $system.language.strings($id);
-				alert(language['bad/' + feature]); //Try to be primitive to make sure this warning works
-			}
+				var notify = function(request) //Alert the error in language specific message
+				{
+					var language = $system.language.strings($id, 'strings.xml');
+					alert('Please enable cookie on your browser'); //FIXME - Language does not get loaded at the moment and apply the error check on login app as well
+					//alert(language['bad/' + feature]); //Try to be primitive to make sure this warning works
+				}
 
-			if(!window.navigator.cookieEnabled) return quit('cookie'); //Check for cookie feature availability
+				return $system.network.send($system.language.pick($id, 'strings.xml')[0], null, null, notify);
+			}
 
 			if(window.XMLHttpRequest) dev.request = function() { return new XMLHttpRequest(); } //Try the cross engine method first
 			else if(window.ActiveXObject) //For IE before version 7, use its own ActiveX implementation
@@ -138,6 +143,8 @@
 
 			//If it cannot initialize remote request feature, quit the whole thing since nothing will work
 			if(typeof dev.request != 'function') return quit('request');
+
+			if(!window.navigator.cookieEnabled) return quit('cookie'); //Check for cookie feature availability
 
 			//Note : window.navigator.language/browserLanguage only represents the language of the interface
 			//and not the one configured by the user, which should be lower priority than the ones set by the user

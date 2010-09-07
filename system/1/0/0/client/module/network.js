@@ -211,7 +211,7 @@
 
 			if(method == 'POST' && $global.demo.mode) return $system.app.callback(_class + '.send', $system.app.method(callback, [new _response(address)])); //Avoid making call for POST on demo mode
 
-			var asynchronous = callback !== null; //Go asynchronous unless specifically specified not to
+			var async = callback !== null; //Go asynchronous unless specifically specified not to
 
 			if($system.is.object(get)) //If URL parameters are specified
 			{
@@ -227,7 +227,7 @@
 			}
 
 			var request = $system.browser.request(); //Create a remote request object
-			request.open(method, $system.network.form(address), asynchronous); //Create the request with required parameters
+			request.open(method, $system.network.form(address), async); //Create the request with required parameters
 
 			var container = new _response(address); //Create the request object
 
@@ -240,23 +240,21 @@
 				if($system.is.digit(code)) code = Number(code);
 
 				container.set({headers : request.getAllResponseHeaders(), status : request.status, text : request.responseText, xml : request.responseXML, state : request.readyState, code : code});
-				if($system.gui.check(container) == -1) return false; //If the session is expired, quit processing
+				if($system.gui.check(container) == -1) return false; //If the session had expired, quit processing
 
 				if(container.valid(true)) return typeof callback == 'function' ? callback(container) : true; //If the request was valid, including missing files
-				else //If the request failed
-				{
-					if(typeof error == 'function') error(container);
-					$system.gui.alert($id, 'user/network/error', 'user/network/error/solution');
 
-					log.user($global.log.error, 'user/network/error', 'user/network/error/solution');
-					log.dev($global.log.error, 'dev/network/error', 'dev/network/error/solution', [request.status]);
+				if(typeof error == 'function') error(container);
+				$system.gui.alert($id, 'user/network/error', 'user/network/error/solution');
 
-					return false;
-				}
+				log.user($global.log.error, 'user/network/error', 'user/network/error/solution');
+				log.dev($global.log.error, 'dev/network/error', 'dev/network/error/solution', [request.status]);
+
+				return false;
 			}
 
 			//If a callback function is specified, set the function to receive the state changes
-			if(asynchronous) request.onreadystatechange = $system.app.method(run, [container, request, callback, error]);
+			if(async) request.onreadystatechange = $system.app.method(run, [container, request, callback, error]);
 
 			if(method == 'POST') //If HTTP request method is POST, set the appropriate header
 			{
@@ -278,10 +276,11 @@
 				for(var field in header) if($system.is.text(field) && $system.is.text(header[field])) request.setRequestHeader(field, header[field]);
 
 			request.send(send); //Send the request to the server
-
 			container.set({made : true}); //Update the request object information
-			if(!asynchronous) container.set({headers : request.getAllResponseHeaders(), status : request.status, text : request.responseText, xml : request.responseXML, state : request.readyState});
 
-			return asynchronous ? true : container; //Return the state of the operation or the request object
+			if(!async) container.set({headers : request.getAllResponseHeaders(), status : request.status, text : request.responseText, xml : request.responseXML, state : request.readyState});
+			else run(container, request, callback, error);
+
+			return async ? true : container; //Return the state of the operation or the request object for synchronous request
 		}
 	}

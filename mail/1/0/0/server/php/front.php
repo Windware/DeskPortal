@@ -97,7 +97,7 @@
 			header('Content-Type: text/plain');
 			header('Content-Disposition: attachment; filename=empty.txt');
 
-			print Mail_1_0_0_Item::attachment($_GET['id']); #Get the attachment file from the mail server
+			print Mail_1_0_0_Item::attachment($_GET['id']); #Get the attachment file from the mail server (The above headers will be overridden on success)
 		break;
 
 		case 'gui.compose' : #Get the plain text version of a mail
