@@ -12,7 +12,7 @@
 	<string name="start" value="The launcher bar on the left part of the screen groups applications by category. Click a category to reveal individual applications." />
 	<string name="example" value="For example, click on the 'Personal' category and inside the list, click on the 'Memo' application name." />
 	<string name="interface" value="The application's interface should soon appear. The guide may get hidden behind the application, but clicking on the guide window again will return it to the front. You need to be connected to the internet at this time." />
-	<string name="tool" value="To view each application's manual and general configuration, click on the &lt;img src=&quot;router-php.php?_version=1_0_0&amp;amp;_self=system/1/0/0/component/default/computer/graphic/info.png&quot; /&gt; button at the top of the window." />
+	<string name="tool" value="To view each application's manual and general configuration, click on the &lt;img src=&quot;router-php.php?_version=1_0_0&amp;amp;_self=system/1/0/0/client/default/computer/image/info.png&quot; /&gt; button at the top of the window." />
 
 	<string name="_3_window" value="Window" />
 	<string name="drag" value="You can reposition a window by left clicking an empty area where there are no scrollbars and then holding down the mouse button while you drag the window to a new spot." />

@@ -1,6 +1,0 @@
-<root>
-	<server host="ldap.my.company" port="389" user="" pass="">
-		<param name="version" value="3" />
-		<param name="base" value="ou=people,dc=my,dc=company" />
-	</server>
-</root>

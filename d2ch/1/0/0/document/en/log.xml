@@ -1,0 +1,14 @@
+<root>
+	<!-- USER -->
+	<!-- run.js -->
+	<string name="user/run/list" value="Could not get board list" />
+	<string name="user/run/list/message" value="Failed to get the list of boards" />
+
+	<!-- message.js -->
+	<string name="user/message/get" value="Could not get messages" />
+	<string name="user/message/get/message" value="Failed to get the messages for this thread" />
+
+	<!-- thread.js -->
+	<string name="user/thread/get" value="Could not get thread list" />
+	<string name="user/thread/get/message" value="Failed to get the list of threads" />
+</root>

@@ -1,0 +1,30 @@
+<root>
+	<developer name="Windware Solution" site="http://windware.com/" />
+	<info revision="1" category="information" />
+
+	<language name="en">
+		<translator name="Windware Solution" />
+	</language>
+
+	<language name="ja">
+		<translator name="Windware Solution" />
+	</language>
+
+	<license>
+		<folder name="." license="Windware Reference License">
+			<author name="Windware Solution" site="http://windware.com/" />
+
+			<folder name="client">
+				<folder name="default">
+					<folder name="common">
+						<folder name="image">
+							<file name="icon.png" license="???">
+								<author name="???" contact="???" site="???" />
+							</file>
+						</folder>
+					</folder>
+				</folder>
+			</folder>
+		</folder>
+	</license>
+</root>

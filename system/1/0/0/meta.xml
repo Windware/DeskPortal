@@ -11,17 +11,17 @@
 	</language>
 
 	<requirement>
-		<item>PHP version 5.2 (probably works for later versions) with PDO (with appropriate database drivers), SimpleXML, mbstring, GD, PCRE, zlib and cURL modules</item>
+		<item>PHP version 5.2 (probably works for later versions) with PDO (with appropriate database drivers), simplexml, mbstring, gd, pcre, zlib and curl modules</item>
 	</requirement>
 
 	<license>
 		<folder name="." license="Windware Reference License">
 			<author name="Windware Solution" site="http://windware.com/" />
 
-			<folder name="component">
+			<folder name="client">
 				<folder name="default">
-					<folder name="computer">
-						<folder name="graphic" license="Public Domain">
+					<folder name="common">
+						<folder name="image" license="Public Domain">
 							<author name="Open Clip Art" contact="http://openclipart.org/media/people/contact/admin" site="http://openclipart.org/" />
 
 							<file name="about.png" license="Free commercial use license">

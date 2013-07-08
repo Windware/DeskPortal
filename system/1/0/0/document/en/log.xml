@@ -57,7 +57,7 @@
 	<string name="dev/meta" value="Application meta information cannot be loaded for '%%'." />
 	<string name="dev/meta/solution" value="Check for 'meta.xml' presence under its root directory." />
 
-	<string name="dev/library/network" value="Application library error by network failure for '%%client/init.js'." />
+	<string name="dev/library/network" value="Application library error by network failure for '%%client/default/common/script/init.js'." />
 	<string name="dev/library/network/solution" value="Check the network." />
 	<string name="dev/library/init" value="Application library initialization error for '%%' scripts : %%." />
 	<string name="dev/library/init/solution" value="Check the JavaScript files for errors." />
@@ -66,7 +66,7 @@
 	<string name="dev/library/object" value="Application library object failed to load for '%%'." />
 	<string name="dev/library/object/solution" value="Check the module scripts." />
 
-	<string name="dev/info" value="Application info error for '%%' on client/info.js : %%." />
+	<string name="dev/info" value="Application info error for '%%' on client/default/common/script/info.js : %%." />
 	<string name="dev/depend/specify" value="Application '%%' did not specify a system dependency." />
 	<string name="dev/depend/specify" value="Make sure a valid system is declared in info.js." />
 

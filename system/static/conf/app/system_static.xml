@@ -1,0 +1,288 @@
+<root>
+	<!--
+		This is a system wide configuration file.
+
+		Each entries should not be commented out but kept as blank (value="") if unnecessary.
+		NOTE : Entries are written in single level XML to ease the parsing without the need for XML libraries.
+
+		If document root on the web server is not set to 'system/static/root/' but the top directory then make really sure that any files outside 'system/static/root/' are not accessible by the client.
+		TODO - Might want to cache the configuration values for each languages instead of parsing this every request (Parameter to define such file goes to?)
+		NOTE - Since this file will be read as a whole to be parsed with regular expression, do not keep same entries in comments or they will be parsed too.
+	-->
+
+	<!-- DOM root node name
+		The identification name for root DOM node within the browser JavaScript environment.
+		Make sure to keep it with only alphabets to be safe technically.
+	-->
+	<conf name="root" value="deskportal" />
+	<conf name="brand" value="DeskPortal" /> <!-- The name of this system -->
+
+	<conf name="brand_site" value="http://deskportal.com/" /> <!-- The main site -->
+	<conf name="brand_info" value="http://deskportal.net/" /> <!-- Product information site --> 
+
+	<conf name="developer" value="Windware Solution" /> <!-- Developer group name -->
+	<conf name="developer_site" value="http://windware.com/" /> <!-- The web site of the developer -->
+
+	<!-- System Database
+		Where to store the system database. db_system_type can be any database type supported by all of the server side languages used.
+		PHP will use PDO. Rerl will use DBI. TODO - Python will use ???. Ruby will use ???.
+		For example, 'mysql', 'pgsql' and 'sqlite'.
+		To specify unix socket connection, specify the socket as the db_user_host and db_user_port will be ignored in this case.
+		For sqlite, db_user_host, db_user_port, db_user_user and db_user_pass are ignored and db_user_database is used as the file name.
+
+		For detailed configuration on how to connect to database with each programming language, refer to 'system/static/conf/database/database.EXT'
+	-->
+	<conf name="db_system_type" value="mysql" />
+	<conf name="db_system_host" value="localhost" />
+	<conf name="db_system_port" value="3306" />
+	<conf name="db_system_database" value="deskportal" />
+	<conf name="db_system_user" value="deskportal" />
+	<conf name="db_system_pass" value="deskportal" />
+
+	<!-- User Database
+		Where to store the user database. Can be the same as the system database.
+		A string of '%APP%' will be replaced as the name of the application accessing the database
+		and '%VERSION%' for the version of the application's database (not the version of the application itself).
+		And for db_user_database, '%USER%' will also be replaced as the logged in user's ID.
+
+		Not recommended to use string substitution for anything but sqlite, since it will unlikely to be able to create a new database on the fly.
+		FIXME - It doesn't even try to create a new database right now.
+		TODO - Might implement dynamic database creation in case var substitution was specified for db name for db like mysql (but depends on db server permission)
+	-->
+	<conf name="db_user_type" value="mysql" />
+	<conf name="db_user_host" value="localhost" />
+	<conf name="db_user_port" value="3306" />
+	<conf name="db_user_database" value="deskportal" />
+	<conf name="db_user_user" value="deskportal" />
+	<conf name="db_user_pass" value="deskportal" />
+
+	<!-- Database Prefix
+		A prefix to use for database table names.
+	-->
+	<conf name="db_user_prefix" value="dp_" />
+	<conf name="db_system_prefix" value="dp_" />
+
+	<!-- Database Persistent Connection
+		Whether to use persistent connection to database or not.
+		Should be used to avoid repeated overhead of opening a new database connection for every requests.
+		But be warned that SQLite may get locked statuses accessing on a same connection from multiple processes.
+	-->
+	<conf name="db_user_persistent" value="0" />
+	<conf name="db_system_persistent" value="0" />
+
+	<!-- Database lock
+		All database write operations will not take place by surrounding all operations in a transaction and rolling back when set to 1.
+		It will help to see what database operations took place with 'log_query' turned on without changing the data.
+		It is advised to restart the web server if 'db_persistent' is set to 1 when flipping this value
+		as previous database connections may get in the way of the transaction.
+		This is automatically turned on when 'system_demo' is set to 1.
+	-->
+	<conf name="db_lock" value="0" />
+
+	<!-- Authentication Method
+		User authentication method. Please look inside 'system/static/server/auth/METHOD.EXT' for specific configurations.
+		The function inside each authentication file should have a 'System_Static_Auth' class with 'verify' method returning
+		either true or false by validating the user name and password passed as parameters.
+	-->
+	<conf name="system_auth" value="local" />
+
+	<!-- Demo mode
+		Turn the system into demo mode "1" or not "0".
+		Demo mode forbids any POST request to avoid writing data and allows multiple clients to use a single user.
+		Turn on for the purpose of demonstrating the system.
+		A guest user should be first created with demo mode off, tweak its user setting and turn on demo mode to disallow any changes.
+		It is typically easier to use 'system_auth' as 'demo' for a simple authentication.
+	-->
+	<conf name="system_demo" value="0" />
+
+	<!-- System Version
+		Version of the system to use before a user logs in. (ex : Top login page)
+		After an user logs in, the user specified system version will be used.
+	-->
+	<conf name="system_version" value="1_0_0" />
+
+	<!-- Automatic User Creation
+		Whether to create user accounts automatically or not upon first successful authentication
+		through external authentication mechanism. (ex : ldap)
+		The value can be either 1 or 0 and if this is set to 0, user accounts must be manually added to 'system_static_user'
+		table in the system database before an user can gain the access even if the authentication succeeds.
+		Has no meaning when 'system_auth' is set to "local" since it refers to the same database for both user list and authentication.
+	-->
+	<conf name="user_create" value="1" />
+
+	<!-- Hash Algorithm for user password
+		Set an algorithm to be used to hash user passwords for local user database.
+		Must be supported by all the server side languages used. (ex : sha256)
+	-->
+	<conf name="user_hash" value="sha256" />
+
+	<!-- Caching
+		Caching flag for the system. Only turn off under development.
+		This will create cache files on the server side and send out cache headers to clients.
+	-->
+	<conf name="cache" value="1" />
+
+	<!-- Cache storage method
+		The method to use for caching.
+		Can be any of the implemented method in 'system/static/server/cache/METHOD.LANG' where 'METHOD' should be mentioned in here.
+		Specific configuration for each methods are inside 'system/static/conf/cache/METHOD.xml'.
+	-->
+	<conf name="cache_method" value="file" />
+
+	<!-- Minify
+		  Whether to minify contents sent out such as JavaScript/CSS/HTML or not.
+		  Should be turned on with caching enabled.
+		  If caching is disabled, this will slow down the loading time by minifying on every request.
+		  Disable under development.
+	-->
+	<conf name="minify" value="1" />
+
+	<!-- Compression
+		To compress the output sent to the clients or not.
+		Only turn off for development purpose as it will usually have bad impact on performance when off.
+		Note that compression may still occur to data stored even if this is set to off.
+	-->
+	<conf name="compress" value="1" />
+
+	<!-- File system umask value
+		The value to be masked against operations when creating new files and folders on file systems where file permissions are applicable.
+	-->
+	<conf name="umask" value="0000" />
+
+	<!-- System side log level
+		Verbosity level to log to the system database. Values can be from 1 to 6. It will log anything from and below the specified value.
+		Numbers are, 2:Critical, 3:Error, 4:Warning, 5:Notice, 6:Info, 7:Debug (0 and 1 are unused to match the ordinary log levels)
+	-->
+	<conf name="log_system" value="4" />
+
+	<!-- User side log level
+		Verbosity level to log to the user's database. Value meanings are same as above.
+		Should not be too high to inflate the users' database size.
+	-->
+	<conf name="log_user" value="4" />
+
+	<!-- Log display level
+		Verbosity level to display the errors on screen. Value meanings are same as above.
+	-->
+	<conf name="log_display" value="4" />
+
+	<!-- Log SQL query parameters
+		Whether to display SQL query or not in the log.
+		SQL queries are not logged by any of the above settings.
+		Setting it to 1 will display the query with placeholders.
+		Setting it to 2 will fill in the actual values. (Watch out for binary and long text values in the queries.)
+	-->
+	<conf name="log_query" value="0" />
+
+	<!-- Detailed system log report level
+		Level of system logging to start displaying detailed debug message to display.
+		Only useful when 'log_display' is in effect.
+		Not applicable for user logging.
+		Note that this can display alot of information to the screen under higher levels.
+		Suggested to use only when backtrace is necessary.
+	-->
+	<conf name="log_detail" value="0" />
+
+	<!-- Show log on display in HTML or text.
+		  Whether to show the log in HTML formatted table or in simple text representation when displayed under 'log_display'.
+		  Always invalid for command line executions.
+		  Values can be 0 for text and 1 for HTML.
+	-->
+	<conf name="log_html" value="0" />
+
+	<!-- Emergency log file path
+		The path of a log file that gets logged to before system can log to a database or when failed to log to the database.
+		Use a relative path to specify a path under root of the whole tree (ex : system/static/data/static.log)
+		Make sure the file or the directory, if the file does not exist, is writeable by the web server process.
+	-->
+	<conf name="log_file" value="/home/deep/deskportal/static.log" />
+
+	<!-- Periodic log
+		Where to write the logs to while executing periodic schedule scripts.
+		TODO - If empty, log to standard output
+	-->
+	<conf name="periodic_log" value="/home/deep/deskportal/periodic.log" />
+
+	<!-- Periodic log level
+		Verbosity level of logs to take while running periodic schedule scripts set by above configuration.
+	-->
+	<conf name="periodic_level" value="5" />
+
+	<!-- Periodic log mail
+		Send the log messages to an email address if specified for periodic scheduler logging when logging happened.
+		Keep it empty to disable sending mails.
+		Note that a lot of lengthy email can be dispatched if the log level is set high.
+	-->
+	<conf name="periodic_mail" value="webmaster@deskportal.org" />
+
+	<!-- Remote request agent string
+		The user agent string to use when making remote HTTP request.
+		Replaces '%VERSION%' as system version number.
+	-->
+	<conf name="net_agent" value="http://deskportal.com/ [%VERSION%]" />
+
+	<!-- Network connection timeout length
+		Amount of seconds to wait till any sort of network connection is considered timed out.
+	-->
+	<conf name="net_timeout" value="8" />
+
+	<!-- User file storage directory
+		Location to store users' files. Takes '%USER%' (user ID), '%APP%' (app name) for string substitution.
+		NOTE : Does not substitute '%VERSION%' to avoid placing same files on different minor app versions.
+		If files need to be distinguished between versions, apps should prefix file names with its own versions.
+	-->
+	<conf name="user_storage" value="/home/deep/deskportal/%USER%/%APP%/" />
+
+	<!-- Extension settings
+		Specify the file extensions each of the languages are triggered by the web server.
+	-->
+	<conf name="ext_php" value="php" />
+	<conf name="ext_perl" value="pl" />
+	<conf name="ext_python" value="py" />
+	<conf name="ext_ruby" value="rb" />
+
+	<!-- Public Applications
+		List of applications that are available without logging in.
+		Leave the value as empty for all applications to be public to not take user application subscription into account.
+		Leaving out essential applications like system and login will render the system useless unless none are specified.
+	-->
+	<conf name="app_public" value="about" />
+	<conf name="app_public" value="announce" />
+	<conf name="app_public" value="login" />
+	<conf name="app_public" value="notification" />
+	<conf name="app_public" value="system" />
+
+	<!-- Commonly Subscribed Applications
+		List of applications those will be given to a new user.
+		Note that if an application's dependent application is not available for an user it can cause errors on client side.
+		Check each application's document for required dependencies. Dependencies can also vary from version to version on a same application as well.
+
+		Any applications listed in 'public' configuration will be available to an user without mentioning them here.
+		Which also means when 'public' configuration is empty, this setting has no meaning.
+
+		The application will be set subscribed on the first login of the user.
+	-->
+	<conf name="app_subscribed" value="addressbook" />
+	<conf name="app_subscribed" value="bookmark" />
+	<conf name="app_subscribed" value="calculator" />
+	<conf name="app_subscribed" value="calendar" />
+	<conf name="app_subscribed" value="clock" />
+	<conf name="app_subscribed" value="guide" />
+	<conf name="app_subscribed" value="headline" />
+	<conf name="app_subscribed" value="launcher" />
+	<conf name="app_subscribed" value="mail" />
+	<conf name="app_subscribed" value="memo" />
+	<conf name="app_subscribed" value="search" />
+	<conf name="app_subscribed" value="setting" />
+	<conf name="app_subscribed" value="todo" />
+	<conf name="app_subscribed" value="toolbar" />
+
+	<!-- Default Applications
+		List of applications displayed initially on the screen for a new user.
+		The newest version from each of the application at that moment will be shown by specifying only the application name such as 'clock'
+		unless versions are also specified such as in the form of 'clock_1_0_0'.
+	-->
+	<conf name="app_initial" value="clock" />
+	<conf name="app_initial" value="guide" />
+	<conf name="app_initial" value="launcher" />
+</root>

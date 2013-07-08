@@ -1,0 +1,5 @@
+<root>
+	<!-- The user allowed to login under demo mode -->
+	<conf name="identity" value="guest@guest" />
+	<conf name="password" value="guest" />
+</root>

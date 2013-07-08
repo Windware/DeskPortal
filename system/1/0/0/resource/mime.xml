@@ -1,6 +1,6 @@
 <root>
 	<type ext="png" mime="image/png" compress="0" />
-	<type ext="jpg" mime="image/jpg" compress="0" />
+	<type ext="jpg" mime="image/jpeg" compress="0" />
 	<type ext="gif" mime="image/gif" compress="0" />
 	<type ext="ico" mime="image/vnd.microsoft.icon" compress="0" />
 

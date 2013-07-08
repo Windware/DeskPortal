@@ -79,21 +79,21 @@
 			return $minifier->min();
 		}
 		
-		public function __construct($input) #Setup process
+		public function __construct($input) //Setup process
 		{
 			$this->input = str_replace("\r\n", "\n", $input);
 			$this->inputLength = strlen($this->input);
 		}
 		
-		public function min() #Perform minification, return result
+		public function min() //Perform minification, return result
 		{
-			if($this->output !== '') return $this->output; #Min already run
+			if($this->output !== '') return $this->output; //Min already run
 			$this->action(self::ACTION_DELETE_A_B);
 			
 			while($this->a !== null)
 			{
-				#Determine next command
-				$command = self::ACTION_KEEP_A; #Default
+				//Determine next command
+				$command = self::ACTION_KEEP_A; //Default
 
 				if($this->a === ' ') { if(!$this->isAlphaNum($this->b)) $command = self::ACTION_DELETE_A; }
 				elseif($this->a === "\n")
@@ -120,21 +120,21 @@
 		{
 			switch($command)
 			{
-				case self::ACTION_KEEP_A : $this->output .= $this->a; #Fallthrough
+				case self::ACTION_KEEP_A : $this->output .= $this->a; //Fallthrough
 
 				case self::ACTION_DELETE_A :
 					$this->a = $this->b;
 
-					if($this->a === "'" || $this->a === '"') #String literal
+					if($this->a === "'" || $this->a === '"') //String literal
 					{
-						$str = $this->a; #In case needed for exception
+						$str = $this->a; //In case needed for exception
 
 						while(true)
 						{
 							$this->output .= $this->a;
 							$this->a = $this->get();
 
-							if($this->a === $this->b) break; #End quote
+							if($this->a === $this->b) break; //End quote
 							if(ord($this->a) <= self::ORD_LF) throw new Exception('Unterminated String: '.var_export($str, true));
 
 							$str .= $this->a;
@@ -145,14 +145,14 @@
 						}
 					}
 
-					#Fallthrough
+					//Fallthrough
 				case self::ACTION_DELETE_A_B :
 					$this->b = $this->next();
 
-					if($this->b === '/' && $this->isRegexpLiteral()) #RegExp literal
+					if($this->b === '/' && $this->isRegexpLiteral()) //RegExp literal
 					{
 						$this->output .= $this->a.$this->b;
-						$pattern = '/'; #In case needed for exception
+						$pattern = '/'; //In case needed for exception
 
 						while(true)
 						{
@@ -178,19 +178,19 @@
 		
 		protected function isRegexpLiteral()
 		{
-			if(false !== strpos("\n{;(,=:[!&|?", $this->a)) return true; #We aren't dividing
+			if(false !== strpos("\n{;(,=:[!&|?", $this->a)) return true; //We aren't dividing
 
 			if(' ' === $this->a)
 			{
 				$length = strlen($this->output);
-				if($length < 2) return true; #Weird edge case
+				if($length < 2) return true; //Weird edge case
 
-				#You can't divide a keyword
+				//You can't divide a keyword
 				if(preg_match('/(?:case|else|in|return|typeof)$/', $this->output, $m))
 				{
-					if($this->output === $m[0]) return true; #Odd but could happen
+					if($this->output === $m[0]) return true; //Odd but could happen
 
-					#Make sure it's a keyword, not end of an identifier
+					//Make sure it's a keyword, not end of an identifier
 					$charBeforeKeyword = substr($this->output, $length - strlen($m[0]) - 1, 1);
 					if(!$this->isAlphaNum($charBeforeKeyword)) return true;
 				}
@@ -199,7 +199,7 @@
 			return false;
 		}
 		
-		protected function get() #Get next char. Convert ctrl char to space.
+		protected function get() //Get next char. Convert ctrl char to space.
 		{
 			$c = $this->lookAhead;
 			$this->lookAhead = null;
@@ -215,14 +215,14 @@
 			}
 
 			if($c === "\r" || $c === "\n") return "\n";
-			if(ord($c) < self::ORD_SPACE) return ' '; #Control char
+			if(ord($c) < self::ORD_SPACE) return ' '; //Control char
 
 			return $c;
 		}
 		
-		protected function peek() { return $this->lookAhead = $this->get(); } #Get next char. If is ctrl character, translate to a space or newline.
+		protected function peek() { return $this->lookAhead = $this->get(); } //Get next char. If is ctrl character, translate to a space or newline.
 		
-		protected function isAlphaNum($c) { return preg_match('/^[0-9a-zA-Z_\\$\\\\]$/', $c) || ord($c) > 126; } #Is $c a letter, digit, underscore, dollar sign, escape, or non-ASCII?
+		protected function isAlphaNum($c) { return preg_match('/^[0-9a-zA-Z_\\$\\\\]$/', $c) || ord($c) > 126; } //Is $c a letter, digit, underscore, dollar sign, escape, or non-ASCII?
 		
 		protected function singleLineComment()
 		{
@@ -233,8 +233,8 @@
 				$get = $this->get();
 				$comment .= $get;
 
-				if(ord($get) > self::ORD_LF) continue; #If not EOL reached
-				if(preg_match('/^\\/@(?:cc_on|if|elif|else|end)\\b/', $comment)) return "/{$comment}"; #If IE conditional comment
+				if(ord($get) > self::ORD_LF) continue; //If not EOL reached
+				if(preg_match('/^\\/@(?:cc_on|if|elif|else|end)\\b/', $comment)) return "/{$comment}"; //If IE conditional comment
 
 				return $get;
 			}
@@ -251,12 +251,12 @@
 
 				if($get === '*')
 				{
-					if($this->peek() === '/') #End of comment reached
+					if($this->peek() === '/') //End of comment reached
 					{
 						$this->get();
 
-						if(0 === strpos($comment, '!')) return "\n/*".substr($comment, 1)."*/\n"; #If comment preserved by YUI Compressor
-						if(preg_match('/^@(?:cc_on|if|elif|else|end)\\b/', $comment)) return "/*{$comment}*/"; #If IE conditional comment
+						if(0 === strpos($comment, '!')) return "\n/*".substr($comment, 1)."*/\n"; //If comment preserved by YUI Compressor
+						if(preg_match('/^@(?:cc_on|if|elif|else|end)\\b/', $comment)) return "/*{$comment}*/"; //If IE conditional comment
 
 						return ' ';
 					}
@@ -267,7 +267,7 @@
 			}
 		}
 		
-		protected function next() #Get the next character, skipping over comments. Some comments may be preserved.
+		protected function next() //Get the next character, skipping over comments. Some comments may be preserved.
 		{
 			$get = $this->get();
 			if($get !== '/') return $get;
@@ -282,4 +282,3 @@
 			}
 		}
 	}
-?>

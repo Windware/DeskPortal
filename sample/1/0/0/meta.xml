@@ -63,10 +63,10 @@
 		<folder name="." license="Windware Reference License">
 			<author name="Author" contact="author@example.com" site="http://example.com" />
 
-			<folder name="component">
+			<folder name="client">
 				<folder name="default">
-					<folder name="computer">
-						<folder name="graphic">
+					<folder name="common">
+						<folder name="image">
 							<file name="icon.png" license="Free license">
 								<author name="Icon Author" contact="icon@example.com" site="http://example.com/" />
 							</file>

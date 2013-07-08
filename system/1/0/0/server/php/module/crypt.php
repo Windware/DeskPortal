@@ -1,9 +1,9 @@
 <?php
 	class System_1_0_0_Crypt
 	{
-		protected static $_cipher = MCRYPT_BLOWFISH; #Encryption method
+		protected static $_cipher = MCRYPT_BLOWFISH; //Encryption method (Requires PHP Mcrypt module)
 
-		protected static function _init($key) #Initialize the crypt module
+		protected static function _init($key) //Initialize the crypt module
 		{
 			$resource = mcrypt_module_open(self::$_cipher, '', 'cbc', '');
 
@@ -14,7 +14,7 @@
 			return $resource;
 		}
 
-		public static function decrypt(&$system, $data, $key) #Decrypt given data with the key
+		public static function decrypt(&$system, $data, $key) //Decrypt given data with the key
 		{
 			if(!$system->is_text($data) || !$system->is_text($key)) return false;
 
@@ -27,7 +27,7 @@
 			return rtrim($data, "\0");
 		}
 
-		public static function encrypt(&$system, $data, $key) #Encrypt given data with the key
+		public static function encrypt(&$system, $data, $key) //Encrypt given data with the key
 		{
 			if(!$system->is_text($data) || !$system->is_text($key)) return false;
 
@@ -40,4 +40,3 @@
 			return base64_encode($data);
 		}
 	}
-?>

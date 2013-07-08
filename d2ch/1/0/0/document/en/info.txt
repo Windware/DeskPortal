@@ -1,0 +1,1 @@
+An application to read and post to Japanese public message board 2ch

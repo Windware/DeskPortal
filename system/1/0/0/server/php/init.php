@@ -5,20 +5,20 @@
 
 		public function __construct($location)
 		{
-			$this->global = &System_Static::$global; #Link to the globally used variables
+			$this->global = &System_Static::$global; //Link to the globally used variables
 
 			#Set them temporarily for the log and user object to catch the system information (Redefined later)
 			$this->system = array('id' => $class = get_class(), 'version' => preg_replace('/^[a-z]+_(\d+_\d+)$/i', '\1', $class));
 
-			$this->global['define']['device'] = 'computer'; #FIXME
+			$this->global['define']['device'] = 'computer'; //FIXME
 
-			$path['self'] = preg_replace('/\?.*/', '', $this->file_relative($location)); #Get the path to the requested file
-			$path['system'] = $this->file_relative(__FILE__); #Get the path to this system
+			$path['self'] = preg_replace('/\?.*/', '', $this->file_relative($location)); //Get the path to the requested file
+			$path['system'] = $this->file_relative(__FILE__); //Get the path to this system
 
-			$this->self = System_Static::app_env($path['self']); #Get path environments for the app
-			$this->system = System_Static::app_env($path['system']); #Get path environments for the system
+			$this->self = System_Static::app_env($path['self']); //Get path environments for the app
+			$this->system = System_Static::app_env($path['system']); //Get path environments for the system
 
-			$this->log(__METHOD__); #Report the creation of the system object
+			$this->log(__METHOD__); //Report the creation of the system object
 		}
 
 
@@ -86,7 +86,7 @@
 
 		public function database($type, $caller, System_1_0_0_User $user = null, $app = null, $version = null, $reload = false)
 		{
-			static $_database; #Local database object cache
+			static $_database; //Local database object cache
 			$log = $this->log(__METHOD__);
 
 			if($app === null) $app = $this->self['name'];
@@ -100,19 +100,19 @@
 
 			switch($type)
 			{
-				case 'user' : #If user is specified, open the user's database
+				case 'user' : //If user is specified, open the user's database
 					if($user === null) $user = $this->user();
 
-					if(!$user->valid) #If opening user database when there is no valid user, quit
+					if(!$user->valid) //If opening user database when there is no valid user, quit
 					{
 						$problem = "No valid user found to open an user database '$app' version '$version'";
 						return $log->dev(LOG_WARNING, $problem, 'Specify a valid user or make sure an user is logged in');
 					}
 
-					$id = "$app.$version.$user->id"; #Unique ID for cache index
+					$id = "$app.$version.$user->id"; //Unique ID for cache index
 				break;
 
-				case 'system' : $id = "$app.$version"; break; #Open the system database if unspecified
+				case 'system' : $id = "$app.$version"; break; //Open the system database if unspecified
 
 				default :
 					$problem = "Wrong database type specified opening database '$app' version '$version'";
@@ -122,10 +122,10 @@
 
 			$log->dev(LOG_INFO, "Requesting using database '$app' version '$version'");
 
-			if(!$reload && $_database[$id] instanceof System_1_0_0_Database) #If local cache exists, use it
+			if(!$reload && $_database[$id] instanceof System_1_0_0_Database) //If local cache exists, use it
 			{
 				$log->dev(LOG_INFO, "Using locally cached database connection for database '$app' version '$version'");
-				$_database[$id]->caller = $this->file_relative($caller); #Switch the caller name TODO - Caller gets mixed if multiple app calls it at once
+				$_database[$id]->caller = $this->file_relative($caller); //Switch the caller name TODO - Caller gets mixed if multiple app calls it at once
 
 				return $_database[$id];
 			}
@@ -135,7 +135,7 @@
 
 		public function database_escape($string) { return System_1_0_0_Database::escape($string); }
 
-		public function database_key($type, $key, $value = null, System_1_0_0_User $user = null, $app = null, $version = null)
+		public function database_key($type, $key, $value = false, System_1_0_0_User $user = null, $app = null, $version = null)
 		{
 			return System_1_0_0_Database::key($this, $type, $key, $value, $user, $app, $version);
 		}
@@ -182,7 +182,11 @@
 
 		public function is_id($subject) { return System_Static::is_id($subject); }
 
+		public function is_identity($subject) { return self::is_mail($subject); }
+
 		public function is_language($subject) { return System_1_0_0_Is::language($subject); }
+
+		public function is_mail($subject) { return System_1_0_0_Is::mail($subject); }
 
 		public function is_path($subject) { return System_Static::is_path($subject); }
 
@@ -208,21 +212,21 @@
 
 		public function log($caller)
 		{
-			static $_log; #Cached log objects specific to each functions
+			static $_log; //Cached log objects specific to each functions
 			if(!is_string($caller)) return false;
 
-			$id = md5($caller); #Make it usable as a hash key
+			$id = md5($caller); //Make it usable as a hash key
 
 			if($_log[$id] instanceof System_1_0_0_Log)
 			{
-				$_log[$id]->caller = $caller; #Switch the caller name
+				$_log[$id]->caller = $caller; //Switch the caller name
 				return $_log[$id];
 			}
 
 			return $_log[$id] = new System_1_0_0_Log($this, $caller);
 		}
 
-		public function log_query($mode = 2) { $this->app_conf('system', 'static', 'log_query', $mode); } #Debugging shortcut
+		public function log_query($mode = 2) { $this->app_conf('system', 'static', 'log_query', $mode); } //Debugging shortcut
 
 
 		public function minify_css($code) { return System_1_0_0_Minify::css($this, $code); }
@@ -237,7 +241,7 @@
 
 		public function user($id = null, $reload = false)
 		{
-			static $_user; #Cached user objects
+			static $_user; //Cached user objects
 
 			$log = $this->log(__METHOD__);
 			if($id !== null && !$this->is_digit($id)) return $log->param();
@@ -246,9 +250,9 @@
 			return $_user[$id] = new System_1_0_0_User($this, $id);
 		}
 
-		public function user_create($name, $pass) { return System_1_0_0_User::create($this, $name, $pass); }
+		public function user_create($identity, $password) { return System_1_0_0_User::create($this, $identity, $password); }
 
-		public function user_find($name) { return System_1_0_0_User::find($this, $name); }
+		public function user_find($identity) { return System_1_0_0_User::find($this, $identity); }
 
 
 		public function xml_build($data, $exclude = array()) { return System_1_0_0_Xml::build($this, $data, $exclude); }
@@ -256,8 +260,6 @@
 		public function xml_data($string) { return System_1_0_0_Xml::data($this, $string); }
 
 		public function xml_dump($status, $name = null, $list = array(), $exclude = array(), $compress = false) { return System_1_0_0_Xml::dump($this, $status, $name, $list, $exclude, $compress); }
-
-		public function xml_entity($string) { return System_1_0_0_Xml::entity($this, $string); }
 
 		public function xml_header($declare = true) { return System_1_0_0_Xml::header($this, $declare); }
 
@@ -273,4 +275,3 @@
 
 		public function xml_status($value, $key = null) { return System_1_0_0_Xml::status($this, $value, $key); }
 	}
-?>

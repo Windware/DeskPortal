@@ -8,7 +8,6 @@
 	sub app_env
 	{
 	}
-	}
 
 	sub auth_verify
 	{

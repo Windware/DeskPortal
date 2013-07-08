@@ -1,15 +1,14 @@
 <?php
 	class System_Static_Auth
 	{
-		public function verify($name, $pass) #Check against pre defined demo user credential
+		public function verify($identity, $password) //Check against pre defined demo user credential
 		{
 			$system = new System_1_0_0(__FILE__);
 
 			$log = $system->log(__METHOD__);
-			if(!is_string($name) || !is_string($pass)) return $log->param();
+			if(!$system->is_identity($identity) || !is_string($password)) return $log->param();
 
 			$conf = $system->file_conf('system/static/conf/auth/demo.xml');
-			return $conf['user'] == strtolower($name) && $conf['pass'] == $pass;
+			return $conf['identity'] === strtolower($identity) && $conf['password'] === $password;
 		}
 	}
-?>

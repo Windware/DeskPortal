@@ -618,6 +618,8 @@
 					$connection = Mail_1_0_0_Account::_special($info); #Get account connection parameters
 
 					$pop3 = Mail_1_0_0_Item::_pop3($system, $connection['receiver']['host'], $connection['receiver']['port'], $connection['receiver']['secure'], $connection['receiver']['user'], $system->crypt_decrypt($connection['receiver']['pass'], $conf['key']), $user);
+					if(!$pop3) return false;
+
 					$list = $pop3->getListing(); #Get list of mails
 
 					$query = $database->prepare("SELECT uid FROM {$database->prefix}loaded WHERE user = :user AND account = :account");
@@ -753,4 +755,3 @@
 			return true;
 		}
 	}
-?>

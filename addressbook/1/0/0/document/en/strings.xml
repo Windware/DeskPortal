@@ -14,7 +14,7 @@
 
 	<!-- Info window -->
 	<string name="name" value="Name" />
-	<string name="sex" value="Sex" />
+	<string name="gender" value="Gender" />
 	<string name="female" value="Female" />
 	<string name="male" value="Male" />
 	<string name="age" value="Age" />

@@ -54,7 +54,7 @@
 
 			$value = array(':user' => $user->id);
 
-			$field = explode(' ', 'name sex age birth_year birth_month birth_day mail_main mail_mobile mail_alt phone mobile web address note groups updated');
+			$field = explode(' ', 'name gender age birth_year birth_month birth_day mail_main mail_mobile mail_alt phone mobile web address note groups updated');
 
 			foreach($field as $section)
 			{

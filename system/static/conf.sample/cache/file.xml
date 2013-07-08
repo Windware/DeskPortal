@@ -1,8 +1,0 @@
-<root>
-	<!-- Cache storage path
-		When cache method is set to 'file', this is the path to keep caches in.
-		Folders will be created automatically inside.
-		Can use relative path against the root tree of the whole system.
-	-->
-	<conf name="cache_path" value="/path/to/caches/" />
-</root>

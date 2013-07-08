@@ -3,9 +3,9 @@
 	{
 		public function verify()
 		{
-			#Read XML config
-			#Open connection to SQL server
-			#Run query
-			#return result
+			//Read XML config
+			//Open connection to SQL server
+			//Run query
+			//return result
 		}
 	}

@@ -5,8 +5,8 @@
 		{
 			global $global;
 
-			#Read the XML config
-			#contact the LDAP server
-			#return result
+			//Read the XML config
+			//contact the LDAP server
+			//return result
 		}
 	}

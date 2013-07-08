@@ -1,0 +1,4 @@
+
+	$self.conf = new function()
+	{
+	}

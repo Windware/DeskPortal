@@ -1,4 +1,0 @@
-<root>
-	<!-- The user allowed to login under demo mode -->
-	<user name="guest" pass="guest" />
-</root>

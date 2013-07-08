@@ -14,10 +14,10 @@
 		<folder name="." license="Windware Reference License">
 			<author name="Windware Solution" site="http://windware.com/" />
 
-			<folder name="component">
+			<folder name="client">
 				<folder name="default">
-					<folder name="computer">
-						<folder name="graphic">
+					<folder name="common">
+						<folder name="image">
 							<file name="icon.png" license="Public Domain">
 								<author name="Open Clip Art" contact="http://openclipart.org/media/people/contact/admin" site="http://openclipart.org/" />
 							</file>

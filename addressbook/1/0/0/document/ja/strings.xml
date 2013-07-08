@@ -14,7 +14,7 @@
 
 	<!-- 情報ウインドウ -->
 	<string name="name" value="名前" />
-	<string name="sex" value="性別" />
+	<string name="gender" value="性別" />
 	<string name="age" value="年齢" />
 	<string name="female" value="女性" />
 	<string name="male" value="男性" />

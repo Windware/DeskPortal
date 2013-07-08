@@ -1,0 +1,7 @@
+<root>
+	<!-- Announcement Feed
+		URL of the RSS feed that 'Announce' application will use to display.
+		Application can set 'language' URL parameter to get a language specific announcement.
+	-->
+	<conf name="url" value="http://deskportal.com/feed.php" />
+</root>

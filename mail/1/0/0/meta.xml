@@ -24,10 +24,10 @@
 		<folder name="." license="Windware Reference License">
 			<author name="Windware Solution" site="http://windware.com/" />
 
-			<folder name="component">
+			<folder name="client">
 				<folder name="default">
-					<folder name="computer">
-						<folder name="graphic" license="Free commercial use license">
+					<folder name="common">
+						<folder name="image" license="Free commercial use license">
 							<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
 
 							<file name="icon.png" license="Public Domain">

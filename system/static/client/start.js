@@ -13,7 +13,7 @@
 
 			this.developer = {name : '%developer%', site : '%developer_site%'}; //The developer information
 
-			this.demo = {mode : %demo%, user : '%demo_user%', pass : '%demo_pass%'}; //Whether this is under demo mode or not
+			this.demo = {mode : %demo%, identity : '%demo_identity%', password : '%demo_password%'}; //Whether this is under demo mode or not
 
 			this.extensions = {%extension%}; //List of available server side languages and their extension
 
@@ -82,7 +82,7 @@
 				round : true, //If the window should have rounded corners or not
 				fade : false, //To fade windows and elements or not (Can degrade performance when 'true')
 				translucent : false, //Whether to make windows translucent or not while moving and resizing
-				animate : false, //If shrink/expand operations should be done with animation (Not used yet as of system_1_0_0)
+				animate : false, //If shrink/expand operations should be done with animation
 
 				delay : 1, //Delay in seconds till a tip is shown
 				move : 1, //Type of window movement

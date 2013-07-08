@@ -5,7 +5,7 @@
 		<column name="user" param="INT NOT NULL" />
 		<column name="name" param="VARCHAR(255) NOT NULL" />
 		<column name="age" param="INT" />
-		<column name="sex" param="INT" />
+		<column name="gender" param="INT" />
 		<column name="birth_year" param="INT" />
 		<column name="birth_month" param="INT" />
 		<column name="birth_day" param="INT" />

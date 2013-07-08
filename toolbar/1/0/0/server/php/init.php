@@ -81,4 +81,3 @@
 			return $query->success && $database->commit() || $database->rollback() && false;
 		}
 	}
-?>

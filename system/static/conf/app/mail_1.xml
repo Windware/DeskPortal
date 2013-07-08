@@ -1,0 +1,23 @@
+<!-- This file must be copied to "system/static/conf/app/" to take effect -->
+<root>
+	<!-- Key string to encrypt user password in database
+		Since this application needs the passwords to access the mail servers in plain text form,
+		the passwords will be stored in a readable format, but it will be encrypted with the key string mentioned here
+		and will be decrypted using this key upon use.
+
+		Anyone accessing the user database will not be able to decrypt the user password without this key string.
+		While both the database and the key string may be accessed from the same source together,
+		it is still encrypted to be better than kept as plain text.
+
+		Changing this value during use will render all request to remote mail servers invalid.
+	-->
+	<conf name="key" value="9520e453211e208344b3460e24654a1b82b68ebf333cfe26ff2" />
+
+	<!--
+		The mailer name to be sent as 'X-Mailer' in the mail header when mails are sent
+
+		%APP% will be replaced by the name of this application
+		%VERSION% will be replaced by the version of this application
+	-->
+	<conf name="mailer" value="%brand_site% [%APP% %VERSION%]" />
+</root>

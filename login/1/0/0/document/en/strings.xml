@@ -1,5 +1,5 @@
 <root>
-	<string name="user" value="User name" />
+	<string name="mail" value="Email" />
 	<string name="pass" value="Password" />
 	<string name="button" value="Enter" />
 	<string name="session" value="Keep logged in" />

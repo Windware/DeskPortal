@@ -1,6 +1,6 @@
 <?php
 	class Mail_1_0_0_Item #Supports both POP3/IMAP and servers without UIDL or UID support
-	{ #TODO : Include PEAR packages as local files to avoid code change and to minimize external dep - Auth_SASL, Net_POP3, Net_SMTP, Mail, Mail_mime
+	{ #TODO : Include PEAR packages as local files to avoid code change and to minimize external dependencies - Auth_SASL, Net_POP3, Net_SMTP, Mail, Mail_mime
 		protected static $_attachment = 50; #Maximum megabytes allowed to be sent as an entire mail
 
 		protected static $_flag = array('deleted' => 'Deleted', 'seen' => 'Seen', 'marked' => 'Flagged', 'replied' => 'Answered', 'draft' => 'Draft'); #Table column names and corresponding IMAP flags

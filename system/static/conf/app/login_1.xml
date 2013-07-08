@@ -1,0 +1,13 @@
+<root>
+	<!--
+		The address used to recover lost passwords
+		Leave empty to disable showing a link
+	-->
+	<conf name="recover" value="http://deskportal.com/en/account/" />
+
+	<!--
+		The address used to make new registration
+		Leave empty to disable showing a link
+	-->
+	<conf name="register" value="http://deskportal.com/en/signup/" />
+</root>

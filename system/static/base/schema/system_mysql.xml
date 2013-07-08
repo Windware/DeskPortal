@@ -98,10 +98,11 @@
 	<table name="user">
 		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
 		<column name="name" param="VARCHAR(30) NOT NULL UNIQUE" />
-		<column name="pass" param="CHAR(64)" /> <!-- Password in SHA256 hash -->
+		<column name="password" param="CHAR(64)" /> <!-- Password in SHA256 hash -->
+		<column name="mail" param="VARCHAR(255) NOT NULL DEFAULT ''" /> <!-- Email address -->
 		<column name="joined" param="DATE" />
-		<column name="logged" param="INT DEFAULT 0" /> <!-- Number of times the user logged in -->
-		<column name="invalid" param="INT DEFAULT 0" /> <!-- Suspended users -->
+		<column name="logged" param="INT NOT NULL DEFAULT 0" /> <!-- Number of times the user logged in -->
+		<column name="invalid" param="INT NOT NULL DEFAULT 0" /> <!-- Suspended users -->
 
 		<extra name="ENGINE" param="INNODB" />
 	</table>
