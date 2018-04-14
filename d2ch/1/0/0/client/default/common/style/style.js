@@ -1,6 +1,5 @@
+window = 'ffeeaa'
+hover = '556677'
 
-	window = 'ffeeaa';
-	hover = '556677';
-
-	width = 500;
-	height = 500;
+width = 500
+height = 500

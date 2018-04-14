@@ -1,23 +1,23 @@
 <root>
 	<!-- ユーザー -->
 	<!-- item.js -->
-	<string name="user/save" value="ユーザー'%%'の情報を保存しました。" />
-	<string name="user/save/fail" value="ユーザー名を入力してください。" />
-	<string name="user/save/fail/solution" value="登録をするにはユーザー名が必要です。" />
+	<string name="user/save" value="ユーザー'%%'の情報を保存しました。"/>
+	<string name="user/save/fail" value="ユーザー名を入力してください。"/>
+	<string name="user/save/fail/solution" value="登録をするにはユーザー名が必要です。"/>
 
-	<string name="user/remove" value="ユーザー'%%'の登録が削除されました。" />
-	<string name="user/column" value="カラムの選択を保存しました。" />
+	<string name="user/remove" value="ユーザー'%%'の登録が削除されました。"/>
+	<string name="user/column" value="カラムの選択を保存しました。"/>
 
-	<string name="user/birth" value="無効な誕生日が指定されています。" />
-	<string name="user/birth/solution" value="正しい誕生日を入力してください。" />
+	<string name="user/birth" value="無効な誕生日が指定されています。"/>
+	<string name="user/birth/solution" value="正しい誕生日を入力してください。"/>
 
-	<string name="user/mail" value="無効なメールアドレスが指定されています。" />
-	<string name="user/mail/solution" value="正しいメールアドレスを入力してください。" />
+	<string name="user/mail" value="無効なメールアドレスが指定されています。"/>
+	<string name="user/mail/solution" value="正しいメールアドレスを入力してください。"/>
 
-	<string name="user/list" value="'%%'グループの一覧を取得しました。" />
-	<string name="user/search" value="'%%'グループの一覧を検索しました。" />
+	<string name="user/list" value="'%%'グループの一覧を取得しました。"/>
+	<string name="user/search" value="'%%'グループの一覧を検索しました。"/>
 
-	<string name="user/group/create" value="グループ'%%'を作成しました。" />
-	<string name="user/group/remove" value="グループ'%%'を削除しました。" />
-	<string name="user/group/update" value="グループ'%%'を更新しました。" />
+	<string name="user/group/create" value="グループ'%%'を作成しました。"/>
+	<string name="user/group/remove" value="グループ'%%'を削除しました。"/>
+	<string name="user/group/update" value="グループ'%%'を更新しました。"/>
 </root>

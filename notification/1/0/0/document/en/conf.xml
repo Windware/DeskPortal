@@ -1,17 +1,17 @@
 <root>
-	<string name="_1_display" value="Display" />
-	<string name="level" value="Report level" />
+	<string name="_1_display" value="Display"/>
+	<string name="level" value="Report level"/>
 
-	<string name="important" value="Only important" />
-	<string name="default" value="Default" />
-	<string name="detail" value="Detail " />
+	<string name="important" value="Only important"/>
+	<string name="default" value="Default"/>
+	<string name="detail" value="Detail "/>
 
-	<string name="period" value="Display period " />
-	<string name="minute" value="minutes" />
-	<string name="always" value="Always" />
+	<string name="period" value="Display period "/>
+	<string name="minute" value="minutes"/>
+	<string name="always" value="Always"/>
 
-	<string name="animated" value="Animated" />
+	<string name="animated" value="Animated"/>
 
-	<string name="dev" value="Show messages for developers" />
-	<string name="apply" value="Apply" />
+	<string name="dev" value="Show messages for developers"/>
+	<string name="apply" value="Apply"/>
 </root>

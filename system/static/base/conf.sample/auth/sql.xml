@@ -1,5 +1,5 @@
 <root>
 	<server type="mysql" host="localhost" port="3306" user="root" password="" database="deskportal">
-		<query string="SELECT id FROM %table% WHERE name = %name% AND password = %password%" />
+		<query string="SELECT id FROM %table% WHERE name = %name% AND password = %password%"/>
 	</server>
 </root>

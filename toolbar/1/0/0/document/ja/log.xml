@@ -1,8 +1,8 @@
 <root>
 	<!-- USER -->
 	<!-- gui.js -->
-	<string name="user/create" value="新規ツールバーを作成しました。" />
-	<string name="user/remove" value="ツールバーを削除しました。" />
+	<string name="user/create" value="新規ツールバーを作成しました。"/>
+	<string name="user/remove" value="ツールバーを削除しました。"/>
 
-	<string name="user/run" value="%%を実行しました。" />
+	<string name="user/run" value="%%を実行しました。"/>
 </root>

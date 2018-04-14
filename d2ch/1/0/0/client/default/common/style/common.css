@@ -1,30 +1,138 @@
 
-	table#%id%_main { border-collapse : collapse; margin-top : 10px; }
+table#
 
-	table#%id%_main td { border-color : #333; }
+%
+id
 
-	div#%id%_list, div#%id%_thread, div#%id%_message { overflow : auto; }
+%
+_main { border-collapse: collapse; margin-top: 10px; }
 
-	div#%id%_thread { background-color : #e8e8d8; }
+table#
 
-	div#%id%_message { background-color : #fff; }
+%
+id
 
-	div#%id%_message a { color : #975; }
+%
+_main td { border-color: #333; }
 
-	div#%id%_list a, div#%id%_thread a { display : block; padding : 5px; border-bottom : 1px #333 dotted; }
+div#
 
-	td.%id%_title { font-weight : bold; height : 5%; padding : 10px; font-size : 120%; }
+%
+id
 
-	a.%id%_category { background-color : #ccb; }
+%
+_list, div#
 
-	a.%id%_board { background-color : #eed; padding-left : 15px !important; }
+%
+id
 
-	h4.%id%_title { border-bottom : 1px #333 dotted; }
+%
+_thread, div#
 
-	div.%id%_reply { margin : 10px; }
+%
+id
 
-	div.%id%_text { margin : 10px; clear : right; }
+%
+_message { overflow: auto; }
 
-	img.%id%_message_filter { cursor : pointer; }
+div#
 
-	span.%id%_signature { cursor : help; color : #cca; }
+%
+id
+
+%
+_thread { background-color: #e8e8d8; }
+
+div#
+
+%
+id
+
+%
+_message { background-color: #fff; }
+
+div#
+
+%
+id
+
+%
+_message a { color: #975; }
+
+div#
+
+%
+id
+
+%
+_list a, div#
+
+%
+id
+
+%
+_thread a { display: block; padding: 5px; border-bottom: 1px #333 dotted; }
+
+td.
+
+%
+id
+
+%
+_title { font-weight: bold; height: 5%; padding: 10px; font-size: 120%; }
+
+a.
+
+%
+id
+
+%
+_category { background-color: #ccb; }
+
+a.
+
+%
+id
+
+%
+_board { background-color: #eed; padding-left: 15px !important; }
+
+h4.
+
+%
+id
+
+%
+_title { border-bottom: 1px #333 dotted; }
+
+div.
+
+%
+id
+
+%
+_reply { margin: 10px; }
+
+div.
+
+%
+id
+
+%
+_text { margin: 10px; clear: right; }
+
+img.
+
+%
+id
+
+%
+_message_filter { cursor: pointer; }
+
+span.
+
+%
+id
+
+%
+_signature { cursor: help; color: #cca; }

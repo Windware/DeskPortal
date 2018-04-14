@@ -1,17 +1,17 @@
 <root>
-	<string name="_1_feed" value="ヘッドライン" />
-	<string name="_2_category" value="カテゴリー" />
+	<string name="_1_feed" value="ヘッドライン"/>
+	<string name="_2_category" value="カテゴリー"/>
 
-	<string name="new" value="新規" />
-	<string name="add" value="追加" />
-	<string name="feed" value="フィード" />
-	<string name="what" value="フィードとは？" />
+	<string name="new" value="新規"/>
+	<string name="add" value="追加"/>
+	<string name="feed" value="フィード"/>
+	<string name="what" value="フィードとは？"/>
 
-	<string name="name" value="名前" />
-	<string name="category" value="カテゴリー" />
-	<string name="delete" value="削除" />
-	<string name="set" value="決定" />
-	<string name="confirm" value="このフィードを削除しますか？" />
+	<string name="name" value="名前"/>
+	<string name="category" value="カテゴリー"/>
+	<string name="delete" value="削除"/>
+	<string name="set" value="決定"/>
+	<string name="confirm" value="このフィードを削除しますか？"/>
 
-	<string name="category/confirm" value="このカテゴリーを削除しますか？" />
+	<string name="category/confirm" value="このカテゴリーを削除しますか？"/>
 </root>

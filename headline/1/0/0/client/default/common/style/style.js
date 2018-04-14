@@ -1,10 +1,9 @@
+bar = true
 
-	bar = true;
+window = '556677'
+border = '333333'
 
-	window = '556677';
-	border = '333333';
+color = 'ffffff'
+hover = 'cccccc'
 
-	color = 'ffffff';
-	hover = 'cccccc';
-
-	width = 850;
+width = 850

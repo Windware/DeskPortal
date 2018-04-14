@@ -1,13 +1,13 @@
 <root>
-	<string name="system" value="System" />
-	<string name="multimedia" value="Multimedia" />
-	<string name="network" value="Network" />
-	<string name="misc" value="Misc" />
-	<string name="tool" value="Tool" />
-	<string name="entertainment" value="Entertainment" />
-	<string name="assistance" value="Assistance" />
-	<string name="information" value="Information" />
-	<string name="productivity" value="Productivity" />
-	<string name="personal" value="Personal" />
-	<string name="uncategorized" value="Uncategorized" />
+	<string name="system" value="System"/>
+	<string name="multimedia" value="Multimedia"/>
+	<string name="network" value="Network"/>
+	<string name="misc" value="Misc"/>
+	<string name="tool" value="Tool"/>
+	<string name="entertainment" value="Entertainment"/>
+	<string name="assistance" value="Assistance"/>
+	<string name="information" value="Information"/>
+	<string name="productivity" value="Productivity"/>
+	<string name="personal" value="Personal"/>
+	<string name="uncategorized" value="Uncategorized"/>
 </root>

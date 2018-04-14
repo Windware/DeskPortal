@@ -1,44 +1,44 @@
 <root>
 	<!-- Weight -->
-	<string name="t" value="ton" />
-	<string name="kg" value="kilogram" />
-	<string name="g" value="gram" />
-	<string name="mg" value="miligram" />
-	<string name="lb" value="pound" />
+	<string name="t" value="ton"/>
+	<string name="kg" value="kilogram"/>
+	<string name="g" value="gram"/>
+	<string name="mg" value="miligram"/>
+	<string name="lb" value="pound"/>
 
 	<!-- Mass -->
-	<string name="kl" value="kiloliter" />
-	<string name="dl" value="deciliter" />
-	<string name="l" value="liter" />
-	<string name="ml" value="mililiter" />
-	<string name="oz" value="ounce" />
+	<string name="kl" value="kiloliter"/>
+	<string name="dl" value="deciliter"/>
+	<string name="l" value="liter"/>
+	<string name="ml" value="mililiter"/>
+	<string name="oz" value="ounce"/>
 
 	<!-- Length -->
-	<string name="ly" value="light year" />
-	<string name="km" value="kilometer" />
-	<string name="m" value="meter" />
-	<string name="cm" value="centimeter" />
-	<string name="mm" value="milimeter" />
-	<string name="nm" value="nanometer" />
-	<string name="ft" value="feet" />
-	<string name="in" value="inch" />
+	<string name="ly" value="light year"/>
+	<string name="km" value="kilometer"/>
+	<string name="m" value="meter"/>
+	<string name="cm" value="centimeter"/>
+	<string name="mm" value="milimeter"/>
+	<string name="nm" value="nanometer"/>
+	<string name="ft" value="feet"/>
+	<string name="in" value="inch"/>
 
 	<!-- Speed -->
-	<string name="kph" value="km/h" />
-	<string name="mph" value="mile/h" />
-	<string name="kt" value="knot" />
-	<string name="Ma" value="mach" />
+	<string name="kph" value="km/h"/>
+	<string name="mph" value="mile/h"/>
+	<string name="kt" value="knot"/>
+	<string name="Ma" value="mach"/>
 
 	<!-- Temperature -->
-	<string name="C" value="celsius" />
-	<string name="F" value="fahrenheit" />
+	<string name="C" value="celsius"/>
+	<string name="F" value="fahrenheit"/>
 
 	<!-- Time -->
-	<string name="year" value="year" />
-	<string name="month" value="month" />
-	<string name="week" value="week" />
-	<string name="day" value="day" />
-	<string name="hour" value="hour" />
-	<string name="minute" value="minute" />
-	<string name="second" value="second" />
+	<string name="year" value="year"/>
+	<string name="month" value="month"/>
+	<string name="week" value="week"/>
+	<string name="day" value="day"/>
+	<string name="hour" value="hour"/>
+	<string name="minute" value="minute"/>
+	<string name="second" value="second"/>
 </root>

@@ -1,4 +1,5 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/link" value="This application is the introduction page for the system. You can click on the link at the bottom to see more about %brand%." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/link"
+	        value="This application is the introduction page for the system. You can click on the link at the bottom to see more about %brand%."/>
 </root>

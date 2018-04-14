@@ -1,9 +1,8 @@
+window = 'cccccc'
+border = '333333'
 
-	window = 'cccccc';
-	border = '333333';
+width = 180
+height = 220
 
-	width = 180;
-	height = 220;
-
-	bar = false;
-	center = true;
+bar = false
+center = true

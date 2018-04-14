@@ -1,52 +1,52 @@
 <root>
 	<!-- 一般 -->
-	<string name="loading" value="読み込み中..." />
-	<string name="error" value="エラー" />
-	<string name="close" value="閉じる" />
+	<string name="loading" value="読み込み中..."/>
+	<string name="error" value="エラー"/>
+	<string name="close" value="閉じる"/>
 
 	<!-- 情報ウインドウ -->
-	<string name="tool" value="ツール" />
-	<string name="about" value="情報" />
-	<string name="conf" value="設定" />
-	<string name="history" value="履歴" />
-	<string name="manual" value="説明" />
-	<string name="review" value="評価" />
-	<string name="reload" value="再読み込み" />
+	<string name="tool" value="ツール"/>
+	<string name="about" value="情報"/>
+	<string name="conf" value="設定"/>
+	<string name="history" value="履歴"/>
+	<string name="manual" value="説明"/>
+	<string name="review" value="評価"/>
+	<string name="reload" value="再読み込み"/>
 
-	<string name="general" value="一般" />
-	<string name="apply" value="適用" />
-	<string name="version" value="バージョン" />
-	<string name="theme" value="外観" />
-	<string name="default" value="標準" />
+	<string name="general" value="一般"/>
+	<string name="apply" value="適用"/>
+	<string name="version" value="バージョン"/>
+	<string name="theme" value="外観"/>
+	<string name="default" value="標準"/>
 
-	<string name="plan" value="予定" />
-	<string name="new" value="新規" />
-	<string name="current" value="現在" />
-	<string name="change" value="変更点" />
-	<string name="fix" value="修正点" />
-	<string name="bug" value="バグ" />
+	<string name="plan" value="予定"/>
+	<string name="new" value="新規"/>
+	<string name="current" value="現在"/>
+	<string name="change" value="変更点"/>
+	<string name="fix" value="修正点"/>
+	<string name="bug" value="バグ"/>
 
-	<string name="history/missing" value="履歴は見つかりませんでした" />
-	<string name="user/cancel" value="クリックするとログアウトをキャンセルします" />
+	<string name="history/missing" value="履歴は見つかりませんでした"/>
+	<string name="user/cancel" value="クリックするとログアウトをキャンセルします"/>
 
 	<!-- 情報パネル -->
-	<string name="desc" value="概要" />
-	<string name="developer" value="開発者" />
-	<string name="translator" value="翻訳者" />
-	<string name="web" value="ウェブサイト" />
-	<string name="user" value="ユーザー" />
-	<string name="dev" value="開発者向け" />
-	<string name="translation" value="翻訳" />
-	<string name="target" value="対象国" />
-	<string name="all" value="全て" />
-	<string name="none" value="無し" />
+	<string name="desc" value="概要"/>
+	<string name="developer" value="開発者"/>
+	<string name="translator" value="翻訳者"/>
+	<string name="web" value="ウェブサイト"/>
+	<string name="user" value="ユーザー"/>
+	<string name="dev" value="開発者向け"/>
+	<string name="translation" value="翻訳"/>
+	<string name="target" value="対象国"/>
+	<string name="all" value="全て"/>
+	<string name="none" value="無し"/>
 
 	<!-- 単位 -->
-	<string name="weight" value="重量" />
-	<string name="length" value="長さ" />
-	<string name="time" value="時間" />
-	<string name="mass" value="質量" />
-	<string name="speed" value="速度" />
-	<string name="temperature" value="温度" />
-	<string name="currency" value="通貨" />
+	<string name="weight" value="重量"/>
+	<string name="length" value="長さ"/>
+	<string name="time" value="時間"/>
+	<string name="mass" value="質量"/>
+	<string name="speed" value="速度"/>
+	<string name="temperature" value="温度"/>
+	<string name="currency" value="通貨"/>
 </root>

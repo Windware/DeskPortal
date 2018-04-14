@@ -1,12 +1,11 @@
+window = 'ffffff'
+border = '333333'
 
-	window = 'ffffff';
-	border = '333333';
+bar = false
+center = true
 
-	bar = false;
-	center = true;
+left = 35
+top = 20
 
-	left = 35;
-	top = 20;
-
-	width = 120;
-	height = 30;
+width = 120
+height = 30

@@ -1,8 +1,8 @@
 <root>
 	<os name="windows">
 		<serif>
-			<font name="Times New Roman" />
-			<font name="Georgia" />
+			<font name="Times New Roman"/>
+			<font name="Georgia"/>
 		</serif>
 		<sans>
 		</sans>
@@ -21,13 +21,13 @@
 
 	<os name="linux">
 		<serif>
-			<font name="Bitstream Vera Serif" />
+			<font name="Bitstream Vera Serif"/>
 		</serif>
 		<sans>
-			<font name="Bitstream Vera Sans" />
+			<font name="Bitstream Vera Sans"/>
 		</sans>
 		<mono>
-			<font name="Bitstream Vera Sans Mono" />
+			<font name="Bitstream Vera Sans Mono"/>
 		</mono>
 	</os>
 </root>

@@ -1,4 +1,3 @@
-
-	$self.conf = new function()
-	{
-	}
+$self.conf = new function()
+{
+}

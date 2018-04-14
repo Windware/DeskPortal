@@ -1,74 +1,301 @@
+/* Configuration */
+tbody#
 
-	/* Configuration */
-	tbody#%id%_conf_account th, div#%id%_conf_folder_area div { border : 1px #333 solid; text-align : center; font-weight : bold; padding : 5px; background-color : #da8; }
+%
+id
 
-	td.%id%_conf_row { text-align : right; border-right : 1px #333 dotted; }
+%
+_conf_account th, div#
 
-	/* Main interface */
-	table#%id%_tab { background-color : #dc8; width : 100%; margin-bottom : 10px; }
+%
+id
 
-	table#%id%_tab th { cursor : pointer; border : 1px #333 solid; }
+%
+_conf_folder_area div { border: 1px #333 solid; text-align: center; font-weight: bold; padding: 5px; background-color: #da8; }
 
-	table#%id%_read_zone { border-color : #333; background-color : #fafafa; empty-cells : show; border-collapse : collapse; width : 100%; }
+td.
 
-	table#%id%_read_zone th, table#%id%_read_zone td { border-color : #333; }
+%
+id
 
-	tr#%id%_read_header { background-color : #a87; }
+%
+_conf_row { text-align: right; border-right: 1px #333 dotted; }
 
-	tr.%id%_mail_unread { font-weight : bold; }
+/* Main interface */
+table#
 
-	tr.%id%_mail_marked { background-color : #bba; }
+%
+id
 
-	tr.%id%_mail_replied { font-style : italic; }
+%
+_tab { background-color: #dc8; width: 100%; margin-bottom: 10px; }
 
-	tr.%id%_mail_draft { background-color : #eee; }
+table#
 
-	tr.%id%_hover { background-color : #c97; }
+%
+id
 
-	.%id%_pane { border : 1px #333 solid; overflow : auto; height : 300px; background-color : #fafafa; }
+%
+_tab th { cursor: pointer; border: 1px #333 solid; }
 
-	td#%id%_folder a { display : block; padding : 5px; }
+table#
 
-	a.%id%_hilight { background-color : #c97 !important; }
+%
+id
 
-	div.%id%_folder_header { background-color : #a87; text-align : center; padding : 5px; border-bottom : 1px #333 solid; }
+%
+_read_zone { border-color: #333; background-color: #fafafa; empty-cells: show; border-collapse: collapse; width: 100%; }
 
-	a.%id%_displayed { background-color : #555 !important; color : #fff; }
+table#
 
-	th.%id%_row_check { width : 20px; }
+%
+id
 
-	th.%id%_row_from { width : 200px; }
+%
+_read_zone th, table#
 
-	th.%id%_row_date { width : 120px; }
+%
+id
 
-	img.%id%_indicator { width : 16px; height : 16px; }
+%
+_read_zone td { border-color: #333; }
 
-	div#%id%_mail_empty { margin : 10px; }
+tr#
 
-	img#%id%_drag { position : absolute; width : 48px; height : 48px; }
+%
+id
 
-	tr.%id%_selected { background-color : #edc !important; }
+%
+_read_header { background-color: #a87; }
 
-	/* Mail window */
-	p.%id%_mail_subject { background-color : #333; text-align : center; border : 1px #ccc solid; padding : 3px; margin-bottom : 10px; }
+tr.
 
-	div.%id%_mail_body { word-break : all; overflow : auto; height : 300px; text-align : left; background-color : #eee; color : #333; padding : 10px; }
+%
+id
 
-	.%id%_mail_action input { width : 110px; border : 1px #333 solid; background-color : #dca; }
+%
+_mail_unread { font-weight: bold; }
 
-	tbody.%id%_mail_header th { font-weight : bold; text-align : right; }
+tr.
 
-	tbody.%id%_mail_header td { padding-left : 10px; }
+%
+id
 
-	a.%id%_mail_attachment { color : #eee !important; }
+%
+_mail_marked { background-color: #bba; }
 
-	a.%id%_mail_attachment:hover, a.%id%_mail_attachment:active { color : #eca !important; }
+tr.
 
-	.%id%_form_warn { border : 2px #d76 solid; }
+%
+id
 
-	td.%id%_compose_attachment input { margin : 5px; }
+%
+_mail_replied { font-style: italic; }
 
-	/* Address List */
-	div.%id%_address { overflow : auto; height : 250px; background-color : #766; border : 1px #333 dotted; }
+tr.
 
-	div.%id%_address a { display : block; }
+%
+id
+
+%
+_mail_draft { background-color: #eee; }
+
+tr.
+
+%
+id
+
+%
+_hover { background-color: #c97; }
+
+.
+
+%
+id
+
+%
+_pane { border: 1px #333 solid; overflow: auto; height: 300px; background-color: #fafafa; }
+
+td#
+
+%
+id
+
+%
+_folder a { display: block; padding: 5px; }
+
+a.
+
+%
+id
+
+%
+_hilight { background-color: #c97 !important; }
+
+div.
+
+%
+id
+
+%
+_folder_header { background-color: #a87; text-align: center; padding: 5px; border-bottom: 1px #333 solid; }
+
+a.
+
+%
+id
+
+%
+_displayed { background-color: #555 !important; color: #fff; }
+
+th.
+
+%
+id
+
+%
+_row_check { width: 20px; }
+
+th.
+
+%
+id
+
+%
+_row_from { width: 200px; }
+
+th.
+
+%
+id
+
+%
+_row_date { width: 120px; }
+
+img.
+
+%
+id
+
+%
+_indicator { width: 16px; height: 16px; }
+
+div#
+
+%
+id
+
+%
+_mail_empty { margin: 10px; }
+
+img#
+
+%
+id
+
+%
+_drag { position: absolute; width: 48px; height: 48px; }
+
+tr.
+
+%
+id
+
+%
+_selected { background-color: #edc !important; }
+
+/* Mail window */
+p.
+
+%
+id
+
+%
+_mail_subject { background-color: #333; text-align: center; border: 1px #ccc solid; padding: 3px; margin-bottom: 10px; }
+
+div.
+
+%
+id
+
+%
+_mail_body { word-break: all; overflow: auto; height: 300px; text-align: left; background-color: #eee; color: #333; padding: 10px; }
+
+.
+
+%
+id
+
+%
+_mail_action input { width: 110px; border: 1px #333 solid; background-color: #dca; }
+
+tbody.
+
+%
+id
+
+%
+_mail_header th { font-weight: bold; text-align: right; }
+
+tbody.
+
+%
+id
+
+%
+_mail_header td { padding-left: 10px; }
+
+a.
+
+%
+id
+
+%
+_mail_attachment { color: #eee !important; }
+
+a.
+
+%
+id
+
+%
+_mail_attachment:hover, a.
+
+%
+id
+
+%
+_mail_attachment:active { color: #eca !important; }
+
+.
+
+%
+id
+
+%
+_form_warn { border: 2px #d76 solid; }
+
+td.
+
+%
+id
+
+%
+_compose_attachment input { margin: 5px; }
+
+/* Address List */
+div.
+
+%
+id
+
+%
+_address { overflow: auto; height: 250px; background-color: #766; border: 1px #333 dotted; }
+
+div.
+
+%
+id
+
+%
+_address a { display: block; }

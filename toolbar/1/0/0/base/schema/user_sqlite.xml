@@ -1,41 +1,41 @@
 <root>
 	<!-- Displayed bar ID -->
 	<table name="display">
-		<column name="user" param="INT NOT NULL" />
-		<column name="id" param="INT NOT NULL" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="id" param="INT NOT NULL"/>
 
-		<column name="UNIQUE" param="(user, id)" />
+		<column name="UNIQUE" param="(user, id)"/>
 	</table>
 
 	<!-- Search history -->
 	<table name="history">
-		<column name="user" param="INT NOT NULL" />
-		<column name="feature" param="VARCHAR(255) NOT NULL" />
-		<column name="value" param="VARCHAR(255) NOT NULL" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="feature" param="VARCHAR(255) NOT NULL"/>
+		<column name="value" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(user, feature)" />
+		<column name="UNIQUE" param="(user, feature)"/>
 	</table>
 
 	<!-- Conversion result -->
 	<table name="result">
-		<column name="user" param="INT NOT NULL" />
-		<column name="method" param="VARCHAR(255) NOT NULL" />
-		<column name="source" param="VARCHAR(255) NOT NULL" />
-		<column name="target" param="VARCHAR(255) NOT NULL" />
-		<column name="value" param="VARCHAR(255) NOT NULL" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="method" param="VARCHAR(255) NOT NULL"/>
+		<column name="source" param="VARCHAR(255) NOT NULL"/>
+		<column name="target" param="VARCHAR(255) NOT NULL"/>
+		<column name="value" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(user, method, source, target)" />
+		<column name="UNIQUE" param="(user, method, source, target)"/>
 	</table>
 
 	<!-- Function selection -->
 	<table name="selection">
-		<column name="user" param="INT NOT NULL" />
-		<column name="bar" param="INT NOT NULL" />
-		<column name="feature" param="VARCHAR(255) NOT NULL" />
-		<column name="method" param="VARCHAR(255) NOT NULL" />
-		<column name="source" param="VARCHAR(255) NOT NULL" />
-		<column name="target" param="VARCHAR(255) NOT NULL" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="bar" param="INT NOT NULL"/>
+		<column name="feature" param="VARCHAR(255) NOT NULL"/>
+		<column name="method" param="VARCHAR(255) NOT NULL"/>
+		<column name="source" param="VARCHAR(255) NOT NULL"/>
+		<column name="target" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(user, bar)" />
+		<column name="UNIQUE" param="(user, bar)"/>
 	</table>
 </root>

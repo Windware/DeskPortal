@@ -2,35 +2,53 @@
 	<p style="background-color : #cba; padding : 5px; border : 1px #333 solid">
 		<img id="%id%_indicator" src="%file:mail/1/0/0/client/default/common/image/loading/red.gif%" style="visibility : hidden" class="%id%_indicator" />
 
-		[<img class="%system%_icon" style="cursor : pointer" src="%image:new.png%" onclick="%top%.%id%.gui.compose()"%tip:new% />]
+		[<img class="%system%_icon" style="cursor : pointer" src="%image:new.png%" onclick="%top%.%id%.gui.compose()" %tip:new% />]
 
-		[<strong>%string:account%</strong> : <select id="%id%_account" onchange="%top%.%id%.account.change(this.value)"%tip:account%></select>]
+		[<strong>%string:account%</strong> :
+		<select id="%id%_account" onchange="%top%.%id%.account.change(this.value)" %tip:account%></select>]
 
 		[<span%tip:page% style="cursor : help"><strong>%string:page%</strong> :
-			<select id="%id%_show" onchange="%top%.%id%.gui.flip(this.value)"><option value="1">1</option></select>
+		<select id="%id%_show" onchange="%top%.%id%.gui.flip(this.value)">
+			<option value="1">1</option>
+		</select>
 		</span>]
 
 		[<strong>%string:filter%</strong> :
-		<label for="%id%_marked"%tip:marked%>
+		<label for="%id%_marked" %tip:marked%>
 			<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter('marked', this.checked)" name="marked">%string:marked%
 		</label>
 
-		<label for="%id%_unread"%tip:unread%>
+		<label for="%id%_unread" %tip:unread%>
 			<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter('unread', this.checked)" name="unread">%string:unread%
 		</label>]
 
-		[<span%tip:search% style="cursor : help"><strong>%string:search%</strong> : <input type="text" name="search" style="width : 120px" /></span>]
+		[<span%tip:search% style="cursor : help"><strong>%string:search%</strong> :
+		<input type="text" name="search" style="width : 120px" /></span>]
 	</p>
 
 	<input type="submit" style="display : none" />
 </form>
 
-<table style="width : 100%"><tbody><tr>
-	<td style="width : 20%; vertical-align : top"><div style="background-color : #ddc" class="%id%_pane"%scroll%>
-		<table style="width : 100%" cellpadding="0" cellspacing="0"><tbody><tr><td id="%id%_folder"></td></tr></tbody></table>
-	</div></td>
+<table style="width : 100%">
+	<tbody>
+	<tr>
+		<td style="width : 20%; vertical-align : top">
+			<div style="background-color : #ddc" class="%id%_pane" %scroll%>
+				<table style="width : 100%" cellpadding="0" cellspacing="0">
+					<tbody>
+					<tr>
+						<td id="%id%_folder"></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</td>
 
-	<td style="width : 80%; vertical-align : top"><form id="%id%_mail_list" class="%id%_pane"%scroll%>
-		<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"></table>
-	</form></td>
-</tr></tbody></table>
+		<td style="width : 80%; vertical-align : top">
+			<form id="%id%_mail_list" class="%id%_pane" %scroll%>
+				<table cellpadding="5" cellspacing="0" border="1" id="%id%_read_zone"></table>
+			</form>
+		</td>
+	</tr>
+	</tbody>
+</table>

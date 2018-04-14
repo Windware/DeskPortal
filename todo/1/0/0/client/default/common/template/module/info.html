@@ -1,6 +1,7 @@
 <!-- Without the form being 'inline', the textarea cell gets corrupted on Firefox 3.5 and Opera 9 -->
 <form onsubmit="%top%.%id%.item.set(this); return false" class="%system%_full" style="display : inline">
-	<table cellpadding="5" cellspacing="0" class="%system%_full %id%_info"><tbody class="%system%_full">
+	<table cellpadding="5" cellspacing="0" class="%system%_full %id%_info">
+		<tbody class="%system%_full">
 		<tr>
 			<th colspan="2" style="border : none; text-align : center"><h2>%string:edit%</h2></th>
 		</tr>
@@ -19,12 +20,22 @@
 			<th>%string:due%</th>
 
 			<td>
-				<select name="year"><option value="">----</option>%value:year%</select>
-				<select name="month"><option value="">--</option>%value:month%</select>
-				<select name="day"><option value="">--</option>%value:day%</select>
+				<select name="year">
+					<option value="">----</option>
+					%value:year%</select>
+				<select name="month">
+					<option value="">--</option>
+					%value:month%</select>
+				<select name="day">
+					<option value="">--</option>
+					%value:day%</select>
 
-				<select name="hour"><option value="">--</option>%value:hour%</select> :
-				<select name="minute"><option value="">--</option>%value:minute%</select>
+				<select name="hour">
+					<option value="">--</option>
+					%value:hour%</select> :
+				<select name="minute">
+					<option value="">--</option>
+					%value:minute%</select>
 			</td>
 		</tr>
 
@@ -55,5 +66,6 @@
 				<input type="button" value="%string:close%" onclick="%top%.%id%.gui.remove(%value:id%)" />
 			</td>
 		</tr>
-	</tbody></table>
+		</tbody>
+	</table>
 </form>

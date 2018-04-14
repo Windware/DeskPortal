@@ -1,6 +1,6 @@
 <root>
-	<string name="add" value="Click here to add a new bar" />
-	<string name="delete" value="Click here to close this bar" />
+	<string name="add" value="Click here to add a new bar"/>
+	<string name="delete" value="Click here to close this bar"/>
 
-	<string name="external" value="Results will be shown at an external site" />
+	<string name="external" value="Results will be shown at an external site"/>
 </root>

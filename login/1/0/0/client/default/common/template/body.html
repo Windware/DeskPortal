@@ -1,18 +1,20 @@
 <h2>%title%</h2>
 
 <form id="%id%_form" onsubmit="return %top%.%id%.login.enter(this)" method="post">
-	<table><tbody>
-	<tr>
-		<td style="text-align : right">%string:mail%</td>
-		<td><input type="text" name="identity" class="%system%_flat %id%_enter" /></td>
-	</tr>
-	<tr>
-		<td style="text-align : right">%string:pass%</td>
-		<td><input type="password" name="pass" class="%system%_flat %id%_enter" /></td>
-	</tr>
-	</tbody></table>
+	<table>
+		<tbody>
+		<tr>
+			<td style="text-align : right">%string:mail%</td>
+			<td><input type="text" name="identity" class="%system%_flat %id%_enter" /></td>
+		</tr>
+		<tr>
+			<td style="text-align : right">%string:pass%</td>
+			<td><input type="password" name="pass" class="%system%_flat %id%_enter" /></td>
+		</tr>
+		</tbody>
+	</table>
 
-	<p><label for="%id%_session"%tip:session%>
+	<p><label for="%id%_session" %tip:session%>
 		<input type="checkbox" name="keep" id="%id%_session" /> %string:session%
 	</label></p>
 
@@ -20,7 +22,7 @@
 </form>
 
 <p style="border-top : 1px #333 dotted; padding-top : 10px">
-	<a href="%conf:register%" target="_blank"%tip:register%>%string:register%</a>
+	<a href="%conf:register%" target="_blank" %tip:register%>%string:register%</a>
 </p>
 
-<p><a href="%conf:recover%" target="_blank"%tip:recover%>%string:recover%</a></p>
+<p><a href="%conf:recover%" target="_blank" %tip:recover%>%string:recover%</a></p>

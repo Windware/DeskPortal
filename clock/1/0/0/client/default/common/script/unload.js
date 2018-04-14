@@ -1,2 +1,1 @@
-
-	if(__timer) clearInterval(__timer); //Clear out the clock renewal timer
+if(__timer) clearInterval(__timer) //Clear out the clock renewal timer

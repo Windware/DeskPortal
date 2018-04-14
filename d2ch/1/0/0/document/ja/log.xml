@@ -1,14 +1,14 @@
 <root>
 	<!-- USER -->
 	<!-- run.js -->
-	<string name="user/run/list" value="板取得に失敗しました" />
-	<string name="user/run/list/message" value="板一覧が取得できませんでした" />
+	<string name="user/run/list" value="板取得に失敗しました"/>
+	<string name="user/run/list/message" value="板一覧が取得できませんでした"/>
 
 	<!-- message.js -->
-	<string name="user/message/get" value="書き込み取得に失敗しました" />
-	<string name="user/message/get/message" value="このスレッドの書き込みが取得できませんでした" />
+	<string name="user/message/get" value="書き込み取得に失敗しました"/>
+	<string name="user/message/get/message" value="このスレッドの書き込みが取得できませんでした"/>
 
 	<!-- thread.js -->
-	<string name="user/thread/get" value="スレッド取得に失敗しました" />
-	<string name="user/thread/get/message" value="スレッド一覧が取得できませんでした" />
+	<string name="user/thread/get" value="スレッド取得に失敗しました"/>
+	<string name="user/thread/get/message" value="スレッド一覧が取得できませんでした"/>
 </root>

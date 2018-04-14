@@ -1,9 +1,8 @@
+window = 'ffffff'
+hover = '556677'
 
-	window = 'ffffff';
-	hover = '556677';
+width = 550
+height = 300
 
-	width = 550;
-	height = 300;
-
-	left = 230;
-	top = 20;
+left = 230
+top = 20

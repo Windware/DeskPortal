@@ -1,5 +1,9 @@
 <?php
-	class System_1_0_0_Folder
+
+class System_1_0_0_Folder
+{
+	public static function readable($folder)
 	{
-		public static function readable($folder) { return is_readable($folder) && is_dir($folder); } //Check if a folder is readable
-	}
+		return is_readable($folder) && is_dir($folder);
+	} //Check if a folder is readable
+}

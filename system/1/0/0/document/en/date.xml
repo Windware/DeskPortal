@@ -1,11 +1,11 @@
 <root>
-	<string name="year" value="%%" />
-	<string name="month" value="%%" />
-	<string name="day" value="%%" />
-	<string name="week" value="%%" />
-	<string name="hour" value="%%" />
-	<string name="minute" value="%%" />
+	<string name="year" value="%%"/>
+	<string name="month" value="%%"/>
+	<string name="day" value="%%"/>
+	<string name="week" value="%%"/>
+	<string name="hour" value="%%"/>
+	<string name="minute" value="%%"/>
 
-	<string name="am" value="AM" />
-	<string name="pm" value="PM" />
+	<string name="am" value="AM"/>
+	<string name="pm" value="PM"/>
 </root>

@@ -1,14 +1,14 @@
 <root>
-	<month number="1" full="1" less="1" />
-	<month number="2" full="2" less="2" />
-	<month number="3" full="3" less="3" />
-	<month number="4" full="4" less="4" />
-	<month number="5" full="5" less="5" />
-	<month number="6" full="6" less="6" />
-	<month number="7" full="7" less="7" />
-	<month number="8" full="8" less="8" />
-	<month number="9" full="9" less="9" />
-	<month number="10" full="10" less="10" />
-	<month number="11" full="11" less="11" />
-	<month number="12" full="12" less="12" />
+	<month number="1" full="1" less="1"/>
+	<month number="2" full="2" less="2"/>
+	<month number="3" full="3" less="3"/>
+	<month number="4" full="4" less="4"/>
+	<month number="5" full="5" less="5"/>
+	<month number="6" full="6" less="6"/>
+	<month number="7" full="7" less="7"/>
+	<month number="8" full="8" less="8"/>
+	<month number="9" full="9" less="9"/>
+	<month number="10" full="10" less="10"/>
+	<month number="11" full="11" less="11"/>
+	<month number="12" full="12" less="12"/>
 </root>

@@ -1,76 +1,82 @@
 <root>
-	<developer name="Windware Solution" site="http://windware.com/" />
-	<info revision="1" category="system" />
+	<developer name="Windware Solution" site="https://windware.com/"/>
+	<info revision="1" category="system"/>
 
 	<language name="en">
-		<translator name="Windware Solution" />
+		<translator name="Windware Solution"/>
 	</language>
 
 	<language name="ja">
-		<translator name="Windware Solution" />
+		<translator name="Windware Solution"/>
 	</language>
 
 	<requirement>
-		<item>PHP version 5.2 (probably works for later versions) with PDO (with appropriate database drivers), simplexml, mbstring, gd, pcre, zlib and curl modules</item>
+		<item>PHP version 5.2 (probably works for later versions) with PDO (with appropriate database drivers), simplexml,
+			mbstring, gd, pcre, zlib and curl modules
+		</item>
 	</requirement>
 
 	<license>
 		<folder name="." license="Windware Reference License">
-			<author name="Windware Solution" site="http://windware.com/" />
+			<author name="Windware Solution" site="https://windware.com/"/>
 
 			<folder name="client">
 				<folder name="default">
 					<folder name="common">
 						<folder name="image" license="Public Domain">
-							<author name="Open Clip Art" contact="http://openclipart.org/media/people/contact/admin" site="http://openclipart.org/" />
+							<author name="Open Clip Art" contact="https://openclipart.org/media/people/contact/admin"
+							        site="https://openclipart.org/"/>
 
 							<file name="about.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com"
+								        site="https://www.webdesignerdepot.com/"/>
 							</file>
 
 							<file name="about_grey.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" />
+								<author name="Webdesigner Depot"/>
 							</file>
 
 							<file name="blank.png" license="Public Domain">
-								<author name="Windware Solution" />
+								<author name="Windware Solution"/>
 							</file>
 
 							<file name="history.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" />
+								<author name="Webdesigner Depot"/>
 							</file>
 
 							<file name="history_grey.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" />
+								<author name="Webdesigner Depot"/>
 							</file>
 
 							<file name="lock.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" />
+								<author name="Webdesigner Depot"/>
 							</file>
 
 							<file name="manual.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" />
+								<author name="Webdesigner Depot"/>
 							</file>
 
 							<file name="manual_grey.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" />
+								<author name="Webdesigner Depot"/>
 							</file>
 
 							<file name="notice.png" license="Free use license">
-								<author name="Function Design" contact="liam@wefunction.com" site="http://www.wefunction.com/" />
+								<author name="Function Design" contact="liam@wefunction.com" site="http://www.wefunction.com/"/>
 							</file>
 
 							<file name="unlock.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" />
+								<author name="Webdesigner Depot"/>
 							</file>
 
 							<folder name="wallpaper">
 								<file name="db_*.jpg" license="Commercial use license">
-									<author name="Ryan Bliss" contact="rbliss@digitalblasphemy.com" site="http://digitalblasphemy.com/" />
+									<author name="Ryan Bliss" contact="rbliss@digitalblasphemy.com"
+									        site="http://www.digitalblasphemy.com/"/>
 								</file>
 
 								<file name="p8_*.jpg" license="Public Domain">
-									<author name="Photos8.com" contact="http://photos8.com/contact.html" site="http://photos8.com/" />
+									<author name="Photos8.com" contact="http://photos8.com/contact.html"
+									        site="http://photos8.com/"/>
 								</file>
 							</folder>
 						</folder>
@@ -82,18 +88,18 @@
 				<folder name="php">
 					<folder name="module">
 						<file name="minify_css.php" license="BSD License">
-							<author name="Steve Clay" contact="steve@mrclay.org" site="http://code.google.com/p/minify/" />
+							<author name="Steve Clay" contact="steve@mrclay.org" site="https://github.com/mrclay/minify"/>
 						</file>
 
 						<file name="minify_html.php" license="BSD License">
-							<author name="Steve Clay" contact="steve@mrclay.org" site="http://code.google.com/p/minify/" />
-							<author name="Ryan Grove" contact="ryan@wonko.com" />
+							<author name="Steve Clay" contact="steve@mrclay.org" site="https://github.com/mrclay/minify"/>
+							<author name="Ryan Grove" contact="ryan@wonko.com"/>
 						</file>
 
 						<file name="minify_js.php" license="MIT License">
-							<author name="Douglas Crockford" contact="douglas@crockford.com" note="Original author" />
-							<author name="Ryan Grove" contact="ryan@wonko.com" note="PHP port" />
-							<author name="Steve Clay" contact="steve@mrclay.org" site="http://code.google.com/p/minify/" />
+							<author name="Douglas Crockford" contact="douglas@crockford.com" note="Original author"/>
+							<author name="Ryan Grove" contact="ryan@wonko.com" note="PHP port"/>
+							<author name="Steve Clay" contact="steve@mrclay.org" site="https://github.com/mrclay/minify"/>
 						</file>
 					</folder>
 				</folder>

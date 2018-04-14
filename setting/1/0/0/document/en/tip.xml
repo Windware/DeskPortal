@@ -1,16 +1,20 @@
 <root>
-	<string name="switch" value="Switch the settings tab" />
-	<string name="language" value="Choose the preferred language to use system wide." />
-	<string name="fade" value="Choose to have fade effect or not.\nThis has better performance when turned off." />
-	<string name="round" value="To have rounded corners on windows or not. Does not affect performance." />
-	<string name="move" value="Choose the window move style.\nSimpler style has better performance when dragging windows around." />
-	<string name="system" value="System version to use. This changes the overall look and feels. Please refer to the history page for details." />
-	<string name="history" value="Check the update history of the selected version" />
-	<string name="logout" value="If no activity is made during this period inside %brand%, user will logout automatically." />
-	<string name="wallpaper" value="Click to change the wallpaper" />
+	<string name="switch" value="Switch the settings tab"/>
+	<string name="language" value="Choose the preferred language to use system wide."/>
+	<string name="fade" value="Choose to have fade effect or not.\nThis has better performance when turned off."/>
+	<string name="round" value="To have rounded corners on windows or not. Does not affect performance."/>
+	<string name="move"
+	        value="Choose the window move style.\nSimpler style has better performance when dragging windows around."/>
+	<string name="system"
+	        value="System version to use. This changes the overall look and feels. Please refer to the history page for details."/>
+	<string name="history" value="Check the update history of the selected version"/>
+	<string name="logout"
+	        value="If no activity is made during this period inside %brand%, user will logout automatically."/>
+	<string name="wallpaper" value="Click to change the wallpaper"/>
 
-	<string name="bg/resize" value="Check here to make the wallpaper resize according to the browser size." />
-	<string name="bg/stretch" value="Check here to make the wallpaper strech to full screen. Only streches if resizing is enabled." />
-	<string name="bg/center" value="Check here to make the wallpaper centered when not set to strech." />
-	<string name="bg/address" value="Insert a web address to use that image as a wallpaper." />
+	<string name="bg/resize" value="Check here to make the wallpaper resize according to the browser size."/>
+	<string name="bg/stretch"
+	        value="Check here to make the wallpaper strech to full screen. Only streches if resizing is enabled."/>
+	<string name="bg/center" value="Check here to make the wallpaper centered when not set to strech."/>
+	<string name="bg/address" value="Insert a web address to use that image as a wallpaper."/>
 </root>

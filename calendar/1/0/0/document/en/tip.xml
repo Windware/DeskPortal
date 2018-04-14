@@ -1,4 +1,4 @@
 <root>
-	<string name="summary" value="%%" />
-	<string name="switch" value="Show %%'s calendar" />
+	<string name="summary" value="%%"/>
+	<string name="switch" value="Show %%'s calendar"/>
 </root>

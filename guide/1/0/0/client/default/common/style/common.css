@@ -1,10 +1,38 @@
 
-	a.%id%_active { font-weight : bold; }
+a.
 
-	div#%id%_page { overflow : auto; height : 100%; }
+%
+id
 
-	ol#%id%_list a { display : block; }
+%
+_active { font-weight: bold; }
 
-	%self% h2 { text-align : center; }
+div#
 
-	p.%id%_next { font-weight : bold; text-align : right; }
+%
+id
+
+%
+_page { overflow: auto; height: 100%; }
+
+ol#
+
+%
+id
+
+%
+_list a { display: block; }
+
+%
+self
+
+%
+h2 { text-align: center; }
+
+p.
+
+%
+id
+
+%
+_next { font-weight: bold; text-align: right; }

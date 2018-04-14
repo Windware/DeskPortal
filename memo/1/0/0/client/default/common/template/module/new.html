@@ -1,8 +1,11 @@
 <form onsubmit="return %top%.%id%.item.add(this)">
-	<table class="%system%_full"><tbody>
-		<tr><td colspan="2" style="text-align : center">
-			<h2>%string:create%</h2>
-		</td></tr>
+	<table class="%system%_full">
+		<tbody>
+		<tr>
+			<td colspan="2" style="text-align : center">
+				<h2>%string:create%</h2>
+			</td>
+		</tr>
 
 		<tr>
 			<th style="text-align : right">%string:name%</th>
@@ -11,14 +14,19 @@
 
 		<tr>
 			<th style="text-align : right; vertical-align : top">%string:group%</th>
-			<td><div id="%id%_set_groups" class="%id%_groups"%scroll%></div></td>
+			<td>
+				<div id="%id%_set_groups" class="%id%_groups" %scroll%></div>
+			</td>
 		</tr>
 
 		<tr>
 			<td colspan="2">
 				<p><input type="submit" value="%string:add%" style="width : 100%" /></p>
-				<p><input type="button" value="%string:close%" onclick="%top%.%system%.window.fade('%id%_new', true)" style="width : 100%" /></p>
+				<p>
+					<input type="button" value="%string:close%" onclick="%top%.%system%.window.fade('%id%_new', true)" style="width : 100%" />
+				</p>
 			</td>
 		</tr>
-	</tbody></table>
+		</tbody>
+	</table>
 </form>

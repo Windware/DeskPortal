@@ -1,20 +1,79 @@
+/* Main interface */
+a#
 
-	/* Main interface */
-	a#%id%_create { border : 1px #333 solid; display : inline-block; width : 150px; text-align : center; background-color : #555; color : #eee; }
+%
+id
 
-	tr#%id%_header { background-color : #ca7; height : 10px; }
+%
+_create { border: 1px #333 solid; display: inline-block; width: 150px; text-align: center; background-color: #555; color: #eee; }
 
-	td.%id%_title { font-weight : bold; }
+tr#
 
-	span.%id%_close { color : #731; font-weight : bold; }
+%
+id
 
-	tr.%id%_active { background-color : #ec5; cursor : pointer; }
+%
+_header { background-color: #ca7; height: 10px; }
 
-	tr.%id%_inactive { font-style : italic; }
+td.
 
-	/* New registration */
-	td#%system%_%id%_new_body { color : #ddd; }
+%
+id
 
-	table.%id%_info th { text-align : right; border-right : 1px #333 dotted; }
+%
+_title { font-weight: bold; }
 
-	table.%id%_info td { text-align : left; }
+span.
+
+%
+id
+
+%
+_close { color: #731; font-weight: bold; }
+
+tr.
+
+%
+id
+
+%
+_active { background-color: #ec5; cursor: pointer; }
+
+tr.
+
+%
+id
+
+%
+_inactive { font-style: italic; }
+
+/* New registration */
+td#
+
+%
+system
+
+%
+_
+
+%
+id
+
+%
+_new_body { color: #ddd; }
+
+table.
+
+%
+id
+
+%
+_info th { text-align: right; border-right: 1px #333 dotted; }
+
+table.
+
+%
+id
+
+%
+_info td { text-align: left; }

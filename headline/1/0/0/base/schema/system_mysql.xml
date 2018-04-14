@@ -1,54 +1,54 @@
 <root>
 	<!-- News feed cached objects -->
 	<table name="cache">
-		<column name="id" param="CHAR(32) PRIMARY KEY NOT NULL" />
-		<column name="content" param="MEDIUMBLOB" />
+		<column name="id" param="CHAR(32) PRIMARY KEY NOT NULL"/>
+		<column name="content" param="MEDIUMBLOB"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- List of entries (NOTE : Avoiding 'UNIQUE' on 'link' for the index to go beyond max length. Not using 'VARCHAR' over 255 characters for compatibility reasons.) -->
 	<table name="entry">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="feed" param="INT NOT NULL" />
-		<column name="subject" param="VARCHAR(255) NOT NULL" />
-		<column name="link" param="TEXT NOT NULL" />
-		<column name="date" param="DATETIME NOT NULL" />
-		<column name="section" param="VARCHAR(255)" />
-		<column name="description" param="TEXT" />
-		<column name="cache" param="MEDIUMTEXT" />
-		<column name="custom1" param="TEXT" />
-		<column name="custom2" param="TEXT" />
-		<column name="custom3" param="TEXT" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="feed" param="INT NOT NULL"/>
+		<column name="subject" param="VARCHAR(255) NOT NULL"/>
+		<column name="link" param="TEXT NOT NULL"/>
+		<column name="date" param="DATETIME NOT NULL"/>
+		<column name="section" param="VARCHAR(255)"/>
+		<column name="description" param="TEXT"/>
+		<column name="cache" param="MEDIUMTEXT"/>
+		<column name="custom1" param="TEXT"/>
+		<column name="custom2" param="TEXT"/>
+		<column name="custom3" param="TEXT"/>
 
-		<index name="feed, link(50)" />
-		<index name="feed, date" />
-		<index name="date" />
+		<index name="feed, link(50)"/>
+		<index name="feed, date"/>
+		<index name="date"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- RSS list (NOTE : Not using 'UNIQUE' on 'address' like above.) -->
 	<table name="feed">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="address" param="TEXT NOT NULL" />
-		<column name="site" param="TEXT" />
-		<column name="description" param="VARCHAR(255)" />
-		<column name="icon" param="BLOB" />
-		<column name="updated" param="DATETIME" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="address" param="TEXT NOT NULL"/>
+		<column name="site" param="TEXT"/>
+		<column name="description" param="VARCHAR(255)"/>
+		<column name="icon" param="BLOB"/>
+		<column name="updated" param="DATETIME"/>
 
-		<index name="address(50), updated" />
-		<index name="updated" />
+		<index name="address(50), updated"/>
+		<index name="updated"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- Number of users using a feed -->
 	<table name="used">
-		<column name="feed" param="INT NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
+		<column name="feed" param="INT NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
 
-		<column name="UNIQUE" param="(feed, user)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(feed, user)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 </root>

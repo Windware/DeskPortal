@@ -1,4 +1,5 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="intro" value="This is a simple digital clock that can display the date and the time. The time is displayed in 24 hour format." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="intro"
+	        value="This is a simple digital clock that can display the date and the time. The time is displayed in 24 hour format."/>
 </root>

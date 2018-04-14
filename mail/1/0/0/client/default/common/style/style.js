@@ -1,10 +1,9 @@
+window = 'eeddcc'
 
-	window = 'eeddcc';
+border = '555555'
+hover = '333333'
 
-	border = '555555';
-	hover = '333333';
+bar = true
+up = true
 
-	bar = true;
-	up = true;
-
-	width = 880;
+width = 880

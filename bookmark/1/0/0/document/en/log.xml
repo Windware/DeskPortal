@@ -1,30 +1,31 @@
 <root>
 	<!-- USER -->
 	<!-- item.js -->
-	<string name="user/add" value="Added a new bookmark." />
-	<string name="user/load" value="Loaded bookmarks for the selected categories." />
+	<string name="user/add" value="Added a new bookmark."/>
+	<string name="user/load" value="Loaded bookmarks for the selected categories."/>
 
-	<string name="user/remove" value="Removed bookmark '%%'." />
-	<string name="user/update" value="Updated bookmark '%%'." />
+	<string name="user/remove" value="Removed bookmark '%%'."/>
+	<string name="user/update" value="Updated bookmark '%%'."/>
 
-	<string name="user/category/create" value="Created category '%%'." />
-	<string name="user/category/remove" value="Removed category '%%'." />
-	<string name="user/category/update" value="Updated category '%%'." />
+	<string name="user/category/create" value="Created category '%%'."/>
+	<string name="user/category/remove" value="Removed category '%%'."/>
+	<string name="user/category/update" value="Updated category '%%'."/>
 
-	<string name="user/cache/add" value="Retrieved cache for '%%'." />
+	<string name="user/cache/add" value="Retrieved cache for '%%'."/>
 
-	<string name="user/item/add" value="Successfully added a bookmark" />
-	<string name="user/item/add/message" value="Bookmark has been added" />
+	<string name="user/item/add" value="Successfully added a bookmark"/>
+	<string name="user/item/add/message" value="Bookmark has been added"/>
 
-	<string name="user/item/add/fail" value="Error adding the bookmark" />
-	<string name="user/item/add/fail/message" value="An error occured while adding the bookmark" />
+	<string name="user/item/add/fail" value="Error adding the bookmark"/>
+	<string name="user/item/add/fail/message" value="An error occured while adding the bookmark"/>
 
-	<string name="user/item/add/duplicate" value="Duplicate bookmark detected" />
-	<string name="user/item/add/duplicate/message" value="A bookmark with same address exists" />
+	<string name="user/item/add/duplicate" value="Duplicate bookmark detected"/>
+	<string name="user/item/add/duplicate/message" value="A bookmark with same address exists"/>
 
-	<string name="user/item/import" value="Successfully imported bookmarks" />
-	<string name="user/item/import/message" value="Importing bookmarks completed" />
+	<string name="user/item/import" value="Successfully imported bookmarks"/>
+	<string name="user/item/import/message" value="Importing bookmarks completed"/>
 
-	<string name="user/item/import/fail" value="Failed to import the bookmark" />
-	<string name="user/item/import/fail/message" value="Importing the bookmarks failed, please revise the bookmark file to send." />
+	<string name="user/item/import/fail" value="Failed to import the bookmark"/>
+	<string name="user/item/import/fail/message"
+	        value="Importing the bookmarks failed, please revise the bookmark file to send."/>
 </root>

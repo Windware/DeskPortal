@@ -1,12 +1,12 @@
-<root>	
-	<string name="_1_category" value="Category" />
+<root>
+	<string name="_1_category" value="Category"/>
 
-	<string name="category" value="Category" />
-	<string name="new" value="New" />
-	<string name="set" value="Set" />
-	<string name="name" value="Name" />
-	<string name="color" value="Color" />
-	<string name="delete" value="Delete" />
+	<string name="category" value="Category"/>
+	<string name="new" value="New"/>
+	<string name="set" value="Set"/>
+	<string name="name" value="Name"/>
+	<string name="color" value="Color"/>
+	<string name="delete" value="Delete"/>
 
-	<string name="confirm" value="Delete this category?" />
+	<string name="confirm" value="Delete this category?"/>
 </root>

@@ -1,6 +1,6 @@
 <root>
-	<string name="_1_display" value="Display" />
+	<string name="_1_display" value="Display"/>
 
-	<string name="date" value="Show date" />
-	<string name="apply" value="Apply" />
+	<string name="date" value="Show date"/>
+	<string name="apply" value="Apply"/>
 </root>

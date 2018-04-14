@@ -1,21 +1,30 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/intro" value="This is a memo taking application with categorization and auto save features." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/intro" value="This is a memo taking application with categorization and auto save features."/>
 
-	<string name="_2_create" value="Create" />
-	<string name="2/create" value="To create a new memo, click on the 'New' bar on the main window. On the new window created, type in the name of the memo. If there are no groups created, the group box includes nothing. How to create groups will be explained later. Click on the 'Add memo' button to create the memo." />
-	<string name="2/group" value="When the memo is created, the groups specified will be listed on the left side of the main window. If no groups are specified, it will be listed under '(Other)' group." />
-	<string name="2/expand" value="When the name of the group is clicked, the memos associated to that group will be displayed. If multiple groups are applied on a memo, that memo will appear under multiple groups." />
+	<string name="_2_create" value="Create"/>
+	<string name="2/create"
+	        value="To create a new memo, click on the 'New' bar on the main window. On the new window created, type in the name of the memo. If there are no groups created, the group box includes nothing. How to create groups will be explained later. Click on the 'Add memo' button to create the memo."/>
+	<string name="2/group"
+	        value="When the memo is created, the groups specified will be listed on the left side of the main window. If no groups are specified, it will be listed under '(Other)' group."/>
+	<string name="2/expand"
+	        value="When the name of the group is clicked, the memos associated to that group will be displayed. If multiple groups are applied on a memo, that memo will appear under multiple groups."/>
 
-	<string name="_3_write" value="Write" />
-	<string name="3/write" value="By clicking on the memo name under the group name, a text input field will appear on the right side of the window. The text written inside here will be automatically saved. The currently selected memo name will be emphasized in the list." />
-	<string name="3/save" value="When a text is typed in the input field, the color of the background will change and when the auto save completes, it will turn back to the default color." />
+	<string name="_3_write" value="Write"/>
+	<string name="3/write"
+	        value="By clicking on the memo name under the group name, a text input field will appear on the right side of the window. The text written inside here will be automatically saved. The currently selected memo name will be emphasized in the list."/>
+	<string name="3/save"
+	        value="When a text is typed in the input field, the color of the background will change and when the auto save completes, it will turn back to the default color."/>
 
-	<string name="_4_change" value="Edit" />
-	<string name="4/edit" value="By clicking on the icon next to the memo name, it will open a window to edit memo information. You may change the name of the memo or the groups the memo belongs to. You may also click on the 'Delete' button to delete the memo." />
+	<string name="_4_change" value="Edit"/>
+	<string name="4/edit"
+	        value="By clicking on the icon next to the memo name, it will open a window to edit memo information. You may change the name of the memo or the groups the memo belongs to. You may also click on the 'Delete' button to delete the memo."/>
 
-	<string name="_5_group" value="Group" />
-	<string name="5/add" value="To add a new group, click on the 'Setting' tab of this window and go to the 'Group' section. Type in the group name you wish to create and click on 'Set' button to create it." />
-	<string name="5/apply" value="The group added will be available in the memo information edit window to be specified against memos." />
-	<string name="5/edit" value="To change the name of the group or delete a group, select the group name from the left selection box in the group configuration screen and either change the name or delete it." />
+	<string name="_5_group" value="Group"/>
+	<string name="5/add"
+	        value="To add a new group, click on the 'Setting' tab of this window and go to the 'Group' section. Type in the group name you wish to create and click on 'Set' button to create it."/>
+	<string name="5/apply"
+	        value="The group added will be available in the memo information edit window to be specified against memos."/>
+	<string name="5/edit"
+	        value="To change the name of the group or delete a group, select the group name from the left selection box in the group configuration screen and either change the name or delete it."/>
 </root>

@@ -1,6 +1,30 @@
 
-	div#%id%_box { word-break : all; height : 300px; overflow : auto; border : 1px #333 dotted; background-color : #ddd; } /* News region */
+div#
 
-	h3.%id%_date { color : #888; margin-bottom : 0px; border-bottom : 1px #333 dashed; } /* News date */
+%
+id
 
-	h2.%id%_title { font-size : 120%; margin-top : 0px; } /* News title */
+%
+_box { word-break: all; height: 300px; overflow: auto; border: 1px #333 dotted; background-color: #ddd; }
+
+/* News region */
+
+h3.
+
+%
+id
+
+%
+_date { color: #888; margin-bottom: 0px; border-bottom: 1px #333 dashed; }
+
+/* News date */
+
+h2.
+
+%
+id
+
+%
+_title { font-size: 120%; margin-top: 0px; }
+
+/* News title */

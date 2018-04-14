@@ -1,38 +1,37 @@
+$self.background = new function()
+{
+	var _class = $id + '.background'
 
-	$self.background = new function()
+	var _loaded //Indicates the wallpapers are loaded
+
+	this.get = function(refresh) //Get a list of wallpapers
 	{
-		var _class = $id + '.background';
+		var log = $system.log.init(_class + '.get')
+		if(!refresh && _loaded) return true
 
-		var _loaded; //Indicates the wallpapers are loaded
-
-		this.get = function(refresh) //Get a list of wallpapers
+		var list = function(request)
 		{
-			var log = $system.log.init(_class + '.get');
-			if(!refresh && _loaded) return true;
+			$system.node.id($id + '_wallpaper').innerHTML = '' //Clear up any previous listings
+			var image = $system.dom.tags(request.xml, 'image')
 
-			var list = function(request)
+			for(var i = 0; i < image.length; i++)
 			{
-				$system.node.id($id + '_wallpaper').innerHTML = ''; //Clear up any previous listings
-				var image = $system.dom.tags(request.xml, 'image');
+				var name = $system.dom.attribute(image[i], 'name')
+				if(name.match(/\.\./)) continue //Drop bad looking path
 
-				for(var i = 0; i < image.length; i++)
-				{
-					var name = $system.dom.attribute(image[i], 'name');
-					if(name.match(/\.\./)) continue; //Drop bad looking path
+				var file = $system.info.devroot + 'image/wallpaper/' + name //Requesting wallpaper file
+				var box = document.createElement('img')
 
-					var file = $system.info.devroot + 'image/wallpaper/' + name; //Requesting wallpaper file
-					var box = document.createElement('img');
+				box.className = $id + '_wallpaper'
+				box.onclick = $system.app.method($system.image.wallpaper, [file, true])
 
-					box.className = $id + '_wallpaper';
-					box.onclick = $system.app.method($system.image.wallpaper, [file, true]);
-
-					box.src = $system.network.form($self.info.root + 'server/php/run.php?task=background.thumbnail&file=' + file);
-					$system.node.id($id + '_wallpaper').appendChild(box); //Load the thumbnail images
-				}
-
-				_loaded = true;
+				box.src = $system.network.form($self.info.root + 'server/php/run.php?task=background.thumbnail&file=' + file)
+				$system.node.id($id + '_wallpaper').appendChild(box) //Load the thumbnail images
 			}
 
-			return $system.network.send($self.info.root + 'server/php/run.php', {task : 'background.get'}, null, list);
+			_loaded = true
 		}
+
+		return $system.network.send($self.info.root + 'server/php/run.php', {task: 'background.get'}, null, list)
 	}
+}

@@ -1,11 +1,12 @@
 <?php
-	class System_Static_Auth
+
+class System_Static_Auth
+{
+	public function verify()
 	{
-		public function verify()
-		{
-			//Read XML config
-			//Open connection to SQL server
-			//Run query
-			//return result
-		}
+		//Read XML config
+		//Open connection to SQL server
+		//Run query
+		//return result
 	}
+}

@@ -1,44 +1,44 @@
 <root>
-	<string name="sq" value="Albanian" />
-	<string name="ar" value="Arabic" />
-	<string name="bg" value="Bulgarian" />
-	<string name="ca" value="Catalan" />
-	<string name="zh" value="Chinese" />
-	<string name="hr" value="Croatian" />
-	<string name="cs" value="Czech" />
-	<string name="da" value="Danish" />
-	<string name="nl" value="Dutch" />
-	<string name="en" value="English" />
-	<string name="et" value="Estonian" />
-	<string name="tl" value="Filipino" />
-	<string name="fi" value="Finnish" />
-	<string name="fr" value="French" />
-	<string name="gl" value="Galician" />
-	<string name="de" value="German" />
-	<string name="el" value="Greek" />
-	<string name="iw" value="Hebrew" />
-	<string name="hi" value="Hindi" />
-	<string name="hu" value="Hungarian" />
-	<string name="id" value="Indonesian" />
-	<string name="it" value="Italian" />
-	<string name="ja" value="Japanese" />
-	<string name="kr" value="Korean" />
-	<string name="lv" value="Latvian" />
-	<string name="lt" value="Lithuanian" />
-	<string name="mt" value="Maltese" />
-	<string name="no" value="Norwegian" />
-	<string name="fa" value="Persian" />
-	<string name="pl" value="Polish" />
-	<string name="pt" value="Portuguese" />
-	<string name="ro" value="Romanian" />
-	<string name="ru" value="Russian" />
-	<string name="sr" value="Serbian" />
-	<string name="sk" value="Slovak" />
-	<string name="sl" value="Slovenian" />
-	<string name="es" value="Spanish" />
-	<string name="sv" value="Swedish" />
-	<string name="th" value="Thai" />
-	<string name="tr" value="Turkish" />
-	<string name="uk" value="Ukrainian" />
-	<string name="vi" value="Vietnamese" />
+	<string name="sq" value="Albanian"/>
+	<string name="ar" value="Arabic"/>
+	<string name="bg" value="Bulgarian"/>
+	<string name="ca" value="Catalan"/>
+	<string name="zh" value="Chinese"/>
+	<string name="hr" value="Croatian"/>
+	<string name="cs" value="Czech"/>
+	<string name="da" value="Danish"/>
+	<string name="nl" value="Dutch"/>
+	<string name="en" value="English"/>
+	<string name="et" value="Estonian"/>
+	<string name="tl" value="Filipino"/>
+	<string name="fi" value="Finnish"/>
+	<string name="fr" value="French"/>
+	<string name="gl" value="Galician"/>
+	<string name="de" value="German"/>
+	<string name="el" value="Greek"/>
+	<string name="iw" value="Hebrew"/>
+	<string name="hi" value="Hindi"/>
+	<string name="hu" value="Hungarian"/>
+	<string name="id" value="Indonesian"/>
+	<string name="it" value="Italian"/>
+	<string name="ja" value="Japanese"/>
+	<string name="kr" value="Korean"/>
+	<string name="lv" value="Latvian"/>
+	<string name="lt" value="Lithuanian"/>
+	<string name="mt" value="Maltese"/>
+	<string name="no" value="Norwegian"/>
+	<string name="fa" value="Persian"/>
+	<string name="pl" value="Polish"/>
+	<string name="pt" value="Portuguese"/>
+	<string name="ro" value="Romanian"/>
+	<string name="ru" value="Russian"/>
+	<string name="sr" value="Serbian"/>
+	<string name="sk" value="Slovak"/>
+	<string name="sl" value="Slovenian"/>
+	<string name="es" value="Spanish"/>
+	<string name="sv" value="Swedish"/>
+	<string name="th" value="Thai"/>
+	<string name="tr" value="Turkish"/>
+	<string name="uk" value="Ukrainian"/>
+	<string name="vi" value="Vietnamese"/>
 </root>

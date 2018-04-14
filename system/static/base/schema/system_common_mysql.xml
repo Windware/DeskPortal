@@ -1,9 +1,9 @@
 <root>
 	<!-- Key/value store for each application on system database -->
 	<table>
-		<column name="name" param="varchar(255) UNIQUE" />
-		<column name="value" param="text" />
+		<column name="name" param="varchar(255) UNIQUE"/>
+		<column name="value" param="text"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 </root>

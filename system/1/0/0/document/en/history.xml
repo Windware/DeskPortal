@@ -4,7 +4,8 @@
 			<new summary="Initial release">Initial release</new>
 
 			<bug summary="Selection and text input form stays on top in Internet Explorer 6">
-				With Internet Explorer 6, selection and text input form will in a window remain above other windows even if the window is below others.
+				With Internet Explorer 6, selection and text input form will in a window remain above other windows even if
+				the window is below others.
 				This is the browser's fault and not likely to be fixed.
 				To overcome this problem, upgrading Internet Explorer or using another browser is necessary.
 			</bug>
@@ -17,11 +18,13 @@
 
 			<bug summary="Resizing a window is sometimes inaccurate on Firefox/Opera/Konqueror">
 				When resizing a window, the end result is inaccurate under certain conditions for those browsers.
-				This is hard to fix difference on the rendering implementations on the browsers but a workaround is being planned.
+				This is hard to fix difference on the rendering implementations on the browsers but a workaround is being
+				planned.
 			</bug>
 
 			<bug summary="Slow performance under certain wallpapers with Firefox in some cases">
-				When a wallpaper is set with resizing but without streching and without centering, the performance can get degraded under Firefox under some cases.
+				When a wallpaper is set with resizing but without streching and without centering, the performance can get
+				degraded under Firefox under some cases.
 				This is a problem of the browser and not likely to be fixed until the browser is fixed.
 				Try other combinations of background options to work around the problem.
 			</bug>

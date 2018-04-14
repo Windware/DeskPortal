@@ -1,8 +1,32 @@
 
-	tr#%id%_display { background-color : #aaa; font-size : 130%; font-weight : bold; }
+tr#
 
-	tr#%id%_display td { padding : 0px 10px; }
+%
+id
 
-	table#%id%_calculator td { width : 25%; padding : 2px; font-size : 120%; text-align : center; }
+%
+_display { background-color: #aaa; font-size: 130%; font-weight: bold; }
 
-	td.%id%_pressed { border : 1px #ccc inset; }
+tr#
+
+%
+id
+
+%
+_display td { padding: 0px 10px; }
+
+table#
+
+%
+id
+
+%
+_calculator td { width: 25%; padding: 2px; font-size: 120%; text-align: center; }
+
+td.
+
+%
+id
+
+%
+_pressed { border: 1px #ccc inset; }

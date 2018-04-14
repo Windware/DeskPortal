@@ -1,6 +1,6 @@
 <root>
 	<!-- ユーザー -->
 	<!-- gui.js -->
-	<string name="user/switch" value="選択された言語は存在しません" />
-	<string name="user/switch/solution" value="使用可能な言語を選択してください" />
+	<string name="user/switch" value="選択された言語は存在しません"/>
+	<string name="user/switch/solution" value="使用可能な言語を選択してください"/>
 </root>

@@ -1,8 +1,8 @@
 <root>
 	<!-- USER -->
 	<!-- gui.js -->
-	<string name="user/gui/complete" value="設定が変更されました。" />
+	<string name="user/gui/complete" value="設定が変更されました。"/>
 
-	<string name="user/gui/change/title" value="設定変更完了" />
-	<string name="user/gui/change/message" value="変更はページの再読み込み後に反映されます" />
+	<string name="user/gui/change/title" value="設定変更完了"/>
+	<string name="user/gui/change/message" value="変更はページの再読み込み後に反映されます"/>
 </root>

@@ -1,31 +1,43 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/intro" value="This application can change the system settings and the wallpaper displayed." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/intro" value="This application can change the system settings and the wallpaper displayed."/>
 
-	<string name="_2_system" value="System" />
-	<string name="2/intro" value="The language used and the version of the system can be changed." />
-	<string name="2/language" value="To change the language, pick a language from the 'Language' listing." />
-	<string name="2/version" value="To change the vesion of the system, pick the version from the 'Version' listing. You may view what has changed between versions by clicking on the 'Update history' link." />
-	<string name="2/apply" value="You will need to click on the 'Apply' button for any of the changes to take effect." />
-	<string name="2/number" value="The first part of the version number is increased when a major change has been applied to an application, the second number will be increased typically when a new feature is added and the third number is increased when a bug has been fixed. So, you are encouraged to use the largest version as the third number against the versions with same first and second numbers. This applies to all applications." />
-	<string name="2/logout" value="The duration set for 'Auto logout' is used to logout the user automatically if no activity took place during that period or if the browser is closed while the session is configured to be kept at the time of login. This is highly recommended to be set when the system is used on public computers and the system will not be kept logged in after the user leaves the computer." />
-	<string name="2/another" value="If an user logs in from another computer while logged in, the user session on the previous computer will be forced to cease." />
+	<string name="_2_system" value="System"/>
+	<string name="2/intro" value="The language used and the version of the system can be changed."/>
+	<string name="2/language" value="To change the language, pick a language from the 'Language' listing."/>
+	<string name="2/version"
+	        value="To change the vesion of the system, pick the version from the 'Version' listing. You may view what has changed between versions by clicking on the 'Update history' link."/>
+	<string name="2/apply" value="You will need to click on the 'Apply' button for any of the changes to take effect."/>
+	<string name="2/number"
+	        value="The first part of the version number is increased when a major change has been applied to an application, the second number will be increased typically when a new feature is added and the third number is increased when a bug has been fixed. So, you are encouraged to use the largest version as the third number against the versions with same first and second numbers. This applies to all applications."/>
+	<string name="2/logout"
+	        value="The duration set for 'Auto logout' is used to logout the user automatically if no activity took place during that period or if the browser is closed while the session is configured to be kept at the time of login. This is highly recommended to be set when the system is used on public computers and the system will not be kept logged in after the user leaves the computer."/>
+	<string name="2/another"
+	        value="If an user logs in from another computer while logged in, the user session on the previous computer will be forced to cease."/>
 
-	<string name="_3_window" value="Window" />
-	<string name="3/window" value="The behavior of the window can be changed." />
-	<string name="3/move" value="At the 'Move type' option, it may change how the window can be moved. 'Body' type will move the window body itself. 'Border' will let the border of the window move and lets the body move when the position is determined. 'Object' will create a small object that you can drag around to determine the position of the window and then the window will be moved. The 'Object' method is the best for performance." />
-	<string name="3/translucent" value="Translucent move makes windows translucent when moving or resizing windows." />
-	<string name="3/fade" value="The 'Fade effect' option will determine giving fade effects when windows open and close and in some other circumstances. On some computers, it may decrease the performance, and in those cases, this option should be disabled." />
-	<string name="3/corner" value="The 'Rounded corners' option will make the corners rounded on windows. No performance difference is made either way." />
+	<string name="_3_window" value="Window"/>
+	<string name="3/window" value="The behavior of the window can be changed."/>
+	<string name="3/move"
+	        value="At the 'Move type' option, it may change how the window can be moved. 'Body' type will move the window body itself. 'Border' will let the border of the window move and lets the body move when the position is determined. 'Object' will create a small object that you can drag around to determine the position of the window and then the window will be moved. The 'Object' method is the best for performance."/>
+	<string name="3/translucent" value="Translucent move makes windows translucent when moving or resizing windows."/>
+	<string name="3/fade"
+	        value="The 'Fade effect' option will determine giving fade effects when windows open and close and in some other circumstances. On some computers, it may decrease the performance, and in those cases, this option should be disabled."/>
+	<string name="3/corner"
+	        value="The 'Rounded corners' option will make the corners rounded on windows. No performance difference is made either way."/>
 
-	<string name="_4_background" value="Background" />
-	<string name="4/background" value="The background preferences can be changed." />
-	<string name="4/size" value="By selecting 'Size adjustment' option, the size of the wallpaper will be adjusted to that of the browser size. The width and height ratio of the wallpaper will be kept." />
-	<string name="4/expand" value="By selecting 'Strech' option, the wallpaper will expand or shrink to fit to the browser size ignoring the ratio of the original size. This option will be available when the 'Size adjustment' option is set." />
-	<string name="4/center" value="By selecting 'Center' option, the wallpaper will be placed at the middle of the screen. If 'Strech' option is set, this option will be disabled. In another case, when the wallpaper is bigger than the size of the browser and when the size adjustment is disabled, this option is practically useless." />
+	<string name="_4_background" value="Background"/>
+	<string name="4/background" value="The background preferences can be changed."/>
+	<string name="4/size"
+	        value="By selecting 'Size adjustment' option, the size of the wallpaper will be adjusted to that of the browser size. The width and height ratio of the wallpaper will be kept."/>
+	<string name="4/expand"
+	        value="By selecting 'Strech' option, the wallpaper will expand or shrink to fit to the browser size ignoring the ratio of the original size. This option will be available when the 'Size adjustment' option is set."/>
+	<string name="4/center"
+	        value="By selecting 'Center' option, the wallpaper will be placed at the middle of the screen. If 'Strech' option is set, this option will be disabled. In another case, when the wallpaper is bigger than the size of the browser and when the size adjustment is disabled, this option is practically useless."/>
 
-	<string name="_5_wallpaper" value="Wallpaper" />
-	<string name="5/wallpaper" value="By clicking on the 'Wallpaper' tab, a list of wallpapers will be displayed and can be changed to any of it." />
-	<string name="5/list" value="By selecting a wallpaper from the list and clicking it, the wallpaper can be changed." />
-	<string name="5/web" value="It can also be set to a wallpaper on the internet by entering the web address in the 'Web address' text input field. If the wallpaper does not display, please check by accessing the address with the browser. An address of the image must be specified directly and not the address of a web page. The address of an image does not end with .html but typically with .jpg." />
+	<string name="_5_wallpaper" value="Wallpaper"/>
+	<string name="5/wallpaper"
+	        value="By clicking on the 'Wallpaper' tab, a list of wallpapers will be displayed and can be changed to any of it."/>
+	<string name="5/list" value="By selecting a wallpaper from the list and clicking it, the wallpaper can be changed."/>
+	<string name="5/web"
+	        value="It can also be set to a wallpaper on the internet by entering the web address in the 'Web address' text input field. If the wallpaper does not display, please check by accessing the address with the browser. An address of the image must be specified directly and not the address of a web page. The address of an image does not end with .html but typically with .jpg."/>
 </root>

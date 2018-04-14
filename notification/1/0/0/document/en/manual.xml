@@ -1,11 +1,16 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/intro" value="This application displays the system activity and other applications' activity to notify the user of what is currently happening." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/intro"
+	        value="This application displays the system activity and other applications' activity to notify the user of what is currently happening."/>
 
-	<string name="_2_display" value="Display" />
-	<string name="2/display" value="The messages displayed can be adjusted by the display options. To show the options, go to the 'Config' tab of this window and to the 'Display' section." />
-	<string name="2/level" value="'Report level' sets the amount of messages shown. The more detail options will show more messages." />
-	<string name="2/period" value="'Display period' will adjust the time the messages are shown. When expired, the messages will disappear." />
-	<string name="2/dev" value="To view messages intended for developers, click the developer message option. For casual uses, this option should be turned off." />
-	<string name="2/apply" value="By clicking on the 'Apply' button, the changes will take effect." />
+	<string name="_2_display" value="Display"/>
+	<string name="2/display"
+	        value="The messages displayed can be adjusted by the display options. To show the options, go to the 'Config' tab of this window and to the 'Display' section."/>
+	<string name="2/level"
+	        value="'Report level' sets the amount of messages shown. The more detail options will show more messages."/>
+	<string name="2/period"
+	        value="'Display period' will adjust the time the messages are shown. When expired, the messages will disappear."/>
+	<string name="2/dev"
+	        value="To view messages intended for developers, click the developer message option. For casual uses, this option should be turned off."/>
+	<string name="2/apply" value="By clicking on the 'Apply' button, the changes will take effect."/>
 </root>

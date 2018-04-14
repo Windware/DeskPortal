@@ -1,16 +1,16 @@
 <root>
-	<string name="switch" value="設定のタブを切り替えます" />
-	<string name="language" value="システム全体での使用言語を変更します" />
-	<string name="fade" value="フェード効果を使用するかを設定します。\n無効の方がパフォーマンスが向上します。" />
-	<string name="round" value="ウインドウの角を丸くするかを選択します。パフォーマンスへの影響はありません。" />
-	<string name="move" value="ウインドウの移動方式を設定します。\n簡易な方式であるほど、ウインドウを移動する際のパフォーマンスが向上します。" />
-	<string name="system" value="使用するシステムバージョンを選択します。全体的な見た目や挙動の変更が施されます。詳しくは更新履歴をご覧下さい。" />
-	<string name="history" value="選択されたバージョンの更新履歴を参照します。" />
-	<string name="logout" value="設定された時間の間%brand%を使わずにいると自動でログアウトされます。" />
-	<string name="wallpaper" value="壁紙を選択できます" />
+	<string name="switch" value="設定のタブを切り替えます"/>
+	<string name="language" value="システム全体での使用言語を変更します"/>
+	<string name="fade" value="フェード効果を使用するかを設定します。\n無効の方がパフォーマンスが向上します。"/>
+	<string name="round" value="ウインドウの角を丸くするかを選択します。パフォーマンスへの影響はありません。"/>
+	<string name="move" value="ウインドウの移動方式を設定します。\n簡易な方式であるほど、ウインドウを移動する際のパフォーマンスが向上します。"/>
+	<string name="system" value="使用するシステムバージョンを選択します。全体的な見た目や挙動の変更が施されます。詳しくは更新履歴をご覧下さい。"/>
+	<string name="history" value="選択されたバージョンの更新履歴を参照します。"/>
+	<string name="logout" value="設定された時間の間%brand%を使わずにいると自動でログアウトされます。"/>
+	<string name="wallpaper" value="壁紙を選択できます"/>
 
-	<string name="bg/resize" value="有効にすると壁紙をブラウザーのサイズに合わせて拡大縮小します。" />
-	<string name="bg/stretch" value="有効にすると壁紙をブラウザー全体に表示するようにします。サイズ調整が無効の場合は無効です。" />
-	<string name="bg/center" value="有効にすると壁紙をブラウザーの中央に表示するようにします。伸縮が有効の場合は無効です。" />
-	<string name="bg/address" value="ウェブアドレスを入力するとその画像を壁紙として使えます。" />
+	<string name="bg/resize" value="有効にすると壁紙をブラウザーのサイズに合わせて拡大縮小します。"/>
+	<string name="bg/stretch" value="有効にすると壁紙をブラウザー全体に表示するようにします。サイズ調整が無効の場合は無効です。"/>
+	<string name="bg/center" value="有効にすると壁紙をブラウザーの中央に表示するようにします。伸縮が有効の場合は無効です。"/>
+	<string name="bg/address" value="ウェブアドレスを入力するとその画像を壁紙として使えます。"/>
 </root>

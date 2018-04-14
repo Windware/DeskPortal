@@ -1,40 +1,40 @@
 <root>
 	<!-- Adding, filtering and sorting -->
-	<string name="new" value="New address" />
-	<string name="add" value="Add" />
+	<string name="new" value="New address"/>
+	<string name="add" value="Add"/>
 
-	<string name="search" value="Search" />
-	<string name="order" value="Order" />
-	<string name="name" value="Name" />
-	<string name="address" value="Address" />
-	<string name="type" value="Type" />
-	<string name="added" value="Added" />
-	<string name="viewed" value="Viewed" />
-	<string name="updated" value="Updated" />
-	<string name="remove" value="Remove category '%%'?" />
+	<string name="search" value="Search"/>
+	<string name="order" value="Order"/>
+	<string name="name" value="Name"/>
+	<string name="address" value="Address"/>
+	<string name="type" value="Type"/>
+	<string name="added" value="Added"/>
+	<string name="viewed" value="Viewed"/>
+	<string name="updated" value="Updated"/>
+	<string name="remove" value="Remove category '%%'?"/>
 
 	<!-- Section headers -->
-	<string name="category" value="Category" />
-	<string name="list" value="List" />
+	<string name="category" value="Category"/>
+	<string name="list" value="List"/>
 
 	<!-- Category list -->
-	<string name="all" value="All" />
+	<string name="all" value="All"/>
 
 	<!-- Bookmarks -->
-	<string name="data" value="Data" />
-	<string name="edit" value="Edit" />
-	<string name="info" value="Bookmark Information" />
-	<string name="apply" value="Apply" />
-	<string name="status" value="Status" />
-	<string name="delete" value="Delete" />
-	<string name="confirm" value="Delete this entry?" />
+	<string name="data" value="Data"/>
+	<string name="edit" value="Edit"/>
+	<string name="info" value="Bookmark Information"/>
+	<string name="apply" value="Apply"/>
+	<string name="status" value="Status"/>
+	<string name="delete" value="Delete"/>
+	<string name="confirm" value="Delete this entry?"/>
 
-	<string name="cache" value="Text cache" />
-	<string name="cache/confirm" value="Update the cache?" />
-	<string name="update" value="Update" />
-	<string name="view" value="View" />
-	<string name="never" value="Never" />
-	<string name="error" value="Error" />
-	<string name="error/big" value="Target size too big to save" />
-	<string name="close" value="Close" />
+	<string name="cache" value="Text cache"/>
+	<string name="cache/confirm" value="Update the cache?"/>
+	<string name="update" value="Update"/>
+	<string name="view" value="View"/>
+	<string name="never" value="Never"/>
+	<string name="error" value="Error"/>
+	<string name="error/big" value="Target size too big to save"/>
+	<string name="close" value="Close"/>
 </root>

@@ -1,10 +1,14 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/intro" value="This application can search information across various applications." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/intro" value="This application can search information across various applications."/>
 
-	<string name="_2_search" value="Search" />
-	<string name="2/search" value="To start the search, pick the target application on the main window, and enter the search phrase in the text input box, then, by pressing the 'Enter' key, the results will be shown on the right side of the window." />
-	<string name="2/limit" value="It is necessary to input more than 2 letters for the search phrase and at least 1 application as a target but only maximum of 5 words are allowed as search phrase separated by space and only results matching all words will be displayed." />
-	<string name="2/result" value="The results will be shown grouped by application names and by clicking on them, the application will launch displaying the result." />
-	<string name="2/page" value="The results are only shown by 20 entries per application and in order to display further results, the result page links below the results should be used. Clicking on 'Next' will reveal the next 20 results for that application. To specify the result page number directly, select the page number." />
+	<string name="_2_search" value="Search"/>
+	<string name="2/search"
+	        value="To start the search, pick the target application on the main window, and enter the search phrase in the text input box, then, by pressing the 'Enter' key, the results will be shown on the right side of the window."/>
+	<string name="2/limit"
+	        value="It is necessary to input more than 2 letters for the search phrase and at least 1 application as a target but only maximum of 5 words are allowed as search phrase separated by space and only results matching all words will be displayed."/>
+	<string name="2/result"
+	        value="The results will be shown grouped by application names and by clicking on them, the application will launch displaying the result."/>
+	<string name="2/page"
+	        value="The results are only shown by 20 entries per application and in order to display further results, the result page links below the results should be used. Clicking on 'Next' will reveal the next 20 results for that application. To specify the result page number directly, select the page number."/>
 </root>

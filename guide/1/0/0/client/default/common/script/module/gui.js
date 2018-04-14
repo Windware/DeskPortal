@@ -1,26 +1,25 @@
+$self.gui = new function()
+{
+	var _class = $id + '.gui'
 
-	$self.gui = new function()
+	var _previous //Previously selected index link
+
+	this.page = function(name) //Swap to another page
 	{
-		var _class = $id + '.gui';
+		var log = $system.log.init(_class + '.page')
+		if(!$system.is.text(name) || !$self.info.template[name]) return log.param()
 
-		var _previous; //Previously selected index link
+		if(_previous) $system.node.classes(_previous, $id + '_active', false) //Revert the look
+		var index = $id + '_index_' + name //Index node ID
 
-		this.page = function(name) //Swap to another page
-		{
-			var log = $system.log.init(_class + '.page');
-			if(!$system.is.text(name) || !$self.info.template[name]) return log.param();
+		$system.node.classes(index, $id + '_active', true) //Make it look active
 
-			if(_previous) $system.node.classes(_previous, $id + '_active', false); //Revert the look
-			var index = $id + '_index_' + name; //Index node ID
+		var page = $system.node.id($id + '_page')
+		$system.node.fade(page.id, false)
 
-			$system.node.classes(index, $id + '_active', true); //Make it look active
+		page.innerHTML = $self.info.template[name] //Set the page
+		page.scrollTop = 0 //Show the top part of page
 
-			var page = $system.node.id($id + '_page');
-			$system.node.fade(page.id, false);
-
-			page.innerHTML = $self.info.template[name]; //Set the page
-			page.scrollTop = 0; //Show the top part of page
-
-			_previous = index; //Remember current index
-		}
+		_previous = index //Remember current index
 	}
+}

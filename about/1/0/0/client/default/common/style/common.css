@@ -1,4 +1,22 @@
 
-	div#%id%_more a:hover, div#%id%_more a:active { color : #567 !important; }
+div#
 
-	select#%id%_option { background-color : #d98; width : 100px; border : 1px #fff solid; }
+%
+id
+
+%
+_more a:hover, div#
+
+%
+id
+
+%
+_more a:active { color: #567 !important; }
+
+select#
+
+%
+id
+
+%
+_option { background-color: #d98; width: 100px; border: 1px #fff solid; }

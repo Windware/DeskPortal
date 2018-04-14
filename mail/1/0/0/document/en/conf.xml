@@ -1,69 +1,69 @@
 <root>
-	<string name="_1_account" value="Accounts" />
-	<string name="_2_folder" value="Folders" />
+	<string name="_1_account" value="Accounts"/>
+	<string name="_2_folder" value="Folders"/>
 
-	<string name="required" value="Required fields" />
-	<string name="account" value="Account" />
-	<string name="new" value="New" />
-	<string name="basic" value="Basic Settings" />
+	<string name="required" value="Required fields"/>
+	<string name="account" value="Account"/>
+	<string name="new" value="New"/>
+	<string name="basic" value="Basic Settings"/>
 
-	<string name="default" value="Default account" />
-	<string name="yes" value="Yes" />
-	<string name="no" value="No" />
+	<string name="default" value="Default account"/>
+	<string name="yes" value="Yes"/>
+	<string name="no" value="No"/>
 
-	<string name="description" value="Description" />
-	<string name="name" value="Name" />
-	<string name="address" value="Address" />
+	<string name="description" value="Description"/>
+	<string name="name" value="Name"/>
+	<string name="address" value="Address"/>
 
-	<string name="prefer" value="Preferred format" />
-	<string name="plain" value="Plain text" />
-	<string name="html" value="HTML" />
+	<string name="prefer" value="Preferred format"/>
+	<string name="plain" value="Plain text"/>
+	<string name="html" value="HTML"/>
 
-	<string name="signature" value="Signature" />
-	<string name="max" value="Up to 500 characters" />
+	<string name="signature" value="Signature"/>
+	<string name="max" value="Up to 500 characters"/>
 
-	<string name="receive" value="Receive Settings" />
-	<string name="send" value="Send Settings" />
+	<string name="receive" value="Receive Settings"/>
+	<string name="send" value="Send Settings"/>
 
-	<string name="type" value="Type" />
-	<string name="server" value="Server" />
-	<string name="port" value="Port" />
-	<string name="secure" value="Secure" />
+	<string name="type" value="Type"/>
+	<string name="server" value="Server"/>
+	<string name="port" value="Port"/>
+	<string name="secure" value="Secure"/>
 
-	<string name="keep" value="Keep Message" />
-	<string name="leave" value="Leave messages on server" />
-	<string name="days" value="days" />
+	<string name="keep" value="Keep Message"/>
+	<string name="leave" value="Leave messages on server"/>
+	<string name="days" value="days"/>
 
-	<string name="user" value="User" />
-	<string name="pass" value="Password" />
-	<string name="saving" value="Checking, saving configuration and refreshing folders..." />
-	<string name="while" value="This may take a moment" />
-	<string name="save" value="Save" />
+	<string name="user" value="User"/>
+	<string name="pass" value="Password"/>
+	<string name="saving" value="Checking, saving configuration and refreshing folders..."/>
+	<string name="while" value="This may take a moment"/>
+	<string name="save" value="Save"/>
 
-	<string name="folder" value="Folder" />
-	<string name="inbox" value="Inbox" />
-	<string name="draft" value="Draft" />
-	<string name="sent" value="Sent" />
-	<string name="trash" value="Trash" />
+	<string name="folder" value="Folder"/>
+	<string name="inbox" value="Inbox"/>
+	<string name="draft" value="Draft"/>
+	<string name="sent" value="Sent"/>
+	<string name="trash" value="Trash"/>
 
-	<string name="adjustment" value="Adjustment" />
-	<string name="special" value="Special Folders" />
+	<string name="adjustment" value="Adjustment"/>
+	<string name="special" value="Special Folders"/>
 
-	<string name="delete" value="Delete" />
-	<string name="rename" value="Rename" />
-	<string name="move" value="Move" />
-	<string name="display" value="Display" />
-	<string name="on" value="On" />
-	<string name="off" value="Off" />
-	<string name="set" value="Set" />
-	<string name="create" value="Create" />
-	<string name="top" value="Top" />
-	<string name="parent" value="Parent Folder" />
+	<string name="delete" value="Delete"/>
+	<string name="rename" value="Rename"/>
+	<string name="move" value="Move"/>
+	<string name="display" value="Display"/>
+	<string name="on" value="On"/>
+	<string name="off" value="Off"/>
+	<string name="set" value="Set"/>
+	<string name="create" value="Create"/>
+	<string name="top" value="Top"/>
+	<string name="parent" value="Parent Folder"/>
 
-	<string name="terminate" value="Remove account '%%'?" />
-	<string name="pop3" value="All of the mails stored for this account will be deleted." />
-	<string name="remove" value="This will delete the folder %% and all of its mails. This cannot be undone." />
+	<string name="terminate" value="Remove account '%%'?"/>
+	<string name="pop3" value="All of the mails stored for this account will be deleted."/>
+	<string name="remove" value="This will delete the folder %% and all of its mails. This cannot be undone."/>
 
-	<string name="error" value="Error" />
-	<string name="fill" value="Please fill in the required fields marked with '*'." />
+	<string name="error" value="Error"/>
+	<string name="fill" value="Please fill in the required fields marked with '*'."/>
 </root>

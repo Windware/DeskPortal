@@ -1,24 +1,24 @@
 <root>
 	<!-- USER -->
 	<!-- item.js -->
-	<string name="user/time" value="Invalid time is specified." />
-	<string name="user/time/solution" value="Please choose a valid time." />
+	<string name="user/time" value="Invalid time is specified."/>
+	<string name="user/time/solution" value="Please choose a valid time."/>
 
-	<string name="user/add" value="Added todo '%%'." />
-	<string name="user/add/fail" value="Failed to add todo '%%'." />
-	<string name="user/add/duplicate" value="Same name entry exists for '%%'." />
+	<string name="user/add" value="Added todo '%%'."/>
+	<string name="user/add/fail" value="Failed to add todo '%%'."/>
+	<string name="user/add/duplicate" value="Same name entry exists for '%%'."/>
 
-	<string name="user/get" value="Retrieved the list of todo." />
-	<string name="user/remove" value="Removed todo '%%'." />
-	<string name="user/update" value="Updated todo '%%'." />
+	<string name="user/get" value="Retrieved the list of todo."/>
+	<string name="user/remove" value="Removed todo '%%'."/>
+	<string name="user/update" value="Updated todo '%%'."/>
 
 	<!-- category.js -->
-	<string name="user/category/create" value="Created a new category '%%'." />
-	<string name="user/category/remove" value="Removed category '%%'." />
-	<string name="user/category/update" value="Updated category '%%'." />
+	<string name="user/category/create" value="Created a new category '%%'."/>
+	<string name="user/category/remove" value="Removed category '%%'."/>
+	<string name="user/category/update" value="Updated category '%%'."/>
 
 	<!-- DEVELOPER -->
 	<!-- item.js -->
-	<string name="dev/load" value="Todo information is not loaded for ID '%%'." />
-	<string name="dev/load/solution" value="Make sure the todo information is already loaded from 'item.get'." />
+	<string name="dev/load" value="Todo information is not loaded for ID '%%'."/>
+	<string name="dev/load/solution" value="Make sure the todo information is already loaded from 'item.get'."/>
 </root>

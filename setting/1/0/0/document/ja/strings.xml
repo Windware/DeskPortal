@@ -1,36 +1,36 @@
 <root>
-	<string name="option" value="設定" />
-	<string name="language" value="言語" />
-	<string name="browser" value="ブラウザー設定" />
-	<string name="translucent" value="半透明移動" />
-	<string name="fade" value="フェード効果" />
-	<string name="round" value="角を丸める" />
-	<string name="move" value="移動方式" />
-	<string name="system" value="システム" />
-	<string name="logout" value="自動ログアウト" />
-	<string name="off" value="オフ" />
-	<string name="minute" value="分" />
-	<string name="hour" value="時間" />
-	<string name="window" value="ウインドウ" />
-	<string name="wallpaper" value="壁紙" />
-	<string name="background" value="背景" />
-	<string name="apply" value="適用" />
+	<string name="option" value="設定"/>
+	<string name="language" value="言語"/>
+	<string name="browser" value="ブラウザー設定"/>
+	<string name="translucent" value="半透明移動"/>
+	<string name="fade" value="フェード効果"/>
+	<string name="round" value="角を丸める"/>
+	<string name="move" value="移動方式"/>
+	<string name="system" value="システム"/>
+	<string name="logout" value="自動ログアウト"/>
+	<string name="off" value="オフ"/>
+	<string name="minute" value="分"/>
+	<string name="hour" value="時間"/>
+	<string name="window" value="ウインドウ"/>
+	<string name="wallpaper" value="壁紙"/>
+	<string name="background" value="背景"/>
+	<string name="apply" value="適用"/>
 
-	<string name="bg/resize" value="サイズ調整" />
-	<string name="bg/stretch" value="伸縮" />
-	<string name="bg/center" value="中央揃え" />
-	<string name="bg/color" value="背景色" />
-	<string name="bg/address" value="ウェブアドレス" />
+	<string name="bg/resize" value="サイズ調整"/>
+	<string name="bg/stretch" value="伸縮"/>
+	<string name="bg/center" value="中央揃え"/>
+	<string name="bg/color" value="背景色"/>
+	<string name="bg/address" value="ウェブアドレス"/>
 
-	<string name="history/update" value="更新履歴" />
-	<string name="history/system" value="システム更新履歴" />
-	<string name="version" value="バージョン" />
-	<string name="close" value="閉じる" />
+	<string name="history/update" value="更新履歴"/>
+	<string name="history/system" value="システム更新履歴"/>
+	<string name="version" value="バージョン"/>
+	<string name="close" value="閉じる"/>
 
-	<string name="move/content" value="本体" />
-	<string name="move/border" value="枠" />
-	<string name="move/object" value="オブジェクト" />
+	<string name="move/content" value="本体"/>
+	<string name="move/border" value="枠"/>
+	<string name="move/object" value="オブジェクト"/>
 
-	<string name="license/db" value="'digitalblasphemy.com'のマークのある壁紙はDigital Blasphemyの作品であり、使用許可済みです。" />
-	<string name="license/p8" value="'Photos8.com'のマークのある壁紙はPhotos8.comの作品であり、使用許可済みです。" />
+	<string name="license/db" value="'digitalblasphemy.com'のマークのある壁紙はDigital Blasphemyの作品であり、使用許可済みです。"/>
+	<string name="license/p8" value="'Photos8.com'のマークのある壁紙はPhotos8.comの作品であり、使用許可済みです。"/>
 </root>

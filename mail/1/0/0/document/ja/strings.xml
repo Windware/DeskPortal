@@ -1,90 +1,90 @@
 <root>
-	<string name="account" value="アカウント" />
-	<string name="folder" value="フォルダー" />
-	<string name="loading" value="読み込み中..." />
-	<string name="recent" value="%account%の%folder%に新着があります" />
+	<string name="account" value="アカウント"/>
+	<string name="folder" value="フォルダー"/>
+	<string name="loading" value="読み込み中..."/>
+	<string name="recent" value="%account%の%folder%に新着があります"/>
 
 	<!-- 特別フォルダー -->
-	<string name="inbox" value="受信箱" />
-	<string name="drafts" value="下書き" />
-	<string name="sent" value="送信済み" />
-	<string name="trash" value="ごみ箱" />
+	<string name="inbox" value="受信箱"/>
+	<string name="drafts" value="下書き"/>
+	<string name="sent" value="送信済み"/>
+	<string name="trash" value="ごみ箱"/>
 
 	<!-- フィルター -->
-	<string name="all" value="全て" />
-	<string name="display" value="表示" />
+	<string name="all" value="全て"/>
+	<string name="display" value="表示"/>
 
-	<string name="filter" value="フィルター" />
-	<string name="state" value="状態" />
-	<string name="marked" value="マーク済" />
-	<string name="unread" value="未読" />
-	<string name="page" value="ページ" />
-	<string name="order" value="順序" />
-	<string name="reverse" value="逆順" />
-	<string name="search" value="検索" />
+	<string name="filter" value="フィルター"/>
+	<string name="state" value="状態"/>
+	<string name="marked" value="マーク済"/>
+	<string name="unread" value="未読"/>
+	<string name="page" value="ページ"/>
+	<string name="order" value="順序"/>
+	<string name="reverse" value="逆順"/>
+	<string name="search" value="検索"/>
 
 	<!-- メール一覧 -->
-	<string name="new" value="新規" />
-	<string name="to" value="宛先" />
-	<string name="from" value="送信者" />
-	<string name="size" value="サイズ" />
-	<string name="date_received" value="受信日" />
-	<string name="date_sent" value="送信日" />
-	<string name="cc" value="Cc" />
-	<string name="bcc" value="Bcc" />
-	<string name="attachment" value="添付" />
+	<string name="new" value="新規"/>
+	<string name="to" value="宛先"/>
+	<string name="from" value="送信者"/>
+	<string name="size" value="サイズ"/>
+	<string name="date_received" value="受信日"/>
+	<string name="date_sent" value="送信日"/>
+	<string name="cc" value="Cc"/>
+	<string name="bcc" value="Bcc"/>
+	<string name="attachment" value="添付"/>
 
-	<string name="check" value="*" />
-	<string name="subject" value="題名" />
-	<string name="date" value="日付" />
+	<string name="check" value="*"/>
+	<string name="subject" value="題名"/>
+	<string name="date" value="日付"/>
 
-	<string name="empty" value="空" />
-	<string name="read" value="既読" />
-	<string name="replied" value="返信済" />
+	<string name="empty" value="空"/>
+	<string name="read" value="既読"/>
+	<string name="replied" value="返信済"/>
 
-	<string name="yes" value="はい" />
-	<string name="no" value="いいえ" />
+	<string name="yes" value="はい"/>
+	<string name="no" value="いいえ"/>
 
-	<string name="purge" value="ごみ箱を空にしますか？この操作は元に戻す事はできません。" />
-	<string name="none" value="空" />
+	<string name="purge" value="ごみ箱を空にしますか？この操作は元に戻す事はできません。"/>
+	<string name="none" value="空"/>
 
 	<!-- メールウインドウ -->
-	<string name="reply" value="返信" />
-	<string name="reply_all" value="全員に返信" />
-	<string name="forward" value="転送" />
-	<string name="copy" value="コピー" />
-	<string name="move" value="移動" />
-	<string name="delete" value="削除" />
-	<string name="mark" value="マーク" />
-	<string name="close" value="閉じる" />
-	<string name="on" value="有" />
-	<string name="off" value="無" />
+	<string name="reply" value="返信"/>
+	<string name="reply_all" value="全員に返信"/>
+	<string name="forward" value="転送"/>
+	<string name="copy" value="コピー"/>
+	<string name="move" value="移動"/>
+	<string name="delete" value="削除"/>
+	<string name="mark" value="マーク"/>
+	<string name="close" value="閉じる"/>
+	<string name="on" value="有"/>
+	<string name="off" value="無"/>
 
-	<string name="remove" value="このメールはごみ箱に移動されます" />
-	<string name="delete" value="このメールは削除されます" />
+	<string name="remove" value="このメールはごみ箱に移動されます"/>
+	<string name="delete" value="このメールは削除されます"/>
 
-	<string name="previous" value="前" />
-	<string name="next" value="次" />
+	<string name="previous" value="前"/>
+	<string name="next" value="次"/>
 
 	<!-- 作成ウインドウ -->
-	<string name="confirm/send" value="メールを送信しますか？" />
-	<string name="confirm/remove" value="下書きとして保存する場合は添付ファイルはメールから削除されます。" />
+	<string name="confirm/send" value="メールを送信しますか？"/>
+	<string name="confirm/remove" value="下書きとして保存する場合は添付ファイルはメールから削除されます。"/>
 
-	<string name="send" value="送信" />
-	<string name="save" value="保存" />
-	<string name="cancel" value="キャンセル" />
-	<string name="sign" value="署名" />
-	<string name="discard" value="メール作成を中止しますか？" />
-	<string name="sending" value="送信中・・・" />
-	<string name="saving" value="保存中・・・" />
+	<string name="send" value="送信"/>
+	<string name="save" value="保存"/>
+	<string name="cancel" value="キャンセル"/>
+	<string name="sign" value="署名"/>
+	<string name="discard" value="メール作成を中止しますか？"/>
+	<string name="sending" value="送信中・・・"/>
+	<string name="saving" value="保存中・・・"/>
 
 	<!-- Address list -->
-	<string name="address" value="アドレス一覧" />
-	<string name="group" value="グループ" />
-	<string name="type" value="種類" />
-	<string name="uncategorized" value="未区分" />
+	<string name="address" value="アドレス一覧"/>
+	<string name="group" value="グループ"/>
+	<string name="type" value="種類"/>
+	<string name="uncategorized" value="未区分"/>
 
-	<string name="main" value="メイン" />
-	<string name="alt" value="その他" />
-	<string name="mobile" value="携帯" />
+	<string name="main" value="メイン"/>
+	<string name="alt" value="その他"/>
+	<string name="mobile" value="携帯"/>
 </root>

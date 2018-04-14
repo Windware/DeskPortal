@@ -1,37 +1,37 @@
 <root>
 	<!-- Memo and group relation -->
 	<table name="relation">
-		<column name="user" param="INT NOT NULL" />
-		<column name="memo" param="INT NOT NULL" />
-		<column name="groups" param="INT NOT NULL" />
-		<column name="UNIQUE" param="(user, memo, groups)" />
-		<index name="groups" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="memo" param="INT NOT NULL"/>
+		<column name="groups" param="INT NOT NULL"/>
+		<column name="UNIQUE" param="(user, memo, groups)"/>
+		<index name="groups"/>
 	</table>
 
 	<!-- Groups to categorize -->
 	<table name="groups">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255)" />
-		<column name="UNIQUE" param="(user, name)" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255)"/>
+		<column name="UNIQUE" param="(user, name)"/>
 	</table>
 
 	<!-- Memo entry -->
 	<table name="memo">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255)" />
-		<column name="UNIQUE" param="(user, name)" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255)"/>
+		<column name="UNIQUE" param="(user, name)"/>
 	</table>
 
 	<!-- Content revision -->
 	<table name="revision">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="memo" param="INT NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="time" param="DATETIME" />
-		<column name="content" param="TEXT" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="memo" param="INT NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="time" param="DATETIME"/>
+		<column name="content" param="TEXT"/>
 
-		<index name="user, memo, time" />
+		<index name="user, memo, time"/>
 	</table>
 </root>

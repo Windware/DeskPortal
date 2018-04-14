@@ -1,6 +1,5 @@
+window = 'aaccee'
+hover = '557799'
 
-	window = 'aaccee';
-	hover = '557799';
-
-	width = 600;
-	height = 400;
+width = 600
+height = 400

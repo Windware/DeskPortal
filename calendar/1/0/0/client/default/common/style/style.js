@@ -1,12 +1,11 @@
+window = 'cc7744'
+border = '333333'
+hover = 'ffffff'
 
-	window = 'cc7744';
-	border = '333333';
-	hover = 'ffffff';
+bar = false
 
-	bar = false;
+center = true
+up = true
 
-	center = true;
-	up = true;
-
-	width = 280;
-	height = 180;
+width = 280
+height = 180

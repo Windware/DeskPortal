@@ -1,9 +1,9 @@
 <root>
 	<!-- USER -->
 	<!-- conf.js -->
-	<string name="user/conf/save" value="設定を保存しました" />
-	<string name="user/conf/save/message" value="表示設定が保存されました" />
+	<string name="user/conf/save" value="設定を保存しました"/>
+	<string name="user/conf/save/message" value="表示設定が保存されました"/>
 
-	<string name="user/conf/fail" value="設定の保存に失敗しました" />
-	<string name="user/conf/fail/message" value="表示設定の保存に失敗しました" />
+	<string name="user/conf/fail" value="設定の保存に失敗しました"/>
+	<string name="user/conf/fail/message" value="表示設定の保存に失敗しました"/>
 </root>

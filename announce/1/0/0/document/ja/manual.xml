@@ -1,6 +1,6 @@
 <root>
-	<string name="_1_intro" value="紹介" />
+	<string name="_1_intro" value="紹介"/>
 
-	<string name="1/about" value="%brand%の公式定期ニュースです。" />
-	<string name="1/others" value="メインウインドウ下部にあるリンクをクリックすることにより、過去のニュースを読む事ができます。" />
+	<string name="1/about" value="%brand%の公式定期ニュースです。"/>
+	<string name="1/others" value="メインウインドウ下部にあるリンクをクリックすることにより、過去のニュースを読む事ができます。"/>
 </root>

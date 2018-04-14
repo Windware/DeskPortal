@@ -1,36 +1,38 @@
 <root>
-	<string name="option" value="Options" />
-	<string name="language" value="Language" />
-	<string name="browser" value="Browser configured" />
-	<string name="translucent" value="Translucent move" />
-	<string name="fade" value="Fade effect" />
-	<string name="round" value="Rounded corners" />
-	<string name="move" value="Move type" />
-	<string name="system" value="System" />
-	<string name="logout" value="Auto logout" />
-	<string name="off" value="Off" />
-	<string name="minute" value="minutes" />
-	<string name="hour" value="hours" />
-	<string name="window" value="Window" />
-	<string name="wallpaper" value="Wallpaper" />
-	<string name="background" value="Background" />
-	<string name="apply" value="Apply" />
+	<string name="option" value="Options"/>
+	<string name="language" value="Language"/>
+	<string name="browser" value="Browser configured"/>
+	<string name="translucent" value="Translucent move"/>
+	<string name="fade" value="Fade effect"/>
+	<string name="round" value="Rounded corners"/>
+	<string name="move" value="Move type"/>
+	<string name="system" value="System"/>
+	<string name="logout" value="Auto logout"/>
+	<string name="off" value="Off"/>
+	<string name="minute" value="minutes"/>
+	<string name="hour" value="hours"/>
+	<string name="window" value="Window"/>
+	<string name="wallpaper" value="Wallpaper"/>
+	<string name="background" value="Background"/>
+	<string name="apply" value="Apply"/>
 
-	<string name="bg/resize" value="Size adjustment" />
-	<string name="bg/stretch" value="Stretch" />
-	<string name="bg/center" value="Center" />
-	<string name="bg/color" value="Background color" />
-	<string name="bg/address" value="Web address" />
+	<string name="bg/resize" value="Size adjustment"/>
+	<string name="bg/stretch" value="Stretch"/>
+	<string name="bg/center" value="Center"/>
+	<string name="bg/color" value="Background color"/>
+	<string name="bg/address" value="Web address"/>
 
-	<string name="history/update" value="Update history" />
-	<string name="history/system" value="System Update History" />
-	<string name="version" value="Version" />
-	<string name="close" value="Close" />
+	<string name="history/update" value="Update history"/>
+	<string name="history/system" value="System Update History"/>
+	<string name="version" value="Version"/>
+	<string name="close" value="Close"/>
 
-	<string name="move/content" value="Body" />
-	<string name="move/border" value="Border" />
-	<string name="move/object" value="Object" />
+	<string name="move/content" value="Body"/>
+	<string name="move/border" value="Border"/>
+	<string name="move/object" value="Object"/>
 
-	<string name="license/db" value="Wallpapers marked with 'digitalblasphemy.com' are the works of Digital Blasphemy and are approved for use." />
-	<string name="license/p8" value="Wallpapers marked with 'Photos8.com' are the works of Photos8.com and are approved for use." />
+	<string name="license/db"
+	        value="Wallpapers marked with 'digitalblasphemy.com' are the works of Digital Blasphemy and are approved for use."/>
+	<string name="license/p8"
+	        value="Wallpapers marked with 'Photos8.com' are the works of Photos8.com and are approved for use."/>
 </root>

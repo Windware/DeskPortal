@@ -6,7 +6,9 @@
 		<input type="submit" value="%string:add%" />
 	</p>
 
-	<p><a style="cursor : help" onclick="%top%.%system%.conf.swap('%id%', 'manual'); %top%.%system%.conf.flip('%id%', 'manual', '_2_add')">%string:what%</a></p>
+	<p>
+		<a style="cursor : help" onclick="%top%.%system%.conf.swap('%id%', 'manual'); %top%.%system%.conf.flip('%id%', 'manual', '_2_add')">%string:what%</a>
+	</p>
 </form>
 
 <form style="border-top : 1px #333 dotted" onsubmit="return %top%.%id%.feed.remove(this.feed.value)">

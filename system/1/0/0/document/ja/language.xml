@@ -1,44 +1,44 @@
 <root>
-	<string name="sq" value="アルバニア語" />
-	<string name="ar" value="アラブ語" />
-	<string name="bg" value="ブルガリア語" />
-	<string name="ca" value="カタルーニャ語" />
-	<string name="zh" value="中国語" />
-	<string name="hr" value="クロアチア語" />
-	<string name="cs" value="チェコ語" />
-	<string name="da" value="デンマーク語" />
-	<string name="nl" value="オランダ語" />
-	<string name="en" value="英語" />
-	<string name="et" value="エストニア語" />
-	<string name="tl" value="フィリピン語" />
-	<string name="fi" value="フィンランド語" />
-	<string name="fr" value="フランス語" />
-	<string name="gl" value="ガリシア語" />
-	<string name="de" value="ドイツ語" />
-	<string name="el" value="ギリシャ語" />
-	<string name="iw" value="ヘブライ語" />
-	<string name="hi" value="ヒンディー語" />
-	<string name="hu" value="ハンガリー語" />
-	<string name="id" value="インドネシア語" />
-	<string name="it" value="イタリア語" />
-	<string name="ja" value="日本語" />
-	<string name="kr" value="韓国語" />
-	<string name="lv" value="ラトビア語" />
-	<string name="lt" value="リトアニア語" />
-	<string name="mt" value="マルタ語" />
-	<string name="no" value="ノルウェー語" />
-	<string name="fa" value="ペルシャ語" />
-	<string name="pl" value="ポーランド語" />
-	<string name="pt" value="ポルトガル語" />
-	<string name="ro" value="ローマニア語" />
-	<string name="ru" value="ロシア語" />
-	<string name="sr" value="セルビア語" />
-	<string name="sk" value="スロバキア語" />
-	<string name="sl" value="スロベニア語" />
-	<string name="es" value="スペイン語" />
-	<string name="sv" value="スウェーデン語" />
-	<string name="th" value="タイ語" />
-	<string name="tr" value="トルコ語" />
-	<string name="uk" value="ウクライナ語" />
-	<string name="vi" value="ベトナム語" />
+	<string name="sq" value="アルバニア語"/>
+	<string name="ar" value="アラブ語"/>
+	<string name="bg" value="ブルガリア語"/>
+	<string name="ca" value="カタルーニャ語"/>
+	<string name="zh" value="中国語"/>
+	<string name="hr" value="クロアチア語"/>
+	<string name="cs" value="チェコ語"/>
+	<string name="da" value="デンマーク語"/>
+	<string name="nl" value="オランダ語"/>
+	<string name="en" value="英語"/>
+	<string name="et" value="エストニア語"/>
+	<string name="tl" value="フィリピン語"/>
+	<string name="fi" value="フィンランド語"/>
+	<string name="fr" value="フランス語"/>
+	<string name="gl" value="ガリシア語"/>
+	<string name="de" value="ドイツ語"/>
+	<string name="el" value="ギリシャ語"/>
+	<string name="iw" value="ヘブライ語"/>
+	<string name="hi" value="ヒンディー語"/>
+	<string name="hu" value="ハンガリー語"/>
+	<string name="id" value="インドネシア語"/>
+	<string name="it" value="イタリア語"/>
+	<string name="ja" value="日本語"/>
+	<string name="kr" value="韓国語"/>
+	<string name="lv" value="ラトビア語"/>
+	<string name="lt" value="リトアニア語"/>
+	<string name="mt" value="マルタ語"/>
+	<string name="no" value="ノルウェー語"/>
+	<string name="fa" value="ペルシャ語"/>
+	<string name="pl" value="ポーランド語"/>
+	<string name="pt" value="ポルトガル語"/>
+	<string name="ro" value="ローマニア語"/>
+	<string name="ru" value="ロシア語"/>
+	<string name="sr" value="セルビア語"/>
+	<string name="sk" value="スロバキア語"/>
+	<string name="sl" value="スロベニア語"/>
+	<string name="es" value="スペイン語"/>
+	<string name="sv" value="スウェーデン語"/>
+	<string name="th" value="タイ語"/>
+	<string name="tr" value="トルコ語"/>
+	<string name="uk" value="ウクライナ語"/>
+	<string name="vi" value="ベトナム語"/>
 </root>

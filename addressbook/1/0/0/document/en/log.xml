@@ -1,31 +1,31 @@
 <root>
 	<!-- USER -->
 	<!-- item.js -->
-	<string name="user/save" value="Saved the information for user '%%'." />
-	<string name="user/save/fail" value="Please type in an user name to save." />
-	<string name="user/save/fail/solution" value="Need a user name to save an user entry." />
+	<string name="user/save" value="Saved the information for user '%%'."/>
+	<string name="user/save/fail" value="Please type in an user name to save."/>
+	<string name="user/save/fail/solution" value="Need a user name to save an user entry."/>
 
-	<string name="user/remove" value="Deleted user '%%'." />
-	<string name="user/column" value="Saved the column selections." />
+	<string name="user/remove" value="Deleted user '%%'."/>
+	<string name="user/column" value="Saved the column selections."/>
 
-	<string name="user/birth" value="A bad birth date is specified." />
-	<string name="user/birth/solution" value="Please input a proper birth date." />
+	<string name="user/birth" value="A bad birth date is specified."/>
+	<string name="user/birth/solution" value="Please input a proper birth date."/>
 
-	<string name="user/mail" value="Bad email address is specified." />
-	<string name="user/mail/solution" value="Please specify a valid email address." />
+	<string name="user/mail" value="Bad email address is specified."/>
+	<string name="user/mail/solution" value="Please specify a valid email address."/>
 
-	<string name="user/list" value="Retrieved the list for '%%' group." />
-	<string name="user/search" value="Searched the list for '%%' group." />
+	<string name="user/list" value="Retrieved the list for '%%' group."/>
+	<string name="user/search" value="Searched the list for '%%' group."/>
 
-	<string name="user/group/create" value="Created a new group '%%'." />
-	<string name="user/group/remove" value="Removed group '%%'." />
-	<string name="user/group/update" value="Updated group '%%'." />
+	<string name="user/group/create" value="Created a new group '%%'."/>
+	<string name="user/group/remove" value="Removed group '%%'."/>
+	<string name="user/group/update" value="Updated group '%%'."/>
 
 	<!-- DEVELOPER -->
 	<!-- item.js -->
-	<string name="dev/load" value="Data not loaded for ID '%%'." />
-	<string name="dev/load/solution" value="Load the data via 'item.get' beforehand." />
+	<string name="dev/load" value="Data not loaded for ID '%%'."/>
+	<string name="dev/load/solution" value="Load the data via 'item.get' beforehand."/>
 
-	<string name="dev/cache" value="Cache object for entries does not exist." />
-	<string name="dev/cache/solution" value="Attempt to use the cache after a cache is created." />
+	<string name="dev/cache" value="Cache object for entries does not exist."/>
+	<string name="dev/cache/solution" value="Attempt to use the cache after a cache is created."/>
 </root>

@@ -1,27 +1,35 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
+	<string name="_1_intro" value="Introduction"/>
 
-	<string name="1/intro" value="This application allows to maintain people's profiles." />
-	<string name="1/add" value="To add a new contact, click on the 'New entry' button and fill in the information for that person." />
-	<string name="1/optional" value="All the fields except the name is optional." />
-	<string name="1/save" value="Click on the save button to save it." />
-	<string name="1/display" value="You will need to pick a group on the main window to display the saved entries. Each entries can be clicked to view and edit the data. You may also take the mouse over the entry to display the information summarized and mail address and web address column data can be clicked to compose a new mail and show the web page respectively." />
+	<string name="1/intro" value="This application allows to maintain people's profiles."/>
+	<string name="1/add"
+	        value="To add a new contact, click on the 'New entry' button and fill in the information for that person."/>
+	<string name="1/optional" value="All the fields except the name is optional."/>
+	<string name="1/save" value="Click on the save button to save it."/>
+	<string name="1/display"
+	        value="You will need to pick a group on the main window to display the saved entries. Each entries can be clicked to view and edit the data. You may also take the mouse over the entry to display the information summarized and mail address and web address column data can be clicked to compose a new mail and show the web page respectively."/>
 
-	<string name="_2_group" value="Grouping" />
+	<string name="_2_group" value="Grouping"/>
 
-	<string name="2/group" value="Each contact can be associated with a group." />
-	<string name="2/go" value="In order to create a group, go to the 'Setting' tab of this window and to the 'Groups' section." />
-	<string name="2/insert" value="In the text input field, type a name of a group you wish to create and click on the apply button." />
-	<string name="2/change" value="To change previous entries' names, choose the entry from the left selection and insert a new name and click on the apply button. You may also delete a group at this point." />
-	<string name="2/choose" value="When you add or edit an entry, you may choose the registered group at the bottom of the entry's edit window to change that person's belonging group." />
+	<string name="2/group" value="Each contact can be associated with a group."/>
+	<string name="2/go"
+	        value="In order to create a group, go to the 'Setting' tab of this window and to the 'Groups' section."/>
+	<string name="2/insert"
+	        value="In the text input field, type a name of a group you wish to create and click on the apply button."/>
+	<string name="2/change"
+	        value="To change previous entries' names, choose the entry from the left selection and insert a new name and click on the apply button. You may also delete a group at this point."/>
+	<string name="2/choose"
+	        value="When you add or edit an entry, you may choose the registered group at the bottom of the entry's edit window to change that person's belonging group."/>
 
-	<string name="_3_display" value="Display" />
+	<string name="_3_display" value="Display"/>
 
-	<string name="3/column" value="On the main window, you can click on the column names listed on the right side bottom to limit the columns to be displayed to your preference." />
+	<string name="3/column"
+	        value="On the main window, you can click on the column names listed on the right side bottom to limit the columns to be displayed to your preference."/>
 
-	<string name="_4_search" value="Search" />
+	<string name="_4_search" value="Search"/>
 
-	<string name="4/search" value="On the main window at the right side, there is a text input field where you can type a search phrase to limit the output of the current listing which includes that word." />
-	<string name="4/apply" value="The search will only apply to the current selected group displayed." />
-	<string name="4/all" value="In order to search on all groups, please use the 'Search' application." />
+	<string name="4/search"
+	        value="On the main window at the right side, there is a text input field where you can type a search phrase to limit the output of the current listing which includes that word."/>
+	<string name="4/apply" value="The search will only apply to the current selected group displayed."/>
+	<string name="4/all" value="In order to search on all groups, please use the 'Search' application."/>
 </root>

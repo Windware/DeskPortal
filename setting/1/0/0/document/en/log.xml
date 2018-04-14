@@ -1,8 +1,8 @@
 <root>
 	<!-- USER -->
 	<!-- gui.js -->
-	<string name="user/gui/complete" value="Settings changed." />
+	<string name="user/gui/complete" value="Settings changed."/>
 
-	<string name="user/gui/change/title" value="Settings changed" />
-	<string name="user/gui/change/message" value="Changes take effect after page reload" />
+	<string name="user/gui/change/title" value="Settings changed"/>
+	<string name="user/gui/change/message" value="Changes take effect after page reload"/>
 </root>

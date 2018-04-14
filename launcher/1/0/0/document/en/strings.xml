@@ -1,6 +1,6 @@
 <root>
-	<string name="app" value="Applications" />
+	<string name="app" value="Applications"/>
 
-	<string name="logout" value="Logout" />
-	<string name="confirm" value="Do you want to logout?" />
+	<string name="logout" value="Logout"/>
+	<string name="confirm" value="Do you want to logout?"/>
 </root>

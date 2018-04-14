@@ -1,17 +1,17 @@
 <root>
 	<!-- USER -->
 	<!-- login.js -->
-	<string name="user/login/fail/title" value="Login" />
-	<string name="user/login/fail/login" value="Failed to login" />
-	<string name="user/login/fail/network" value="Network error occured. Please try again later." />
-	<string name="user/login/fail/error" value="Login error occured. Please try again later." />
+	<string name="user/login/fail/title" value="Login"/>
+	<string name="user/login/fail/login" value="Failed to login"/>
+	<string name="user/login/fail/network" value="Network error occured. Please try again later."/>
+	<string name="user/login/fail/error" value="Login error occured. Please try again later."/>
 
 	<!-- DEVELOPER -->
 	<!-- login.js -->
-	<string name="dev/login" value="User failed to login." />
-	<string name="dev/cookie" value="Could not receive proper cookies on success status." />
-	<string name="dev/cookie/solution" value="Check server side authentication process." />
+	<string name="dev/login" value="User failed to login."/>
+	<string name="dev/cookie" value="Could not receive proper cookies on success status."/>
+	<string name="dev/cookie/solution" value="Check server side authentication process."/>
 
-	<string name="dev/system" value="System error for login authentication." />
-	<string name="dev/system/solution" value="Check server side authentication." />
+	<string name="dev/system" value="System error for login authentication."/>
+	<string name="dev/system/solution" value="Check server side authentication."/>
 </root>

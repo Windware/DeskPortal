@@ -1,5 +1,5 @@
 <root>
 	<!-- USER -->
 	<!-- conf.js -->
-	<string name="user/change" value="Changed the clock settings." />
+	<string name="user/change" value="Changed the clock settings."/>
 </root>

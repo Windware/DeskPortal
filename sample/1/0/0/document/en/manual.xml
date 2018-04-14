@@ -1,6 +1,7 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
+	<string name="_1_intro" value="Introduction"/>
 
-	<string name="1/file" value="Name of the file inside template/manual directory is used for indexing. For _1_intro.html, it will be indexed using '_1_intro' value." />
-	<string name="1/replaced" value="All of the %string:name% entries will be replaced using this file." />
+	<string name="1/file"
+	        value="Name of the file inside template/manual directory is used for indexing. For _1_intro.html, it will be indexed using '_1_intro' value."/>
+	<string name="1/replaced" value="All of the %string:name% entries will be replaced using this file."/>
 </root>

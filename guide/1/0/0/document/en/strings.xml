@@ -1,54 +1,76 @@
 <root>
-	<string name="welcome" value="Welcome to %brand%!" />
-	<string name="index" value="Index" />
-	<string name="proceed" value="Proceed to next page" />
+	<string name="welcome" value="Welcome to %brand%!"/>
+	<string name="index" value="Index"/>
+	<string name="proceed" value="Proceed to next page"/>
 
-	<string name="_1_intro" value="Introduction" />
-	<string name="intro" value="%brand% can be used to access your own data from any computer that has internet access at any time at any place without installing any software." />
-	<string name="guide" value="This guide will show you how to use %brand%." />
-	<string name="demo" value="Note that no data can be saved under this demo." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="intro"
+	        value="%brand% can be used to access your own data from any computer that has internet access at any time at any place without installing any software."/>
+	<string name="guide" value="This guide will show you how to use %brand%."/>
+	<string name="demo" value="Note that no data can be saved under this demo."/>
 
-	<string name="_2_launch" value="Launching" />
-	<string name="start" value="The launcher bar on the left part of the screen groups applications by category. Click a category to reveal individual applications." />
-	<string name="example" value="For example, click on the 'Personal' category and inside the list, click on the 'Memo' application name." />
-	<string name="interface" value="The application's interface should soon appear. The guide may get hidden behind the application, but clicking on the guide window again will return it to the front. You need to be connected to the internet at this time." />
-	<string name="tool" value="To view each application's manual and general configuration, click on the &lt;img src=&quot;router-php.php?_version=1_0_0&amp;amp;_self=system/1/0/0/client/default/computer/image/info.png&quot; /&gt; button at the top of the window." />
+	<string name="_2_launch" value="Launching"/>
+	<string name="start"
+	        value="The launcher bar on the left part of the screen groups applications by category. Click a category to reveal individual applications."/>
+	<string name="example"
+	        value="For example, click on the 'Personal' category and inside the list, click on the 'Memo' application name."/>
+	<string name="interface"
+	        value="The application's interface should soon appear. The guide may get hidden behind the application, but clicking on the guide window again will return it to the front. You need to be connected to the internet at this time."/>
+	<string name="tool"
+	        value="To view each application's manual and general configuration, click on the &lt;img src=&quot;router-php.php?_version=1_0_0&amp;amp;_self=system/1/0/0/client/default/computer/image/info.png&quot; /&gt; button at the top of the window."/>
 
-	<string name="_3_window" value="Window" />
-	<string name="drag" value="You can reposition a window by left clicking an empty area where there are no scrollbars and then holding down the mouse button while you drag the window to a new spot." />
-	<string name="resize" value="You can resize an application window by right clicking and dragging its bottom right corner." />
-	<string name="cannot" value="However, the window cannot become smaller than its minimal possible size." />
+	<string name="_3_window" value="Window"/>
+	<string name="drag"
+	        value="You can reposition a window by left clicking an empty area where there are no scrollbars and then holding down the mouse button while you drag the window to a new spot."/>
+	<string name="resize"
+	        value="You can resize an application window by right clicking and dragging its bottom right corner."/>
+	<string name="cannot" value="However, the window cannot become smaller than its minimal possible size."/>
 
-	<string name="_4_button" value="Buttons" />
-	<string name="buttons" value="At the top of the application window you should see the application icon and title on the left and various buttons on the right." />
-	<string name="these" value="These buttons represent window management functions. The buttons are, from the left, a tool button, a window lock button, a window sink button, a window shrink button and a window close button." />
-	<string name="tooltip" value="Tooltips explaining each button can be displayed by placing the cursor over a button for a brief moment." />
-	<string name="management" value="The tool button will bring up a new window displaying information and configuration options for that application which will be explained in section 5 of the guide." />
-	<string name="lock" value="The window lock button when pressed will lock the window's position. Click again on the lock button to permit the window to be repositioned. This is useful when selecting text inside the window by dragging mouse over texts instead of moving the window. However, you may still resize the window." />
-	<string name="sink" value="The window sink button will make the current window go behind other windows. This is useful when you want to access windows behind the current window. You can click on any window to bring it to the front again. If there are no windows overlapping, the window sink button does nothing." />
-	<string name="shrink" value="The window shrink button will shrink the content of the window so that it contains only the title and buttons. This is useful to keep an application minimized when not interacting with it. Click on the window shrink button again to expand back to the original size." />
-	<string name="close" value="Finally, clicking the window close button will close the application. You may click on the application name on the launcher to run the application again, and it will resume the state it was at when it was last closed." />
-	<string name="toolbar" value="The application title and buttons can be hidden by clicking on the window's top right corner to make the interface look simpler. You may click the same corner again to recover the title and buttons. Some applications start without the buttons, but they can be recovered as well by clicking on the right top corner of the window. This applies for any windows created, but other than the main application window, the tool button will not appear." />
+	<string name="_4_button" value="Buttons"/>
+	<string name="buttons"
+	        value="At the top of the application window you should see the application icon and title on the left and various buttons on the right."/>
+	<string name="these"
+	        value="These buttons represent window management functions. The buttons are, from the left, a tool button, a window lock button, a window sink button, a window shrink button and a window close button."/>
+	<string name="tooltip"
+	        value="Tooltips explaining each button can be displayed by placing the cursor over a button for a brief moment."/>
+	<string name="management"
+	        value="The tool button will bring up a new window displaying information and configuration options for that application which will be explained in section 5 of the guide."/>
+	<string name="lock"
+	        value="The window lock button when pressed will lock the window's position. Click again on the lock button to permit the window to be repositioned. This is useful when selecting text inside the window by dragging mouse over texts instead of moving the window. However, you may still resize the window."/>
+	<string name="sink"
+	        value="The window sink button will make the current window go behind other windows. This is useful when you want to access windows behind the current window. You can click on any window to bring it to the front again. If there are no windows overlapping, the window sink button does nothing."/>
+	<string name="shrink"
+	        value="The window shrink button will shrink the content of the window so that it contains only the title and buttons. This is useful to keep an application minimized when not interacting with it. Click on the window shrink button again to expand back to the original size."/>
+	<string name="close"
+	        value="Finally, clicking the window close button will close the application. You may click on the application name on the launcher to run the application again, and it will resume the state it was at when it was last closed."/>
+	<string name="toolbar"
+	        value="The application title and buttons can be hidden by clicking on the window's top right corner to make the interface look simpler. You may click the same corner again to recover the title and buttons. Some applications start without the buttons, but they can be recovered as well by clicking on the right top corner of the window. This applies for any windows created, but other than the main application window, the tool button will not appear."/>
 
-	<string name="_5_tool" value="Tool" />
-	<string name="each" value="To learn more about an application, click its tool button." />
-	<string name="about" value="'About' tab briefly describes an application and lists its developers." />
-	<string name="conf" value="'Setting' tab lists available configurations for an application. For some applications, it may contain multiple subsections inside." />
-	<string name="manual" value="'Manual' tab provides instructions on how to use an application." />
-	<string name="history" value="'History' tab lists all versions of an application." />
-	<string name="version" value="%brand% is designed to keep multiple versions of each application available so that users may choose whichever version they prefer. To select a specific version, go to the 'Setting' tab and then to the 'General' subsection. For applications which have not been revised, only one version is available. As new versions are released for an application, they will be automatically listed under 'Setting'." />
+	<string name="_5_tool" value="Tool"/>
+	<string name="each" value="To learn more about an application, click its tool button."/>
+	<string name="about" value="'About' tab briefly describes an application and lists its developers."/>
+	<string name="conf"
+	        value="'Setting' tab lists available configurations for an application. For some applications, it may contain multiple subsections inside."/>
+	<string name="manual" value="'Manual' tab provides instructions on how to use an application."/>
+	<string name="history" value="'History' tab lists all versions of an application."/>
+	<string name="version"
+	        value="%brand% is designed to keep multiple versions of each application available so that users may choose whichever version they prefer. To select a specific version, go to the 'Setting' tab and then to the 'General' subsection. For applications which have not been revised, only one version is available. As new versions are released for an application, they will be automatically listed under 'Setting'."/>
 
-	<string name="_6_session" value="Session" />
-	<string name="session" value="If you have chosen to keep the session at the login prompt, you may close the browser and keep your logged in state the next time you visit %brand% for a period of time. If you have chosen not to keep your session, then closing the browser will automatically logs you out and you are required to log in again on the next visit. If you are on a publically accessible computer, it is strongly advised that you do not select the option to remain logged in when logging in." />
-	<string name="logout" value="To log out manually, use the 'Logout' link displayed in the 'Launcher' application and your login state will be discarded on the browser. When you log in again, your state will be recovered." />
+	<string name="_6_session" value="Session"/>
+	<string name="session"
+	        value="If you have chosen to keep the session at the login prompt, you may close the browser and keep your logged in state the next time you visit %brand% for a period of time. If you have chosen not to keep your session, then closing the browser will automatically logs you out and you are required to log in again on the next visit. If you are on a publically accessible computer, it is strongly advised that you do not select the option to remain logged in when logging in."/>
+	<string name="logout"
+	        value="To log out manually, use the 'Logout' link displayed in the 'Launcher' application and your login state will be discarded on the browser. When you log in again, your state will be recovered."/>
 
-	<string name="_7_setting" value="Setting" />
-	<string name="setting" value="In order to change system settings such as the language and the wallpaper, click the 'System' category of the launcher application and click 'Setting'. This will display a list of user configurable options. The 'Wallpaper' tab at the top will show a list of available wallpapers to use as the background image. You may also enter a valid web address in the input field to specify a wallpaper of your choice." />
+	<string name="_7_setting" value="Setting"/>
+	<string name="setting"
+	        value="In order to change system settings such as the language and the wallpaper, click the 'System' category of the launcher application and click 'Setting'. This will display a list of user configurable options. The 'Wallpaper' tab at the top will show a list of available wallpapers to use as the background image. You may also enter a valid web address in the input field to specify a wallpaper of your choice."/>
 
-	<string name="_8_iphone" value="iPhone" />
-	<string name="scroll" value="While using iPhone, when you'd like to scroll a content inside a window, use 2 fingers to scroll the content, since 1 finger will initiate window movements." />
+	<string name="_8_iphone" value="iPhone"/>
+	<string name="scroll"
+	        value="While using iPhone, when you'd like to scroll a content inside a window, use 2 fingers to scroll the content, since 1 finger will initiate window movements."/>
 
-	<string name="_9_other" value="Other" />
-	<string name="community" value="If you need further information, please visit the community site." />
-	<string name="end" value="This concludes the guide. We hope you enjoy using %brand%." />
+	<string name="_9_other" value="Other"/>
+	<string name="community" value="If you need further information, please visit the community site."/>
+	<string name="end" value="This concludes the guide. We hope you enjoy using %brand%."/>
 </root>

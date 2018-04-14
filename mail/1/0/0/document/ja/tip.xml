@@ -1,40 +1,40 @@
 <root>
 	<!-- 設定 -->
-	<string name="secure" value="接続を暗号化します。メールサーバーが対応している必要があります。" />
-	<string name="leave" value="サーバーにメールのコピーを残しておくかを設定します。日数を空にしておくと、全く削除しません。指定した場合にはその日数経過したメールのコピーはサーバーから削除されます。" />
+	<string name="secure" value="接続を暗号化します。メールサーバーが対応している必要があります。"/>
+	<string name="leave" value="サーバーにメールのコピーを残しておくかを設定します。日数を空にしておくと、全く削除しません。指定した場合にはその日数経過したメールのコピーはサーバーから削除されます。"/>
 
-	<string name="move" value="移動先の親フォルダーを指定してフォルダーを移動できます" />
-	<string name="rename" value="フォルダーの名前を変更できます" />
-	<string name="display" value="フォルダーを表示するかしないかを選択できます" />
-	<string name="delete" value="フォルダーと中のメール全てを削除できます" />
+	<string name="move" value="移動先の親フォルダーを指定してフォルダーを移動できます"/>
+	<string name="rename" value="フォルダーの名前を変更できます"/>
+	<string name="display" value="フォルダーを表示するかしないかを選択できます"/>
+	<string name="delete" value="フォルダーと中のメール全てを削除できます"/>
 
 	<!-- メインウインドウ -->
-	<string name="new" value="新規メールを作成する" />
-	<string name="account" value="表示するアカウントを選択します" />
-	<string name="marked" value="チェックするとマークされたメールのみを表示するようになります" />
-	<string name="unread" value="チェックすると未読のメールのみを表示するようになります" />
-	<string name="search" value="メールの題名、送信者・受信者のアドレスまたは名前から検索できます" />
-	<string name="page" value="現在のフォルダーの表示しているページを変更します" />
-	<string name="empty" value="クリックするとごみ箱を空にします" />
+	<string name="new" value="新規メールを作成する"/>
+	<string name="account" value="表示するアカウントを選択します"/>
+	<string name="marked" value="チェックするとマークされたメールのみを表示するようになります"/>
+	<string name="unread" value="チェックすると未読のメールのみを表示するようになります"/>
+	<string name="search" value="メールの題名、送信者・受信者のアドレスまたは名前から検索できます"/>
+	<string name="page" value="現在のフォルダーの表示しているページを変更します"/>
+	<string name="empty" value="クリックするとごみ箱を空にします"/>
 
-	<string name="sort/check" value="クリックするとメール一覧を選択・解除します" />
-	<string name="sort/subject" value="クリックすると題名順に並び替えられます" />
-	<string name="sort/from" value="クリックすると送信者のアドレス順に並び替えられます" />
-	<string name="sort/sent" value="クリックすると日付順に並び替えられます" />
+	<string name="sort/check" value="クリックするとメール一覧を選択・解除します"/>
+	<string name="sort/subject" value="クリックすると題名順に並び替えられます"/>
+	<string name="sort/from" value="クリックすると送信者のアドレス順に並び替えられます"/>
+	<string name="sort/sent" value="クリックすると日付順に並び替えられます"/>
 
 	<!-- メールウインドウ -->
-	<string name="add" value="アドレス帳に追加する" />
-	<string name="cc" value="CcとBccの入力欄を追加します" />
-	<string name="attachment" value="この添付ファイルをダウンロードする" />
-	<string name="file" value="添付ファイルを追加します" />
-	<string name="remove" value="この添付ファイルを削除します" />
+	<string name="add" value="アドレス帳に追加する"/>
+	<string name="cc" value="CcとBccの入力欄を追加します"/>
+	<string name="attachment" value="この添付ファイルをダウンロードする"/>
+	<string name="file" value="添付ファイルを追加します"/>
+	<string name="remove" value="この添付ファイルを削除します"/>
 
-	<string name="previous" value="前のメールを表示します" />
-	<string name="next" value="次のメールを表示します" />
+	<string name="previous" value="前のメールを表示します"/>
+	<string name="next" value="次のメールを表示します"/>
 
-	<string name="send" value="メールを送信します" />
-	<string name="save" value="下書きとして保存します" />
-	<string name="sign" value="署名を挿入します" />
-	<string name="discard" value="メールを破棄します" />
-	<string name="load" value="アドレス帳からアドレスを表示する" />
+	<string name="send" value="メールを送信します"/>
+	<string name="save" value="下書きとして保存します"/>
+	<string name="sign" value="署名を挿入します"/>
+	<string name="discard" value="メールを破棄します"/>
+	<string name="load" value="アドレス帳からアドレスを表示する"/>
 </root>

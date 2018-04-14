@@ -1,9 +1,8 @@
+window = '555555'
+border = '222222'
 
-	window = '555555';
-	border = '222222';
+color = 'cccccc'
+hover = 'ffffff'
 
-	color = 'cccccc';
-	hover = 'ffffff';
-
-	width = 500;
-	bar = false;
+width = 500
+bar = false

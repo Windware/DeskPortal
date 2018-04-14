@@ -1,78 +1,78 @@
 <root>
 	<!-- USER -->
-	<string name="user/generic/again/solution" value="時間をおいて再度読み込みを行ってください。またアカウントの設定を確認してください。" />
+	<string name="user/generic/again/solution" value="時間をおいて再度読み込みを行ってください。またアカウントの設定を確認してください。"/>
 
 	<!-- account.js -->
-	<string name="user/conf/remove/title" value="アカウント削除" />
-	<string name="user/conf/remove/message" value="アカウントが削除されました" />
-	<string name="user/conf/error/remove" value="アカウント削除時にエラーが発生しました。" />
+	<string name="user/conf/remove/title" value="アカウント削除"/>
+	<string name="user/conf/remove/message" value="アカウントが削除されました"/>
+	<string name="user/conf/error/remove" value="アカウント削除時にエラーが発生しました。"/>
 
 	<!-- address.js -->
-	<string name="user/address/list" value="読み込み失敗" />
-	<string name="user/address/list/message" value="アドレス一覧取得に失敗しました" />
-	<string name="user/address/group/message" value="グループ一覧取得に失敗しました" />
+	<string name="user/address/list" value="読み込み失敗"/>
+	<string name="user/address/list/message" value="アドレス一覧取得に失敗しました"/>
+	<string name="user/address/group/message" value="グループ一覧取得に失敗しました"/>
 
 	<!-- conf.js -->
-	<string name="user/conf/error/title" value="エラーが起きました" />
-	<string name="user/conf/error/message" value="設定の保存に失敗しました。" />
+	<string name="user/conf/error/title" value="エラーが起きました"/>
+	<string name="user/conf/error/message" value="設定の保存に失敗しました。"/>
 
-	<string name="user/conf/success/title" value="保存完了" />
-	<string name="user/conf/success/message" value="設定が保存されました。" />
+	<string name="user/conf/success/title" value="保存完了"/>
+	<string name="user/conf/success/message" value="設定が保存されました。"/>
 
-	<string name="user/conf/auth" value="認証失敗" />
-	<string name="user/conf/read" value="受信用サーバーへの認証に失敗しました。認証情報を確認してください。" />
-	<string name="user/conf/send" value="送信用サーバーへの認証に失敗しました。認証情報を確認してください。" />
+	<string name="user/conf/auth" value="認証失敗"/>
+	<string name="user/conf/read" value="受信用サーバーへの認証に失敗しました。認証情報を確認してください。"/>
+	<string name="user/conf/send" value="送信用サーバーへの認証に失敗しました。認証情報を確認してください。"/>
 
-	<string name="user/conf/signature/title" value="署名が長すぎます" />
-	<string name="user/conf/signature/message" value="署名の長さを500文字以下にしてください。現在は%%文字です。" />
+	<string name="user/conf/signature/title" value="署名が長すぎます"/>
+	<string name="user/conf/signature/message" value="署名の長さを500文字以下にしてください。現在は%%文字です。"/>
 
 	<!-- folder.js -->
-	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。" />
-	<string name="user/folder/list/message" value="%%のアカウントのフォルダー一覧が取得できませんでした。時間をおいて再度試してください。" />
+	<string name="user/folder/list" value="フォルダー一覧の取得に失敗しました。"/>
+	<string name="user/folder/list/message" value="%%のアカウントのフォルダー一覧が取得できませんでした。時間をおいて再度試してください。"/>
 
-	<string name="user/folder/get" value="%%の%%に新着があります。" />
-	<string name="user/folder/empty/title" value="メール削除エラー" />
-	<string name="user/folder/empty/message" value="ごみ箱を空にする際にエラーが発生しました。時間をおいて再度試してください。" />
+	<string name="user/folder/get" value="%%の%%に新着があります。"/>
+	<string name="user/folder/empty/title" value="メール削除エラー"/>
+	<string name="user/folder/empty/message" value="ごみ箱を空にする際にエラーが発生しました。時間をおいて再度試してください。"/>
 
 	<!-- gui.js -->
-	<string name="user/gui/search" value="検索語は%%文字以上、%%文字以下でなければいけません。" />
-	<string name="user/gui/search/solution" value="正しい文字数を入力してください。" />
+	<string name="user/gui/search" value="検索語は%%文字以上、%%文字以下でなければいけません。"/>
+	<string name="user/gui/search/solution" value="正しい文字数を入力してください。"/>
 
-	<string name="user/gui/send/success" value="メール送信完了" />
-	<string name="user/gui/send/success/message" value="メールが送信されました" />
+	<string name="user/gui/send/success" value="メール送信完了"/>
+	<string name="user/gui/send/success/message" value="メールが送信されました"/>
 
-	<string name="user/gui/send/error" value="エラーが発生しました" />
-	<string name="user/gui/send/error/message" value="メール送信時にエラーが発生しました。時間をおいて再度試してください。" />
+	<string name="user/gui/send/error" value="エラーが発生しました"/>
+	<string name="user/gui/send/error/message" value="メール送信時にエラーが発生しました。時間をおいて再度試してください。"/>
 
-	<string name="user/gui/send/big" value="メールのサイズが大きすぎます" />
-	<string name="user/gui/send/big/message" value="メールのサイズが制限を超えました。サイズを減らして再度試してください。" />
+	<string name="user/gui/send/big" value="メールのサイズが大きすぎます"/>
+	<string name="user/gui/send/big/message" value="メールのサイズが制限を超えました。サイズを減らして再度試してください。"/>
 
-	<string name="user/gui/send/imap" value="メールの保存に失敗しました" />
-	<string name="user/gui/send/imap/message" value="メールを保存できませんでした。時間をおいて再度試してください。" />
+	<string name="user/gui/send/imap" value="メールの保存に失敗しました"/>
+	<string name="user/gui/send/imap/message" value="メールを保存できませんでした。時間をおいて再度試してください。"/>
 
-	<string name="user/gui/send/smtp" value="メールの送信に失敗しました" />
-	<string name="user/gui/send/smtp/message" value="メールを送信できませんでした。メールの送り先アドレス、設定を確認して下さい。または時間をおいて再度試してください。" />
+	<string name="user/gui/send/smtp" value="メールの送信に失敗しました"/>
+	<string name="user/gui/send/smtp/message" value="メールを送信できませんでした。メールの送り先アドレス、設定を確認して下さい。または時間をおいて再度試してください。"/>
 
-	<string name="user/gui/send/address" value="無効なアドレスです" />
-	<string name="user/gui/send/address/message" value="アドレスを確認してください" />
+	<string name="user/gui/send/address" value="無効なアドレスです"/>
+	<string name="user/gui/send/address/message" value="アドレスを確認してください"/>
 
-	<string name="user/gui/send/draft" value="メールを保存しました" />
-	<string name="user/gui/send/draft/message" value="メールを下書きフォルダーに保存しました" />
+	<string name="user/gui/send/draft" value="メールを保存しました"/>
+	<string name="user/gui/send/draft/message" value="メールを下書きフォルダーに保存しました"/>
 
-	<string name="user/gui/send/field" value="無効な入力があります" />
-	<string name="user/gui/send/field/message" value="無効な値を修正してください" />
+	<string name="user/gui/send/field" value="無効な入力があります"/>
+	<string name="user/gui/send/field/message" value="無効な値を修正してください"/>
 
 	<!-- item.js -->
-	<string name="user/show/error" value="メールの表示に失敗しました" />
-	<string name="user/show/solution" value="ページを再読み込みして、再度試してください" />
-	<string name="user/item/delete" value="メールの削除に失敗しました" />
+	<string name="user/show/error" value="メールの表示に失敗しました"/>
+	<string name="user/show/solution" value="ページを再読み込みして、再度試してください"/>
+	<string name="user/item/delete" value="メールの削除に失敗しました"/>
 
-	<string name="user/item/list/title" value="エラー" />
-	<string name="user/item/list/message" value="%%のメール取得中にエラーが発生しました" />
+	<string name="user/item/list/title" value="エラー"/>
+	<string name="user/item/list/message" value="%%のメール取得中にエラーが発生しました"/>
 
-	<string name="user/item/mark" value="メールのマークを変更しました" />
-	<string name="user/item/mark/error" value="メールのマークの変更に失敗しました" />
+	<string name="user/item/mark" value="メールのマークを変更しました"/>
+	<string name="user/item/mark/error" value="メールのマークの変更に失敗しました"/>
 
-	<string name="user/item/show" value="メール検索失敗" />
-	<string name="user/item/show/error" value="メールが見つかりませんでした" />
+	<string name="user/item/show" value="メール検索失敗"/>
+	<string name="user/item/show/error" value="メールが見つかりませんでした"/>
 </root>

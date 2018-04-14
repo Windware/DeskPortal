@@ -1,38 +1,38 @@
 <root>
 	<!-- Entry -->
 	<table name="address">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255) NOT NULL" />
-		<column name="age" param="INT" />
-		<column name="gender" param="INT" />
-		<column name="birth_year" param="INT" />
-		<column name="birth_month" param="INT" />
-		<column name="birth_day" param="INT" />
-		<column name="mail_main" param="VARCHAR(255)" />
-		<column name="mail_mobile" param="VARCHAR(255)" />
-		<column name="mail_alt" param="VARCHAR(255)" />
-		<column name="phone" param="VARCHAR(255)" />
-		<column name="mobile" param="VARCHAR(255)" />
-		<column name="web" param="TEXT" />
-		<column name="address" param="TEXT" />
-		<column name="note" param="TEXT" />
-		<column name="groups" param="INT DEFAULT 0" />
-		<column name="created" param="DATETIME NOT NULL" />
-		<column name="updated" param="DATETIME NOT NULL" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255) NOT NULL"/>
+		<column name="age" param="INT"/>
+		<column name="gender" param="INT"/>
+		<column name="birth_year" param="INT"/>
+		<column name="birth_month" param="INT"/>
+		<column name="birth_day" param="INT"/>
+		<column name="mail_main" param="VARCHAR(255)"/>
+		<column name="mail_mobile" param="VARCHAR(255)"/>
+		<column name="mail_alt" param="VARCHAR(255)"/>
+		<column name="phone" param="VARCHAR(255)"/>
+		<column name="mobile" param="VARCHAR(255)"/>
+		<column name="web" param="TEXT"/>
+		<column name="address" param="TEXT"/>
+		<column name="note" param="TEXT"/>
+		<column name="groups" param="INT DEFAULT 0"/>
+		<column name="created" param="DATETIME NOT NULL"/>
+		<column name="updated" param="DATETIME NOT NULL"/>
 
-		<index name="user, name" />
-		<index name="user, groups" />
-		<extra name="ENGINE" param="INNODB" />
+		<index name="user, name"/>
+		<index name="user, groups"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- Group -->
 	<table name="groups">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255) NOT NULL" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(user, name)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(user, name)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 </root>

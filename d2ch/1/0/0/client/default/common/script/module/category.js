@@ -1,14 +1,13 @@
+$self.category = new function()
+{
+	var _class = $id + '.category'
 
-	$self.category = new function()
+	this.expand = function(id) //Expands or shrinks the category on the main interface
 	{
-		var _class = $id + '.category';
+		var log = $system.log.init(_class + '.expand')
+		if(!$system.is.digit(id)) return log.param()
 
-		this.expand = function(id) //Expands or shrinks the category on the main interface
-		{
-			var log = $system.log.init(_class + '.expand');
-			if(!$system.is.digit(id)) return log.param();
-
-			var node = $id + '_category_' + id;
-			return $system.node.fade(node, !$system.node.hidden(node));
-		}
+		var node = $id + '_category_' + id
+		return $system.node.fade(node, !$system.node.hidden(node))
 	}
+}

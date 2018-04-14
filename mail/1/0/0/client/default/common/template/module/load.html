@@ -2,18 +2,19 @@
 
 <form id="%id%_address_%index%_form" style="margin : 10px; text-align : center">
 	<p>%string:group% :
-	<select name="group" onchange="%top%.%id%.address.list('%index%')">
-		<option value="">-----</option>
-		<option value="0">(%string:uncategorized%)</option>
-	</select></p>
+		<select name="group" onchange="%top%.%id%.address.list('%index%')">
+			<option value="">-----</option>
+			<option value="0">(%string:uncategorized%)</option>
+		</select></p>
 
 	<p>%string:type% :
-	<select name="type" onchange="%top%.%id%.address.list('%index%')">
-		<option value="main">%string:main%</option>
-		<option value="alt">%string:alt%</option>
-		<option value="mobile">%string:mobile%</option>
-	</select></p>
+		<select name="type" onchange="%top%.%id%.address.list('%index%')">
+			<option value="main">%string:main%</option>
+			<option value="alt">%string:alt%</option>
+			<option value="mobile">%string:mobile%</option>
+		</select></p>
 </form>
 
 <div id="%id%_address_%index%_area" class="%id%_address" %lock%></div>
-<p style="text-align : center"><a onclick="%top%.%system%.window.fade('%id%_address_%index%_window', true, null, true)">%string:close%</a></p>
+<p style="text-align : center">
+	<a onclick="%top%.%system%.window.fade('%id%_address_%index%_window', true, null, true)">%string:close%</a></p>

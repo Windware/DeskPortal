@@ -1,17 +1,17 @@
 <root>
-	<string name="_1_feed" value="Feed" />
-	<string name="_2_category" value="Category" />
+	<string name="_1_feed" value="Feed"/>
+	<string name="_2_category" value="Category"/>
 
-	<string name="new" value="New" />
-	<string name="add" value="Add" />
-	<string name="feed" value="Feed" />
-	<string name="what" value="What is a feed?" />
+	<string name="new" value="New"/>
+	<string name="add" value="Add"/>
+	<string name="feed" value="Feed"/>
+	<string name="what" value="What is a feed?"/>
 
-	<string name="name" value="Name" />
-	<string name="category" value="Category" />
-	<string name="delete" value="Delete" />
-	<string name="set" value="Set" />
-	<string name="confirm" value="Delete this feed?" />
+	<string name="name" value="Name"/>
+	<string name="category" value="Category"/>
+	<string name="delete" value="Delete"/>
+	<string name="set" value="Set"/>
+	<string name="confirm" value="Delete this feed?"/>
 
-	<string name="category/confirm" value="Delete this category?" />
+	<string name="category/confirm" value="Delete this category?"/>
 </root>

@@ -1,25 +1,26 @@
 <root>
-	<developer name="Windware Solution" site="http://windware.com/" />
-	<info revision="1" category="system" />
+	<developer name="Windware Solution" site="https://windware.com/"/>
+	<info revision="1" category="system"/>
 
 	<language name="en">
-		<translator name="Windware Solution" />
+		<translator name="Windware Solution"/>
 	</language>
 
 	<language name="ja">
-		<translator name="Windware Solution" />
+		<translator name="Windware Solution"/>
 	</language>
 
 	<license>
 		<folder name="." license="Windware Reference License">
-			<author name="Windware Solution" site="http://windware.com/" />
+			<author name="Windware Solution" site="https://windware.com/"/>
 
 			<folder name="client">
 				<folder name="default">
 					<folder name="common">
 						<folder name="image">
 							<file name="icon.png" license="Free commercial use license">
-								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com" site="http://www.webdesignerdepot.com/" />
+								<author name="Webdesigner Depot" contact="info@webdesignerdepot.com"
+								        site="https://www.webdesignerdepot.com/"/>
 							</file>
 						</folder>
 					</folder>

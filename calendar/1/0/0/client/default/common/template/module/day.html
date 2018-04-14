@@ -1,7 +1,8 @@
 <h2 style="padding : 5px; text-align : center">%value:day%</h2>
 
 <form id="%id%_day_%value:id%_form" onsubmit="%top%.%id%.item.set(%value:param%); return false">
-	<table cellpadding="5" cellspacing="0" style="width : 100%" class="%id%_editor %id%_inputs"><tbody>
+	<table cellpadding="5" cellspacing="0" style="width : 100%" class="%id%_editor %id%_inputs">
+		<tbody>
 		<tr style="height : 10px">
 			<th style="width : 30%">%string:title%</th>
 			<td style="width : 70%"><input type="text" name="title" style="width : 200px" /></td>
@@ -42,7 +43,8 @@
 				</p>
 			</td>
 		</tr>
-	</tbody></table>
+		</tbody>
+	</table>
 </form>
 
 <div id="%id%_day_%value:id%_display" style="text-align : center" class="%system%_hidden %id%_inputs">
@@ -51,7 +53,7 @@
 	<p id="%id%_day_%value:id%_category"></p>
 	<p id="%id%_day_%value:id%_time"></p>
 
-	<div id="%id%_day_%value:id%_content" style="padding : 5px; background-color : #c97; text-align : left; border : 1px #333 solid"%lock%></div>
+	<div id="%id%_day_%value:id%_content" style="padding : 5px; background-color : #c97; text-align : left; border : 1px #333 solid" %lock%></div>
 
 	<p>
 		<input type="button" onclick="%top%.%id%.gui.edit(%value:param%)" value="%string:edit%" />

@@ -1,40 +1,41 @@
 <root>
 	<!-- Configuration -->
-	<string name="secure" value="Uses secure connection. Your mail server must support this feature." />
-	<string name="leave" value="To leave the copy of mails on the server or not. Leave the number of days empty to keep it forever or enter the number of days to delete the copy off the server after specified days." />
+	<string name="secure" value="Uses secure connection. Your mail server must support this feature."/>
+	<string name="leave"
+	        value="To leave the copy of mails on the server or not. Leave the number of days empty to keep it forever or enter the number of days to delete the copy off the server after specified days."/>
 
-	<string name="move" value="The folder can be moved by choosing the parent folder" />
-	<string name="rename" value="The folder's name can be changed" />
-	<string name="display" value="The display state of the folder can be changed" />
-	<string name="delete" value="The folder and all the mails inside can be deleted" />
+	<string name="move" value="The folder can be moved by choosing the parent folder"/>
+	<string name="rename" value="The folder's name can be changed"/>
+	<string name="display" value="The display state of the folder can be changed"/>
+	<string name="delete" value="The folder and all the mails inside can be deleted"/>
 
 	<!-- Main window -->
-	<string name="new" value="Compose a new mail" />
-	<string name="account" value="Select an account to display" />
-	<string name="marked" value="Select this option to display only marked mails" />
-	<string name="unread" value="Select this option to display only unread mails" />
-	<string name="search" value="Enter a phrase to search from subject, sender/recipient address or name" />
-	<string name="page" value="Change the displaying page for the currently selected folder" />
-	<string name="empty" value="Click here to empty trash" />
+	<string name="new" value="Compose a new mail"/>
+	<string name="account" value="Select an account to display"/>
+	<string name="marked" value="Select this option to display only marked mails"/>
+	<string name="unread" value="Select this option to display only unread mails"/>
+	<string name="search" value="Enter a phrase to search from subject, sender/recipient address or name"/>
+	<string name="page" value="Change the displaying page for the currently selected folder"/>
+	<string name="empty" value="Click here to empty trash"/>
 
-	<string name="sort/check" value="Click here to select or unselect all mails in the list" />
-	<string name="sort/subject" value="Click here to sort by subject" />
-	<string name="sort/from" value="Click here to sort by sender address" />
-	<string name="sort/sent" value="Click here to sort by date" />
+	<string name="sort/check" value="Click here to select or unselect all mails in the list"/>
+	<string name="sort/subject" value="Click here to sort by subject"/>
+	<string name="sort/from" value="Click here to sort by sender address"/>
+	<string name="sort/sent" value="Click here to sort by date"/>
 
 	<!-- Mail window -->
-	<string name="add" value="Add to address book" />
-	<string name="cc" value="Add Cc and Bcc address fields" />
-	<string name="attachment" value="Download this attachment file" />
-	<string name="file" value="Add an attachment" />
-	<string name="remove" value="Remove this attachment" />
+	<string name="add" value="Add to address book"/>
+	<string name="cc" value="Add Cc and Bcc address fields"/>
+	<string name="attachment" value="Download this attachment file"/>
+	<string name="file" value="Add an attachment"/>
+	<string name="remove" value="Remove this attachment"/>
 
-	<string name="previous" value="Show the previous mail" />
-	<string name="next" value="Show the next mail" />
+	<string name="previous" value="Show the previous mail"/>
+	<string name="next" value="Show the next mail"/>
 
-	<string name="send" value="Send this mail" />
-	<string name="save" value="Save this mail as a draft" />
-	<string name="sign" value="Insert your signature" />
-	<string name="discard" value="Discard this mail" />
-	<string name="load" value="Display addresses from the address book" />
+	<string name="send" value="Send this mail"/>
+	<string name="save" value="Save this mail as a draft"/>
+	<string name="sign" value="Insert your signature"/>
+	<string name="discard" value="Discard this mail"/>
+	<string name="load" value="Display addresses from the address book"/>
 </root>

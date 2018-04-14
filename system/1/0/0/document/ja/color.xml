@@ -1,16 +1,16 @@
 <root>
-	<string name="black" value="黒" />
-	<string name="white" value="白" />
-	<string name="red" value="赤" />
-	<string name="green" value="緑" />
-	<string name="blue" value="青" />
-	<string name="yellow" value="黄" />
-	<string name="purple" value="紫" />
-	<string name="orange" value="オレンジ" />
-	<string name="pink" value="ピンク" />
-	<string name="brown" value="茶" />
-	<string name="grey" value="灰" />
-	<string name="gold" value="金" />
-	<string name="silver" value="銀" />
-	<string name="bronze" value="銅" />
+	<string name="black" value="黒"/>
+	<string name="white" value="白"/>
+	<string name="red" value="赤"/>
+	<string name="green" value="緑"/>
+	<string name="blue" value="青"/>
+	<string name="yellow" value="黄"/>
+	<string name="purple" value="紫"/>
+	<string name="orange" value="オレンジ"/>
+	<string name="pink" value="ピンク"/>
+	<string name="brown" value="茶"/>
+	<string name="grey" value="灰"/>
+	<string name="gold" value="金"/>
+	<string name="silver" value="銀"/>
+	<string name="bronze" value="銅"/>
 </root>

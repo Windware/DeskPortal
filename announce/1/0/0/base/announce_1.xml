@@ -3,5 +3,5 @@
 	<!-- Announcement Feed
 		URL of the RSS feed that 'Announce' application will use to display.
 	-->
-	<conf name="url" value="http://address.to/the.rss" />
+	<conf name="url" value="http://address.to/the.rss"/>
 </root>

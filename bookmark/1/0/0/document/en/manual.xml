@@ -1,43 +1,64 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/intro" value="This is a bookmark application that can store web addresses categorized. It also has the ability to store texts of pages cached, so the information can be viewed at a later time even if the page itself goes missing online." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/intro"
+	        value="This is a bookmark application that can store web addresses categorized. It also has the ability to store texts of pages cached, so the information can be viewed at a later time even if the page itself goes missing online."/>
 
-	<string name="_2_add" value="Add new bookmark" />
-	<string name="2/add" value="To add a new bookmark, enter a web address at the top text input field on the main window and click on the 'Add' button. You may omit the 'http://' part of the address from the input address. You will soon see the entry appear on the right side of the window, which is currently showing the bookmarks those are uncategorized." />
-	<string name="2/edit" value="The bookmarks are shown with a small icon next to it, which can be clicked to edit its information. Clicking on the name of the bookmark will open the address in a new window and keeping the mouse over the name will show that bookmark's information." />
+	<string name="_2_add" value="Add new bookmark"/>
+	<string name="2/add"
+	        value="To add a new bookmark, enter a web address at the top text input field on the main window and click on the 'Add' button. You may omit the 'http://' part of the address from the input address. You will soon see the entry appear on the right side of the window, which is currently showing the bookmarks those are uncategorized."/>
+	<string name="2/edit"
+	        value="The bookmarks are shown with a small icon next to it, which can be clicked to edit its information. Clicking on the name of the bookmark will open the address in a new window and keeping the mouse over the name will show that bookmark's information."/>
 
-	<string name="_3_edit" value="Edit a bookmark" />
-	<string name="3/open" value="When the icon next to the address is clicked, a new window pops up allowing you to edit its name and address. You may set a category once the categories are added which is explained later. You may click on 'Apply' to apply the new name, 'Delete' to delete this entry or 'Close' to close this window without changing anything." />
+	<string name="_3_edit" value="Edit a bookmark"/>
+	<string name="3/open"
+	        value="When the icon next to the address is clicked, a new window pops up allowing you to edit its name and address. You may set a category once the categories are added which is explained later. You may click on 'Apply' to apply the new name, 'Delete' to delete this entry or 'Close' to close this window without changing anything."/>
 
-	<string name="_4_cache" value="Cache a page" />
-	<string name="4/update" value="While the bookmark edit window is open, clicking the 'Update' button inside the cache section will get a cache of the page and clicking on 'Display' will open a new window to show the cache content." />
-	<string name="4/cache" value="This cache is stored as is until you update the cache again, even if the original source is lost. However, it does not store anything but the page text itself, and cannot store a content exceeding the maximum size set." />
+	<string name="_4_cache" value="Cache a page"/>
+	<string name="4/update"
+	        value="While the bookmark edit window is open, clicking the 'Update' button inside the cache section will get a cache of the page and clicking on 'Display' will open a new window to show the cache content."/>
+	<string name="4/cache"
+	        value="This cache is stored as is until you update the cache again, even if the original source is lost. However, it does not store anything but the page text itself, and cannot store a content exceeding the maximum size set."/>
 
-	<string name="_5_category" value="Categories" />
-	<string name="5/update" value="In order to add new categories, click on the 'Setting' tab of this window and go to 'Category'. You may enter a category name and click on 'Set' to create new categories. You may select already created categories from the left selection to edit or delete an entry." />
-	<string name="5/once" value="Once categories are created, you may set categories on bookmarks by opening up the bookmark edit window and click on the categories and click the 'Apply' button." />
-	<string name="5/show" value="When categories are given to bookmarks, they no longer show up on the uncategorized listing. You can click on categories you have given to a bookmark on the left part of the main window to access the bookmark. The top most checkbox allows all the categories to be selected and deselected." />
+	<string name="_5_category" value="Categories"/>
+	<string name="5/update"
+	        value="In order to add new categories, click on the 'Setting' tab of this window and go to 'Category'. You may enter a category name and click on 'Set' to create new categories. You may select already created categories from the left selection to edit or delete an entry."/>
+	<string name="5/once"
+	        value="Once categories are created, you may set categories on bookmarks by opening up the bookmark edit window and click on the categories and click the 'Apply' button."/>
+	<string name="5/show"
+	        value="When categories are given to bookmarks, they no longer show up on the uncategorized listing. You can click on categories you have given to a bookmark on the left part of the main window to access the bookmark. The top most checkbox allows all the categories to be selected and deselected."/>
 
-	<string name="_6_sort" value="Sorting / Filtering" />
-	<string name="6/sort" value="At the top part of the main window, you may click on the item that you wish to sort against to sort the bookmarks shown or enter a text to filter displayed bookmarks those include the text given." />
-	<string name="6/search" value="If you wish to search for the entire bookmarks, please use the 'Search' application." />
+	<string name="_6_sort" value="Sorting / Filtering"/>
+	<string name="6/sort"
+	        value="At the top part of the main window, you may click on the item that you wish to sort against to sort the bookmarks shown or enter a text to filter displayed bookmarks those include the text given."/>
+	<string name="6/search"
+	        value="If you wish to search for the entire bookmarks, please use the 'Search' application."/>
 
-	<string name="_7_import" value="Importing" />
-	<string name="7/intro" value="The favorites stored in the browser can be imported into this application. You will need to export your current bookmarks to a file in order to import them." />
+	<string name="_7_import" value="Importing"/>
+	<string name="7/intro"
+	        value="The favorites stored in the browser can be imported into this application. You will need to export your current bookmarks to a file in order to import them."/>
 
-	<string name="7/ie/open" value="Select 'File' from the menu bar and click on 'Import and Export'." />
-	<string name="7/ie/choice" value="Next, at the settings window, select 'Export to a file'." />
-	<string name="7/ie/export" value="Click on 'Next' to proceed and pick only 'Favorites' from the list. Click 'Next' twice and specify where to save and click 'Export' to save the file." />
+	<string name="7/ie/open" value="Select 'File' from the menu bar and click on 'Import and Export'."/>
+	<string name="7/ie/choice" value="Next, at the settings window, select 'Export to a file'."/>
+	<string name="7/ie/export"
+	        value="Click on 'Next' to proceed and pick only 'Favorites' from the list. Click 'Next' twice and specify where to save and click 'Export' to save the file."/>
 
-	<string name="7/firefox/open" value="Select 'Bookmarks' from the browser menu bar and click on 'Organize Bookmarks'." />
-	<string name="7/firefox/export" value="Next, in the bookmark management window, select on 'Import and Backup' in the menu and click on 'Export HTML' to save the bookmarks to a file." />
+	<string name="7/firefox/open"
+	        value="Select 'Bookmarks' from the browser menu bar and click on 'Organize Bookmarks'."/>
+	<string name="7/firefox/export"
+	        value="Next, in the bookmark management window, select on 'Import and Backup' in the menu and click on 'Export HTML' to save the bookmarks to a file."/>
 
-	<string name="7/safari/export" value="Select 'File' from the menu bar and click on 'Export Bookmarks' and specify the location to save to export the bookmarks." />
-	<string name="7/opera/export" value="Select 'File' from the menu bar, select 'Import and Export' and click on 'Export Bookmarks as HTML' and specify the location to save to export the bookmarks." />
+	<string name="7/safari/export"
+	        value="Select 'File' from the menu bar and click on 'Export Bookmarks' and specify the location to save to export the bookmarks."/>
+	<string name="7/opera/export"
+	        value="Select 'File' from the menu bar, select 'Import and Export' and click on 'Export Bookmarks as HTML' and specify the location to save to export the bookmarks."/>
 
-	<string name="7/chrome/open" value="Click on the tool icon to open the menu on the far right next to the address bar and click on 'Bookmark manager'." />
-	<string name="7/chrome/export" value="Next, in the bookmark manager window, select 'Tools' in the menu and click on 'Export bookmarks' to specify the location and save the file." />
+	<string name="7/chrome/open"
+	        value="Click on the tool icon to open the menu on the far right next to the address bar and click on 'Bookmark manager'."/>
+	<string name="7/chrome/export"
+	        value="Next, in the bookmark manager window, select 'Tools' in the menu and click on 'Export bookmarks' to specify the location and save the file."/>
 
-	<string name="7/other/export" value="Please use the export feature of your browser to save the bookmarks to a file." />
-	<string name="7/finish" value="You may now import the file exported from the 'Setting' tab in the 'Import' section to complete the process." />
+	<string name="7/other/export"
+	        value="Please use the export feature of your browser to save the bookmarks to a file."/>
+	<string name="7/finish"
+	        value="You may now import the file exported from the 'Setting' tab in the 'Import' section to complete the process."/>
 </root>

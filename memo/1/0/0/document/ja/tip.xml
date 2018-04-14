@@ -1,6 +1,6 @@
 <root>
-	<string name="add" value="新しいメモを作成します" />
-	<string name="info" value="メモの情報を表示・編集します" />
-	<string name="shrink" value="このグループを閉じます" />
-	<string name="expand" value="このグループを開きます" />
+	<string name="add" value="新しいメモを作成します"/>
+	<string name="info" value="メモの情報を表示・編集します"/>
+	<string name="shrink" value="このグループを閉じます"/>
+	<string name="expand" value="このグループを開きます"/>
 </root>

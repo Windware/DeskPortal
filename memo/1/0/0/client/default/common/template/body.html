@@ -1,12 +1,16 @@
-<table class="%system%_full" cellpadding="5" cellspacing="0"><tbody class="%system%_full">
+<table class="%system%_full" cellpadding="5" cellspacing="0">
+	<tbody class="%system%_full">
 	<tr>
 		<td style="width : 30%; height : 100%">
-			<div class="%id%_groups %system%_full"%scroll%>
-				<div><a id="%id%_create" style="background-color : #333; color : #ccc" onclick="%top%.%id%.gui.create()"%tip:add%>%string:new%</a></div>
+			<div class="%id%_groups %system%_full" %scroll%>
+				<div>
+					<a id="%id%_create" style="background-color : #333; color : #ccc" onclick="%top%.%id%.gui.create()" %tip:add%>%string:new%</a>
+				</div>
 				<div id="%id%_list"></div>
 			</div>
 		</td>
 
 		<td id="%id%_edit" style="width : 70%; height : 100%"></td>
 	</tr>
-</tbody></table>
+	</tbody>
+</table>

@@ -1,109 +1,109 @@
 <root>
 	<!-- Caches (Only used when caching mechanism is set as 'database' -->
 	<table name="cache">
-		<column name="app" param="VARCHAR(32)" />
-		<column name="version" param="VARCHAR(32)" />
-		<column name="name" param="VARCHAR(128)" />
-		<column name="value" param="BLOB" />
+		<column name="app" param="VARCHAR(32)"/>
+		<column name="version" param="VARCHAR(32)"/>
+		<column name="name" param="VARCHAR(128)"/>
+		<column name="value" param="BLOB"/>
 
-		<column name="UNIQUE" param="(app, version, name)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(app, version, name)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- DNS caches -->
 	<table name="dns">
-		<column name="host" param="VARCHAR(255)" />
-		<column name="type" param="VARCHAR(16)" />
-		<column name="data" param="VARCHAR(15)" />
-		<column name="life" param="DATETIME" />
+		<column name="host" param="VARCHAR(255)"/>
+		<column name="type" param="VARCHAR(16)"/>
+		<column name="data" param="VARCHAR(15)"/>
+		<column name="life" param="DATETIME"/>
 
-		<column name="UNIQUE" param="(host, type)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(host, type)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- Server side schedules -->
 	<table name="event">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="app" param="VARCHAR(32) NOT NULL" />
-		<column name="version" param="VARCHAR(32) NOT NULL" />
-		<column name="name" param="VARCHAR(32) NOT NULL" />
-		<column name="class" param="VARCHAR(64) NOT NULL" />
-		<column name="minute" param="INT DEFAULT NULL" />
-		<column name="hour" param="INT DEFAULT NULL" />
-		<column name="day" param="INT DEFAULT NULL" />
-		<column name="week" param="INT DEFAULT NULL" />
-		<column name="month" param="INT DEFAULT NULL" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="app" param="VARCHAR(32) NOT NULL"/>
+		<column name="version" param="VARCHAR(32) NOT NULL"/>
+		<column name="name" param="VARCHAR(32) NOT NULL"/>
+		<column name="class" param="VARCHAR(64) NOT NULL"/>
+		<column name="minute" param="INT DEFAULT NULL"/>
+		<column name="hour" param="INT DEFAULT NULL"/>
+		<column name="day" param="INT DEFAULT NULL"/>
+		<column name="week" param="INT DEFAULT NULL"/>
+		<column name="month" param="INT DEFAULT NULL"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- List of user groups -->
 	<table name="group">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="name" param="VARCHAR(32) NOT NULL UNIQUE" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="name" param="VARCHAR(32) NOT NULL UNIQUE"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- System logs -->
 	<table name="log">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="session" param="CHAR(32)" />
-		<column name="ip" param="VARCHAR(15)" />
-		<column name="time" param="DATETIME" />
-		<column name="level" param="INT" />
-		<column name="access" param="VARCHAR(255)" />
-		<column name="reporter" param="VARCHAR(32)" />
-		<column name="app" param="VARCHAR(32)" />
-		<column name="version" param="VARCHAR(32)" />
-		<column name="source" param="VARCHAR(64)" />
-		<column name="folder" param="VARCHAR(255)" />
-		<column name="message" param="TEXT" />
-		<column name="solution" param="TEXT" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="session" param="CHAR(32)"/>
+		<column name="ip" param="VARCHAR(15)"/>
+		<column name="time" param="DATETIME"/>
+		<column name="level" param="INT"/>
+		<column name="access" param="VARCHAR(255)"/>
+		<column name="reporter" param="VARCHAR(32)"/>
+		<column name="app" param="VARCHAR(32)"/>
+		<column name="version" param="VARCHAR(32)"/>
+		<column name="source" param="VARCHAR(64)"/>
+		<column name="folder" param="VARCHAR(255)"/>
+		<column name="message" param="TEXT"/>
+		<column name="solution" param="TEXT"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- List of group members -->
 	<table name="member">
-		<column name="user" param="INT NOT NULL" />
-		<column name="belong" param="INT NOT NULL" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="belong" param="INT NOT NULL"/>
 
-		<column name="UNIQUE" param="(user, belong)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(user, belong)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- User login session -->
 	<table name="session">
-		<column name="user" param="INT PRIMARY KEY NOT NULL" />
-		<column name="ticket" param="CHAR(32) NOT NULL" />
-		<column name="ip" param="VARCHAR(15) NOT NULL" />
-		<column name="time" param="DATETIME NOT NULL" />
+		<column name="user" param="INT PRIMARY KEY NOT NULL"/>
+		<column name="ticket" param="CHAR(32) NOT NULL"/>
+		<column name="ip" param="VARCHAR(15) NOT NULL"/>
+		<column name="time" param="DATETIME NOT NULL"/>
 
-		<index name="ticket" />
-		<extra name="ENGINE" param="INNODB" />
+		<index name="ticket"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- User subscription -->
 	<table name="subscription">
-		<column name="user" param="INT NOT NULL" />
-		<column name="app" param="VARCHAR(32) NOT NULL" />
-		<column name="invalid" param="INT DEFAULT 0" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="app" param="VARCHAR(32) NOT NULL"/>
+		<column name="invalid" param="INT DEFAULT 0"/>
 
-		<column name="UNIQUE" param="(user, app)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(user, app)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- User list -->
 	<table name="user">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="name" param="VARCHAR(30) NOT NULL UNIQUE" />
-		<column name="password" param="CHAR(64)" /> <!-- Password in SHA256 hash -->
-		<column name="mail" param="VARCHAR(255) NOT NULL DEFAULT ''" /> <!-- Email address -->
-		<column name="joined" param="DATE" />
-		<column name="logged" param="INT NOT NULL DEFAULT 0" /> <!-- Number of times the user logged in -->
-		<column name="invalid" param="INT NOT NULL DEFAULT 0" /> <!-- Suspended users -->
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="name" param="VARCHAR(30) NOT NULL UNIQUE"/>
+		<column name="password" param="CHAR(64)"/> <!-- Password in SHA256 hash -->
+		<column name="mail" param="VARCHAR(255) NOT NULL DEFAULT ''"/> <!-- Email address -->
+		<column name="joined" param="DATE"/>
+		<column name="logged" param="INT NOT NULL DEFAULT 0"/> <!-- Number of times the user logged in -->
+		<column name="invalid" param="INT NOT NULL DEFAULT 0"/> <!-- Suspended users -->
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 </root>

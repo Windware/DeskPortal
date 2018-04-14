@@ -1,10 +1,11 @@
-<table cellpadding="0" cellspacing="5" class="%system%_full"><tbody class="%system%_full">
+<table cellpadding="0" cellspacing="5" class="%system%_full">
+	<tbody class="%system%_full">
 	<tr style="height : 5%">
 		<td colspan="2" style="width : 100%; text-align : left">
 			<form style="margin : 5px 0px" onsubmit="%top%.%id%.item.add(this.add); return false"><span%tip:add%>
 				%string:new% : <input type="text" name="add" class="%id%_word" />
 				<input type="submit" value="%string:add%" class="%id%_check" />
-			</span></form>
+				</span></form>
 
 			<form style="margin : 5px 0px" id="%id%_settings" onsubmit="%top%.%id%.item.get(); return false">
 				<div><span%tip:search%>%string:search% : <input type="text" name="search" class="%id%_word" /></span></div>
@@ -36,7 +37,7 @@
 						<input type="radio" name="order" value="4" id="%id%_order_4" onclick="%top%.%id%.item.get()" />
 						%string:viewed%
 					</label>
-				</span></div>
+					</span></div>
 			</form>
 		</td>
 	</tr>
@@ -48,15 +49,18 @@
 
 	<tr>
 		<td style="height : 90%; vertical-align : top">
-			<form id="%id%_selection" style="background-color : #aba"%scroll%>
-				<div><input id="%id%_all" type="checkbox" value="" onclick="%top%.%id%.gui.select(this.checked)"%tip:all% /></div>
+			<form id="%id%_selection" style="background-color : #aba" %scroll%>
+				<div>
+					<input id="%id%_all" type="checkbox" value="" onclick="%top%.%id%.gui.select(this.checked)" %tip:all% />
+				</div>
 
-				<div id="%id%_categories"%scroll%></div>
+				<div id="%id%_categories" %scroll%></div>
 			</form>
 		</td>
 
 		<td style="height : 90%; vertical-align : top">
-			<div id="%id%_entries"%scroll%></div>
+			<div id="%id%_entries" %scroll%></div>
 		</td>
 	</tr>
-</tbody></table>
+	</tbody>
+</table>

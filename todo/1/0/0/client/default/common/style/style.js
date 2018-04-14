@@ -1,7 +1,6 @@
+window = 'ccaa55'
+border = '333333'
+hover = 'ffffff'
 
-	window = 'ccaa55';
-	border = '333333';
-	hover = 'ffffff';
-
-	width = 800;
-	height = 200;
+width = 800
+height = 200

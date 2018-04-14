@@ -1,6 +1,6 @@
 <root>
-	<string name="add" value="クリックすると新規のバーを追加します" />
-	<string name="delete" value="クリックするとこのバーを閉じます" />
+	<string name="add" value="クリックすると新規のバーを追加します"/>
+	<string name="delete" value="クリックするとこのバーを閉じます"/>
 
-	<string name="external" value="結果は外部サイトに表示されます" />
+	<string name="external" value="結果は外部サイトに表示されます"/>
 </root>

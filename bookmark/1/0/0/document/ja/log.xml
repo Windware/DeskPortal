@@ -1,30 +1,30 @@
 <root>
 	<!-- USER -->
 	<!-- item.js -->
-	<string name="user/add" value="新規ブックマークを追加しました。" />
-	<string name="user/load" value="選択されたカテゴリーのブックマークを読み込みました。" />
+	<string name="user/add" value="新規ブックマークを追加しました。"/>
+	<string name="user/load" value="選択されたカテゴリーのブックマークを読み込みました。"/>
 
-	<string name="user/remove" value="'%%'のブックマークを削除しました。" />
-	<string name="user/update" value="'%%'のブックマークを更新しました。" />
+	<string name="user/remove" value="'%%'のブックマークを削除しました。"/>
+	<string name="user/update" value="'%%'のブックマークを更新しました。"/>
 
-	<string name="user/category/create" value="カテゴリー'%%'を作成しました。" />
-	<string name="user/category/remove" value="カテゴリー'%%'を削除しました。" />
-	<string name="user/category/update" value="カテゴリー'%%'を更新しました。" />
+	<string name="user/category/create" value="カテゴリー'%%'を作成しました。"/>
+	<string name="user/category/remove" value="カテゴリー'%%'を削除しました。"/>
+	<string name="user/category/update" value="カテゴリー'%%'を更新しました。"/>
 
-	<string name="user/cache/add" value="'%%'のキャッシュを取得しました。" />
+	<string name="user/cache/add" value="'%%'のキャッシュを取得しました。"/>
 
-	<string name="user/item/add" value="ブックマークを追加しました" />
-	<string name="user/item/add/message" value="ブックマークが追加されました" />
+	<string name="user/item/add" value="ブックマークを追加しました"/>
+	<string name="user/item/add/message" value="ブックマークが追加されました"/>
 
-	<string name="user/item/add/fail" value="ブックマークの追加に失敗しました" />
-	<string name="user/item/add/fail/message" value="ブックマークの追加中にエラーが発生しました" />
+	<string name="user/item/add/fail" value="ブックマークの追加に失敗しました"/>
+	<string name="user/item/add/fail/message" value="ブックマークの追加中にエラーが発生しました"/>
 
-	<string name="user/item/add/duplicate" value="同一のブックマークが検出されました" />
-	<string name="user/item/add/duplicate/message" value="同じアドレスのブックマークが存在しています" />
+	<string name="user/item/add/duplicate" value="同一のブックマークが検出されました"/>
+	<string name="user/item/add/duplicate/message" value="同じアドレスのブックマークが存在しています"/>
 
-	<string name="user/item/import" value="お気に入りを読み込みました" />
-	<string name="user/item/import/message" value="お気に入りの読み込みが完了しました" />
+	<string name="user/item/import" value="お気に入りを読み込みました"/>
+	<string name="user/item/import/message" value="お気に入りの読み込みが完了しました"/>
 
-	<string name="user/item/import/fail" value="読み込み失敗" />
-	<string name="user/item/import/fail/message" value="お気に入りの読み込みに失敗しました。送信ファイルを確認してください。" />
+	<string name="user/item/import/fail" value="読み込み失敗"/>
+	<string name="user/item/import/fail/message" value="お気に入りの読み込みに失敗しました。送信ファイルを確認してください。"/>
 </root>

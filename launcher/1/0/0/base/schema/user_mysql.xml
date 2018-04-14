@@ -1,10 +1,10 @@
 <root>
 	<!-- List of apps to exclude from displaying -->
 	<table name="exclude">
-		<column name="user" param="INT NOT NULL" />
-		<column name="app" param="VARCHAR(255) NOT NULL" />
-		<column name="UNIQUE" param="(user, app)" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="app" param="VARCHAR(255) NOT NULL"/>
+		<column name="UNIQUE" param="(user, app)"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 </root>

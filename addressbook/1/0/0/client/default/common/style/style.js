@@ -1,5 +1,4 @@
+window = '998866'
+hover = 'cba'
 
-	window = '998866';
-	hover = 'cba';
-
-	width = 600;
+width = 600

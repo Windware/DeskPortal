@@ -1,2 +1,1 @@
-
-	depend = ['system_1_0_0'];
+depend = ['system_1_0_0']

@@ -1,44 +1,44 @@
 <root>
 	<!-- 重量 -->
-	<string name="t" value="トン" />
-	<string name="kg" value="キログラム" />
-	<string name="g" value="グラム" />
-	<string name="mg" value="ミリグラム" />
-	<string name="lb" value="ポンド" />
+	<string name="t" value="トン"/>
+	<string name="kg" value="キログラム"/>
+	<string name="g" value="グラム"/>
+	<string name="mg" value="ミリグラム"/>
+	<string name="lb" value="ポンド"/>
 
 	<!-- 質量 -->
-	<string name="kl" value="キロリットル" />
-	<string name="dl" value="デシリットル" />
-	<string name="l" value="リットル" />
-	<string name="ml" value="ミリリットル" />
-	<string name="oz" value="オンス" />
+	<string name="kl" value="キロリットル"/>
+	<string name="dl" value="デシリットル"/>
+	<string name="l" value="リットル"/>
+	<string name="ml" value="ミリリットル"/>
+	<string name="oz" value="オンス"/>
 
 	<!-- 尺度 -->
-	<string name="ly" value="光年" />
-	<string name="km" value="キロメートル" />
-	<string name="m" value="メートル" />
-	<string name="cm" value="センチメートル" />
-	<string name="mm" value="ミリメートル" />
-	<string name="nm" value="ナノメートル" />
-	<string name="ft" value="フィート" />
-	<string name="in" value="インチ" />
+	<string name="ly" value="光年"/>
+	<string name="km" value="キロメートル"/>
+	<string name="m" value="メートル"/>
+	<string name="cm" value="センチメートル"/>
+	<string name="mm" value="ミリメートル"/>
+	<string name="nm" value="ナノメートル"/>
+	<string name="ft" value="フィート"/>
+	<string name="in" value="インチ"/>
 
 	<!-- 速度 -->
-	<string name="kph" value="km/時" />
-	<string name="mph" value="マイル/時" />
-	<string name="kt" value="ノット" />
-	<string name="Ma" value="マッハ" />
+	<string name="kph" value="km/時"/>
+	<string name="mph" value="マイル/時"/>
+	<string name="kt" value="ノット"/>
+	<string name="Ma" value="マッハ"/>
 
 	<!-- Temperature -->
-	<string name="C" value="摂氏" />
-	<string name="F" value="華氏" />
+	<string name="C" value="摂氏"/>
+	<string name="F" value="華氏"/>
 
 	<!-- 時間 -->
-	<string name="year" value="年" />
-	<string name="month" value="月" />
-	<string name="week" value="週" />
-	<string name="day" value="日" />
-	<string name="hour" value="時" />
-	<string name="minute" value="分" />
-	<string name="second" value="秒" />
+	<string name="year" value="年"/>
+	<string name="month" value="月"/>
+	<string name="week" value="週"/>
+	<string name="day" value="日"/>
+	<string name="hour" value="時"/>
+	<string name="minute" value="分"/>
+	<string name="second" value="秒"/>
 </root>

@@ -1,8 +1,8 @@
 <root>
-	<string name="mail" value="メールアドレス" />
-	<string name="pass" value="パスワード" />
-	<string name="button" value="ログインする" />
-	<string name="session" value="ログイン情報を保存する" />
-	<string name="register" value="新しいアカウントを作成する" />
-	<string name="recover" value="パスワードを再取得する" />
+	<string name="mail" value="メールアドレス"/>
+	<string name="pass" value="パスワード"/>
+	<string name="button" value="ログインする"/>
+	<string name="session" value="ログイン情報を保存する"/>
+	<string name="register" value="新しいアカウントを作成する"/>
+	<string name="recover" value="パスワードを再取得する"/>
 </root>

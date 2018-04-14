@@ -1,19 +1,19 @@
 <root>
 	<!-- USER -->
 	<!-- item.js -->
-	<string name="user/save" value="メモ'%%'を保存しました。" />
-	<string name="user/save/fail" value="メモの保存に失敗しました。" />
+	<string name="user/save" value="メモ'%%'を保存しました。"/>
+	<string name="user/save/fail" value="メモの保存に失敗しました。"/>
 
-	<string name="user/add" value="新しいメモ'%%'を追加しました。" />
-	<string name="user/edit" value="メモ'%%'の情報を更新しました。" />
-	<string name="user/edit/duplicate" value="メモの名前は既に存在します" />
-	<string name="user/edit/duplicate/message" value="他の名前を指定してメモを保存してください。" />
-	<string name="user/edit/error" value="メモの保存に失敗しました" />
-	<string name="user/edit/error/message" value="時間をおいて再度試してください。" />
-	<string name="user/load" value="メモ'%%'を読み込みました。" />
-	<string name="user/remove" value="メモ'%%'を削除しました。" />
+	<string name="user/add" value="新しいメモ'%%'を追加しました。"/>
+	<string name="user/edit" value="メモ'%%'の情報を更新しました。"/>
+	<string name="user/edit/duplicate" value="メモの名前は既に存在します"/>
+	<string name="user/edit/duplicate/message" value="他の名前を指定してメモを保存してください。"/>
+	<string name="user/edit/error" value="メモの保存に失敗しました"/>
+	<string name="user/edit/error/message" value="時間をおいて再度試してください。"/>
+	<string name="user/load" value="メモ'%%'を読み込みました。"/>
+	<string name="user/remove" value="メモ'%%'を削除しました。"/>
 
-	<string name="user/group/create" value="'%%'のグループを作成しました。" />
-	<string name="user/group/remove" value="'%%'のグループを削除しました。" />
-	<string name="user/group/update" value="'%%'のグループを更新しました。" />
+	<string name="user/group/create" value="'%%'のグループを作成しました。"/>
+	<string name="user/group/remove" value="'%%'のグループを削除しました。"/>
+	<string name="user/group/update" value="'%%'のグループを更新しました。"/>
 </root>

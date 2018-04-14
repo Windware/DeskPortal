@@ -1,8 +1,8 @@
 <root>
-	<string name="mail" value="Email" />
-	<string name="pass" value="Password" />
-	<string name="button" value="Enter" />
-	<string name="session" value="Keep logged in" />
-	<string name="register" value="Register for a new account" />
-	<string name="recover" value="Recover lost password" />
+	<string name="mail" value="Email"/>
+	<string name="pass" value="Password"/>
+	<string name="button" value="Enter"/>
+	<string name="session" value="Keep logged in"/>
+	<string name="register" value="Register for a new account"/>
+	<string name="recover" value="Recover lost password"/>
 </root>

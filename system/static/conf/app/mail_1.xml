@@ -11,7 +11,7 @@
 
 		Changing this value during use will render all request to remote mail servers invalid.
 	-->
-	<conf name="key" value="9520e453211e208344b3460e24654a1b82b68ebf333cfe26ff2" />
+	<conf name="key" value="9520e453211e208344b3460e24654a1b82b68ebf333cfe26ff2"/>
 
 	<!--
 		The mailer name to be sent as 'X-Mailer' in the mail header when mails are sent
@@ -19,5 +19,5 @@
 		%APP% will be replaced by the name of this application
 		%VERSION% will be replaced by the version of this application
 	-->
-	<conf name="mailer" value="%brand_site% [%APP% %VERSION%]" />
+	<conf name="mailer" value="%brand_site% [%APP% %VERSION%]"/>
 </root>

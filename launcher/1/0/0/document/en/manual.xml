@@ -1,16 +1,23 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/intro" value="This application can launch applications that you are subscribed to." />
-	<string name="1/appear" value="Applications are categorized in each groups and by clicking on the category name, the list of applications appear." />
-	<string name="1/run" value="By clicking on the application name, the application will be launched. Click the name again to close the application window." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/intro" value="This application can launch applications that you are subscribed to."/>
+	<string name="1/appear"
+	        value="Applications are categorized in each groups and by clicking on the category name, the list of applications appear."/>
+	<string name="1/run"
+	        value="By clicking on the application name, the application will be launched. Click the name again to close the application window."/>
 
-	<string name="_2_display" value="Display" />
-	<string name="2/intro" value="By going to the 'Setting' tab in this window and to the 'Display' section, the display configuration can be changed." />
-	<string name="2/name" value="Selecting 'Show user name' will make the currently logged in user name to appear at the top part of the launcher." />
-	<string name="2/list" value="By selecting the applications from the list from 'Display Selection', the application to be displayed in the launcher can be selected." />
-	<string name="2/save" value="Click on the 'Save' button to apply the changes." />
+	<string name="_2_display" value="Display"/>
+	<string name="2/intro"
+	        value="By going to the 'Setting' tab in this window and to the 'Display' section, the display configuration can be changed."/>
+	<string name="2/name"
+	        value="Selecting 'Show user name' will make the currently logged in user name to appear at the top part of the launcher."/>
+	<string name="2/list"
+	        value="By selecting the applications from the list from 'Display Selection', the application to be displayed in the launcher can be selected."/>
+	<string name="2/save" value="Click on the 'Save' button to apply the changes."/>
 
-	<string name="_3_logout" value="Logout" />
-	<string name="3/logout" value="To log out, click on the 'Logout' link at the bottom to discard the user session and go back to the log in screen." />
-	<string name="3/encouraged" value="When leaving the computer with a chance of other people using it later on, it is strongly advised to logout when leaving the computer. " />
+	<string name="_3_logout" value="Logout"/>
+	<string name="3/logout"
+	        value="To log out, click on the 'Logout' link at the bottom to discard the user session and go back to the log in screen."/>
+	<string name="3/encouraged"
+	        value="When leaving the computer with a chance of other people using it later on, it is strongly advised to logout when leaving the computer. "/>
 </root>

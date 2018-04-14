@@ -1,12 +1,11 @@
+bar = false
+center = true
 
-	bar = false;
-	center = true;
+window = 'ddccaa'
+border = '333333'
+hover = '666666'
 
-	window = 'ddccaa';
-	border = '333333';
-	hover = '666666';
+left = 15
+top = 260
 
-	left = 15;
-	top = 260;
-
-	width = 300;
+width = 300

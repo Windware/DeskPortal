@@ -1,14 +1,16 @@
-<table cellpadding="5" cellspacing="5" style="width : 100%"><tbody>
+<table cellpadding="5" cellspacing="5" style="width : 100%">
+	<tbody>
 	<tr>
-		<td id="%id%_tab_option" class="%id%_option_cell"%lock%%tip:switch% onclick="%top%.%id%.gui.swap('option')">
+		<td id="%id%_tab_option" class="%id%_option_cell" %lock%%tip:switch% onclick="%top%.%id%.gui.swap('option')">
 			%string:option%
 		</td>
 
-		<td id="%id%_tab_background" class="%id%_option_cell"%lock%%tip:switch% onclick="%top%.%id%.gui.swap('background')">
+		<td id="%id%_tab_background" class="%id%_option_cell" %lock%%tip:switch% onclick="%top%.%id%.gui.swap('background')">
 			%string:wallpaper%
 		</td>
 	</tr>
-</tbody></table>
+	</tbody>
+</table>
 
 <div id="%id%_region_option" class="%system%_hidden">
 	<form id="%id%_form" onsubmit="return %top%.%id%.gui.apply(this)">
@@ -16,60 +18,62 @@
 		<p%tip:language%>%string:language% : <select name="language" id="%id%_language"></select></p>
 
 		<p%tip:system%>
-			%string:version% :
-			<select name="system"></select>
-			(<a onclick="%top%.%id%.gui.history()"%tip:history%>%string:history/update%</a>)
+		%string:version% :
+		<select name="system"></select>
+		(<a onclick="%top%.%id%.gui.history()" %tip:history%>%string:history/update%</a>)
 		</p>
 
 		<p%tip:logout%>
-			%string:logout% :
+		%string:logout% :
 
-			<select name="logout">
-				<option value="10">10 %string:minute%</option>
-				<option value="30">30 %string:minute%</option>
-				<option value="60">1 %string:hour%</option>
-				<option value="120">2 %string:hour%</option>
-				<option value="360">6 %string:hour%</option>
-				<option value="720">12 %string:hour%</option>
-				<option value="1440">24 %string:hour%</option>
-				<option value="0">%string:off%</option>
-			</select>
+		<select name="logout">
+			<option value="10">10 %string:minute%</option>
+			<option value="30">30 %string:minute%</option>
+			<option value="60">1 %string:hour%</option>
+			<option value="120">2 %string:hour%</option>
+			<option value="360">6 %string:hour%</option>
+			<option value="720">12 %string:hour%</option>
+			<option value="1440">24 %string:hour%</option>
+			<option value="0">%string:off%</option>
+		</select>
 		</p>
 
 		<h3>%string:window%</h3>
 		<p%tip:move%>%string:move% :
-			<select name="move">
-				<option value="0">%string:move/content%</option>
-				<option value="1">%string:move/border%</option>
-				<option value="2">%string:move/object%</option>
-			</select>
+		<select name="move">
+			<option value="0">%string:move/content%</option>
+			<option value="1">%string:move/border%</option>
+			<option value="2">%string:move/object%</option>
+		</select>
 		</p>
 
 		<p%tip:fade%><label for="%id%_option_translucent">
-			%string:translucent% : <input id="%id%_option_translucent" type="checkbox" name="translucent" />
-		</label></p>
+		%string:translucent% : <input id="%id%_option_translucent" type="checkbox" name="translucent" />
+	</label></p>
 
 		<p%tip:fade%><label for="%id%_option_fade">
-			%string:fade% : <input id="%id%_option_fade" type="checkbox" name="fade" />
-		</label></p>
+		%string:fade% : <input id="%id%_option_fade" type="checkbox" name="fade" />
+	</label></p>
 
 		<p%tip:round%><label for="%id%_option_round">
-			%string:round% : <input id="%id%_option_round" type="checkbox" name="round" />
-		</label></p>
+		%string:round% : <input id="%id%_option_round" type="checkbox" name="round" />
+	</label></p>
 
 		<h3>%string:background%</h3>
 
 		<p%tip:bg/resize%><label for="%id%_option_resize">
-			%string:bg/resize% : <input id="%id%_option_resize" type="checkbox" name="resize" onclick="%top%.%id%.gui.valid()" />
-		</label></p>
+		%string:bg/resize% :
+		<input id="%id%_option_resize" type="checkbox" name="resize" onclick="%top%.%id%.gui.valid()" />
+	</label></p>
 
 		<p%tip:bg/stretch%><label for="%id%_option_stretch">
-			%string:bg/stretch% : <input id="%id%_option_stretch" type="checkbox" name="stretch" onclick="%top%.%id%.gui.valid()" />
-		</label></p>
+		%string:bg/stretch% :
+		<input id="%id%_option_stretch" type="checkbox" name="stretch" onclick="%top%.%id%.gui.valid()" />
+	</label></p>
 
 		<p%tip:bg/center%><label for="%id%_option_center">
-			%string:bg/center% : <input id="%id%_option_center" type="checkbox" name="center" />
-		</label></p>
+		%string:bg/center% : <input id="%id%_option_center" type="checkbox" name="center" />
+	</label></p>
 
 		<!--<p%tip:bg/color%>%string:bg/color% : <select name="background"></select></p>-->
 		<p style="text-align : center"><input type="submit" value="%string:apply%" />
@@ -77,12 +81,13 @@
 </div>
 
 <div id="%id%_region_background" class="%system%_hidden">
-	<form onsubmit="%top%.%system%.image.wallpaper(this.address.value, true); return false"%tip:bg/address%>
-		%string:bg/address% : <input id="%id%_wallpaper_address" type="text" name="address" />
-		<input type="submit" style="display : none" />
+	<form onsubmit="%top%.%system%.image.wallpaper(this.address.value, true); return false" %tip:bg
+	/address%>
+	%string:bg/address% : <input id="%id%_wallpaper_address" type="text" name="address" />
+	<input type="submit" style="display : none" />
 	</form>
 
-	<div style="overflow : auto; height : 400px"%scroll%>
+	<div style="overflow : auto; height : 400px" %scroll%>
 		<div id="%id%_wallpaper"></div>
 
 		<div style="font-size : 90%; font-style : italic; border : 1px #333 solid; padding : 5px; text-align : left">

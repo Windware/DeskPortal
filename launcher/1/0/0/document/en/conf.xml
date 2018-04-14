@@ -1,7 +1,7 @@
 <root>
-	<string name="_1_display" value="Display" />
+	<string name="_1_display" value="Display"/>
 
-	<string name="name" value="Show user identity" />
-	<string name="display" value="Display Selection" />
-	<string name="save" value="Save" />
+	<string name="name" value="Show user identity"/>
+	<string name="display" value="Display Selection"/>
+	<string name="save" value="Save"/>
 </root>

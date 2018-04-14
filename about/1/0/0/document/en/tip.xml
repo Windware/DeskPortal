@@ -1,8 +1,8 @@
 <root>
-	<string name="change" value="Choose an entry to change the interface language" />
-	<string name="more" value="Click here to view more information about %brand%" />
-	<string name="less" value="Click here to hide information about %brand%" />
-	<string name="official" value="Visit the official web site" />
-	<string name="info" value="Visit the information web site" />
-	<string name="company" value="Visit the %developer% web site" />
+	<string name="change" value="Choose an entry to change the interface language"/>
+	<string name="more" value="Click here to view more information about %brand%"/>
+	<string name="less" value="Click here to hide information about %brand%"/>
+	<string name="official" value="Visit the official web site"/>
+	<string name="info" value="Visit the information web site"/>
+	<string name="company" value="Visit the %developer% web site"/>
 </root>

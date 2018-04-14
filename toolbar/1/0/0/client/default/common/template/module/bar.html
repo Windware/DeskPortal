@@ -1,25 +1,29 @@
 <form id="%id%_form_INDEX" onsubmit="return %top%.%id%.gui.process(INDEX)" style="display : inline">
-	<table cellpadding="1" cellspacing="0" style="text-align : center; width : 100%"><tbody><tr>
-		<td>
-			<a onclick="return %top%.%id%.gui.create()"%tip:add% id="%id%_control_INDEX" style="font-weight : bold; font-size : 150%"></a>
-		</td>
+	<table cellpadding="1" cellspacing="0" style="text-align : center; width : 100%">
+		<tbody>
+		<tr>
+			<td>
+				<a onclick="return %top%.%id%.gui.create()" %tip:add% id="%id%_control_INDEX" style="font-weight : bold; font-size : 150%"></a>
+			</td>
 
-		<td>
-			<select onchange="%top%.%id%.gui.swap(INDEX, this.value)" name="feature">
-				%value:feature%
-			</select>
-		</td>
+			<td>
+				<select onchange="%top%.%id%.gui.swap(INDEX, this.value)" name="feature">
+					%value:feature%
+				</select>
+			</td>
 
-		<td>%value:method%</td>
-		<td>%value:mode%</td>
+			<td>%value:method%</td>
+			<td>%value:mode%</td>
 
-		<td style="padding : 0px 10px; width : 100%">
-			<div>
-				<input name="input" type="text" style="width : 100%" />
-				<input type="submit" class="%system%_hidden" />
-			</div>
+			<td style="padding : 0px 10px; width : 100%">
+				<div>
+					<input name="input" type="text" style="width : 100%" />
+					<input type="submit" class="%system%_hidden" />
+				</div>
 
-			<div id="%id%_result_INDEX" class="%system%_hidden" style="padding : 3px 0px; font-weight : bold; cursor : text; border : 1px #333 solid; margin-top : 3px"%lock%>&#160;</div>
-		</td>
-	</tr></tbody></table>
+				<div id="%id%_result_INDEX" class="%system%_hidden" style="padding : 3px 0px; font-weight : bold; cursor : text; border : 1px #333 solid; margin-top : 3px" %lock%>&#160;</div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
 </form>

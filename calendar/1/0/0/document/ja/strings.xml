@@ -1,19 +1,19 @@
 <root>
 	<!-- カレンダーインターフェース -->
-	<string name="next" value="来月" />
-	<string name="previous" value="先月" />
+	<string name="next" value="来月"/>
+	<string name="previous" value="先月"/>
 
 	<!-- スケジュール編集画面 -->
-	<string name="set" value="決定" />
-	<string name="edit" value="編集" />
-	<string name="delete" value="削除" />
-	<string name="cancel" value="キャンセル" />
-	<string name="close" value="閉じる" />
-	<string name="title" value="タイトル" />
-	<string name="category" value="カテゴリー" />
-	<string name="type" value="種類" />
-	<string name="content" value="内容" />
-	<string name="schedule" value="スケジュール" />
-	<string name="time" value="時刻" />
-	<string name="confirm" value="%%日のスケジュールを削除しますか？" />
+	<string name="set" value="決定"/>
+	<string name="edit" value="編集"/>
+	<string name="delete" value="削除"/>
+	<string name="cancel" value="キャンセル"/>
+	<string name="close" value="閉じる"/>
+	<string name="title" value="タイトル"/>
+	<string name="category" value="カテゴリー"/>
+	<string name="type" value="種類"/>
+	<string name="content" value="内容"/>
+	<string name="schedule" value="スケジュール"/>
+	<string name="time" value="時刻"/>
+	<string name="confirm" value="%%日のスケジュールを削除しますか？"/>
 </root>

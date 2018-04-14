@@ -1,18 +1,18 @@
 <root>
 	<!-- Interface -->
-	<string name="search" value="Search" />
-	<string name="target" value="Target" />
-	<string name="version" value="Version" />
+	<string name="search" value="Search"/>
+	<string name="target" value="Target"/>
+	<string name="version" value="Version"/>
 
-	<string name="page" value="Page" />
-	<string name="previous" value="Previous" />
-	<string name="next" value="Next" />
+	<string name="page" value="Page"/>
+	<string name="previous" value="Previous"/>
+	<string name="next" value="Next"/>
 
-	<string name="alert/length" value="Search letter must be more than 2 letters" />
-	<string name="alert/searching" value="Searching..." />
-	<string name="alert/none" value="No results were found" />
-	<string name="alert/select" value="No application selected for searching" />
+	<string name="alert/length" value="Search letter must be more than 2 letters"/>
+	<string name="alert/searching" value="Searching..."/>
+	<string name="alert/none" value="No results were found"/>
+	<string name="alert/select" value="No application selected for searching"/>
 
 	<!-- App specific -->
-	<string name="from" value="From" />
+	<string name="from" value="From"/>
 </root>

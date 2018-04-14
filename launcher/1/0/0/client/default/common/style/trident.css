@@ -1,2 +1,10 @@
 
-	div.%id%_section { height : 100%; } /* Fade does not work without height set (even meaninglessly) */
+div.
+
+%
+id
+
+%
+_section { height: 100%; }
+
+/* Fade does not work without height set (even meaninglessly) */

@@ -1,4 +1,4 @@
 <root>
-	<string name="open" value="'%%'の一覧を表示します" />
-	<string name="close" value="'%%'の一覧を閉じます" />
+	<string name="open" value="'%%'の一覧を表示します"/>
+	<string name="close" value="'%%'の一覧を閉じます"/>
 </root>

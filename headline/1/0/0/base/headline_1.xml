@@ -7,5 +7,5 @@
 		Note that RSS won't be fetched exactly the every minute specified here
 		but will have a few random minutes margin to randomize each feed fetch process not to try to fetch many RSS on the same minute
 	-->
-	<conf name="limit" value="30" />
+	<conf name="limit" value="30"/>
 </root>

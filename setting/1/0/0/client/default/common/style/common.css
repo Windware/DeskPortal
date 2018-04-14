@@ -1,12 +1,48 @@
 
-	td.%id%_option_cell { width : 50%; border : 1px #333 solid; text-align : center; cursor : pointer; background-color : #ca8; }
+td.
 
-	td.%id%_active { background-color : #964; font-weight : bold; }
+%
+id
 
-	img.%id%_wallpaper { width : 120px; height : 90px; margin : 5px; cursor : pointer; }
+%
+_option_cell { width: 50%; border: 1px #333 solid; text-align: center; cursor: pointer; background-color: #ca8; }
 
-	div#%id%_list { overflow : auto; border : 1px #333 solid; background-color : #fff; height : 300px; }
+td.
 
-	table#%id% h3 { margin : 5px; border-bottom : 1px #333 dotted; }
+%
+id
 
-	div#%id%_list h3 { margin : 5px; border-bottom : 1px #333 dotted; }
+%
+_active { background-color: #964; font-weight: bold; }
+
+img.
+
+%
+id
+
+%
+_wallpaper { width: 120px; height: 90px; margin: 5px; cursor: pointer; }
+
+div#
+
+%
+id
+
+%
+_list { overflow: auto; border: 1px #333 solid; background-color: #fff; height: 300px; }
+
+table#
+
+%
+id
+
+%
+h3 { margin: 5px; border-bottom: 1px #333 dotted; }
+
+div#
+
+%
+id
+
+%
+_list h3 { margin: 5px; border-bottom: 1px #333 dotted; }

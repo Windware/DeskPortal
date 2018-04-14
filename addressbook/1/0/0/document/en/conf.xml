@@ -1,11 +1,11 @@
 <root>
-	<string name="_1_group" value="Group" />
+	<string name="_1_group" value="Group"/>
 
-	<string name="group" value="Group" />
-	<string name="name" value="Name" />
-	<string name="new" value="New group" />
-	<string name="delete" value="Delete" />
-	<string name="set" value="Set" />
+	<string name="group" value="Group"/>
+	<string name="name" value="Name"/>
+	<string name="new" value="New group"/>
+	<string name="delete" value="Delete"/>
+	<string name="set" value="Set"/>
 
-	<string name="confirm" value="Delete this group?" />
+	<string name="confirm" value="Delete this group?"/>
 </root>

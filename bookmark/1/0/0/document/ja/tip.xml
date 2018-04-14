@@ -1,15 +1,15 @@
 <root>
-	<string name="add" value="ウェブアドレスを入力するとブックマークを追加できます" />
+	<string name="add" value="ウェブアドレスを入力するとブックマークを追加できます"/>
 
 	<!-- 検索と順序 -->
-	<string name="order" value="表示順序を変更します" />
-	<string name="search" value="単語で検索します" />
+	<string name="order" value="表示順序を変更します"/>
+	<string name="search" value="単語で検索します"/>
 
 	<!-- 一覧 -->
-	<string name="edit" value="ブックマークの情報を編集します" />
-	<string name="info" value="%%" />
-	<string name="all" value="全てのカテゴリーを選択または解除します" />
+	<string name="edit" value="ブックマークの情報を編集します"/>
+	<string name="info" value="%%"/>
+	<string name="all" value="全てのカテゴリーを選択または解除します"/>
 
 	<!-- Cache -->
-	<string name="source" value="元のページを開く" />
+	<string name="source" value="元のページを開く"/>
 </root>

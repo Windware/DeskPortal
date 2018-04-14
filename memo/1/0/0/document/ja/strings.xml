@@ -1,22 +1,22 @@
 <root>
 	<!-- 新規メモ作成画面 -->
-	<string name="new" value="新規" />
-	<string name="create" value="新規メモ" />
-	<string name="add" value="メモを作成" />
-	<string name="close" value="閉じる" />
+	<string name="new" value="新規"/>
+	<string name="create" value="新規メモ"/>
+	<string name="add" value="メモを作成"/>
+	<string name="close" value="閉じる"/>
 
 	<!-- メイン画面 -->
-	<string name="name" value="名前" />
-	<string name="group" value="グループ" />
-	<string name="other" value="その他" />
-	<string name="loading" value="読み込み中..." />
+	<string name="name" value="名前"/>
+	<string name="group" value="グループ"/>
+	<string name="other" value="その他"/>
+	<string name="loading" value="読み込み中..."/>
 
 	<!-- 編集画面 -->
-	<string name="edit" value="編集" />
-	<string name="info" value="情報" />
-	<string name="last" value="最終編集日時" />
-	<string name="apply" value="適用" />
-	<string name="delete" value="削除" />
-	<string name="close" value="閉じる" />
-	<string name="confirm" value="'%%'のメモを削除しますか？" />
+	<string name="edit" value="編集"/>
+	<string name="info" value="情報"/>
+	<string name="last" value="最終編集日時"/>
+	<string name="apply" value="適用"/>
+	<string name="delete" value="削除"/>
+	<string name="close" value="閉じる"/>
+	<string name="confirm" value="'%%'のメモを削除しますか？"/>
 </root>

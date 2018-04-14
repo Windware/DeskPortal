@@ -1,22 +1,22 @@
 <root>
-	<string name="cad" value="Canada Dollars" />
-	<string name="chf" value="Switzerland Francs" />
-	<string name="cny" value="China Yuan Renminbi" />
-	<string name="dkk" value="Denmark Kroner" />
-	<string name="eur" value="Euro" />
-	<string name="gbp" value="United Kingdom Pounds" />
-	<string name="hkd" value="Hong Kong Dollars" />
-	<string name="huf" value="Hungary Forint" />
-	<string name="inr" value="India Rupees" />
-	<string name="jpy" value="Japan Yen" />
-	<string name="mxn" value="Mexico Pesos" />
-	<string name="myr" value="Malaysia Ringgits" />
-	<string name="nok" value="Norway Kroner" />
-	<string name="nzd" value="New Zealand Dollars" />
-	<string name="rub" value="Russia Rubles" />
-	<string name="sek" value="Sweden Kronor" />
-	<string name="sgd" value="Singapore Dollars" />
-	<string name="thb" value="Thailand Baht" />
-	<string name="usd" value="United States Dollars" />
-	<string name="zar" value="South Africa Rand" />
+	<string name="cad" value="Canada Dollars"/>
+	<string name="chf" value="Switzerland Francs"/>
+	<string name="cny" value="China Yuan Renminbi"/>
+	<string name="dkk" value="Denmark Kroner"/>
+	<string name="eur" value="Euro"/>
+	<string name="gbp" value="United Kingdom Pounds"/>
+	<string name="hkd" value="Hong Kong Dollars"/>
+	<string name="huf" value="Hungary Forint"/>
+	<string name="inr" value="India Rupees"/>
+	<string name="jpy" value="Japan Yen"/>
+	<string name="mxn" value="Mexico Pesos"/>
+	<string name="myr" value="Malaysia Ringgits"/>
+	<string name="nok" value="Norway Kroner"/>
+	<string name="nzd" value="New Zealand Dollars"/>
+	<string name="rub" value="Russia Rubles"/>
+	<string name="sek" value="Sweden Kronor"/>
+	<string name="sgd" value="Singapore Dollars"/>
+	<string name="thb" value="Thailand Baht"/>
+	<string name="usd" value="United States Dollars"/>
+	<string name="zar" value="South Africa Rand"/>
 </root>

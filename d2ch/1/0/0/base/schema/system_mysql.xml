@@ -1,54 +1,54 @@
 <root>
 	<!-- Board list -->
 	<table name="board">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="name" param="VARCHAR(255) NOT NULL" />
-		<column name="address" param="TEXT NOT NULL" />
-		<column name="category" param="INT" />
-		<column name="updated" param="DATETIME" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="name" param="VARCHAR(255) NOT NULL"/>
+		<column name="address" param="TEXT NOT NULL"/>
+		<column name="category" param="INT"/>
+		<column name="updated" param="DATETIME"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- Board category -->
 	<table name="category">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="name" param="VARCHAR(255) NOT NULL UNIQUE" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="name" param="VARCHAR(255) NOT NULL UNIQUE"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- Threads on a board -->
 	<table name="thread">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
 
-		<column name="board" param="INT NOT NULL" />
-		<column name="file" param="VARCHAR(255) NOT NULL" />
+		<column name="board" param="INT NOT NULL"/>
+		<column name="file" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="number" param="INT NOT NULL" />
-		<column name="reply" param="INT NOT NULL" />
-		<column name="title" param="TEXT NOT NULL" />
+		<column name="number" param="INT NOT NULL"/>
+		<column name="reply" param="INT NOT NULL"/>
+		<column name="title" param="TEXT NOT NULL"/>
 
-		<column name="updated" param="DATETIME" />
-		<column name="UNIQUE" param="(board, number)" />
+		<column name="updated" param="DATETIME"/>
+		<column name="UNIQUE" param="(board, number)"/>
 
-		<extra name="ENGINE" param="INNODB" />
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- Messages in a thread -->
 	<table name="message">
-		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment" />
-		<column name="thread" param="INT NOT NULL" />
-		<column name="number" param="INT NOT NULL" />
+		<column name="id" param="INT PRIMARY KEY NOT NULL auto_increment"/>
+		<column name="thread" param="INT NOT NULL"/>
+		<column name="number" param="INT NOT NULL"/>
 
-		<column name="name" param="VARCHAR(255) NOT NULL" />
-		<column name="mail" param="VARCHAR(255) NOT NULL" />
-		<column name="signature" param="VARCHAR(255)" />
+		<column name="name" param="VARCHAR(255) NOT NULL"/>
+		<column name="mail" param="VARCHAR(255) NOT NULL"/>
+		<column name="signature" param="VARCHAR(255)"/>
 
-		<column name="posted" param="DATETIME NOT NULL" />
-		<column name="message" param="TEXT NOT NULL" />
+		<column name="posted" param="DATETIME NOT NULL"/>
+		<column name="message" param="TEXT NOT NULL"/>
 
-		<column name="UNIQUE" param="(thread, number)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(thread, number)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 </root>

@@ -1,16 +1,16 @@
 <root>
-	<string name="black" value="Black" />
-	<string name="white" value="White" />
-	<string name="red" value="Red" />
-	<string name="green" value="Green" />
-	<string name="blue" value="Blue" />
-	<string name="yellow" value="Yellow" />
-	<string name="purple" value="Purple" />
-	<string name="orange" value="Orange" />
-	<string name="pink" value="Pink" />
-	<string name="brown" value="Brown" />
-	<string name="grey" value="Grey" />
-	<string name="gold" value="Gold" />
-	<string name="silver" value="Silver" />
-	<string name="bronze" value="Bronze" />
+	<string name="black" value="Black"/>
+	<string name="white" value="White"/>
+	<string name="red" value="Red"/>
+	<string name="green" value="Green"/>
+	<string name="blue" value="Blue"/>
+	<string name="yellow" value="Yellow"/>
+	<string name="purple" value="Purple"/>
+	<string name="orange" value="Orange"/>
+	<string name="pink" value="Pink"/>
+	<string name="brown" value="Brown"/>
+	<string name="grey" value="Grey"/>
+	<string name="gold" value="Gold"/>
+	<string name="silver" value="Silver"/>
+	<string name="bronze" value="Bronze"/>
 </root>

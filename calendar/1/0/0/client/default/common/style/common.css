@@ -1,23 +1,83 @@
 
-	div#%id%_current { font-weight : bold; font-size : 120%; }
+div#
 
-	/* Calendar days */
-	td.%id%_today { color : #fea; }
+%
+id
 
-	td.%id%_registered { border : 1px #333 solid; padding : 0px; }
+%
+_current { font-weight: bold; font-size: 120%; }
 
-	.%id%_sunday { color : #a41; }
+/* Calendar days */
+td.
 
-	.%id%_saturday { color : #14a; }
+%
+id
 
-	td.%id%_active { color : #fff; }
+%
+_today { color: #fea; }
 
-	/* Schedule edit */
-	table.%id%_editor th { text-align : right; vertical-align : top; }
+td.
 
-	table.%id%_editor td { vertical-align : top; }
+%
+id
 
-	.%id%_inputs input { width : 150px; }
+%
+_registered { border: 1px #333 solid; padding: 0px; }
 
-	/* Configuration */
-	span#%id%_pick_preview { display : inline-block; width : 15px; height : 15px; border : 1px #333 solid; }
+.
+
+%
+id
+
+%
+_sunday { color: #a41; }
+
+.
+
+%
+id
+
+%
+_saturday { color: #14a; }
+
+td.
+
+%
+id
+
+%
+_active { color: #fff; }
+
+/* Schedule edit */
+table.
+
+%
+id
+
+%
+_editor th { text-align: right; vertical-align: top; }
+
+table.
+
+%
+id
+
+%
+_editor td { vertical-align: top; }
+
+.
+
+%
+id
+
+%
+_inputs input { width: 150px; }
+
+/* Configuration */
+span#
+
+%
+id
+
+%
+_pick_preview { display: inline-block; width: 15px; height: 15px; border: 1px #333 solid; }

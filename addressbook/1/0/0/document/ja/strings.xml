@@ -1,36 +1,36 @@
 <root>
 	<!-- インターフェース -->
-	<string name="info" value="情報" />
-	<string name="new" value="新規追加" />
-	<string name="list" value="一覧" />
-	<string name="search" value="検索" />
-	<string name="added" value="追加日" />
-	<string name="domain" value="メールドメイン" />
+	<string name="info" value="情報"/>
+	<string name="new" value="新規追加"/>
+	<string name="list" value="一覧"/>
+	<string name="search" value="検索"/>
+	<string name="added" value="追加日"/>
+	<string name="domain" value="メールドメイン"/>
 
-	<string name="uncategorized" value="未区分" />
-	<string name="select" value="選択してください" />
-	<string name="display" value="表示項目" />
-	<string name="remove" value="この登録を削除しますか？" />
+	<string name="uncategorized" value="未区分"/>
+	<string name="select" value="選択してください"/>
+	<string name="display" value="表示項目"/>
+	<string name="remove" value="この登録を削除しますか？"/>
 
 	<!-- 情報ウインドウ -->
-	<string name="name" value="名前" />
-	<string name="gender" value="性別" />
-	<string name="age" value="年齢" />
-	<string name="female" value="女性" />
-	<string name="male" value="男性" />
-	<string name="birthday" value="誕生日" />
-	<string name="mail_main" value="メール" />
-	<string name="mail_mobile" value="メール (携帯)" />
-	<string name="mail_alt" value="メール (その他)" />
-	<string name="web" value="ウェブ" />
-	<string name="mobile" value="携帯電話" />
-	<string name="phone" value="電話" />
-	<string name="address" value="住所" />
-	<string name="note" value="メモ" />
-	<string name="group" value="グループ" />
-	<string name="created" value="追加日" />
+	<string name="name" value="名前"/>
+	<string name="gender" value="性別"/>
+	<string name="age" value="年齢"/>
+	<string name="female" value="女性"/>
+	<string name="male" value="男性"/>
+	<string name="birthday" value="誕生日"/>
+	<string name="mail_main" value="メール"/>
+	<string name="mail_mobile" value="メール (携帯)"/>
+	<string name="mail_alt" value="メール (その他)"/>
+	<string name="web" value="ウェブ"/>
+	<string name="mobile" value="携帯電話"/>
+	<string name="phone" value="電話"/>
+	<string name="address" value="住所"/>
+	<string name="note" value="メモ"/>
+	<string name="group" value="グループ"/>
+	<string name="created" value="追加日"/>
 
-	<string name="save" value="保存" />
-	<string name="delete" value="削除" />
-	<string name="close" value="閉じる" />
+	<string name="save" value="保存"/>
+	<string name="delete" value="削除"/>
+	<string name="close" value="閉じる"/>
 </root>

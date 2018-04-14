@@ -1,10 +1,40 @@
 
-	div.%id%_filter { text-align : center; font-weight : bold; margin : 10px; border-bottom : 1px #333 dotted; }
+div.
 
-	tr.%id%_header { background-color : #333; color : #ccc; }
+%
+id
 
-	tr.%id%_active { background-color : #fff; cursor : pointer; }
+%
+_filter { text-align: center; font-weight: bold; margin: 10px; border-bottom: 1px #333 dotted; }
 
-	table.%id%_info th { background-color : #876; border : 1px #333 dotted; border-width : 0px 1px; text-align : right; }
+tr.
 
-	table.%id%_info input { width : 200px; }
+%
+id
+
+%
+_header { background-color: #333; color: #ccc; }
+
+tr.
+
+%
+id
+
+%
+_active { background-color: #fff; cursor: pointer; }
+
+table.
+
+%
+id
+
+%
+_info th { background-color: #876; border: 1px #333 dotted; border-width: 0px 1px; text-align: right; }
+
+table.
+
+%
+id
+
+%
+_info input { width: 200px; }

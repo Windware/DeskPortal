@@ -1,24 +1,28 @@
-<table cellpadding="0" cellspacing="5" class="%system%_full"><tbody class="%system%_full">
+<table cellpadding="0" cellspacing="5" class="%system%_full">
+	<tbody class="%system%_full">
 	<tr style="height : 5%">
-		<td colspan="2"><form id="%id%_selection_filter" onsubmit="return %top%.%id%.gui.filter()">
-			<div class="%id%_filter">
-				<strong>%string:filter%</strong> [%string:state% :
+		<td colspan="2">
+			<form id="%id%_selection_filter" onsubmit="return %top%.%id%.gui.filter()">
+				<div class="%id%_filter">
+					<strong>%string:filter%</strong> [%string:state% :
 
-				<label for="%id%_marked"%tip:marked%>
-					<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter()" name="marked"> %string:marked%
-				</label>
+					<label for="%id%_marked" %tip:marked%>
+						<input type="checkbox" id="%id%_marked" onclick="%top%.%id%.gui.filter()" name="marked"> %string:marked%
+					</label>
 
-				<label for="%id%_unread"%tip:unread%>
-					<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter()" name="unread"> %string:unread%
-				</label>]
+					<label for="%id%_unread" %tip:unread%>
+						<input type="checkbox" id="%id%_unread" onclick="%top%.%id%.gui.filter()" name="unread"> %string:unread%
+					</label>]
 
-				[<span%tip:category% style="cursor : help">%string:category% :
-				<select name="category" id="%id%_filter_category" onchange="%top%.%id%.gui.filter()"></select></span>]
+					[<span%tip:category% style="cursor : help">%string:category% :
+					<select name="category" id="%id%_filter_category" onchange="%top%.%id%.gui.filter()"></select></span>]
 
-				[<span%tip:search% style="cursor : help">%string:search% : <input type="text" name="search" style="width : 120px" />]
-				<input type="submit" style="display : none" /></span>
-			</div>
-		</form></td>
+					[<span%tip:search% style="cursor : help">%string:search% :
+					<input type="text" name="search" style="width : 120px" />]
+					<input type="submit" style="display : none" /></span>
+				</div>
+			</form>
+		</td>
 	</tr>
 
 	<tr style="height : 5%">
@@ -28,8 +32,8 @@
 
 	<tr style="height : 5%">
 		<td colspan="2">
-			<form id="%id%_selection_span" class="%id%_filter"%tip:period% style="cursor : help">
-				<strong>%string:display%</strong> [%string:period% 
+			<form id="%id%_selection_span" class="%id%_filter" %tip:period% style="cursor : help">
+				<strong>%string:display%</strong> [%string:period%
 
 				<select name="period" onchange="%top%.%id%.gui.period(this.value)">
 					<option value="0">%string:daily%</option>
@@ -59,7 +63,12 @@
 	</tr>
 
 	<tr>
-		<td class="%id%_item" style="width : 30%"><div id="%id%_list"%scroll%></div></td>
-		<td class="%id%_item" style="width : 70%"><form id="%id%_entries"%scroll%></form></td>
+		<td class="%id%_item" style="width : 30%">
+			<div id="%id%_list" %scroll%></div>
+		</td>
+		<td class="%id%_item" style="width : 70%">
+			<form id="%id%_entries" %scroll%></form>
+		</td>
 	</tr>
-</tbody></table>
+	</tbody>
+</table>

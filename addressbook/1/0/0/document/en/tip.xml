@@ -1,9 +1,9 @@
 <root>
-	<string name="info" value="%%" />
-	<string name="year" value="Year" />
-	<string name="month" value="Month" />
-	<string name="day" value="Day" />
+	<string name="info" value="%%"/>
+	<string name="year" value="Year"/>
+	<string name="month" value="Month"/>
+	<string name="day" value="Day"/>
 
-	<string name="mail" value="Compose an email for this address" />
-	<string name="web" value="Open the web address in a new window" />
+	<string name="mail" value="Compose an email for this address"/>
+	<string name="web" value="Open the web address in a new window"/>
 </root>

@@ -4,5 +4,5 @@
 		Folders will be created automatically inside.
 		Can use relative path against the root tree of the whole system.
 	-->
-	<conf name="cache_path" value="/var/tmp/deskportal/" />
+	<conf name="cache_path" value="/var/tmp/deskportal/"/>
 </root>

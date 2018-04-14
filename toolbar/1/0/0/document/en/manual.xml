@@ -1,27 +1,35 @@
 <root>
-	<string name="disclaimer" value="Please understand that the result page displayed is not provided by %brand%." />
+	<string name="disclaimer" value="Please understand that the result page displayed is not provided by %brand%."/>
 
-	<string name="_1_intro" value="Introduction" />
-	<string name="1/intro" value="This application is a toolbar that can convert units and search information." />
-	<string name="1/use" value="Main window has three selection boxes and it may convert and search data according to the combination and input given." />
-	<string name="1/plus" value="The '+' sign at the left side of the boolbar can be used to produce a new toolbar. It can be useful to keep multiple types of toolbars. The produced toolbars have a '-' sign instead of '+' which can be used to close the toolbar by clicking on it." />
+	<string name="_1_intro" value="Introduction"/>
+	<string name="1/intro" value="This application is a toolbar that can convert units and search information."/>
+	<string name="1/use"
+	        value="Main window has three selection boxes and it may convert and search data according to the combination and input given."/>
+	<string name="1/plus"
+	        value="The '+' sign at the left side of the boolbar can be used to produce a new toolbar. It can be useful to keep multiple types of toolbars. The produced toolbars have a '-' sign instead of '+' which can be used to close the toolbar by clicking on it."/>
 
-	<string name="_2_search_web" value="Search/Web" />
-	<string name="2/search" value="It can search for the web." />
-	<string name="2/how" value="First, choose 'Search' as the first selection on the main window and 'Web' as the second selection. And on the third selection, choose 'Page' to search for web pages and 'Image' to search for web images. By typing in the search keyword in the input box and hitting the 'Enter' key, the result will be displayed on a new window." />
+	<string name="_2_search_web" value="Search/Web"/>
+	<string name="2/search" value="It can search for the web."/>
+	<string name="2/how"
+	        value="First, choose 'Search' as the first selection on the main window and 'Web' as the second selection. And on the third selection, choose 'Page' to search for web pages and 'Image' to search for web images. By typing in the search keyword in the input box and hitting the 'Enter' key, the result will be displayed on a new window."/>
 
-	<string name="_3_search_wikipedia" value="Search/Wikipedia" />
-	<string name="3/search" value="It can search for Wikipedia which is an encyclopedia offered on the internet." />
-	<string name="3/how" value="First, choose 'Search' as the first selection on the main window and 'Wikipedia' as the second selection. And on the third selection, choose the language you wish to search against. By typing in the search keyword in the input box and hitting the 'Enter' key, the result will be displayed on a new window." />
+	<string name="_3_search_wikipedia" value="Search/Wikipedia"/>
+	<string name="3/search" value="It can search for Wikipedia which is an encyclopedia offered on the internet."/>
+	<string name="3/how"
+	        value="First, choose 'Search' as the first selection on the main window and 'Wikipedia' as the second selection. And on the third selection, choose the language you wish to search against. By typing in the search keyword in the input box and hitting the 'Enter' key, the result will be displayed on a new window."/>
 
-	<string name="_4_search_dictionary" value="Search/Dictionary" />
-	<string name="4/search" value="It can search for words in dictionaries." />
-	<string name="4/how" value="First, choose 'Search' as the first selection on the main window and 'Dictionary' as the second selection. And on the third selection, choose the language you wish to search against. By typing in the search keyword in the input box and hitting the 'Enter' key, the result will be displayed on a new window." />
-	<string name="4/japanese" value=" " />
+	<string name="_4_search_dictionary" value="Search/Dictionary"/>
+	<string name="4/search" value="It can search for words in dictionaries."/>
+	<string name="4/how"
+	        value="First, choose 'Search' as the first selection on the main window and 'Dictionary' as the second selection. And on the third selection, choose the language you wish to search against. By typing in the search keyword in the input box and hitting the 'Enter' key, the result will be displayed on a new window."/>
+	<string name="4/japanese" value=" "/>
 
-	<string name="_5_convert_unit" value="Convert/Unit, Currency, Language" />
-	<string name="5/convert" value="It can convert units, currencies and languages." />
-	<string name="5/how" value="First, choose 'Convert' as the first selection on the main window and pick the unit type that you want to convert as the second selection. And on the third selection, on the top selection box, choose the source unit or language that you want to convert from and on the bottom box choose the target unit or language that you want to convert to. By typing in a digit for unit conversion and a phrase for language conversion in the input box and hitting the 'Enter' key, the result will be displayed in the box below the input field." />
-	<string name="5/other" value="For currency conversion and language translation, the result will be displayed on a new window. Please understand that these results are not provided by %brand%." />
-	<string name="5/round" value="For unit conversions, the result will be rounded at the fifth decimal point and thus it may not display a precise value." />
+	<string name="_5_convert_unit" value="Convert/Unit, Currency, Language"/>
+	<string name="5/convert" value="It can convert units, currencies and languages."/>
+	<string name="5/how"
+	        value="First, choose 'Convert' as the first selection on the main window and pick the unit type that you want to convert as the second selection. And on the third selection, on the top selection box, choose the source unit or language that you want to convert from and on the bottom box choose the target unit or language that you want to convert to. By typing in a digit for unit conversion and a phrase for language conversion in the input box and hitting the 'Enter' key, the result will be displayed in the box below the input field."/>
+	<string name="5/other"
+	        value="For currency conversion and language translation, the result will be displayed on a new window. Please understand that these results are not provided by %brand%."/>
+	<string name="5/round"
+	        value="For unit conversions, the result will be rounded at the fifth decimal point and thus it may not display a precise value."/>
 </root>

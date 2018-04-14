@@ -1,22 +1,22 @@
 <root>
 	<!-- フィルター -->
-	<string name="marked" value="マークされたトピックのみ表示します" />
-	<string name="unread" value="未読のトピックのみ表示します" />
-	<string name="category" value="表示させるカテゴリーを選択できます" />
-	<string name="search" value="表示されてる記事から単語を検索します" />
-	<string name="period" value="選択されているフィードの表示期間を指定できます" />
+	<string name="marked" value="マークされたトピックのみ表示します"/>
+	<string name="unread" value="未読のトピックのみ表示します"/>
+	<string name="category" value="表示させるカテゴリーを選択できます"/>
+	<string name="search" value="表示されてる記事から単語を検索します"/>
+	<string name="period" value="選択されているフィードの表示期間を指定できます"/>
 
-	<string name="site" value="ニュースサイトを開きます" />
-	<string name="read" value="このサイトのニュースを読みます" />
+	<string name="site" value="ニュースサイトを開きます"/>
+	<string name="read" value="このサイトのニュースを読みます"/>
 
 	<!-- エントリー -->
-	<string name="category" value="カテゴリーを設定します" />
-	<string name="mark" value="記事をマークします" />
-	<string name="open" value="記事を新しいウインドウで開きます" />
-	<string name="info" value="%%" />
+	<string name="category" value="カテゴリーを設定します"/>
+	<string name="mark" value="記事をマークします"/>
+	<string name="open" value="記事を新しいウインドウで開きます"/>
+	<string name="info" value="%%"/>
 
 	<!-- ページ -->
-	<string name="page" value="フィードの表示ページを指定できます" />
-	<string name="previous" value="記事一覧の前のページを表示します" />
-	<string name="next" value="記事一覧の次のページを表示します" />
+	<string name="page" value="フィードの表示ページを指定できます"/>
+	<string name="previous" value="記事一覧の前のページを表示します"/>
+	<string name="next" value="記事一覧の次のページを表示します"/>
 </root>

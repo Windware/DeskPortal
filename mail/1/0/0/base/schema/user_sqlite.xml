@@ -1,141 +1,144 @@
 <root>
 	<!-- Accounts-->
 	<table name="account">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="base" param="INT" /> <!-- Whether this account is default or not -->
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="base" param="INT"/> <!-- Whether this account is default or not -->
 
-		<column name="description" param="VARCHAR(255)" />
-		<column name="name" param="VARCHAR(255) NOT NULL" />
-		<column name="address" param="VARCHAR(255) NOT NULL" />
-		<column name="preference" param="VARCHAR(12) NOT NULL" /> <!-- Mail display preference either in 'plain' or 'html' -->
-		<column name="signature" param="TEXT" />
-		<column name="supported" param="INT" /> <!-- Whether UID/UIDL is supported -->
+		<column name="description" param="VARCHAR(255)"/>
+		<column name="name" param="VARCHAR(255) NOT NULL"/>
+		<column name="address" param="VARCHAR(255) NOT NULL"/>
+		<column name="preference"
+		        param="VARCHAR(12) NOT NULL"/> <!-- Mail display preference either in 'plain' or 'html' -->
+		<column name="signature" param="TEXT"/>
+		<column name="supported" param="INT"/> <!-- Whether UID/UIDL is supported -->
 
-		<column name="receive_type" param="VARCHAR(12) NOT NULL" />
-		<column name="receive_host" param="VARCHAR(255) NOT NULL" />
-		<column name="receive_port" param="INT NOT NULL" />
-		<column name="receive_secure" param="INT NOT NULL" />
-		<column name="receive_keep" param="INT" />
-		<column name="receive_duration" param="INT" />
-		<column name="receive_user" param="VARCHAR(255)" />
-		<column name="receive_pass" param="VARCHAR(255)" />
+		<column name="receive_type" param="VARCHAR(12) NOT NULL"/>
+		<column name="receive_host" param="VARCHAR(255) NOT NULL"/>
+		<column name="receive_port" param="INT NOT NULL"/>
+		<column name="receive_secure" param="INT NOT NULL"/>
+		<column name="receive_keep" param="INT"/>
+		<column name="receive_duration" param="INT"/>
+		<column name="receive_user" param="VARCHAR(255)"/>
+		<column name="receive_pass" param="VARCHAR(255)"/>
 
-		<column name="send_host" param="VARCHAR(255) NOT NULL" />
-		<column name="send_port" param="INT NOT NULL" />
-		<column name="send_secure" param="INT NOT NULL" />
-		<column name="send_user" param="VARCHAR(255)" />
-		<column name="send_pass" param="VARCHAR(255)" />
+		<column name="send_host" param="VARCHAR(255) NOT NULL"/>
+		<column name="send_port" param="INT NOT NULL"/>
+		<column name="send_secure" param="INT NOT NULL"/>
+		<column name="send_user" param="VARCHAR(255)"/>
+		<column name="send_pass" param="VARCHAR(255)"/>
 
-		<column name="folder_inbox" param="INT" />
-		<column name="folder_drafts" param="INT" />
-		<column name="folder_sent" param="INT" />
-		<column name="folder_trash" param="INT" />
+		<column name="folder_inbox" param="INT"/>
+		<column name="folder_drafts" param="INT"/>
+		<column name="folder_sent" param="INT"/>
+		<column name="folder_trash" param="INT"/>
 
-		<column name="UNIQUE" param="(user, description)" />
+		<column name="UNIQUE" param="(user, description)"/>
 	</table>
 
 	<!-- Mail data -->
 	<table name="mail">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="folder" param="INT NOT NULL" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="folder" param="INT NOT NULL"/>
 
-		<column name="uid" param="VARCHAR(255)" /> <!-- Unique identifier for a message provided by the mail server -->
-		<column name="signature" param="CHAR(32)" /> <!-- md5 sum of the header of a mail to identify the message when UID/UIDL is unsupported -->
+		<column name="uid" param="VARCHAR(255)"/> <!-- Unique identifier for a message provided by the mail server -->
+		<column name="signature"
+		        param="CHAR(32)"/> <!-- md5 sum of the header of a mail to identify the message when UID/UIDL is unsupported -->
 
-		<column name="mail" param="BLOB" /> <!-- Entire mail content compressed -->
-		<column name="header" param="BLOB" /> <!-- Entire header compressed -->
-		<column name="subject" param="TEXT" />
-		<column name="mid" param="VARCHAR(255)" /> <!-- Message-ID header value -->
+		<column name="mail" param="BLOB"/> <!-- Entire mail content compressed -->
+		<column name="header" param="BLOB"/> <!-- Entire header compressed -->
+		<column name="subject" param="TEXT"/>
+		<column name="mid" param="VARCHAR(255)"/> <!-- Message-ID header value -->
 
-		<column name="sent" param="DATETIME" />
-		<column name="received" param="DATETIME" />
+		<column name="sent" param="DATETIME"/>
+		<column name="received" param="DATETIME"/>
 
-		<column name="preview" param="TEXT" /> <!-- Partial excerpt of the plain text version. Uncompressed to be sent inside XML. -->
-		<column name="plain" param="TEXT" /> <!-- Plain text version of the body. Uncompressed for search purpose. -->
-		<column name="html" param="BLOB" /> <!-- HTML version of the body compressed -->
-		<column name="encode" param="VARCHAR(32)" /> <!-- Character encoding type for HTML version -->
+		<column name="preview"
+		        param="TEXT"/> <!-- Partial excerpt of the plain text version. Uncompressed to be sent inside XML. -->
+		<column name="plain" param="TEXT"/> <!-- Plain text version of the body. Uncompressed for search purpose. -->
+		<column name="html" param="BLOB"/> <!-- HTML version of the body compressed -->
+		<column name="encode" param="VARCHAR(32)"/> <!-- Character encoding type for HTML version -->
 
-		<column name="marked" param="INT" /> <!-- Corresponds to IMAP flag 'Flagged' -->
-		<column name="seen" param="INT" /> <!-- Corresponds to IMAP flag 'Seen' -->
-		<column name="replied" param="INT" /> <!-- Corresponds to IMAP flag 'Answered' -->
-		<column name="draft" param="INT" /> <!-- Corresponds to IMAP flag 'Draft' -->
-		<column name="color" param="CHAR(6)" />
+		<column name="marked" param="INT"/> <!-- Corresponds to IMAP flag 'Flagged' -->
+		<column name="seen" param="INT"/> <!-- Corresponds to IMAP flag 'Seen' -->
+		<column name="replied" param="INT"/> <!-- Corresponds to IMAP flag 'Answered' -->
+		<column name="draft" param="INT"/> <!-- Corresponds to IMAP flag 'Draft' -->
+		<column name="color" param="CHAR(6)"/>
 
-		<column name="UNIQUE" param="(user, folder, uid)" />
+		<column name="UNIQUE" param="(user, folder, uid)"/>
 
-		<index name="user, folder, seen" />
-		<index name="user, folder, signature" />
-		<index name="user, folder, draft" />
-		<index name="user, folder, sent" />
-		<index name="user, sent" />
+		<index name="user, folder, seen"/>
+		<index name="user, folder, signature"/>
+		<index name="user, folder, draft"/>
+		<index name="user, folder, sent"/>
+		<index name="user, sent"/>
 	</table>
 
 	<!-- List of downloaded mails to keep track of unread mails for POP3 -->
 	<table name="loaded">
-		<column name="user" param="INT NOT NULL" />
-		<column name="account" param="INT NOT NULL" />
-		<column name="uid" param="VARCHAR(255)" />
-		<column name="signature" param="CHAR(32)" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="account" param="INT NOT NULL"/>
+		<column name="uid" param="VARCHAR(255)"/>
+		<column name="signature" param="CHAR(32)"/>
 
-		<index name="user, account, signature" />
-		<index name="user, account, uid" />
+		<index name="user, account, signature"/>
+		<index name="user, account, uid"/>
 	</table>
 
 	<!-- List of folders -->
 	<table name="folder">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
 
-		<column name="account" param="INT NOT NULL" />
-		<column name="recent" param="INT" /> <!-- Number of new mails -->
+		<column name="account" param="INT NOT NULL"/>
+		<column name="recent" param="INT"/> <!-- Number of new mails -->
 
-		<column name="name" param="VARCHAR(255) NOT NULL" />
-		<column name="parent" param="INT" /> <!-- Can create child folders or not -->
-		<column name="count" param="INT" /> <!-- Number of unread mails as a reference -->
+		<column name="name" param="VARCHAR(255) NOT NULL"/>
+		<column name="parent" param="INT"/> <!-- Can create child folders or not -->
+		<column name="count" param="INT"/> <!-- Number of unread mails as a reference -->
 
-		<column name="connector" param="VARCHAR(4)" /> <!-- Folder name separater -->
-		<column name="subscribed" param="INT" />
-		<column name="updated" param="DATETIME" />
+		<column name="connector" param="VARCHAR(4)"/> <!-- Folder name separater -->
+		<column name="subscribed" param="INT"/>
+		<column name="updated" param="DATETIME"/>
 
-		<column name="UNIQUE" param="(user, account, name)" />
+		<column name="UNIQUE" param="(user, account, name)"/>
 	</table>
 
 	<!-- From addresses -->
 	<table name="from">
-		<column name="mail" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255)" />
-		<column name="address" param="VARCHAR(255) NOT NULL" />
+		<column name="mail" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255)"/>
+		<column name="address" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(mail, address)" />
+		<column name="UNIQUE" param="(mail, address)"/>
 	</table>
 
 	<!-- Cc addresses -->
 	<table name="cc">
-		<column name="mail" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255)" />
-		<column name="address" param="VARCHAR(255) NOT NULL" />
+		<column name="mail" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255)"/>
+		<column name="address" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(mail, address)" />
+		<column name="UNIQUE" param="(mail, address)"/>
 	</table>
 
 	<!-- Bcc addresses (Only used on mail drafts) -->
 	<table name="bcc">
-		<column name="mail" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255)" />
-		<column name="address" param="VARCHAR(255) NOT NULL" />
+		<column name="mail" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255)"/>
+		<column name="address" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(mail, address)" />
+		<column name="UNIQUE" param="(mail, address)"/>
 	</table>
 
 	<!-- To addresses -->
 	<table name="to">
-		<column name="mail" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255)" />
-		<column name="address" param="VARCHAR(255) NOT NULL" />
+		<column name="mail" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255)"/>
+		<column name="address" param="VARCHAR(255) NOT NULL"/>
 
-		<column name="UNIQUE" param="(mail, address)" />
+		<column name="UNIQUE" param="(mail, address)"/>
 	</table>
 
 	<!--
@@ -143,26 +146,26 @@
 		The files themselves will be stored as individual files.
 	-->
 	<table name="attachment">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
 
-		<column name="mail" param="INT NOT NULL" />
-		<column name="cid" param="VARCHAR(255)" /> <!-- Content ID used for inline objects -->
+		<column name="mail" param="INT NOT NULL"/>
+		<column name="cid" param="VARCHAR(255)"/> <!-- Content ID used for inline objects -->
 
-		<column name="size" param="INT" /> <!-- File size -->
-		<column name="name" param="TEXT NOT NULL" /> <!-- File name -->
-		<column name="type" param="VARCHAR(255)" /> <!-- Mime type -->
+		<column name="size" param="INT"/> <!-- File size -->
+		<column name="name" param="TEXT NOT NULL"/> <!-- File name -->
+		<column name="type" param="VARCHAR(255)"/> <!-- Mime type -->
 
-		<column name="position" param="VARCHAR(255)" /> <!-- Position of this attachment in the mime structure -->
-		<index name="mail, cid" />
+		<column name="position" param="VARCHAR(255)"/> <!-- Position of this attachment in the mime structure -->
+		<index name="mail, cid"/>
 	</table>
 
 	<!-- References to other mails -->
 	<table name="reference">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="mail" param="INT NOT NULL" />
-		<column name="reference" param="INT NOT NULL" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="mail" param="INT NOT NULL"/>
+		<column name="reference" param="INT NOT NULL"/>
 
-		<column name="UNIQUE" param="(mail, reference)" />
-		<index name="reference" />
+		<column name="UNIQUE" param="(mail, reference)"/>
+		<index name="reference"/>
 	</table>
 </root>

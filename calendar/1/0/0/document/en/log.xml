@@ -1,19 +1,19 @@
 <root>
 	<!-- USER -->
 	<!-- item.js -->
-	<string name="user/save" value="Schedule information saved for %%." />
-	<string name="user/save/fail" value="Schedule information failed to be saved for %%." />
-	<string name="user/remove" value="Schedule information deleted for %%." />
-	<string name="user/display" value="Loaded schedules for %%." />
+	<string name="user/save" value="Schedule information saved for %%."/>
+	<string name="user/save/fail" value="Schedule information failed to be saved for %%."/>
+	<string name="user/remove" value="Schedule information deleted for %%."/>
+	<string name="user/display" value="Loaded schedules for %%."/>
 
-	<string name="user/title" value="Title is empty" />
-	<string name="user/title/solution" value="Please type in a title" />
+	<string name="user/title" value="Title is empty"/>
+	<string name="user/title/solution" value="Please type in a title"/>
 
-	<string name="user/date" value="Invalid time specified" />
-	<string name="user/date/solution" value="Please set a valid time" />
+	<string name="user/date" value="Invalid time specified"/>
+	<string name="user/date/solution" value="Please set a valid time"/>
 
 	<!-- group.js -->
-	<string name="user/category/add" value="Added category '%%'." />
-	<string name="user/category/remove" value="Removed category '%%'." />
-	<string name="user/category/update" value="Updated category '%%'." />
+	<string name="user/category/add" value="Added category '%%'."/>
+	<string name="user/category/remove" value="Removed category '%%'."/>
+	<string name="user/category/update" value="Updated category '%%'."/>
 </root>

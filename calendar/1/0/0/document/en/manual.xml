@@ -1,21 +1,27 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
+	<string name="_1_intro" value="Introduction"/>
 
-	<string name="1/intro" value="This application can display a month's view and register a schedule for each days." />
-	<string name="1/month" value="By clicking on the link with arrows pointing to previous or next month next to the current month name, it will swap the calendar to that month." />
-	<string name="1/today" value="Today's date will be emphasized." />
+	<string name="1/intro" value="This application can display a month's view and register a schedule for each days."/>
+	<string name="1/month"
+	        value="By clicking on the link with arrows pointing to previous or next month next to the current month name, it will swap the calendar to that month."/>
+	<string name="1/today" value="Today's date will be emphasized."/>
 
-	<string name="_2_register" value="Register a schedule" />
+	<string name="_2_register" value="Register a schedule"/>
 
-	<string name="2/register" value="To register a new schedule, click on the day you want to register and inside the new window that opened, enter the information. Other than title are optional. You may not pick any categories until they are added. On how to add them will be explained later. By clicking on the 'Set' button, it will be saved and the day will have a border around it." />
-	<string name="2/see" value="By putting the mouse over a registered day, you may view the registered information." />
+	<string name="2/register"
+	        value="To register a new schedule, click on the day you want to register and inside the new window that opened, enter the information. Other than title are optional. You may not pick any categories until they are added. On how to add them will be explained later. By clicking on the 'Set' button, it will be saved and the day will have a border around it."/>
+	<string name="2/see" value="By putting the mouse over a registered day, you may view the registered information."/>
 
-	<string name="_3_edit" value="Edit a schedule" />
-	<string name="3/click" value="To edit an existing schedule of a day, click on that day and click on the 'Edit' button on the window appeared." />
-	<string name="3/edit" value="You may change the information and click on 'Set' to save the changes, 'Delete' to delete the schedule, 'Close' to close the window without saving any changes, or 'Cancel' to cancel changes made and go back to the previous screen." />
+	<string name="_3_edit" value="Edit a schedule"/>
+	<string name="3/click"
+	        value="To edit an existing schedule of a day, click on that day and click on the 'Edit' button on the window appeared."/>
+	<string name="3/edit"
+	        value="You may change the information and click on 'Set' to save the changes, 'Delete' to delete the schedule, 'Close' to close the window without saving any changes, or 'Cancel' to cancel changes made and go back to the previous screen."/>
 
-	<string name="_4_category" value="Categories" />
+	<string name="_4_category" value="Categories"/>
 
-	<string name="4/category" value="In order to add a new category, go to the 'Setting' tab of this window and to the 'Category' section and enter the name. Choose the background color you wish to use for that category and click on the 'Set' button. To edit or delete existing categories, pick the category from the left selection box." />
-	<string name="4/edit" value="The configured categories may be linked to the schedule by opening up the schedule window of that day and set a category to it. The background color will be applied for that day." />
+	<string name="4/category"
+	        value="In order to add a new category, go to the 'Setting' tab of this window and to the 'Category' section and enter the name. Choose the background color you wish to use for that category and click on the 'Set' button. To edit or delete existing categories, pick the category from the left selection box."/>
+	<string name="4/edit"
+	        value="The configured categories may be linked to the schedule by opening up the schedule window of that day and set a category to it. The background color will be applied for that day."/>
 </root>

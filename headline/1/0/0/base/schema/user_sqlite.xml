@@ -1,42 +1,42 @@
 <root>
 	<!-- Tag list -->
 	<table name="category">
-		<column name="id" param="INTEGER PRIMARY KEY NOT NULL" />
-		<column name="user" param="INT NOT NULL" />
-		<column name="name" param="VARCHAR(255)" />
+		<column name="id" param="INTEGER PRIMARY KEY NOT NULL"/>
+		<column name="user" param="INT NOT NULL"/>
+		<column name="name" param="VARCHAR(255)"/>
 
-		<column name="UNIQUE" param="(user, name)" />
+		<column name="UNIQUE" param="(user, name)"/>
 	</table>
 
 	<!-- Feed entries -->
 	<table name="entry">
-		<column name="user" param="INT NOT NULL" />
-		<column name="entry" param="INT NOT NULL" />
-		<column name="category" param="INT DEFAULT 0" />
-		<column name="seen" param="INT DEFAULT 0" />
-		<column name="rate" param="INT DEFAULT 0" />
-		<column name="trash" param="INT DEFAULT 0" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="entry" param="INT NOT NULL"/>
+		<column name="category" param="INT DEFAULT 0"/>
+		<column name="seen" param="INT DEFAULT 0"/>
+		<column name="rate" param="INT DEFAULT 0"/>
+		<column name="trash" param="INT DEFAULT 0"/>
 
-		<column name="UNIQUE" param="(user, entry)" />
+		<column name="UNIQUE" param="(user, entry)"/>
 	</table>
 
 	<!-- Category relation -->
 	<table name="relation">
-		<column name="user" param="INT NOT NULL" />
-		<column name="entry" param="INT NOT NULL" />
-		<column name="category" param="INT NOT NULL" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="entry" param="INT NOT NULL"/>
+		<column name="category" param="INT NOT NULL"/>
 
-		<column name="UNIQUE" param="(user, entry, category)" />
-		<extra name="ENGINE" param="INNODB" />
+		<column name="UNIQUE" param="(user, entry, category)"/>
+		<extra name="ENGINE" param="INNODB"/>
 	</table>
 
 	<!-- Feed source -->
 	<table name="subscribed">
-		<column name="user" param="INT NOT NULL" />
-		<column name="feed" param="INT NOT NULL" />
-		<column name="period" param="INT DEFAULT 2" />
-		<column name="category" param="INT DEFAULT 0" />
+		<column name="user" param="INT NOT NULL"/>
+		<column name="feed" param="INT NOT NULL"/>
+		<column name="period" param="INT DEFAULT 2"/>
+		<column name="category" param="INT DEFAULT 0"/>
 
-		<column name="UNIQUE" param="(user, feed)" />
+		<column name="UNIQUE" param="(user, feed)"/>
 	</table>
 </root>

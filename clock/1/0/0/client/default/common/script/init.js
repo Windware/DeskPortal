@@ -1,2 +1,1 @@
-
-	var __timer; //Timer to update the clock display
+var __timer //Timer to update the clock display

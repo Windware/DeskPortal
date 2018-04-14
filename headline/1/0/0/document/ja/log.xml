@@ -1,17 +1,17 @@
 <root>
 	<!-- USER -->
 	<!-- feed.js -->
-	<string name="user/feed/add" value="新しいフィード%%を追加しました。" />
-	<string name="user/feed/add/fail" value="フィード%%の追加に失敗しました。" />
+	<string name="user/feed/add" value="新しいフィード%%を追加しました。"/>
+	<string name="user/feed/add/fail" value="フィード%%の追加に失敗しました。"/>
 
-	<string name="user/feed/get" value="フィード一覧を取得しました。" />
-	<string name="user/feed/remove" value="%%のフィードを削除しました。" />
-	<string name="user/feed/new" value="%%に新しい記事が掲載されました。" />
+	<string name="user/feed/get" value="フィード一覧を取得しました。"/>
+	<string name="user/feed/remove" value="%%のフィードを削除しました。"/>
+	<string name="user/feed/new" value="%%に新しい記事が掲載されました。"/>
 
-	<string name="user/sample" value="サンプルフィードを追加しました。" />
-	<string name="user/entry/get" value="%%の記事を取得しました。" />
+	<string name="user/sample" value="サンプルフィードを追加しました。"/>
+	<string name="user/entry/get" value="%%の記事を取得しました。"/>
 
-	<string name="user/category/add" value="%%のカテゴリーを追加しました。" />
-	<string name="user/category/remove" value="%%のカテゴリーを削除しました。" />
-	<string name="user/category/update" value="%%のカテゴリーを更新しました。" />
+	<string name="user/category/add" value="%%のカテゴリーを追加しました。"/>
+	<string name="user/category/remove" value="%%のカテゴリーを削除しました。"/>
+	<string name="user/category/update" value="%%のカテゴリーを更新しました。"/>
 </root>

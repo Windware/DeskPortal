@@ -1,6 +1,5 @@
+window = 'cc8877'
+width = 420
 
-	window = 'cc8877';
-	width = 420;
-
-	up = true;
-	center = true;
+up = true
+center = true

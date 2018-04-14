@@ -1,5 +1,5 @@
 <root>
-	<string name="level" value="Level of messages to display. More messages are shown for detailed levels." />
-	<string name="period" value="The time the messages are displayed. When expired, the message will disappear." />
-	<string name="dev" value="To show developer targetted messages. Should be unchecked normally." />
+	<string name="level" value="Level of messages to display. More messages are shown for detailed levels."/>
+	<string name="period" value="The time the messages are displayed. When expired, the message will disappear."/>
+	<string name="dev" value="To show developer targetted messages. Should be unchecked normally."/>
 </root>

@@ -1,22 +1,22 @@
 <root>
-	<string name="cad" value="カナダ ドル" />
-	<string name="chf" value="スイス フランク" />
-	<string name="cny" value="中国元" />
-	<string name="dkk" value="デンマーク クローネ" />
-	<string name="eur" value="ユーロ" />
-	<string name="gbp" value="イギリス ポンド" />
-	<string name="hkd" value="香港 ドル" />
-	<string name="huf" value="ハンガリー フォリント" />
-	<string name="inr" value="インド ルピー" />
-	<string name="jpy" value="日本円" />
-	<string name="mxn" value="メキシコ ペソ" />
-	<string name="myr" value="マレーシア リンギット" />
-	<string name="nok" value="ノルウェー クローネ" />
-	<string name="nzd" value="ニュージーランド ドル" />
-	<string name="rub" value="ロシア ルーブル" />
-	<string name="sek" value="スウェーデン クローナ" />
-	<string name="sgd" value="シンガポール ドル" />
-	<string name="thb" value="タイ バーツ" />
-	<string name="usd" value="アメリカ ドル" />
-	<string name="zar" value="南アフリカ ランド" />
+	<string name="cad" value="カナダ ドル"/>
+	<string name="chf" value="スイス フランク"/>
+	<string name="cny" value="中国元"/>
+	<string name="dkk" value="デンマーク クローネ"/>
+	<string name="eur" value="ユーロ"/>
+	<string name="gbp" value="イギリス ポンド"/>
+	<string name="hkd" value="香港 ドル"/>
+	<string name="huf" value="ハンガリー フォリント"/>
+	<string name="inr" value="インド ルピー"/>
+	<string name="jpy" value="日本円"/>
+	<string name="mxn" value="メキシコ ペソ"/>
+	<string name="myr" value="マレーシア リンギット"/>
+	<string name="nok" value="ノルウェー クローネ"/>
+	<string name="nzd" value="ニュージーランド ドル"/>
+	<string name="rub" value="ロシア ルーブル"/>
+	<string name="sek" value="スウェーデン クローナ"/>
+	<string name="sgd" value="シンガポール ドル"/>
+	<string name="thb" value="タイ バーツ"/>
+	<string name="usd" value="アメリカ ドル"/>
+	<string name="zar" value="南アフリカ ランド"/>
 </root>

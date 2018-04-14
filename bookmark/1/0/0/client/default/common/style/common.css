@@ -1,35 +1,126 @@
+%
+self
 
-	%self% h2 { border : 1px #333 solid; background-color : #cdc; text-align : center; font-size : 110%; }
+%
+h2 { border: 1px #333 solid; background-color: #cdc; text-align: center; font-size: 110%; }
 
-	%self% h3 { font-size : 100%; line-height : 100%; text-align : center; color : #456; }
+%
+self
 
-	form#%id%_selection, div#%id%_entries { word-break : break-all; text-align : left; height : 300px; overflow : auto; border : 1px #333 solid; }
+%
+h3 { font-size: 100%; line-height: 100%; text-align: center; color: #456; }
 
-	/* Category listings */
-	input.%id%_check { border : 1px #333 solid; background-color : #898; }
+form#
 
-	/* Bookmark entries */
-	div#%id%_entries { background-color : #ded; }
+%
+id
 
-	div#%id%_entries span { background-color : #333; width : 5px; height : 16px; display : inline-block; }
+%
+_selection, div#
 
-	div#%id%_entries img { border : none; width : 16px; height : 16px; }
+%
+id
 
-	a.%id%_active { background-color : #ded !important; }
+%
+_entries { word-break: break-all; text-align: left; height: 300px; overflow: auto; border: 1px #333 solid; }
 
-	a.%id%_row { border-bottom : 1px #333 dotted; padding : 5px; display : block; color : #333 !important; }
+/* Category listings */
+input.
 
-	a.%id%_dark { background-color : #9a9; }
+%
+id
 
-	a.%id%_light { background-color : #aba; }
+%
+_check { border: 1px #333 solid; background-color: #898; }
 
-	/* Filters */
-	input.%id%_word { width : 200px; background-color : #aba; border : 1px #333 solid; }
+/* Bookmark entries */
+div#
 
-	/* Configuration */
-	div#%id%_conf_category { padding : 5px; height : 300px; text-align : left; border : 1px #333 solid; background-color : #aba; overflow-y : auto; }
+%
+id
 
-	form.%id%_field { border : 1px #333 dotted; margin : 10px 0px; }
+%
+_entries { background-color: #ded; }
 
-	/* Editing */
-	form.%id%_edits { text-align : left; }
+div#
+
+%
+id
+
+%
+_entries span { background-color: #333; width: 5px; height: 16px; display: inline-block; }
+
+div#
+
+%
+id
+
+%
+_entries img { border: none; width: 16px; height: 16px; }
+
+a.
+
+%
+id
+
+%
+_active { background-color: #ded !important; }
+
+a.
+
+%
+id
+
+%
+_row { border-bottom: 1px #333 dotted; padding: 5px; display: block; color: #333 !important; }
+
+a.
+
+%
+id
+
+%
+_dark { background-color: #9a9; }
+
+a.
+
+%
+id
+
+%
+_light { background-color: #aba; }
+
+/* Filters */
+input.
+
+%
+id
+
+%
+_word { width: 200px; background-color: #aba; border: 1px #333 solid; }
+
+/* Configuration */
+div#
+
+%
+id
+
+%
+_conf_category { padding: 5px; height: 300px; text-align: left; border: 1px #333 solid; background-color: #aba; overflow-y: auto; }
+
+form.
+
+%
+id
+
+%
+_field { border: 1px #333 dotted; margin: 10px 0px; }
+
+/* Editing */
+form.
+
+%
+id
+
+%
+_edits { text-align: left; }

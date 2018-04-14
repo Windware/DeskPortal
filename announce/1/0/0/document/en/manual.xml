@@ -1,6 +1,7 @@
 <root>
-	<string name="_1_intro" value="Introduction" />
+	<string name="_1_intro" value="Introduction"/>
 
-	<string name="1/about" value="This is the official announcement from %brand% showing periodical news." />
-	<string name="1/others" value="You may click on the link at the bottom of the main window to view older news as well." />
+	<string name="1/about" value="This is the official announcement from %brand% showing periodical news."/>
+	<string name="1/others"
+	        value="You may click on the link at the bottom of the main window to view older news as well."/>
 </root>

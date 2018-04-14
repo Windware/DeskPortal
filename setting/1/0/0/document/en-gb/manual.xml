@@ -1,4 +1,5 @@
 <root>
-	<string name="3/window" value="The behaviour of the window can be changed." />
-	<string name="4/center" value="By selecting 'Centre' option, the wallpaper will be placed at the middle of the screen. If 'Strech' option is set, this option will be disabled. In another case, when the wallpaper is bigger than the size of the browser and when the size adjustment is disabled, this option is practically useless." />
+	<string name="3/window" value="The behaviour of the window can be changed."/>
+	<string name="4/center"
+	        value="By selecting 'Centre' option, the wallpaper will be placed at the middle of the screen. If 'Strech' option is set, this option will be disabled. In another case, when the wallpaper is bigger than the size of the browser and when the size adjustment is disabled, this option is practically useless."/>
 </root>

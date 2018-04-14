@@ -1,13 +1,13 @@
 <root>
-	<string name="system" value="システム" />
-	<string name="multimedia" value="マルチメディア" />
-	<string name="network" value="ネットワーク" />
-	<string name="misc" value="その他" />
-	<string name="tool" value="ツール" />
-	<string name="entertainment" value="遊び" />
-	<string name="assistance" value="補助" />
-	<string name="information" value="情報" />
-	<string name="productivity" value="" />
-	<string name="personal" value="パーソナル" />
-	<string name="uncategorized" value="未区分" />
+	<string name="system" value="システム"/>
+	<string name="multimedia" value="マルチメディア"/>
+	<string name="network" value="ネットワーク"/>
+	<string name="misc" value="その他"/>
+	<string name="tool" value="ツール"/>
+	<string name="entertainment" value="遊び"/>
+	<string name="assistance" value="補助"/>
+	<string name="information" value="情報"/>
+	<string name="productivity" value=""/>
+	<string name="personal" value="パーソナル"/>
+	<string name="uncategorized" value="未区分"/>
 </root>

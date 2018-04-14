@@ -1,21 +1,21 @@
 <root>
-	<string name="from" value="From" />
-	<string name="to" value="To" />
-	<string name="error" value="Conversion error" />
-	<string name="external" value="External" />
+	<string name="from" value="From"/>
+	<string name="to" value="To"/>
+	<string name="error" value="Conversion error"/>
+	<string name="external" value="External"/>
 
 	<!-- Feature -->
-	<string name="convert" value="Convert" />
-	<string name="search" value="Search" />
+	<string name="convert" value="Convert"/>
+	<string name="search" value="Search"/>
 
 	<!-- Method -->
-	<string name="dictionary" value="Dictionary" />
-	<string name="wikipedia" value="Wikipedia" />
-	<string name="language" value="Language" />
+	<string name="dictionary" value="Dictionary"/>
+	<string name="wikipedia" value="Wikipedia"/>
+	<string name="language" value="Language"/>
 
 	<!-- Mode -->
-	<string name="web" value="Web" />
-	<string name="page" value="Page" />
-	<string name="image" value="Image" />
-	<string name="cache" value="Cache" />
+	<string name="web" value="Web"/>
+	<string name="page" value="Page"/>
+	<string name="image" value="Image"/>
+	<string name="cache" value="Cache"/>
 </root>

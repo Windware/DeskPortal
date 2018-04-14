@@ -1,45 +1,45 @@
 <root>
 	<!-- Interface -->
-	<string name="list" value="Feeds" />
-	<string name="entries" value="Entries" />
-	<string name="category" value="Category" />
-	<string name="article" value="Article" />
-	<string name="view" value="View" />
-	<string name="unavailable" value="Unavailable" />
-	<string name="loading" value="Loading..." />
+	<string name="list" value="Feeds"/>
+	<string name="entries" value="Entries"/>
+	<string name="category" value="Category"/>
+	<string name="article" value="Article"/>
+	<string name="view" value="View"/>
+	<string name="unavailable" value="Unavailable"/>
+	<string name="loading" value="Loading..."/>
 
 	<!-- Categories -->
-	<string name="all" value="All" />
-	<string name="unset" value="Not set" />
+	<string name="all" value="All"/>
+	<string name="unset" value="Not set"/>
 
 	<!-- Filters -->
-	<string name="filter" value="Filters" />
-	<string name="state" value="State" />
-	<string name="marked" value="Marked" />
-	<string name="unread" value="Unread" />
-	<string name="search" value="Search" />
-	<string name="mark" value="Mark" />
-	<string name="filter_determine" value="No news is selected to filter" />
-	<string name="filter_determine_fix" value="Please select a news feed first" />
+	<string name="filter" value="Filters"/>
+	<string name="state" value="State"/>
+	<string name="marked" value="Marked"/>
+	<string name="unread" value="Unread"/>
+	<string name="search" value="Search"/>
+	<string name="mark" value="Mark"/>
+	<string name="filter_determine" value="No news is selected to filter"/>
+	<string name="filter_determine_fix" value="Please select a news feed first"/>
 
 	<!-- List -->
-	<string name="year" value="Year" />
-	<string name="month" value="Month" />
-	<string name="week" value="Week" />
-	<string name="day" value="Day" />
+	<string name="year" value="Year"/>
+	<string name="month" value="Month"/>
+	<string name="week" value="Week"/>
+	<string name="day" value="Day"/>
 
 	<!-- Entries -->
-	<string name="display" value="Display" />
-	<string name="period" value="Period" />
-	<string name="unit" value="Unit" />
-	<string name="daily" value="Daily" />
-	<string name="weekly" value="Weekly" />
-	<string name="monthly" value="Monthly" />
-	<string name="none" value="No summary" />
-	<string name="new" value="New" />
+	<string name="display" value="Display"/>
+	<string name="period" value="Period"/>
+	<string name="unit" value="Unit"/>
+	<string name="daily" value="Daily"/>
+	<string name="weekly" value="Weekly"/>
+	<string name="monthly" value="Monthly"/>
+	<string name="none" value="No summary"/>
+	<string name="new" value="New"/>
 
-	<string name="previous" value="Previous" />
-	<string name="next" value="Next" />
+	<string name="previous" value="Previous"/>
+	<string name="next" value="Next"/>
 
-	<string name="sample" value="No headlines are registered. Do you wish to add sample headlines?" />
+	<string name="sample" value="No headlines are registered. Do you wish to add sample headlines?"/>
 </root>
